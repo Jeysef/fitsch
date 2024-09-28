@@ -11,12 +11,12 @@ type AllowedVariants = ExtractTypographyVariantType<
   "p" | "lead" | "largeText" | "mutedText" | "smallText"
 >;
 
-interface TextProps extends TypographyProps {
+interface TextProps<T extends ValidComponent = "p"> extends TypographyProps<T> {
   variant?: AllowedVariants;
 }
 
-const Text = <T extends ValidComponent = "p">({ variant = "p", ...props }: PolymorphicProps<T, TextProps>) => {
-  const [_, others] = splitProps(props as TextProps, ["variant"])
+const Text = <T extends ValidComponent = "p">({ variant = "p", ...props }: PolymorphicProps<T, TextProps<T>>) => {
+  const [_, others] = splitProps(props as TextProps<any>, ["variant"])
   return <Typography variant={variant} {...others} />;
 }
 Text.displayName = "Text";

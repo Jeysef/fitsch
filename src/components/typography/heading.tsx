@@ -11,12 +11,12 @@ type AllowedVariants = ExtractTypographyVariantType<
   "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 >;
 
-interface HeadingProps extends TypographyProps {
+interface HeadingProps<T extends ValidComponent> extends TypographyProps<T> {
   variant: AllowedVariants;
 }
 
-const Heading = <T extends ValidComponent>(props: PolymorphicProps<T, HeadingProps>) => {
-  const [local, others] = splitProps(props as HeadingProps, ["variant"])
+const Heading = <T extends ValidComponent>(props: PolymorphicProps<T, HeadingProps<T>>) => {
+  const [local, others] = splitProps(props as HeadingProps<any>, ["variant"])
   return <Typography variant={local.variant} {...others} />;
 }
 

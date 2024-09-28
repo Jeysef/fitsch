@@ -9,13 +9,13 @@ import {
 // Specify the variants you want to allow (linting error will be thrown when using exported component with a variant (1) not specified here or (2) not within TypographyVariant)
 type AllowedVariants = ExtractTypographyVariantType<"blockquote">;
 
-export interface BlockquoteProps
-  extends TypographyProps {
+export interface BlockquoteProps<T extends ValidComponent = "blockquote">
+  extends TypographyProps<T> {
   variant?: AllowedVariants;
 }
 
-const Blockquote = <T extends ValidComponent = "blockquote">({ variant = "blockquote", ...props }: PolymorphicProps<T, BlockquoteProps>) => {
-  const [_, others] = splitProps(props as BlockquoteProps, ["variant"])
+const Blockquote = <T extends ValidComponent = "blockquote">({ variant = "blockquote", ...props }: PolymorphicProps<T, BlockquoteProps<T>>) => {
+  const [_, others] = splitProps(props as BlockquoteProps<any>, ["variant"])
   return <Typography variant={variant} {...others} />;
 }
 
