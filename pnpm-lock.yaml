@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/geist-mono':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fontsource/geist-sans':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@kobalte/core':
         specifier: ^0.13.6
         version: 0.13.6(solid-js@1.9.1)
@@ -483,6 +489,12 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@fontsource/geist-mono@5.1.0':
+    resolution: {integrity: sha512-MDFgmKUdDbV357vD2bOZAro597Nd2md01GAdr3GSZteCJQdPT/UhHUBCAxl9KUiH03aMPFM9Rx7x8/EtrJmpKg==}
+
+  '@fontsource/geist-sans@5.1.0':
+    resolution: {integrity: sha512-4AI/UxIcZiYgK6/cTo4R9oM4VHHLcFdHVv7m2+M42VyY16hhKJADrGe4HPjTxvolmce2IZX/jc6sFJ+GkLB64w==}
 
   '@internationalized/date@3.5.5':
     resolution: {integrity: sha512-H+CfYvOZ0LTJeeLOqm19E3uj/4YjrmOFtBufDHPfvtI80hFAMqtrp7oCACpe4Cil5l8S0Qu/9dYfZc/5lY8WQQ==}
@@ -3393,6 +3405,10 @@ snapshots:
       '@floating-ui/utils': 0.2.8
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@fontsource/geist-mono@5.1.0': {}
+
+  '@fontsource/geist-sans@5.1.0': {}
 
   '@internationalized/date@3.5.5':
     dependencies:
