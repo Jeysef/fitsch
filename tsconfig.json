@@ -16,6 +16,7 @@
       "@testing-library/jest-dom"
     ],
     "isolatedModules": true,
+    "baseUrl": "./",
     "paths": {
       "~/*": [
         "./src/*"
