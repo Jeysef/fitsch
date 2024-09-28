@@ -50,6 +50,9 @@ importers:
       jsdom:
         specifier: ^24.0.0
         version: 24.1.3
+      lucide-solid:
+        specifier: ^0.446.0
+        version: 0.446.0(solid-js@1.9.1)
       postcss:
         specifier: ^8.4.38
         version: 8.4.47
@@ -1996,6 +1999,11 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
+
+  lucide-solid@0.446.0:
+    resolution: {integrity: sha512-WDL3+dSYS1lJDY34EZ5O4ppQNRCDWef0pstKS8wx/VxhK8v5uUZOPjCoDqJ3Sd8DT2QH4lNIMUjlGuuMclRCGA==}
+    peerDependencies:
+      solid-js: ^1.4.7
 
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -5026,6 +5034,10 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide-solid@0.446.0(solid-js@1.9.1):
+    dependencies:
+      solid-js: 1.9.1
 
   lz-string@1.5.0: {}
 
