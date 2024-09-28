@@ -5,7 +5,7 @@ import Content from "~/components/menu/content";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-export const [openend, setOpened] = createSignal(true, { name: "menuOpened" });
+const [openend, setOpened] = createSignal(true, { name: "menuOpened" });
 const [menuHidden, setMenuHidden] = createSignal(false, { name: "menuHidden" });
 
 /**
