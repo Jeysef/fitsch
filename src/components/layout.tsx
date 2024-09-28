@@ -1,0 +1,16 @@
+import type { JSX } from "solid-js";
+import Header from "~/components/Header";
+import Menu from "~/components/menu/Menu";
+import { cn } from "~/lib/utils";
+
+export default function Layout({ children }: { children: JSX.Element }) {
+  return (
+    <div class={cn('h-dvh w-full flex flex-col')}>
+      <Header />
+      <div class='relative flex w-full h-[calc(100%-3rem)]'>
+        <Menu />
+        {children}
+      </div>
+    </div>
+  )
+}

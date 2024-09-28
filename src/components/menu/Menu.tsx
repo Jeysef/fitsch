@@ -1,10 +1,11 @@
-import Menu from "lucide-solid/icons/menu";
+import MenuIcon from "lucide-solid/icons/menu";
+import X from "lucide-solid/icons/x";
 import { createSignal } from "solid-js";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-export const [openend, setOpened] = createSignal(true, { name: "navOpened" });
-const [navHidden, setNavHidden] = createSignal(false, { name: "navHidden" });
+export const [openend, setOpened] = createSignal(true, { name: "menuOpened" });
+const [menuHidden, setMenuHidden] = createSignal(false, { name: "menuHidden" });
 
 /**
    * This is a workaround for the transition to work properly.
@@ -12,9 +13,9 @@ const [navHidden, setNavHidden] = createSignal(false, { name: "navHidden" });
    */
 export const toggleNavigation = (openend: boolean) => {
   openend ?
-    setNavHidden(false)
+    setMenuHidden(false)
     : setTimeout(() => {
-      setNavHidden(true);
+      setMenuHidden(true);
     }, 150);
   setTimeout(() => {
     setOpened(openend)
@@ -23,19 +24,27 @@ export const toggleNavigation = (openend: boolean) => {
 
 }
 
-export default function Navigation() {
+export default function Menu() {
   return (
     <>
       <Button variant="default" size="icon" aria-label="navigation opener" class={cn("absolute top-4 left-4 z-10", { "hidden": openend() })} onClick={() => toggleNavigation(true)}>
-        <Menu />
+        <MenuIcon />
       </Button>
 
-      <nav class={cn("peer/nav flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 ", {
+      <aside class={cn("flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 ", {
         "-ml-64": !openend(),
-        "hidden": navHidden(),
+        "hidden": menuHidden(),
       })}
       >
-      </nav >
+        <Button
+          variant="ghost"
+          size={null}
+          class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+          onClick={() => toggleNavigation(false)}
+        >
+          <X />
+        </Button>
+      </aside >
     </>
   )
 }
