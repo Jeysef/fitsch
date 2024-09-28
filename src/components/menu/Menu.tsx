@@ -1,6 +1,7 @@
 import MenuIcon from "lucide-solid/icons/menu";
 import X from "lucide-solid/icons/x";
 import { createSignal } from "solid-js";
+import Content from "~/components/menu/content";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -31,7 +32,7 @@ export default function Menu() {
         <MenuIcon />
       </Button>
 
-      <aside class={cn("flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 ", {
+      <aside class={cn("flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 z-10", {
         "-ml-64": !openend(),
         "hidden": menuHidden(),
       })}
@@ -44,6 +45,7 @@ export default function Menu() {
         >
           <X />
         </Button>
+        <Content />
       </aside >
     </>
   )
