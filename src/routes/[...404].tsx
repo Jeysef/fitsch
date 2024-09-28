@@ -1,5 +1,4 @@
 import { Title } from "@solidjs/meta";
-import { A } from "@solidjs/router";
 import { HttpStatusCode } from "@solidjs/start";
 import type { APIEvent } from "@solidjs/start/server";
 
@@ -21,15 +20,6 @@ export default function NotFound() {
           solidjs.com
         </a>{" "}
         to learn how to build Solid apps.
-      </p>
-      <p class="my-4">
-        <A href="/" class="text-sky-600 hover:underline">
-          Home
-        </A>
-        {" - "}
-        <A href="/about" class="text-sky-600 hover:underline">
-          About Page
-        </A>
       </p>
     </main>
   );
