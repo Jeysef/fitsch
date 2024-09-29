@@ -1,4 +1,3 @@
-import { cn } from "~/lib/utils";
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type {
 	TabsContentProps,
@@ -12,6 +11,7 @@ import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { ValidComponent, VoidProps } from "solid-js";
 import { splitProps } from "solid-js";
+import { cn } from "~/lib/utils";
 
 type tabsProps<T extends ValidComponent = "div"> = TabsRootProps<T> & {
 	class?: string;
@@ -84,7 +84,7 @@ export const TabsTrigger = <T extends ValidComponent = "button">(
 	return (
 		<TabsPrimitive.Trigger
 			class={cn(
-				"peer relative z-10 inline-flex h-7 w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium outline-none transition-colors disabled:pointer-events-none disabled:opacity-50 data-[selected]:text-foreground",
+				"peer relative z-10 inline-flex h-7 w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium outline-none transition-[color] disabled:pointer-events-none disabled:opacity-50 data-[selected]:text-foreground",
 				local.class,
 			)}
 			{...rest}
@@ -100,7 +100,7 @@ const tabsIndicatorVariants = cva(
 				block:
 					"data-[orientation=horizontal]:bottom-1 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:right-1 data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[calc(100%-0.5rem)] data-[orientation=vertical]:w-[calc(100%-0.5rem)] bg-background shadow rounded-md peer-focus-visible:ring-[1.5px] peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-focus-visible:outline-none",
 				underline:
-					"data-[orientation=horizontal]:-bottom-[1px] data-[orientation=horizontal]:left-0 data-[orientation=vertical]:-right-[1px] data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[2px] data-[orientation=vertical]:w-[2px] bg-primary",
+					"data-[orientation=horizontal]:bottom-0 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:-right-[1px] data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[2px] data-[orientation=vertical]:w-[2px] bg-primary",
 			},
 		},
 		defaultVariants: {
@@ -111,9 +111,9 @@ const tabsIndicatorVariants = cva(
 
 type tabsIndicatorProps<T extends ValidComponent = "div"> = VoidProps<
 	TabsIndicatorProps<T> &
-		VariantProps<typeof tabsIndicatorVariants> & {
-			class?: string;
-		}
+	VariantProps<typeof tabsIndicatorVariants> & {
+		class?: string;
+	}
 >;
 
 export const TabsIndicator = <T extends ValidComponent = "div">(
