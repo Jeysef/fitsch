@@ -6,7 +6,7 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkb
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { getData } from "~/server/scraper/mock";
-import { DEGREE, SEMESTER, type StudyOverview, type StudyOverviewConfig } from "~/server/scraper/types";
+import { DEGREE, SEMESTER, type Grade, type StudyOverview, type StudyOverviewConfig } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type ValidatorFn } from "~/solid-forms";
 
 export default function Wrapper() {
@@ -19,7 +19,7 @@ export default function Wrapper() {
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
           <Match when={data.error}>
-            <span>Error: {data.error()}</span>
+            <span>Error: {data.error}</span>
           </Match>
           <Match when={data()}>
             <Content resource={resource} />
@@ -42,7 +42,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
     year: createFormControl<string | null>("2024", { required: true, validators: validator.bind(null, "year") }),
     semester: createFormControl<typeof SEMESTER[SEMESTER]>(SEMESTER.WINTER, { required: true, validators: validator.bind(null, "semester") }),
     degree: createFormControl<typeof DEGREE[DEGREE]>(DEGREE.BACHELOR, { required: true, validators: validator.bind(null, "degree") }),
-    grade: createFormControl<string>(undefined, { required: true, validators: validator.bind(null, "grade"), touched: true }),
+    grade: createFormControl<Grade>(undefined, { required: true, validators: validator.bind(null, "grade"), touched: true }),
   })
 
 
@@ -115,7 +115,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
       </RadioGroup>
       <RadioGroup
         value={group.controls.grade.value}
-        onChange={group.controls.grade.setValue}
+        onChange={group.controls.grade.setValue as (value: string) => void}
         name="yearOfStudy"
         onBlur={() => group.controls.grade.markTouched(true)}
         disabled={group.controls.grade.isDisabled}
@@ -124,11 +124,11 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
       >
         <RadioGroup.Label class={typographyVariants({ variant: "h5" })} >Ročník</RadioGroup.Label>
         <For each={data()!.data.grades}>
-          {(year) => (
-            <RadioGroupItem value={year} class="flex items-center gap-2">
+          {(grade) => (
+            <RadioGroupItem value={grade.label} class="flex items-center gap-2">
               <RadioGroupItemInput />
               <RadioGroupItemControl as="button" type="button" />
-              <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{year}</RadioGroupItemLabel>
+              <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{grade.label}</RadioGroupItemLabel>
             </RadioGroupItem>
           )}
         </For>
@@ -137,9 +137,9 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
       <section class="space-y-2 ml-2">
         <Show when={group.controls.grade.value && group.controls.semester.value}>
           <Typography as="span" variant={"h6"}>Povinné</Typography>
-          <For each={data()!.data.courses[group.controls.grade.value][group.controls.semester.value].compulsory}>
+          <For each={data()!.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory}>
             {(course) => (
-              <Checkbox class="flex items-start" value={course.id}>
+              <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
                 <CheckboxLabel class="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   {course.abbreviation}
@@ -148,9 +148,9 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
             )}
           </For>
           <Typography as="span" variant={"h6"}>Volitelné</Typography>
-          <For each={data()!.data.courses[group.controls.grade.value][group.controls.semester.value].optional}>
+          <For each={data()!.data.courses[group.controls.grade.value]?.[group.controls.semester.value].optional}>
             {(course) => (
-              <Checkbox class="flex items-start" value={course.id}>
+              <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
                 <CheckboxLabel class="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   {course.abbreviation}

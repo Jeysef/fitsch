@@ -137,15 +137,19 @@ export class StudyApi {
   async getStudyProgramCourses(programUrl: string) {
     const locales = await this.getLanguageSet();
     const $ = await this.fetchDocument(programUrl)
+
+    const abbreviation = $("main .b-detail .b-detail__summary strong").first().text().trim() as Program;
+    const name = $("h1.b-detail__title").text().trim();
+
     const courses: StudyCourses = {};
-    let prevYear: keyof StudyCourses = 0;
+    let prevYear: keyof StudyCourses = "0";
     $("main").has("#planh").find(".table-responsive").first().find("table").each((_, element) => {
-      const year: StudyYear = parseInt($(element).children("caption").text().trim()[0]) || "ALL";
+      const year: StudyYear = `${parseInt($(element).children("caption").text().trim()[0])}${abbreviation}` || "ALL";
 
       const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
       prevYear = year;
       if (!courses[year]) {
-        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [] };
+        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name };
       }
       const list: StudyCourse[] = courses[year][semester]
 
@@ -154,7 +158,7 @@ export class StudyApi {
       rows.each((_, element) => {
         const rowBgColor = $(element).css('background-color');
         const abbreviation = $(element).children("th").text().trim();
-        const title = $(element).children("td").first().children("a").text().trim();
+        const name = $(element).children("td").first().children("a").text().trim();
         const link = $(element).children("td").first().children("a").attr("href")!;
         const id = parseInt(link.match(/\/course\/(\d+)/)?.[1] ?? "", 10);
         const credits = $(element).children("td").eq(1).text().trim();
@@ -177,7 +181,7 @@ export class StudyApi {
             else if (obligationText === locales.course.obligation.elective) { obligation = false }
             break;
         }
-        list.push({ abbreviation, title, link, credits, obligation, completion, faculty, note, id });
+        list.push({ abbreviation, name, link, credits, obligation, completion, faculty, note, id });
       });
     })
     return courses;
@@ -224,7 +228,7 @@ export class StudyApi {
       "#ffe6cc": COURSE_TYPE.EXAM
     }
 
-    const name = $(".b-detail__annot .b-detail__annot-item").first().text().trim() as Program;
+    const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim() as Program;
     const link = courseUrl;
 
     const range = $("main div.b-detail__body div.grid__cell").filter((_, element) => {
@@ -270,7 +274,8 @@ export class StudyApi {
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       return {
-        name,
+        abbreviation,
+        name: abbreviation,
         link,
         type,
         day: normalizedDay,

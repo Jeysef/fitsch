@@ -48,7 +48,7 @@ interface StudySpecialization extends StudyProgramBase { }
 
 interface StudyCourse {
   abbreviation: string;
-  title: string;
+  name: string;
   link: string;
   id: number;
   credits: string;
@@ -73,10 +73,11 @@ type GradeWithoutAll = `${GradeNumber}${Program}`;
 type Grade = GradeWithoutAll | "ALL";
 
 interface StudyOverviewYear { value: string, label: string }
+interface StudyOverviewGrade { label: Grade, name: string }
 interface StudyOverviewCourse {
   name: string;
   abbreviation: string;
-  id: string;
+  id: number;
 }
 interface StudyOverview {
   /**
@@ -100,7 +101,7 @@ interface StudyOverview {
     years: StudyOverviewYear[],
     semesters: SEMESTER[],
     degrees: DEGREE[],
-    grades: Grade[],
+    grades: StudyOverviewGrade[],
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
@@ -119,8 +120,8 @@ interface StudyOverview {
 
 
 type StudyCourses = {
-  [grade: GradeNumber]: Record<SEMESTER, StudyCourse[]>;
-  ALL?: Record<SEMESTER, StudyCourse[]>;
+  [grade: GradeWithoutAll]: Record<SEMESTER, StudyCourse[]> & { name: string };
+  ALL?: Record<SEMESTER, StudyCourse[]> & { name: string };
 }
 type StudyYear = keyof StudyCourses;
 
@@ -129,6 +130,7 @@ interface StudyTimeScheduleConfig {
 }
 
 interface CourseDetail {
+  abbreviation: string;
   name: string;
   link: string;
   day: DAY;
@@ -146,5 +148,5 @@ interface CourseDetail {
 
 
 export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER };
-export type { CourseDetail, Grade, Program, StudyCourse, StudyCourses, StudyOverview, StudyOverviewConfig, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig, StudyYear };
+export type { CourseDetail, Grade, GradeWithoutAll, Program, StudyCourse, StudyCourses, StudyOverview, StudyOverviewConfig, StudyOverviewCourse, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig, StudyYear, StudyOverviewGrade };
 
