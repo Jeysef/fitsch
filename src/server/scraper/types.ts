@@ -20,25 +20,31 @@ enum COURSE_TYPE {
   DEMO_EXERCISE = "DEMO_EXERCISE"
 }
 
-interface StudySpecialization {
-  abbreviation: string;
-  name: string;
-  url: string;
+enum DAY {
+  MON = "MON",
+  TUE = "TUE",
+  WED = "WED",
+  THU = "THU",
+  FRI = "FRI",
 }
+
 
 interface StudyPrograms {
   [DEGREE.BACHELOR]: StudyProgram[];
   [DEGREE.MASTER]: StudyProgram[];
   [DEGREE.DOCTORAL]: StudyProgram[];
 }
-
-interface StudyProgram {
+interface StudyProgramBase {
   name: string;
+  abbreviation: string;
   url: string;
+}
+interface StudyProgram extends StudyProgramBase {
   isEnglish?: boolean;
   specializations: StudySpecialization[];
   attendanceType: string;
 }
+interface StudySpecialization extends StudyProgramBase { }
 
 interface StudyCourse {
   abbreviation: string;
@@ -53,11 +59,18 @@ interface StudyCourse {
 }
 
 interface StudyOverviewConfig {
-  year: string, // value
+  year: string | number, // value
   degree: DEGREE,
 }
 
-type Grade = string | "ALL";
+/**
+ * ex: BIT, DIT, NBIO, NHCP
+ */
+type Program = string
+
+type GradeNumber = number;
+type GradeWithoutAll = `${GradeNumber}${Program}`;
+type Grade = GradeWithoutAll | "ALL";
 
 interface StudyOverviewYear { value: string, label: string }
 interface StudyOverviewCourse {
@@ -73,6 +86,9 @@ interface StudyOverview {
    */
   values: {
     year: StudyOverviewYear,
+    /**
+     * this value may seem redundant on the server side, but it's here for the client side
+     */
     semester: SEMESTER,
     degree: DEGREE,
     grade: Grade,
@@ -94,20 +110,41 @@ interface StudyOverview {
      * grade > semester > type > courses
      * because pages are structured like this
      */
-    courses: { [G in Grade]: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } } },
+    courses: {
+      [grade: GradeWithoutAll]: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } },
+      ALL?: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } }
+    }
   }
 }
 
 
 type StudyCourses = {
-  [year: number]: {
-    [semester in SEMESTER]: StudyCourse[];
-  }
-  allYear?: StudyCourse[];
-};
+  [grade: GradeNumber]: Record<SEMESTER, StudyCourse[]>;
+  ALL?: Record<SEMESTER, StudyCourse[]>;
+}
 type StudyYear = keyof StudyCourses;
 
+interface StudyTimeScheduleConfig {
+  year: string | number | null;
+}
 
-export { COURSE_TYPE, DEGREE, LANGUAGE, SEMESTER };
-export type { Grade, StudyCourse, StudyCourses, StudyOverview, StudyOverviewConfig, StudyProgram, StudyPrograms, StudySpecialization, StudyYear };
+interface CourseDetail {
+  name: string;
+  link: string;
+  day: DAY;
+  weeks: string;
+  room: string;
+  type: COURSE_TYPE | null;
+  start: string;
+  end: string;
+  capacity: string;
+  lectureGroup: string[];
+  groups: string;
+  info: string;
+  note: string | null;
+}
+
+
+export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER };
+export type { CourseDetail, Grade, Program, StudyCourse, StudyCourses, StudyOverview, StudyOverviewConfig, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig, StudyYear };
 

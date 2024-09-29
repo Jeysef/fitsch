@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140908417-1"></script>
+        <script>
+            var _consent = document.cookie.replace(/(?:(?:^|.*;\s*)cookieconsent_status\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            var _ga_expire = 365*24*3600;
+            if (_consent == 'deny') window['ga-disable-UA-140908417-1'] = true;
+            if (_consent != 'allow') _ga_expire = 0;
+            gtag('js', new Date());
+            gtag('config', 'UA-140908417-1', {
+                'page_location': "https://www.fit.vut.cz/study/course/281030/.en",
+                'page_path': "/study/course/281030/.en",
+                'anonymize_ip': true,
+                'custom_map': { 'dimension1': 'lang', 'dimension2': 'referrer', 'dimension3': 'DNT' },
+                'site_speed_sample_rate': 100,
+                'sample_rate': 100,
+                'cookie_prefix': 'gafit',
+                'cookie_domain': 'www.fit.vut.cz',
+                'cookie_expires': _ga_expire,
+                'content_group1': "en",
+                'lang': "en",
+                'referrer': "https://www.fit.vut.cz/study/course/281030/.cs",
+                'DNT': (navigator.doNotTrack == '1' || window.doNotTrack == '1'),
+            });
+        </script>
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  { if(f.fbq)return;n=f.fbq=function(){ n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments) };
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  if (_consent == 'allow') s.parentNode.insertBefore(t,s) }(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '792092991515050');
+  fbq('track', 'PageView');
+</script>
+<!-- End Facebook Pixel Code -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Electronics for Information Technology - IEL">
+        <meta property="og:title" content="Electronics for Information Technology - IEL">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:site_name" content="Faculty of Information Technology, Brno University of Technology">
+        <meta property="og:url" content="https://www.fit.vut.cz/study/course/281030/.en">
+        <meta property="og:type" content="website">
+        <meta name="twitter:image" content="https://www.fit.vut.cz/img/logos/FIT_zkracene_barevne_RGB_CZ.png">
+        <meta property="og:image" content="https://www.fit.vut.cz/img/logos/FIT_zkracene_barevne_RGB_CZ.png">
+
+        <title>Electronics for Information Technology - IEL</title>
+        <link rel="stylesheet" href="https://www.fit.vut.cz/css/style-fit.v3.css">
+        <link rel="stylesheet" href="https://www.fit.vut.cz/css/print-fit.v3.css" media="print">
+        <link rel="stylesheet" href="https://www.fit.vut.cz/css/custom.css">
+        <link type="application/rss+xml" rel="alternate" title="FIT News RSS" href="https://www.fit.vut.cz/fit/news-rss/.en">
+        <link rel="apple-touch-icon" sizes="180x180" href="https://www.fit.vut.cz/img/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="https://www.fit.vut.cz/img/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="https://www.fit.vut.cz/img/favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="144x144" href="https://www.fit.vut.cz/img/favicon/favicon-144x144.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="https://www.fit.vut.cz/img/favicon/android-chrome-192x192.png">
+        <link rel="mask-icon" href="https://www.fit.vut.cz/img/favicon/safari-pinned-tab.svg" color="#00a9e0">
+        <link rel="manifest" href="https://www.fit.vut.cz/site.webmanifest">
+        <link rel="alternate" hreflang="en" href="https://www.fit.vut.cz/study/course/281030/.en">
+        <link rel="alternate" hreflang="cs" href="https://www.fit.vut.cz/study/course/281030/.cs">
+        <link rel="alternate" hreflang="sk" href="https://www.fit.vut.cz/study/course/281030/.cs">
+        <meta name="msapplication-config" content="https://www.fit.vut.cz/browserconfig.xml">
+        <meta name="theme-color" content="#00a9e0">
+        <script src="https://www.fit.vut.cz/js/cookies-fit.v3.js"></script>
+        <script>
+            (function () {
+                var className = document.documentElement.className;
+                className = className.replace('no-js', 'js');
+
+                if (window.Cookies.get('fontsLoaded') === 'true') {
+                    className += ' fonts-loaded';
+                }
+
+                document.documentElement.className = className;
+            }());
+        </script>
+        <script src="https://www.fit.vut.cz/js/modernizr.min.js"></script>
+        <script src="https://www.fit.vut.cz/js/jquery-2.2.4.min.js"></script>
+<script>
+/* ecomail */
+        (function (w,d,s,o,f,js,fjs) {
+            w['ecm-widget']=o;w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) };
+            js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
+            js.id = '3-b6fcc542fb021c84fdaff536dd0a74a1'; js.dataset.a = 'studyit'; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs);
+        }(window, document, 'script', 'ecmwidget', 'https://d70shl7vidtft.cloudfront.net/widget.js'));
+</script>
+<script>
+        (function (w,d,s,o,f,js,fjs) {
+            w['ecm-widget']=o;w[o] = w[o] || function () { (w[o].q = w[o].q || []).push(arguments) };
+            js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
+            js.id = '4-f67e22c6c3dacfc9b77b6b40399abc16'; js.dataset.a = 'studyit'; js.src = f; js.async = 1; fjs.parentNode.insertBefore(js, fjs);
+        }(window, document, 'script', 'ecmwidget', 'https://d70shl7vidtft.cloudfront.net/widget.js'));
+</script>
+
+<script src="https://www.fit.vut.cz/js/jquery.tablesorter.min.js"></script>
+<script src="https://www.fit.vut.cz/js/jquery.tablesorter.widgets.min.js"></script>
+<link rel="stylesheet" href="https://www.fit.vut.cz/css/theme.blue.css">
+<style>
+.fixmd {
+padding-top: 0.4em;
+}
+</style>
+    </head>
+    <body>
+        <div class="mother">
+            <nav class="m-accessibility" id="m-accessibility">
+                <p class="vhide">Accessibility navigation</p>
+                <a class="color-secondary" tabindex="0" title="Go to content (Shortcut: Alt + 2)" accesskey="2" href="#main">
+                    Go to content
+                </a>
+                <span class="hide">|</span>
+                <a class="color-secondary" tabindex="0" href="#m-main">Go to the main menu</a>
+                <span class="hide">|</span>
+                <a class="color-secondary" tabindex="0" href="#f-search-trigger">Go to search</a>
+            </nav>
+            <header class="header header--lg header--fit-en">
+                <div class="header__logo">
+                    <a href="https://www.fit.vut.cz/.en">
+                        <span class="icon-svg icon-svg--symbol print-hide">
+                            <svg class="icon-svg__svg icon-symbol-red" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-symbol" x="0" y="0" width="100%" height="100%"></use>
+                            </svg>
+                            <svg class="icon-svg__svg icon-symbol-blue" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-fit.svg#icon-symbol-fit" x="0" y="0" width="100%" height="100%"></use>
+                            </svg>
+                        </span>
+                        <span class="icon-svg icon-svg--sign-fit-en header__logo-sign print-hide is-visible">
+                            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-sign-fit-en" x="0" y="0" width="100%" height="100%"></use>
+                            </svg>
+                        </span>
+                        <span class="header__logo-main is-hidden" data-timeout="3000">
+                            <span class="icon-svg icon-svg--logo-fit-en--lg print-hide">
+                                <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-logo-fit-en--lg" x="0" y="0" width="100%" height="100%"></use>
+                                </svg>
+                            </span>
+                            <span class="icon-svg icon-svg--logo-fit print-show">
+                                <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-logo-fit-en" x="0" y="0" width="100%" height="100%"></use>
+                                </svg>
+                            </span>
+                        </span>
+                        <span class="vhide">
+                            Faculty of Information Technology, BUT
+                        </span>
+                    </a>
+                </div>
+
+                <nav id="m-main" class="m-main m-main--header m-main--header-lg header__menu" aria-label="Main menu">
+                    <a href="#" class="m-main__toggle">
+                        <span class="icon-svg icon-svg--menu m-main__toggle-icon m-main__toggle-icon--open">
+                            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-menu" x="0" y="0" width="100%" height="100%"></use>
+                            </svg>
+                        </span>
+                        <span class="icon-svg icon-svg--close--sm m-main__toggle-icon m-main__toggle-icon--close">
+                            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-close--sm" x="0" y="0" width="100%" height="100%"></use>
+                            </svg>
+                        </span>
+                        <span class="m-main__toggle-label">Menu</span>
+                    </a>
+
+                    <ul class="m-main__list m-main__list--main">
+
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">For Applicants</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/.en" class="m-sub__link">Study at FIT in English</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/degree-programme/.en" class="m-sub__link">Study at FIT in Czech</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/short-term/.en" class="m-sub__link">Short-term Study</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/degree-programme-en/.en" class="m-sub__link">Full Degree Programmes</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/summer-schools/.en" class="m-sub__link">Summer Schools</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/special/.en" class="m-sub__link">Students with Special Needs in Studies</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/applicants/contact/.en" class="m-sub__link">Contact</a>
+                                                </li>
+                                        </ul>
+                                        <p>
+                                            <a href="https://www.vutbr.cz/eprihlaska/en/zadani/vybrat-obor/fakulta/20042" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'E-application', 'value': 1})" target="_blank" class="btn btn--sm">
+                                                <span class="btn__text">E-application</span>
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">For Students</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu m-main__submenu--md" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/.en" class="m-sub__link">Study Information</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/study-news/.en" class="m-sub__link">Study News</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/for-freshmen/.en" class="m-sub__link">For Freshmen</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/calendar/.en" class="m-sub__link">Academic Year</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/courses/.en" class="m-sub__link" aria-current="true">Courses</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/programs/.en" class="m-sub__link">Degree Programmes</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/theses/.en" class="m-sub__link">State Final Examination and Theses</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/study-abroad/.en" class="m-sub__link">Study and Internships Abroad</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/creative-activity/.en" class="m-sub__link">Creative Activity of Students</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/internships/.en" class="m-sub__link">Offers of Professional Internships</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/student-union/.en" class="m-sub__link">FIT Student Union</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/study-rooms/.en" class="m-sub__link">Study rooms at FIT</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/study/clubs-at-fit/.en" class="m-sub__link">Clubs at FIT</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+<div class="m-sub__col m-sub__col--highlighted">
+    <div class="m-highlights">
+    	<h2 class="m-highlights__title">Study Department</h2>
+        <div>
+          <p><b>Office Hours</b></p>
+<p>Mon 8:00-11:00<br>
+Wed 8:00-11:00 and 13:00-14:30<br>
+Thu 8:00-11:00<br>
+<br>
+<b>Note:</b>&nbsp;during holidays from July to August office hours are only on Wednesdays 8:00-11:00.&nbsp;</p>
+<p>E-mail: <a href="mailto:study@fit.vut.cz">study@fit.vut.cz</a></p>
+<p>Any e-mail communication should be addressed to <b>study@fit.vut.cz</b>.</p>
+
+        </div>
+    	<p><a href="https://www.fit.vut.cz/units/dean/.en#study" class="btn btn--secondary btn--xs btn--outline">
+	        <span class="btn__text">More about study department</span>
+	    </a></p>
+    </div>
+</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">Science and Research</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/overview/.en" class="m-sub__link">Science and Research at FIT</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/groups/.en" class="m-sub__link">Research Groups</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/esf-projects/.en" class="m-sub__link">European Structural Funds Projects</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/projects/.en" class="m-sub__link">Projects</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/publications/.en" class="m-sub__link">Publications</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/products/.en" class="m-sub__link">Products</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/patents/.en" class="m-sub__link">Patents</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/conferences/.en" class="m-sub__link">Conferences</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/research/awards/.en" class="m-sub__link">Awards and Recognitions</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">Cooperation with FIT</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/cooperation-with-companies/.en" class="m-sub__link">Industry Cooperation</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/partners/.en" class="m-sub__link">Partners</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/research-partnership/.en" class="m-sub__link">Research Partnership</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/foreign-cooperation/.en" class="m-sub__link">Foreign Cooperation</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/collaboration-with-schools/.en" class="m-sub__link">Collaboration with Schools</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/faculty-services/.en" class="m-sub__link">Faculty Services</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/cooperation/for-graduates/.en" class="m-sub__link">Job Offers in IT</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">Faculty</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/news/.en" class="m-sub__link">News</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/events/.en" class="m-sub__link">Event Calendar</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/map/.en" class="m-sub__link">Campus Map</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/campus/.en" class="m-sub__link">Faculty Campus</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/structure/.en" class="m-sub__link">Organizational Structure</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/info/.en" class="m-sub__link">Information Board</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/history/.en" class="m-sub__link">History and Now</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/history86/.en" class="m-sub__link">Brief history of the department</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/press/.en" class="m-sub__link">For Media</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/people/.en" class="m-sub__link">Staff</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/contacts/.en" class="m-sub__link">Contacts</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/fit/gdpr/.en" class="m-sub__link">Protection of Personal Data</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item" data-toggle>
+                            <a href="#" class="m-main__link" onclick="return false;">Units</a>
+                            <a href="#" class="m-main__toggle-sub js-toggle">
+                                <span class="icon-svg icon-svg--angle-d m-main__toggle-sub-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Submenu</span>
+                            </a>
+                            <div class="m-main__submenu" data-toggleable>
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <ul class="m-sub__list">
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/dean/.en" class="m-sub__link">Deans Office</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/uifs/.en" class="m-sub__link">Department of Information Systems</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/uits/.en" class="m-sub__link">Department of Intelligent Systems</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/upgm/.en" class="m-sub__link">Department of Computer Graphics and Multimedia</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/upsy/.en" class="m-sub__link">Department of Computer Systems</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/cvt/.en" class="m-sub__link">Computer Centre</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/vcit/.en" class="m-sub__link">Research Centre of Information Technology</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/library/.en" class="m-sub__link">Library</a>
+                                                </li>
+                                                <li class="m-sub__item">
+                                                    <a href="https://www.fit.vut.cz/units/museum/.en" class="m-sub__link">Museum</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="m-main__item hide--d">
+                                <a href="https://www.fit.vut.cz/study/course/281030/.cs" class="m-main__link m-main__link--lang">CS</a>
+                        </li>
+                    </ul>
+
+                    <ul class="m-main__list m-main__list--side">
+                        <li class="m-main__item">
+                            <a href="#" class="m-main__link m-main__link--icon js-user-menu">
+                                <span class="icon-svg icon-svg--user m-main__icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-user" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Log in</span>
+                            </a>
+                            <div class="m-main__submenu m-main__submenu--m">
+                                <div class="m-sub">
+                                    <div class="m-sub__col">
+                                        <h2 class="h4">Log in</h2>
+                                        
+                                        <ul class="m-sub__list">
+                                            <li class="m-sub__item">
+                                                <a href="https://www.fit.vut.cz/login/.en" class="m-sub__link">WEB FIT</a>
+                                            </li>
+                                            <li class="m-sub__item">
+                                                <a href="https://vut.cz/intra/" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'IS VUT', 'value': 1})" class="m-sub__link">IS VUT</a>
+                                            </li>
+                                            <li class="m-sub__item">
+                                                <a href="https://wis.fit.vutbr.cz/FIT/.en" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'Wis', 'value': 1})" class="m-sub__link">IS FIT</a>
+                                            </li>
+                                            <li class="m-sub__item">
+                                                <a href="https://roundcube.fit.vutbr.cz/" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'Roundcube', 'value': 1})" class="m-sub__link">Web Email</a>
+                                            </li>
+                                            <li class="m-sub__item">
+                                                <a href="https://cas.fit.vutbr.cz/" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'Cas', 'value': 1})" class="m-sub__link">CAS FIT</a>
+                                            </li>
+                                            <li class="m-sub__item">
+                                                <a href="https://nextcloud.fit.vutbr.cz/" onclick="gtag('event','click',{'event_category': 'links', 'event_label': 'Nextcloud', 'value': 1})" class="m-sub__link">Nextcloud FIT</a>
+                                            </li>
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="m-main__item">
+                            <a href="#f-search" class="m-main__link m-main__link--icon js-toggle" id="f-search-trigger">
+                                <span class="icon-svg icon-svg--search m-main__icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-search" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                                <span class="vhide">Search</span>
+                            </a>
+                        </li>
+                        <li class="m-main__item hide--m hide--t">
+                                <a href="https://www.fit.vut.cz/study/course/281030/.cs" class="m-main__link m-main__link--lang">CS</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="header__search">
+                    <form action="https://www.fit.vut.cz/search/.en" id="f-search" class="f-search f-search--lg" role="search">
+                        <p class="inp inp--group inp--group--m mb0">
+                            <label for="f-text" class="vhide">Search</label>
+                            <span class="inp__fix inp__fix--btn-icon">
+                                <input type="text" class="inp__text inp__text--lg inp__text--flat" id="f-text" name="q" placeholder="Search" data-focus>
+                                <button class="btn btn--lg btn--icon-only btn--blank inp__btn-icon" type="submit">
+                                    <span class="btn__text">
+                                        <span class="vhide">Search</span>
+                                        <span class="icon-svg icon-svg--search btn__icon">
+                                            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-search" x="0" y="0" width="100%" height="100%"></use>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </button>
+                            </span>
+                            <span class="inp__btn">
+                                <a href="#f-search" class="btn btn--lg btn--secondary btn--icon-only js-toggle">
+                                    <span class="btn__text">
+                                        <span class="vhide">Close</span>
+                                        <span class="icon-svg icon-svg--close btn__icon">
+                                            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-close" x="0" y="0" width="100%" height="100%"></use>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </a>
+                            </span>
+                        </p>
+                    </form>
+                </div>
+
+<nav id="m-breadcrumb" class="m-breadcrumb header__breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList" aria-label="Breadcrumb navigation">
+    <a href="#" class="m-breadcrumb__nav m-breadcrumb__nav--prev">
+        <span class="icon-svg icon-svg--angle-l m-breadcrumb__nav-icon">
+            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-l" x="0" y="0" width="100%" height="100%"></use>
+            </svg>
+        </span>
+    </a>
+
+    <div class="m-breadcrumb__wrap">
+        <ol class="m-breadcrumb__list">
+                <li class="m-breadcrumb__item">
+                    <a href="https://www.fit.vut.cz/.en" class="m-breadcrumb__link">FIT</a>
+                </li>
+                <li class="m-breadcrumb__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span class="icon-svg icon-svg--angle-r m-breadcrumb__separator">
+                        <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-r" x="0" y="0" width="100%" height="100%"></use>
+                        </svg>
+                    </span>
+                    <a href="https://www.fit.vut.cz/study/.en" class="m-breadcrumb__link" itemprop="item"><span itemprop="name">For Students</span><meta itemprop="position" content="1"></a>
+                </li>
+                <li class="m-breadcrumb__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span class="icon-svg icon-svg--angle-r m-breadcrumb__separator">
+                        <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-r" x="0" y="0" width="100%" height="100%"></use>
+                        </svg>
+                    </span>
+                    <a href="https://www.fit.vut.cz/study/courses/.en" class="m-breadcrumb__link" itemprop="item"><span itemprop="name">Courses</span><meta itemprop="position" content="2"></a>
+                </li>
+
+                <li class="m-breadcrumb__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span class="icon-svg icon-svg--angle-r m-breadcrumb__separator">
+                        <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-r" x="0" y="0" width="100%" height="100%"></use>
+                        </svg>
+                    </span>
+
+                    <a href="https://www.fit.vut.cz/study/course/281030/.en" class="m-breadcrumb__link" aria-current="page" itemprop="item"><span itemprop="name">Course details</span><meta itemprop="position" content="3"></a>
+                </li>
+        </ol>
+    </div>
+
+    <a href="#" class="m-breadcrumb__nav m-breadcrumb__nav--next">
+        <span class="icon-svg icon-svg--angle-r m-breadcrumb__nav-icon">
+            <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-r" x="0" y="0" width="100%" height="100%"></use>
+            </svg>
+        </span>
+    </a>
+</nav>
+
+            </header>
+            <main id="main" class="main">
+        <div class="b-detail" itemscope itemtype="https://schema.org/Course">
+            <div class="grid grid--0">
+                <div class="grid__cell size--t-4-12 holder holder--lg b-detail__head b-detail__head--arrow bg">
+                    <p class="mb20">
+                        <span class="tag tag--sm ">Course details</span>
+                    </p>
+                    <h1 class="b-detail__title" itemprop="name">Electronics for Information Technology</h1>
+                    <meta itemprop="url" content="https://www.fit.vut.cz/study/course/IEL/.en">
+                </div>
+
+                <div class="grid__cell size--t-8-12 holder holder--lg b-detail__summary pt20--m">
+                    <p class="b-detail__annot mb20">
+                        <span class="b-detail__annot-item font-bold" itemprop="courseCode">IEL</span>
+                        <span class="b-detail__annot-item font-bold">Acad. year 2024/2025</span>
+                        <span class="b-detail__annot-item font-bold">Winter semester</span>
+                        <span class="b-detail__annot-item font-bold">6 credits</span>
+                    </p>
+                    <div class="b-detail__abstract" itemprop="description">
+                        <p>Basic transient analysis of electric circuits. Formulation of circuit equations and possibilities of their solutions. Analysis of RC, RL, and RLC circuits. Analysis of non-linear electric circuits. Parameters and characteristics of semiconductor elements. Graphic, numerical, and analytical methods of non-linear circuit analysis. TTL and CMOS gates. Power supply units. Limiters and sampling circuits. Level translators, stabilizers. Astable, monostable, and bistable flip-flops. Lossless and lossy transmission lines. Wave propagation on transmission lines, reflections, impedance matching.</p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="b-detail__body border-t">
+                <div class="grid grid--0">              
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Guarantor
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd">
+                            <a href="https://www.fit.vut.cz/person/2797/.en">Růžička Richard, doc. Ing., Ph.D., MBA</a> (DCSY)
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Course coordinator
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd">
+                                <a href="https://www.fit.vut.cz/person/23139/.en">Šátek Václav, Ing., Ph.D.</a> (DITS)<br>
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Language of instruction
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd" itemprop="inLanguage">
+                            Czech, English
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Completion
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd">
+                            Credit+Examination (written)
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Time span
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ul>
+                            <li>39 hrs lectures</li>
+                            <li>6 hrs seminar</li>
+                            <li>12 hrs laboratories</li>
+                            <li>8 hrs projects</li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Assessment points
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ul>
+                                <li>55 pts final exam (written part)</li>
+                                <li>15 pts mid-term test (written part)</li>
+                                <li>18 pts labs</li>
+                                <li>12 pts projects</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Department
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd" itemprop="provider">
+                            <a href="https://www.fit.vut.cz/units/uits/.en">Department of Intelligent Systems</a> (UITS)
+                        </div>
+                    </div>
+        
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Lecturer
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd">
+                                <a href="https://www.fit.vut.cz/person/2126/.en">Peringer Petr, Dr. Ing.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/2797/.en">Růžička Richard, doc. Ing., Ph.D., MBA</a> (DCSY)<br>
+                                <a href="https://www.fit.vut.cz/person/23139/.en">Šátek Václav, Ing., Ph.D.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/110633/.en">Veigend Petr, Ing., Ph.D.</a> (DITS)<br>
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle fz-md">
+                            Instructor
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content fixmd">
+                                <a href="https://www.fit.vut.cz/person/10119/.en">Bidlo Michal, doc. Ing., Ph.D.</a> (DCSY)<br>
+                                <a href="https://www.fit.vut.cz/person/138828/.en">Goldmann Tomáš, Ing., Ph.D.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/125061/.en">Nečasová Gabriela, Ing., Ph.D.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/221799/.en">Plevač Lukáš, Ing.</a> (DCSY)<br>
+                                <a href="https://www.fit.vut.cz/person/16502/.en">Rozman Jaroslav, Ing., Ph.D.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/3227/.en">Strnadel Josef, Ing., Ph.D.</a> (DCSY)<br>
+                                <a href="https://www.fit.vut.cz/person/23139/.en">Šátek Václav, Ing., Ph.D.</a> (DITS)<br>
+                                <a href="https://www.fit.vut.cz/person/17532/.en">Šimek Václav, Ing.</a> (DCSY)<br>
+                                <a href="https://www.fit.vut.cz/person/110633/.en">Veigend Petr, Ing., Ph.D.</a> (DITS)<br>
+                        </div>
+                    </div>
+
+                    
+
+
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Learning objectives
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <p>To obtain general knowledge and basics of selected methods of description and analysis of electric circuits with practical application in computer science. To obtain detailed instructions and information about occupational safety with electric devices. To gain practical knowledge of working with fundamental electronic circuits in labs.<br>
+Ability to analyse electric circuits with practical application in computer science. Knowledge of safety regulations for work with electronic devices.</p>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Prerequisite knowledge and skills
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <p>This course takes&nbsp;place in the winter term of the first year of the bachelor's study programme. Thus, we expect that students have&nbsp;the&nbsp;high school level knowledge.</p>
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Study literature
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ul>
+<li>Blahovec, A.: Elektrotechnika I, II, III, Informatorium, Praha 2000</li>
+<li>Gescheidtová, E.: Základní metody měření v&nbsp;elektrotechnice. Brno, CERM 2000.</li>
+<li>Láníček, R.: ELEKTRONIKA, obvody-součástky-děje, BEN - technická literatura, Praha 1998</li>
+<li>Punčochář, J.: Operační zesilovače v&nbsp;elektronice, BEN - technická literatura, Praha 1999</li>
+<li>Lecture notes written in PowerPoint</li>
+</ul>
+
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Fundamental literature
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ul>
+<li>Murina, M.: Teorie obvodů. Brno, VUTIUM 2000.</li>
+<li>Brančík, L.: Elektrotechnika I. Brno, skripta FEKT VUT.</li>
+<li>Sedláček, J., Dědková, J.: Elektrotechnika I&nbsp;- laboratorní a&nbsp;počítačová cvičení. Brno, skripta FEKT VUT.</li>
+<li>Sedláček, J., Valsa, J.: Elektrotechnika II. Brno, skripta FEKT VUT.</li>
+<li>Murina, M., Sedláček, J.: Elektrotechnika II - počítačová cvičení. Brno, skripta FEKT VUT.</li>
+<li>Horowitz, P., Hill, W.: The art of electronics 3rd edition, Cambridge University Press, 2015.</li>
+</ul>
+
+                        </div>
+                    </div>
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                                Syllabus of lectures
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ol>
+<li>Terminology and quantities used in circuits.</li>
+<li>Laws in linear DC circuits (Ohm's Law, Kirchhoff's law)</li>
+<li>Electrical circuits of resistors with one and more directed voltage sources, analysis based on a&nbsp;method of simplification</li>
+<li>Theorems about substituted sources (Thévenin's theorem), a&nbsp;method of loop's current and nodes voltages, the superposition principle</li>
+<li>General description of RC, RL and RLC circuits.&nbsp;RC, RL and RLC circuits with sources of direct voltage. Transient processes</li>
+<li>Alternating voltages and Fourier's series, a&nbsp;solution of RLC circuits. RLC circuits in impulse mode, frequency filters</li>
+<li>Lossless and lossy transmission lines. Wave propagation in transmission lines.</li>
+<li>Semiconducting components, bipolar technology, PN junction, diode</li>
+<li>Bipolar transistors, transistor as a&nbsp;switch</li>
+<li>Unipolar transistors, TTL and CMOS gates (logic levels, power consumption)</li>
+<li>Operational amplifiers with weighted resistant nets. Digital-to-analogue converters. Analogue-to-digital converters</li>
+<li>Overview of important electric circuits (voltage sources, stabilizers, oscillator, multivibrator, bi-stable flip-flop, Schmitt flip-flop, timer, comparator, transmitter, receiver). Microelectronics, principles of integrated circuits manufacturing</li>
+<li>Methods of measurement of electric and non-electric quantities. Modern measuring devices. Principles and application of measuring devices</li>
+</ol>
+
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Syllabus of seminars
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ol>
+<li>Electric circuits of resistors. Fundamental circuits. Editor and simulator of electric circuits with directed voltage source. Audiovisual demonstrations</li>
+<li>RLC circuits, transient processes. Fundamental circuits. Editor and simulator of RLC circuits with alternating voltage source. Audiovisual demonstrations</li>
+<li>Bipolar technology, diode. Fundamental circuits. Audiovisual demonstrations</li>
+<li>Bipolar technology, transistor. Fundamental circuits. Audiovisual demonstrations</li>
+<li>A/D a&nbsp;D/A converters. Audiovisual demonstration of manipulation with professional electronic devices</li>
+<li>Signal transmission. Fundamental circuits. Audiovisual demonstrations</li>
+</ol>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Syllabus of laboratory exercises
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ol>
+<li>Electric circuits of resistors. Fundamental circuits. Editor and simulator of electric circuits with directed voltage source. Audiovisual demonstrations</li>
+<li>RLC circuits, transient processes. Fundamental circuits. Editor and simulator of RLC circuits with alternating voltage source. Audiovisual demonstrations</li>
+<li>Bipolar technology, diode. Fundamental circuits. Audiovisual demonstrations</li>
+<li>Bipolar technology, transistor. Fundamental circuits. Audiovisual demonstrations</li>
+<li>A/D a&nbsp;D/A converters. Audiovisual demonstration of manipulation with professional electronic devices</li>
+<li>Signal transmission. Fundamental circuits. Audiovisual demonstrations</li>
+</ol>
+
+                        </div>
+                    </div>
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Syllabus - others, projects and individual work of students
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <p>Individual valorization of the course on a&nbsp;chosen examples from areas:</p>
+<ol>
+<li>Loop Current Method</li>
+<li>Nodal Voltage Analysis</li>
+<li>Thévenin's theorem</li>
+<li>Transient events in RLC circuits</li>
+</ol>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="grid__cell size--t-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle font-secondary">
+                            Progress assessment
+                        </p>
+                    </div>
+                    <div class="grid__cell size--t-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <p>During the semester, 6 laboratories (each for a&nbsp;maximum of 3 points), semestral project (max. 12 points) and mid semester exam (maximum 15 points) are assessed.&nbsp;</p>
+<p>Mid-term exam and Final exam:&nbsp;<b>The minimal number of points which can be obtained from the final exam is 27</b>.<b>&nbsp;Otherwise</b>,<b>&nbsp;no points will be assigned to a&nbsp;student</b>. Laboratories are voluntary. To attend the laboratory in person, the participant has to be <b>instructed on how to handle the electronic devices safely</b>. The missed laboratory is possible to replace with the individual project after consultation with the lecturer.&nbsp;</p>
+<p><b>Exam prerequisites</b>:</p>
+<ul>
+<li>Obtain at least <b>3 points from the semester project</b> and at least <b>6 points from laboratories</b>.</li>
+</ul>
+
+                        </div>
+                    </div>
+
+
+
+
+
+<script>
+$(function() {
+   $("#schedule").tablesorter({
+        theme: 'blue',
+        widgets: ['saveSort','filter'],
+        widgetOptions: {
+            saveSort: true,
+            storage_storageType: (window.Cookies.get('cookieconsent_status') === 'allow'?'c':'s'),
+            filter_reset : '#reset',
+            filter_liveSearch: true,
+            filter_saveFilters: true,
+            filter_formatter: {
+                9: function($cell, indx) {
+                    var $input = $('<input class="with-reset" type="text">').appendTo($cell);
+                    $('<div class="btn btn--gray"><button class="btn__text" type="button" id="reset">X</button></div>').appendTo($cell);
+                    return $input;
+                }
+            }
+        },
+        textSorter: {
+           0: function(a, b, direction, column, table) {
+               var dny = ['mon','tue','wed','thu','fri','sat','sun'];
+               return dny.indexOf(b)-dny.indexOf(a);
+           }
+        }
+    });
+});
+</script>
+
+                    <div class="grid__cell size--s-12-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle text-left mb0 font-secondary">
+                            Schedule
+                        </p>
+                    </div>
+                    <div class="grid__cell size--s-12-12 holder holder--lg">
+                        <div class="b-detail__content table-responsive mb0">
+                            <table id="schedule" class="tablesorter-blue">
+                            <thead>
+                            <tr><th class="filter-select filter-select-sort-desc">Day</th><th class="filter-select">Type</th><th class="filter-select">Weeks</th><th>Room</th><th class="w5p">Start</th><th class="w5p">End</th><th class="w5p">Capacity</th><th>Lect.grp</th><th>Groups</th><th>Info</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: #e0ffe0"><th>Mon</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>1., 2., 3., 6., 8., 12., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5291/.en">E104</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5292/.en">E105</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5298/.en">E112</a>
+                                    </td><td>10:00</td><td>11:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Růžička</td></tr>
+                                <tr style="background: #e0ffe0"><th>Mon</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>4., 5., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5291/.en">E104</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5292/.en">E105</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5298/.en">E112</a>
+                                    </td><td>10:00</td><td>11:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Peringer</td></tr>
+                                <tr style="background: #e0ffe0"><th>Mon</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-11-18</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5291/.en">E104</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5292/.en">E105</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/5298/.en">E112</a>
+                                    </td><td>10:00</td><td>11:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Strnadel</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Strnadel</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Šimek</td></tr>
+                                <tr style="background: #ffffdc"><th>Mon</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Šimek</td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #e0ffe0"><th>Tue</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>1., 2., 3., 6., 8., 12., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Růžička</td></tr>
+                                <tr style="background: #e0ffe0"><th>Tue</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>4., 5., 7., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Peringer</td></tr>
+                                <tr style="background: #e0ffe0"><th>Tue</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-11-19</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>21</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Goldmann</td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>21</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Goldmann</td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Goldmann</td></tr>
+                                <tr style="background: #ffffdc"><th>Tue</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Goldmann</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>21</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>21</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>09:00</td><td>10:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Plevač</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>09:00</td><td>10:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Plevač</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>1., 2. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Šátek</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>3., 7. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>4., 5., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Peringer</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>6., 8., 12. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Růžička</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-11-20</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-12-11</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>10:00</td><td>10:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Šátek, Veigend</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Strnadel</td></tr>
+                                <tr style="background: #ffffdc"><th>Wed</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Strnadel</td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>1., 2., 4., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>11:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Šátek</td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>3., 7. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>11:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>5., 6., 8., 10., 12., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/139/.en">D0206</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>11:00</td><td>11:50</td><td>470</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        10 - 29
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>1., 2., 3. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Šátek</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>4., 5., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Peringer</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>6., 8., 12. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Růžička</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-10-30</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-11-20</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #e0ffe0"><th>Wed</th>
+                                <td>
+                                    <span>lecture</span>
+                                </td>
+                                <td>2024-12-11</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>14:00</td><td>14:50</td><td>319</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Šátek, Veigend</td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>1., 2., 3., 4., 9., 11. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>15:00</td><td>15:50</td><td>320</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Šátek</td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>5., 6., 8., 10., 12., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>15:00</td><td>15:50</td><td>320</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td></td></tr>
+                                <tr style="background: #e8ffff"><th>Wed</th>
+                                <td>
+                                    <span>seminar</span>
+                                </td>
+                                <td>2024-10-30</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/1884/.en">D105</a>
+                                    </td><td>15:00</td><td>15:50</td><td>320</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        30 - 49
+
+                                        xx
+                                    </td><td>Veigend</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Bidlo</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Bidlo</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Šimek</td></tr>
+                                <tr style="background: #ffffdc"><th>Thu</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>17:00</td><td>18:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Šimek</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>07:00</td><td>08:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>09:00</td><td>10:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>09:00</td><td>10:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>11:00</td><td>12:50</td><td>21</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11360/.en">1BIB</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Nečasová</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Bidlo</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>13:00</td><td>14:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Bidlo</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>3., 5., 7., 9., 11., 13. of  lectures</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                                <tr style="background: #ffffdc"><th>Fri</th>
+                                <td>
+                                    <span>laboratory</span>
+                                </td>
+                                <td>odd week</td>
+                                <td>
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9814/.en">L306.1</a>
+
+                                        <a href="https://www.fit.vut.cz/fit/room-sched/9852/.en">L306.2</a>
+                                    </td><td>15:00</td><td>16:50</td><td>20</td><td>
+                                        <a href="https://www.fit.vut.cz/study/schedule/11359/.en">1BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11353/.en">2BIA</a>
+
+                                        <a href="https://www.fit.vut.cz/study/schedule/11354/.en">2BIB</a>
+                                    </td><td>
+                                        xx
+                                    </td><td>Rozman</td></tr>
+                            </tbody>
+                            </table>
+                        </div>
+                        <div class="holder pb30">
+                        </div>
+                    </div>
+
+                    <div class="grid__cell size--s-12-12 size--tl-4-12 holder holder--lg holder--0-r">
+                        <p class="b-detail__subtitle text-left--m text-left--t mb0--t mb0--m font-secondary">
+                            Course inclusion in study plans
+                        </p>
+                    </div>
+                    <div class="grid__cell size--s-12-12 size--tl-8-12 holder holder--lg">
+                        <div class="b-detail__content">
+                            <ul>
+                                <li>Programme <a href="https://www.fit.vut.cz/study/program/8953/.en">BIT</a>,
+                                        1st  year of study,
+                                    Compulsory
+                                    
+                                <li>Programme <a href="https://www.fit.vut.cz/study/program/8954/.en">BIT (in English)</a>,
+                                        1st  year of study,
+                                    Compulsory
+                                    
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </main>
+            <footer class="footer">
+                <div class="footer__group pt0--m pb0--m pt40--t pt55 pb40 holder holder--lg">
+                    <div class="grid">
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                For Applicants
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/.en" class="footer__link">Study at FIT in English</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/degree-programme/.en" class="footer__link">Study at FIT in Czech</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/short-term/.en" class="footer__link">Short-term Study</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/degree-programme-en/.en" class="footer__link">Full Degree Programmes</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/summer-schools/.en" class="footer__link">Summer Schools</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/special/.en" class="footer__link">Students with Special Needs in Studies</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/applicants/contact/.en" class="footer__link">Contact</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                For Students
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/.en" class="footer__link">Study Information</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/study-news/.en" class="footer__link">Study News</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/for-freshmen/.en" class="footer__link">For Freshmen</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/calendar/.en" class="footer__link">Academic Year</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/courses/.en" class="footer__link" aria-current="true">Courses</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/programs/.en" class="footer__link">Degree Programmes</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/theses/.en" class="footer__link">State Final Examination and Theses</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/study-abroad/.en" class="footer__link">Study and Internships Abroad</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/creative-activity/.en" class="footer__link">Creative Activity of Students</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/internships/.en" class="footer__link">Offers of Professional Internships</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/student-union/.en" class="footer__link">FIT Student Union</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/study-rooms/.en" class="footer__link">Study rooms at FIT</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/study/clubs-at-fit/.en" class="footer__link">Clubs at FIT</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                Science and Research
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/overview/.en" class="footer__link">Science and Research at FIT</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/groups/.en" class="footer__link">Research Groups</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/esf-projects/.en" class="footer__link">European Structural Funds Projects</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/projects/.en" class="footer__link">Projects</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/publications/.en" class="footer__link">Publications</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/products/.en" class="footer__link">Products</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/patents/.en" class="footer__link">Patents</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/conferences/.en" class="footer__link">Conferences</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/research/awards/.en" class="footer__link">Awards and Recognitions</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                Cooperation with FIT
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/cooperation-with-companies/.en" class="footer__link">Industry Cooperation</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/partners/.en" class="footer__link">Partners</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/research-partnership/.en" class="footer__link">Research Partnership</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/foreign-cooperation/.en" class="footer__link">Foreign Cooperation</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/collaboration-with-schools/.en" class="footer__link">Collaboration with Schools</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/faculty-services/.en" class="footer__link">Faculty Services</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/cooperation/for-graduates/.en" class="footer__link">Job Offers in IT</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                Faculty
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/news/.en" class="footer__link">News</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/events/.en" class="footer__link">Event Calendar</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/map/.en" class="footer__link">Campus Map</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/campus/.en" class="footer__link">Faculty Campus</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/structure/.en" class="footer__link">Organizational Structure</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/info/.en" class="footer__link">Information Board</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/history/.en" class="footer__link">History and Now</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/history86/.en" class="footer__link">Brief history of the department</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/press/.en" class="footer__link">For Media</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/people/.en" class="footer__link">Staff</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/contacts/.en" class="footer__link">Contacts</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/fit/gdpr/.en" class="footer__link">Protection of Personal Data</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid__cell size--t-4-12 size--2-12 mb40--t" data-toggle>
+                            <h2 class="footer__title js-toggle">
+                                Units
+                                <span class="icon-svg icon-svg--angle-d footer__title-icon">
+                                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-d" x="0" y="0" width="100%" height="100%"></use>
+                                    </svg>
+                                </span>
+                            </h2>
+                            <div class="footer__more" data-toggleable>
+                                <ul class="footer__list">
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/dean/.en" class="footer__link">Deans Office</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/uifs/.en" class="footer__link">Department of Information Systems</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/uits/.en" class="footer__link">Department of Intelligent Systems</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/upgm/.en" class="footer__link">Department of Computer Graphics and Multimedia</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/upsy/.en" class="footer__link">Department of Computer Systems</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/cvt/.en" class="footer__link">Computer Centre</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/vcit/.en" class="footer__link">Research Centre of Information Technology</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/library/.en" class="footer__link">Library</a>
+                                        </li>
+                                        <li class="footer__item">
+                                            <a href="https://www.fit.vut.cz/units/museum/.en" class="footer__link">Museum</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer__group pt20--m pb40--m pt40 pb50 holder holder--lg">
+                    <div class="grid grid--middle">
+                        <div class="grid__cell size--t-6-12 size--4-12">
+                            <p class="footer__logo">
+                                <a href="https://www.fit.vut.cz/.en">
+                                    <span class="icon-svg icon-svg--logo-fit-en--sm">
+                                        <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-logo-fit-en--sm" x="0" y="0" width="100%" height="100%"></use>
+                                        </svg>
+                                    </span>
+                                    <span class="vhide">
+                                        Faculty of Information Technology, Brno University of Technology
+                                    </span>
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="grid__cell size--t-6-12 size--4-12">
+                            <div class="address footer__info" itemscope itemtype="https://schema.org/Organization">
+                                <meta itemprop="logo" content="https://www.fit.vut.cz/img/favicon/apple-touch-icon.png">
+                                <p class="address__title font-secondary" itemprop="name">
+                                    Faculty of Information Technology<br>
+                                    Brno University of Technology
+                                </p>
+                                <div class="address__wrap">
+                                    <p class="address__item" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+                                        <span itemprop="streetAddress">Božetěchova 2</span><br>
+                                        <span itemprop="postalCode">612 00</span> <span itemprop="addressLocality">Brno</span><br>
+                                        <span itemprop="addressRegion">Czech Republic</span>
+                                    </p>
+                                    <p class="address__item">
+                                        <a itemprop="url" href="https://www.fit.vut.cz/" class="font-bold color-secondary">www.fit.vut.cz</a><br>
+                                        <a href="mailto:info@fit.vut.cz" class="font-bold color-secondary">info@fit.vut.cz</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid__cell size--t-6-12 size--4-12 push--t-6-12 push--auto">
+                            <div class="c-socials footer__socials">
+                                <ul class="c-socials__list">
+                                    <li class="c-socials__item">
+                                        <a href="https://www.facebook.com/FIT.VUT/" target="_blank" class="c-socials__link">
+                                            <span class="icon-svg icon-svg--facebook c-socials__icon">
+                                                <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-facebook" x="0" y="0" width="100%" height="100%"></use>
+                                                </svg>
+                                            </span>
+                                            <span class="vhide">Facebook</span>
+                                        </a>
+                                    </li>
+                                    <li class="c-socials__item">
+                                        <a href="https://twitter.com/FIT_VUT" target="_blank" class="c-socials__link">
+                                            <span class="icon-svg icon-svg--twitter c-socials__icon">
+                                                <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-twitter" x="0" y="0" width="100%" height="100%"></use>
+                                                </svg>
+                                            </span>
+                                            <span class="vhide">Twitter</span>
+                                        </a>
+                                    </li>
+                                    <li class="c-socials__item">
+                                        <a href="https://www.instagram.com/fit.vut/" target="_blank" class="c-socials__link">
+                                            <span class="icon-svg icon-svg--instagram c-socials__icon">
+                                                <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-instagram" x="0" y="0" width="100%" height="100%"></use>
+                                                </svg>
+                                            </span>
+                                            <span class="vhide">Instagram</span>
+                                        </a>
+                                    </li>
+                                    <li class="c-socials__item">
+                                        <a href="https://www.linkedin.com/company/fit.vut" target="_blank" class="c-socials__link">
+                                            <span class="icon-svg icon-svg--minus c-socials__icon">
+                                                <img src="https://www.fit.vut.cz/img/bg/linkedin.svg" alt="IN">
+                                            </span>
+                                            <span class="vhide">Linkedin</span>
+                                        </a>
+                                    </li>
+                                    <li class="c-socials__item">
+                                        <a href="https://www.fit.vut.cz/fit/news-rss/.en" class="c-socials__link">
+                                            <span class="icon-svg icon-svg--instagram c-socials__icon">
+                                                <img class="icon-svg__svg" src="https://www.fit.vut.cz/img/bg/rss.svg" alt="rss">
+                                            </span>
+                                            <span class="vhide">RSS</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="footer__group pt20 pb20 holder holder--lg">
+                    <div class="grid">
+                        <p class="grid__cell size--t-6-12 mb0 fz-sm color-gray">
+                            Copyright &copy; 2024
+                            Faculty of Information Technology, BUT
+<br><a class="color-secondary" href="https://www.fit.vut.cz/fit/cookies/.en">Information about the cookies</a>
+                        </p>
+                        <p class="grid__cell size--t-6-12 mb0 fz-sm color-gray text-left--m text-right">
+                                Your IP address: 62.209.230.50
+                        </p>
+                    </div>
+                </div>
+
+            </footer>
+
+            <a href="#" class="to-top js-top">
+                <span class="vhide">Back to top</span>
+                <span class="icon-svg icon-svg--angle-u to-top__icon">
+                    <svg class="icon-svg__svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <use xlink:href="https://www.fit.vut.cz/img/bg/icons-svg.svg#icon-angle-u" x="0" y="0" width="100%" height="100%"></use>
+                    </svg>
+                </span>
+            </a>
+
+        </div>
+
+        <script src="https://www.fit.vut.cz/js/svg4everybody.min.js"></script>
+        <script src="https://www.fit.vut.cz/js/app-fit.v3.js"></script>
+        <script>
+            var prefLang = "en";
+            try {
+                svg4everybody();
+                App.run({
+                    basePath: "https://www.fit.vut.cz/",
+                    iconsPath: "https://www.fit.vut.cz/img/bg/",
+                    cookieExpires: (_consent != 'allow'?0:7) // days
+                });
+                if (!window.noat) {
+                    window.noat = {};
+                }
+                window.noat.cookieConsent = {
+                text: 'This web uses cookies to ensure the functionality of the site, to analyze traffic and to log on users. You may disable the storing of cookies in your browser, in which case some functions of the Web may be limited.',
+                privacyPolicyText: 'Cookie Policy',
+                privacyPolicyUrl: "https://www.fit.vut.cz/fit/cookies/.en",
+                denyText: 'Disable Cookies',
+                allowText: 'Enable Cookies',
+                };
+            } catch(err) {
+                gtag('event', 'exception', { 'description': err.message, 'fatal': true});
+            }
+        </script>
+        <script src="https://www.fit.vut.cz/js/gdpr-cookie-monster.min.js"></script>
+    </body>
+</html>

@@ -5,5 +5,8 @@ export default defineConfig({
   plugins: [solid()],
   resolve: {
     conditions: ["development", "browser"],
+    alias: {
+      "~": "/src",
+    },
   },
 });

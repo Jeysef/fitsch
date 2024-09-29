@@ -1,0 +1,40 @@
+{
+  "course": {
+    "obligation": {
+      "compulsory": "C",
+      "compulsoryElective": "CE",
+      "elective": "E"
+    },
+    "detail": {
+      "timeSpan": {
+        "timeSpan": "Time span",
+        "lecture": "lectures",
+        "exercises": "exercises"
+      },
+      "day": {
+        "MON": "Mon",
+        "TUE": "Tue",
+        "WED": "Wed",
+        "THU": "Thu",
+        "FRI": "Fri"
+      },
+      "type": {
+        "exercise": "exercise",
+        "lecture": "lecture",
+        "comp.lab": "comp.lab",
+        "exam": "exam",
+        "seminar": "seminar",
+        "laboratory": "laboratory"
+      },
+      "weeks": {
+        "odd": "odd",
+        "even": "even",
+        "of lectures": "of lectures"
+      }
+    }
+  },
+  "studyPlan": {
+    "Lessons in the winter semester": "Lessons in the winter semester",
+    "Lessons in the summer semester": "Lessons in the summer semester"
+  }
+}
