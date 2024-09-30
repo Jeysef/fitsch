@@ -1,3 +1,4 @@
+import LoaderCircle from "lucide-solid/icons/loader-circle";
 import { createResource, For, Match, Show, Suspense, Switch, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
@@ -10,13 +11,15 @@ import { DEGREE, SEMESTER, type Grade, type StudyOverview, type StudyOverviewCon
 import { createFormControl, createFormGroup, type ValidatorFn } from "~/solid-forms";
 
 export default function Wrapper() {
-  const resource = createResource(getData);
+  // defer, so that the loading is not shown on client
+  const resource = createResource(getData, { deferStream: true });
 
 
   const [data] = resource
   return (
     <div class="w-44 space-y-2">
-      <Suspense fallback={<div>Loading...</div>}>
+      {/* in future replace with skeleton or deferStream on resource */}
+      <Suspense fallback={<div class="grid place-items-center h-full"><LoaderCircle class="animate-spin" /></div>}>
         <Switch>
           <Match when={data.error}>
             <span>Error: {data.error}</span>
