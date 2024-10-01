@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { getData } from "~/server/scraper/mock";
 import { SEMESTER, type DataProviderTypes, type DEGREE, type GradeKey, type StudyOverview, type StudyProgramWithUrl } from "~/server/scraper/types";
-import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms";
+import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
@@ -24,7 +24,7 @@ export default function Wrapper() {
           <Match when={data.error}>
             <span>Error: {data.error}</span>
           </Match>
-          <Match when={data() && data.state === "ready"}>
+          <Match when={!!data()?.data}>
             <Content resource={resource} />
           </Match>
         </Switch>
@@ -49,7 +49,6 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   //   return null
   // }
 
-  console.log("🚀 ~ file: Content.tsx:33 ~ Content ~ data", data().data.programs)
 
   const defaultValues = {
     semester: SEMESTER.WINTER,
