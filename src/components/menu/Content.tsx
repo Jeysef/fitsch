@@ -1,5 +1,5 @@
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createResource, For, Match, Show, Suspense, Switch, type JSX, type ResourceReturn } from "solid-js";
+import { createResource, For, Match, Show, Suspense, Switch, type JSX, type Resource, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import { Button } from "~/components/ui/button";
@@ -7,8 +7,8 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkb
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { getData } from "~/server/scraper/mock";
-import { DEGREE, SEMESTER, type Grade, type StudyOverview, type StudyOverviewConfig } from "~/server/scraper/types";
-import { createFormControl, createFormGroup, type ValidatorFn } from "~/solid-forms";
+import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview } from "~/server/scraper/types";
+import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms";
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
@@ -33,35 +33,52 @@ export default function Wrapper() {
   )
 }
 
-function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOverviewConfig> }) {
-  const [data] = resource
+function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
+  // const [data] = resource
+  const data = resource[0] as Resource<StudyOverview> & { state: "ready" }
+
+
   const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
     const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
     return returnType.error ? { error: returnType.error } : null
   }
 
+  // const checkFetchableChange: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
+  //   // check if the value changed from data.values. if so call reload with new values
+  //   if (data().values[name] === value) return null
+  //   return null
+  // }
+
+  const defaultValues = {
+    semester: SEMESTER.WINTER,
+    grade: undefined,
+    programsObligatory: [],
+    programsOptional: []
+  }
 
   const group = createFormGroup({
-    year: createFormControl<string | null>("2024", { required: true, validators: validator.bind(null, "year") }),
-    semester: createFormControl<typeof SEMESTER[SEMESTER]>(SEMESTER.WINTER, { required: true, validators: validator.bind(null, "semester") }),
-    degree: createFormControl<typeof DEGREE[DEGREE]>(DEGREE.BACHELOR, { required: true, validators: validator.bind(null, "degree") }),
-    grade: createFormControl<Grade>(undefined, { required: true, validators: validator.bind(null, "grade"), touched: true }),
+    year: createFormControl<string>(data().values.year.value, { required: true, validators: validator.bind(null, "year") }),
+    semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
+    degree: createFormControl<typeof DEGREE[DEGREE]>(data().values.degree, { required: true, validators: validator.bind(null, "degree") }),
+    grade: createFormControl<GradeKey | undefined>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
+    programsObligatory: createFormControl<string[]>(defaultValues.programsObligatory, { required: true, validators: validator.bind(null, "programsObligatory") }),
+    programsOptional: createFormControl<string[]>(defaultValues.programsOptional, { required: true, validators: validator.bind(null, "programsOptional") }),
+  } satisfies {
+    [K in keyof NavigationSchema]: IFormControl<NavigationSchema[K] | undefined>;
   })
-
 
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
     e.preventDefault();
     group.markSubmitted(true);
     group.value
-    console.log("🚀 ~ file: content.tsx:39 ~ constonSubmit:JSX.EventHandlerUnion<HTMLFormElement,SubmitEvent>|undefined= ~ group.value:", group.value)
   };
   return (
     <form onSubmit={onSubmit}>
       <Select
-        options={data()!.data.years.map(y => y.value)}
+        options={data().data.years.map(y => y.value)}
         value={group.controls.year.value}
         name="year"
-        onChange={group.controls.year.setValue}
+        onChange={group.controls.year.setValue as (value: string | null) => void}
         placeholder="Select a year"
         onBlur={() => group.controls.year.markTouched(true)}
         disabled={group.controls.year.isDisabled}
@@ -128,8 +145,8 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
         <RadioGroup.Label class={typographyVariants({ variant: "h5" })} >Ročník</RadioGroup.Label>
         <For each={data()!.data.grades}>
           {(grade) => (
-            <RadioGroupItem value={grade.label} class="flex items-center gap-2">
-              <RadioGroupItemInput />
+            <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
+              <RadioGroupItemInput class="bottom-0" />
               <RadioGroupItemControl as="button" type="button" />
               <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{grade.label}</RadioGroupItemLabel>
             </RadioGroupItem>
@@ -140,7 +157,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
       <section class="space-y-2 ml-2">
         <Show when={group.controls.grade.value && group.controls.semester.value}>
           <Typography as="span" variant={"h6"}>Povinné</Typography>
-          <For each={data()!.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory}>
+          <For each={data().data.courses[group.controls.grade.value!][group.controls.semester.value!].compulsory}>
             {(course) => (
               <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
@@ -151,7 +168,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, StudyOv
             )}
           </For>
           <Typography as="span" variant={"h6"}>Volitelné</Typography>
-          <For each={data()!.data.courses[group.controls.grade.value]?.[group.controls.semester.value].optional}>
+          <For each={data().data.courses[group.controls.grade.value!][group.controls.semester.value].optional}>
             {(course) => (
               <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
