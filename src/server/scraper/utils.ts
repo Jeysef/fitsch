@@ -1,4 +1,4 @@
-import { gradeAll, type Grade } from "~/server/scraper/types";
+import { gradeAll, type Grade, type StudyId } from "~/server/scraper/types";
 
 export function conjunctRooms(rooms: string[]): string {
   const conjunctedRooms = [
@@ -37,4 +37,20 @@ export function removeSpaces(text: string): string {
 
 export function constructGradeLabel(grade: string, programAbbreviation: string): Grade {
   return grade === gradeAll ? grade : `${grade}${programAbbreviation}` as Grade;
+}
+
+export function createStudyId(url: string): StudyId {
+  // This regex will match any path segment followed by a number
+  const regex = /\/([^\/]+)\/(\d+)/;
+  const match = url?.match(regex);
+
+  if (match) {
+    const [, type, id] = match;
+    // Convert the type to lowercase and remove any potential file extensions
+    const cleanType = type.toLowerCase().replace(/\.[^/.]+$/, "");
+    return `${cleanType}-${id}`;
+  } else {
+    console.error(`No match found for ${url}`);
+    return url;
+  }
 }

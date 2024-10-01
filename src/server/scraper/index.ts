@@ -2,7 +2,7 @@ import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
-import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade } from './types';
+import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudySpecialization } from './types';
 
 
 export class DataProvider {
@@ -13,16 +13,23 @@ export class DataProvider {
 
   async getStudyOverview(config?: DataProviderTypes.getStudyOverviewConfig): Promise<StudyOverview> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config)
-    const values = {
+    const values: StudyOverview["values"] = {
       year: config ? years.find(year => year.value === config.year) ?? currentYear : currentYear,
       degree: config ? config.degree : DEGREE.BACHELOR,
     }
-    // TODO: index should not be hardcoded
-    const defaultProgram = studyPrograms[values.degree][0]
-    const programData = await this.studyApi.getStudyProgramCourses({ programUrl: defaultProgram.url });
+    let degreePrograms = studyPrograms[values.degree]
+    values["specialization"] = config?.specializationId ? Object.values(degreePrograms).flatMap(program => program.specializations).find(specialization => specialization.id === config.specializationId) : undefined
+
+    let degreeProgram: StudyProgram | undefined = undefined
+    degreeProgram = degreePrograms[values.degree]
+    if (!degreeProgram) degreeProgram = Object.values(degreePrograms)[0]
+
+    const programData = await this.studyApi.getStudyProgramCourses({ programUrl: degreeProgram.url });
 
     const grades = Object.entries(programData).map(([grade, data]) => ({ key: grade, label: constructGradeLabel(grade, data.abbreviation) } as StudyOverviewGrade))
     const degrees = Object.values(DEGREE);
+    const specializations: Record<DEGREE, StudySpecialization[]> = ObjectTyped.fromEntries(ObjectTyped.entries(studyPrograms).map(([degree, programs]) => ([degree, Object.values(programs).flatMap(program => program.specializations)] as const)))
+
     const semesters = Object.values(SEMESTER);
 
     const courses = ObjectTyped.fromEntries(ObjectTyped.entries(programData).map(([grade, gradeData]) => ([
@@ -50,6 +57,7 @@ export class DataProvider {
         semesters,
         degrees,
         grades,
+        specializations,
         courses
       }
     } satisfies StudyOverview;

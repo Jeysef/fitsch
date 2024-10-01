@@ -2,6 +2,11 @@ enum LANGUAGE {
   ENGLISH = 'en',
   CZECH = 'cs',
 }
+/**
+ * translation: Studium
+ * 
+ * ends with title of the study program
+ */
 enum DEGREE {
   BACHELOR = "BACHELOR",
   MASTER = "MASTER",
@@ -28,21 +33,26 @@ enum DAY {
   FRI = "FRI",
 }
 
+/**
+ * @example "program-8956"
+ */
+type StudyId = string;
 
 interface StudyPrograms {
-  [DEGREE.BACHELOR]: StudyProgram[];
-  [DEGREE.MASTER]: StudyProgram[];
-  [DEGREE.DOCTORAL]: StudyProgram[];
+  [DEGREE.BACHELOR]: { [id: StudyId]: StudyProgram };
+  [DEGREE.MASTER]: { [id: StudyId]: StudyProgram };
+  [DEGREE.DOCTORAL]: { [id: StudyId]: StudyProgram };
 }
 interface StudyProgramBase {
   name: string;
   abbreviation: string;
+  id: StudyId;
 }
 interface StudyProgramWithUrl extends StudyProgramBase {
   url: string;
 }
 interface StudyProgram extends StudyProgramWithUrl {
-  isEnglish?: boolean;
+  isEnglish: boolean;
   specializations: StudySpecialization[];
   attendanceType: string;
 }
@@ -72,6 +82,7 @@ interface StudyOverview {
   values: {
     year: StudyOverviewYear,
     degree: DEGREE,
+    specialization?: StudySpecialization,
   },
   /**
    * Data coresponding to the chosen values
@@ -81,6 +92,7 @@ interface StudyOverview {
     semesters: SEMESTER[],
     degrees: DEGREE[],
     grades: StudyOverviewGrade[],
+    specializations: Record<DEGREE, StudySpecialization[]>,
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
@@ -149,12 +161,12 @@ export namespace StudyApiTypes {
 
 export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
-    specialization?: string,
+    specializationId: StudySpecialization["id"];
     isEnglish?: boolean
   }
 }
 
 
 export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER, gradeAll };
-export type { CourseDetail, Grade, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
+export type { CourseDetail, Grade, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
 

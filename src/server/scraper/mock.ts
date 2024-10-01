@@ -10,5 +10,6 @@ export const getData: ResourceFetcher<true, StudyOverview, DataProviderTypes.get
 
   const languageProvider = new LanguageProvider(language);
   const dataProvider = new DataProvider(languageProvider);
-  return await dataProvider.getStudyOverview();
+  const data = await dataProvider.getStudyOverview();
+  return data
 }

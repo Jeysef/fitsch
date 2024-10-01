@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import type { StudyApiTypes } from "~/server/scraper/types";
 import { COURSE_TYPE, DEGREE, SEMESTER, type CourseDetail, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
-import { conjunctRooms, removeSpaces } from "~/server/scraper/utils";
+import { conjunctRooms, createStudyId, removeSpaces } from "~/server/scraper/utils";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
@@ -83,31 +83,34 @@ export class StudyApi {
     const programsUrl = `${this.baseUrl}programs/${this.urlLanguage}${queryStr ? `?${queryStr}` : ""}`;
     const $ = await this.fetchDocument(programsUrl)
 
-    const programs: StudyPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, []]));
+    const programs: StudyPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, {}]));
     $("body main .c-programs").each((_, element) => {
       const studyDegree = elementIdDegrees[$(element).attr('id') as keyof typeof elementIdDegrees];
       $(element).find('.c-programmes__list li.c-programmes__item').each((_, element) => {
         let specialization: StudySpecialization[] = [];
         $(element).find('.b-programme .c-branches ul.c-branches__list li.c-branches__item').each((ind, element) => {
           const titleEl = $(element).find('.b-branch .b-branch__title')
-          const abbreviation = titleEl.children('.tag').text().trim();
+          const abbreviation = titleEl.children('.tag.tag--fit').first().text().trim();
           const name = titleEl.children('a').text().trim();
           const url = titleEl.children('a').attr('href');
+          const id = createStudyId(url!);
 
           if (abbreviation && name && url) {
-            specialization.push({ abbreviation, name, url });
+            specialization.push({ abbreviation, name, url, id });
           }
         });
 
         const nameElement = $(element).find('.b-programme a.b-programme__link');
         const name = nameElement.text().trim();
         const url = nameElement.attr('href');
+        const id = createStudyId(url!);
         const isEnglish = $(element).find('span').is('[class="tag tag--xs"]');
         const abbreviation = $(element).find('.b-programme__link').next(".tag").first().text().trim();
+        console.log("🚀 ~ file: api.ts:109 ~ StudyApi ~ $ ~ abbreviation:", abbreviation)
         const attendanceType = $(element).find('.b-programme .b-branch__meta .b-branch__meta-item').last().text().trim();
 
         if (name && url) {
-          programs[studyDegree].push({ name, url, isEnglish, specializations: specialization, attendanceType, abbreviation });
+          programs[studyDegree][id] = ({ name, url, isEnglish, specializations: specialization, attendanceType, abbreviation, id });
         }
       })
     })
@@ -153,7 +156,7 @@ export class StudyApi {
       const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
       prevYear = year;
       if (!courses[year]) {
-        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation };
+        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation, id: createStudyId(programUrl) };
       }
       const list = courses[year][semester]
 

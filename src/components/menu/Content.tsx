@@ -7,7 +7,7 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkb
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { getData } from "~/server/scraper/mock";
-import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview } from "~/server/scraper/types";
+import { SEMESTER, type DataProviderTypes, type DEGREE, type GradeKey, type StudyOverview, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms";
 
 export default function Wrapper() {
@@ -24,7 +24,7 @@ export default function Wrapper() {
           <Match when={data.error}>
             <span>Error: {data.error}</span>
           </Match>
-          <Match when={data()}>
+          <Match when={data() && data.state === "ready"}>
             <Content resource={resource} />
           </Match>
         </Switch>
@@ -49,6 +49,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   //   return null
   // }
 
+
   const defaultValues = {
     semester: SEMESTER.WINTER,
     grade: undefined,
@@ -59,8 +60,9 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   const group = createFormGroup({
     year: createFormControl<string>(data().values.year.value, { required: true, validators: validator.bind(null, "year") }),
     semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
-    degree: createFormControl<typeof DEGREE[DEGREE]>(data().values.degree, { required: true, validators: validator.bind(null, "degree") }),
-    grade: createFormControl<GradeKey | undefined>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
+    degree: createFormControl<DEGREE>(data().values.degree, { required: true, validators: validator.bind(null, "degree") }),
+    grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
+    specialization: createFormControl<StudyProgramWithUrl["id"]>(data().values.specialization?.id, { required: true, validators: validator.bind(null, "specialization") }),
     programsObligatory: createFormControl<string[]>(defaultValues.programsObligatory, { required: true, validators: validator.bind(null, "programsObligatory") }),
     programsOptional: createFormControl<string[]>(defaultValues.programsOptional, { required: true, validators: validator.bind(null, "programsOptional") }),
   } satisfies {
@@ -133,6 +135,28 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
           )}
         </For>
       </RadioGroup>
+      <Show when={group.controls.degree.value && data().data.specializations[group.controls.degree.value]?.length > 0}>
+        <RadioGroup
+          value={group.controls.specialization.value}
+          onChange={group.controls.specialization.setValue as (value: string) => void}
+          name="specialization"
+          onBlur={() => group.controls.specialization.markTouched(true)}
+          disabled={group.controls.specialization.isDisabled}
+          required={group.controls.specialization.isRequired}
+          class="grid gap-x-2"
+        >
+          <RadioGroup.Label class={typographyVariants({ variant: "h5" })} >Obor</RadioGroup.Label>
+          <For each={data().data.specializations[group.controls.degree.value]}>
+            {(specialization) => (
+              <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
+                <RadioGroupItemInput />
+                <RadioGroupItemControl as="button" type="button" />
+                <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{specialization.abbreviation}</RadioGroupItemLabel>
+              </RadioGroupItem>
+            )}
+          </For>
+        </RadioGroup>
+      </Show>
       <RadioGroup
         value={group.controls.grade.value}
         onChange={group.controls.grade.setValue as (value: string) => void}
