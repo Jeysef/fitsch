@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { DEGREE, SEMESTER } from "~/server/scraper/types";
+import { z, type ZodObject, type ZodTypeAny } from "zod";
+import { DEGREE, SEMESTER, type StudyOverview } from "~/server/scraper/types";
 
 
 export const navigationSchema = z.object({
@@ -9,6 +9,6 @@ export const navigationSchema = z.object({
   grade: z.string(),
   programsObligatory: z.array(z.string()).optional(),
   programsOptional: z.array(z.string()).optional(),
-});
+}) satisfies ZodObject<{ [V in keyof StudyOverview["values"]]: ZodTypeAny }>;
 
 export type NavigationSchema = z.infer<typeof navigationSchema>;

@@ -37,43 +37,27 @@ interface StudyPrograms {
 interface StudyProgramBase {
   name: string;
   abbreviation: string;
+}
+interface StudyProgramWithUrl extends StudyProgramBase {
   url: string;
 }
-interface StudyProgram extends StudyProgramBase {
+interface StudyProgram extends StudyProgramWithUrl {
   isEnglish?: boolean;
   specializations: StudySpecialization[];
   attendanceType: string;
 }
-interface StudySpecialization extends StudyProgramBase { }
+interface StudySpecialization extends StudyProgramWithUrl { }
 
-interface StudyCourse {
-  abbreviation: string;
-  name: string;
-  link: string;
-  id: number;
-  credits: string;
-  obligation: boolean;
-  completion: string;
-  faculty: string;
-  note: boolean;
-}
-
-interface StudyOverviewConfig {
-  year: string | number, // value
-  degree: DEGREE,
-}
-
-/**
- * ex: BIT, DIT, NBIO, NHCP
- */
-type Program = string
-
+const gradeAll = "ALL";
+type GradeAll = typeof gradeAll;
 type GradeNumber = number;
-type GradeWithoutAll = `${GradeNumber}${Program}`;
-type Grade = GradeWithoutAll | "ALL";
+type GradeWithoutAll = `${GradeNumber}${StudyProgramBase["abbreviation"]}`;
+type Grade = GradeWithoutAll | GradeAll;
+type GradeKey = string | GradeAll;
+
 
 interface StudyOverviewYear { value: string, label: string }
-interface StudyOverviewGrade { label: Grade, name: string }
+interface StudyOverviewGrade { key: GradeKey, label: Grade }
 interface StudyOverviewCourse {
   name: string;
   abbreviation: string;
@@ -83,16 +67,11 @@ interface StudyOverview {
   /**
    * current data
    * 
-   * values for which the data is meaningful
+   * only values that when changed should cause refetch
    */
   values: {
     year: StudyOverviewYear,
-    /**
-     * this value may seem redundant on the server side, but it's here for the client side
-     */
-    semester: SEMESTER,
     degree: DEGREE,
-    grade: Grade,
   },
   /**
    * Data coresponding to the chosen values
@@ -112,18 +91,25 @@ interface StudyOverview {
      * because pages are structured like this
      */
     courses: {
-      [grade: GradeWithoutAll]: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } },
-      ALL?: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } }
+      [grade: GradeKey]: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } },
     }
   }
 }
 
 
-type StudyCourses = {
-  [grade: GradeWithoutAll]: Record<SEMESTER, StudyCourse[]> & { name: string };
-  ALL?: Record<SEMESTER, StudyCourse[]> & { name: string };
+type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
+type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
+interface StudyCourse {
+  abbreviation: string;
+  name: string;
+  link: string;
+  id: number;
+  credits: string;
+  obligation: boolean;
+  completion: string;
+  faculty: string;
+  note: boolean;
 }
-type StudyYear = keyof StudyCourses;
 
 interface StudyTimeScheduleConfig {
   year: string | number | null;
@@ -146,7 +132,29 @@ interface CourseDetail {
   note: string | null;
 }
 
+export namespace StudyApiTypes {
+  export interface getStudyProgramCoursesConfig {
+    programUrl: string;
+  }
+  export interface getStudyProgramsConfig {
+    year: StudyOverviewYear["value"]
+    degree: DEGREE,
+  }
+  export interface getStudyProgramsReturn {
+    programs: StudyPrograms;
+    years: StudyOverviewYear[];
+    currentYear: StudyOverviewYear;
+  }
+}
 
-export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER };
-export type { CourseDetail, Grade, GradeWithoutAll, Program, StudyCourse, StudyCourses, StudyOverview, StudyOverviewConfig, StudyOverviewCourse, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig, StudyYear, StudyOverviewGrade };
+export namespace DataProviderTypes {
+  export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
+    specialization?: string,
+    isEnglish?: boolean
+  }
+}
+
+
+export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER, gradeAll };
+export type { CourseDetail, Grade, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
 

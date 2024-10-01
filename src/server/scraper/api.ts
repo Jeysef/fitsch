@@ -1,7 +1,9 @@
 import { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { COURSE_TYPE, DEGREE, SEMESTER, type CourseDetail, type DAY, type Program, type StudyCourse, type StudyCourses, type StudyOverviewConfig, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig, type StudyYear } from "~/server/scraper/types";
+import type { StudyApiTypes } from "~/server/scraper/types";
+import { COURSE_TYPE, DEGREE, SEMESTER, type CourseDetail, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
+import { conjunctRooms, removeSpaces } from "~/server/scraper/utils";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
@@ -61,7 +63,7 @@ export class StudyApi {
     return Math.floor(daysDifference / 7) + 1;
   }
 
-  async getStudyPrograms(config: StudyOverviewConfig | null) {
+  public async getStudyPrograms(config?: StudyApiTypes.getStudyProgramsConfig): Promise<StudyApiTypes.getStudyProgramsReturn> {
     const { degree, year } = config ?? { degree: null, year: null }
     const urlTypeDegrees = {
       [DEGREE.BACHELOR]: 'B',
@@ -134,25 +136,26 @@ export class StudyApi {
     return { programs, years, currentYear }
   }
 
-  async getStudyProgramCourses(programUrl: string) {
+  public async getStudyProgramCourses(config: StudyApiTypes.getStudyProgramCoursesConfig): Promise<ProgramStudyCourses> {
     const locales = await this.getLanguageSet();
+    const { programUrl } = config;
     const $ = await this.fetchDocument(programUrl)
 
-    const abbreviation = $("main .b-detail .b-detail__summary strong").first().text().trim() as Program;
+    // program data
+    const abbreviation = $("main .b-detail .b-detail__summary strong").first().text().trim();
     const name = $("h1.b-detail__title").text().trim();
 
-    const courses: StudyCourses = {};
-    let prevYear: keyof StudyCourses = "0";
+    const courses: ProgramStudyCourses = {};
+    let prevYear: GradeKey = "0"; // this key does not exist
     $("main").has("#planh").find(".table-responsive").first().find("table").each((_, element) => {
-      const year: StudyYear = `${parseInt($(element).children("caption").text().trim()[0])}${abbreviation}` || "ALL";
+      const year: GradeKey = ($(element).children("caption").text().trim()[0]) || "ALL";
 
       const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
       prevYear = year;
       if (!courses[year]) {
-        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name };
+        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation };
       }
-      const list: StudyCourse[] = courses[year][semester]
-
+      const list = courses[year][semester]
 
       const rows = $(element).find('tbody tr');
       rows.each((_, element) => {
@@ -187,35 +190,6 @@ export class StudyApi {
     return courses;
   }
 
-  conjunctRooms(rooms: string[]) {
-    const conjunctedRooms = [
-      { main: "E112", streamed: ["E104", "E105"] },
-      { main: "D105", streamed: ["D0206", "D0207"] },
-      { main: "N103", streamed: ["N104", "N105"] },
-    ];
-
-    // Iterate through conjunctedRooms to find matches
-    const result = conjunctedRooms
-      .map(({ main, streamed }) => {
-        // Check if the input rooms include any of the rooms in the main and streamed set
-        if (rooms.includes(main) && rooms.some(room => streamed.includes(room))) {
-          // Create the formatted string
-          const streamedNumbers = streamed
-            .filter(room => rooms.includes(room))
-            .map(room => room.slice(-1)); // Get the last digit of the room (e.g. '4' from 'E104')
-
-          const rest = rooms.filter(room => ![main, ...streamed].includes(room));
-
-          return `${main}+${streamedNumbers.join(',')}${rest.length ? ` ${rest.join(' ')}` : ""}`;
-        }
-        return null;
-      })
-      .filter(result => result !== null) // Filter out null values
-      .join(' ; '); // Join the results with a semicolon and space
-
-    // If result is empty, return the original rooms joined by commas
-    return result || rooms.join(' ');
-  };
 
   async getCourseDetail(courseId: string): Promise<CourseDetail[]> {
     const languageSet = await this.getLanguageSet();
@@ -228,7 +202,7 @@ export class StudyApi {
       "#ffe6cc": COURSE_TYPE.EXAM
     }
 
-    const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim() as Program;
+    const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
     const link = courseUrl;
 
     const range = $("main div.b-detail__body div.grid__cell").filter((_, element) => {
@@ -259,16 +233,14 @@ export class StudyApi {
     //     "selected": false,
     //     "deleted": false
     // };
-    const removeSpaces = (text: string) => {
-      // "sdsd\n\n           ds" => "sdsd ds"
-      return text.replaceAll("\n", "").replace(/\s+/g, ' ').trim()
-    }
+
 
     return $("main table#schedule tbody tr").map((_, element) => {
       const day = $(element).children("th").text().trim();
       const rowBgColor = $(element).css('background');
       const type = rowBgColor && rowBgColor in courseTypeBasedOnColor ? courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor] : null;
-      const room = this.conjunctRooms($(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get())
+      const rooms = $(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get()
+      const room = conjunctRooms(rooms)
       const lectureGroup = $(element).children("td").eq(6).children("a").map((_, element) => $(element).text().trim()).get()
       const [_type, weeksText, __, start, end, capacity, ___, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
       const hasNote = _type.includes("*)")
