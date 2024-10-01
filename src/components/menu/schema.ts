@@ -7,7 +7,7 @@ export const navigationSchema = z.object({
   semester: z.nativeEnum(SEMESTER),
   grade: z.string(),
   degree: z.string(),
-  specialization: z.string().optional(),
+  program: z.string().optional(),
   programsObligatory: z.array(z.string()).optional(),
   programsOptional: z.array(z.string()).optional(),
 }) satisfies ZodObject<{ [V in keyof StudyOverview["values"]]: ZodTypeAny }>;

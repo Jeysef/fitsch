@@ -2,7 +2,7 @@ import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
-import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudySpecialization } from './types';
+import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms, type StudyProgramWithUrl } from './types';
 
 
 export class DataProvider {
@@ -15,10 +15,15 @@ export class DataProvider {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config)
     const values: StudyOverview["values"] = {
       year: config ? years.find(year => year.value === config.year) ?? currentYear : currentYear,
-      degree: config ? config.degree : DEGREE.BACHELOR,
+      degree: (config && config.degree) ?? DEGREE.BACHELOR,
     }
     let degreePrograms = studyPrograms[values.degree]
-    values["specialization"] = config?.specializationId ? Object.values(degreePrograms).flatMap(program => program.specializations).find(specialization => specialization.id === config.specializationId) : undefined
+    // filter language
+    const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === config?.isEnglish ?? false).map(([id, program]) => ([id, program] as const)))
+
+    degreePrograms = filterLanguage(degreePrograms)
+    values["program"] = config?.programId ? Object.values(degreePrograms).flatMap(program => [program, ...program.specializations]).find(programOrSpecialization => programOrSpecialization.id === config.programId) : Object.values(degreePrograms).length === 1 ? Object.values(degreePrograms)[0] : undefined
+    const programs: Record<DEGREE, StudyProgramWithUrl[]> = ObjectTyped.fromEntries(ObjectTyped.entries(studyPrograms).map(([degree, programs]) => ([degree, Object.values(filterLanguage(programs)).flatMap(program => [program, ...program.specializations])] as const)))
 
     let degreeProgram: StudyProgram | undefined = undefined
     degreeProgram = degreePrograms[values.degree]
@@ -28,8 +33,6 @@ export class DataProvider {
 
     const grades = Object.entries(programData).map(([grade, data]) => ({ key: grade, label: constructGradeLabel(grade, data.abbreviation) } as StudyOverviewGrade))
     const degrees = Object.values(DEGREE);
-    const specializations: Record<DEGREE, StudySpecialization[]> = ObjectTyped.fromEntries(ObjectTyped.entries(studyPrograms).map(([degree, programs]) => ([degree, Object.values(programs).flatMap(program => program.specializations)] as const)))
-
     const semesters = Object.values(SEMESTER);
 
     const courses = ObjectTyped.fromEntries(ObjectTyped.entries(programData).map(([grade, gradeData]) => ([
@@ -57,7 +60,7 @@ export class DataProvider {
         semesters,
         degrees,
         grades,
-        specializations,
+        programs,
         courses
       }
     } satisfies StudyOverview;

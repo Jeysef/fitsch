@@ -82,7 +82,10 @@ interface StudyOverview {
   values: {
     year: StudyOverviewYear,
     degree: DEGREE,
-    specialization?: StudySpecialization,
+    /**
+     * Programs and specializations.
+     */
+    program?: StudyProgramWithUrl,
   },
   /**
    * Data coresponding to the chosen values
@@ -92,7 +95,7 @@ interface StudyOverview {
     semesters: SEMESTER[],
     degrees: DEGREE[],
     grades: StudyOverviewGrade[],
-    specializations: Record<DEGREE, StudySpecialization[]>,
+    programs: Record<DEGREE, StudyProgramWithUrl[]>,
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
@@ -149,8 +152,8 @@ export namespace StudyApiTypes {
     programUrl: string;
   }
   export interface getStudyProgramsConfig {
-    year: StudyOverviewYear["value"]
-    degree: DEGREE,
+    year?: StudyOverviewYear["value"]
+    degree?: DEGREE,
   }
   export interface getStudyProgramsReturn {
     programs: StudyPrograms;
@@ -161,7 +164,7 @@ export namespace StudyApiTypes {
 
 export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
-    specializationId: StudySpecialization["id"];
+    programId?: StudyProgramWithUrl["id"];
     isEnglish?: boolean
   }
 }
