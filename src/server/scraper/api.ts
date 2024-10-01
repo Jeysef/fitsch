@@ -106,7 +106,6 @@ export class StudyApi {
         const id = createStudyId(url!);
         const isEnglish = $(element).find('span').is('[class="tag tag--xs"]');
         const abbreviation = $(element).find('.b-programme__link').next(".tag").first().text().trim();
-        console.log("🚀 ~ file: api.ts:109 ~ StudyApi ~ $ ~ abbreviation:", abbreviation)
         const attendanceType = $(element).find('.b-programme .b-branch__meta .b-branch__meta-item').last().text().trim();
 
         if (name && url) {

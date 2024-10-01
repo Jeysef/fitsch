@@ -19,7 +19,7 @@ export class DataProvider {
     }
     let degreePrograms = studyPrograms[values.degree]
     // filter language
-    const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === config?.isEnglish ?? false).map(([id, program]) => ([id, program] as const)))
+    const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === (config?.isEnglish ?? false)).map(([id, program]) => ([id, program] as const)))
 
     degreePrograms = filterLanguage(degreePrograms)
     values["program"] = config?.programId ? Object.values(degreePrograms).flatMap(program => [program, ...program.specializations]).find(programOrSpecialization => programOrSpecialization.id === config.programId) : Object.values(degreePrograms).length === 1 ? Object.values(degreePrograms)[0] : undefined
