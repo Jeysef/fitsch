@@ -986,4 +986,4 @@ function createFormArray(initControls = [], initOptions = {}) {
 }
 
 export { AbstractControlContainerInterface, AbstractControlInterface, bindOwner, composeValidators, createAbstractControlBase, createAbstractControlContainerBase, createFormArray, createFormControl, createFormGroup, DEFAULT_SOURCE, FormArrayInterface, FormControlInterface, FormGroupInterface, isAbstractControl, isAbstractControlContainer, isFormArray, isFormControl, isFormGroup };
-//# sourceMappingURL=index.module.js.map
+//# sourceMappingURL=index.js.map
