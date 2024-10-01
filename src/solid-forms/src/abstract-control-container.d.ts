@@ -1,0 +1,191 @@
+import { ControlId, ValidationErrors } from './abstract-control';
+import { IAbstractControl } from './abstract-control';
+declare type PickUndefinedKeys<T> = {
+    [K in keyof T]: undefined extends T[K] ? K : never;
+}[keyof T];
+declare type PickRequiredKeys<T> = {
+    [K in keyof T]: undefined extends T[K] ? never : K;
+}[keyof T];
+declare type ObjectControlsOptionalRawValue<T extends {
+    [key: string]: IAbstractControl | undefined;
+}> = {
+    [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['rawValue'];
+};
+declare type ObjectControlsRequiredRawValue<T extends {
+    [key: string]: IAbstractControl | undefined;
+}> = {
+    [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['rawValue'];
+};
+declare type ArrayControlsRawValue<T extends ReadonlyArray<IAbstractControl>> = T extends ReadonlyArray<infer C> ? C extends IAbstractControl ? ReadonlyArray<C['rawValue']> : never : never;
+declare type ObjectControlsOptionalValue<T extends {
+    [key: string]: IAbstractControl | undefined;
+}> = {
+    [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['value'];
+};
+declare type ObjectControlsRequiredValue<T extends {
+    [key: string]: IAbstractControl | undefined;
+}> = {
+    [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['value'];
+};
+declare type ArrayControlsValue<T extends ReadonlyArray<IAbstractControl>> = T extends ReadonlyArray<infer C> ? C extends IAbstractControl ? ReadonlyArray<C['value']> : never : never;
+export declare type GenericControlsObject = {
+    readonly [key: string]: IAbstractControl;
+} | ReadonlyArray<IAbstractControl>;
+export declare type ControlsKey<Controls extends GenericControlsObject> = keyof ControlsRawValue<Controls> & keyof ControlsValue<Controls> & (Controls extends ReadonlyArray<any> ? keyof Controls & number : Controls extends object ? // the `& string` is needed or else
+keyof Controls & string : any);
+export declare type ControlsRawValue<Controls extends GenericControlsObject> = Controls extends ReadonlyArray<IAbstractControl> ? ArrayControlsRawValue<Controls> : Controls extends {
+    readonly [key: string]: IAbstractControl | undefined;
+} ? ObjectControlsRequiredRawValue<Controls> & ObjectControlsOptionalRawValue<Controls> : never;
+export declare type ControlsValue<Controls extends GenericControlsObject> = Controls extends ReadonlyArray<IAbstractControl> ? ArrayControlsValue<Controls> : Controls extends {
+    readonly [key: string]: IAbstractControl | undefined;
+} ? Partial<ObjectControlsRequiredValue<Controls> & ObjectControlsOptionalValue<Controls>> : never;
+export declare type ContainerControls<C> = C extends IAbstractControlContainer<infer Controls> ? Controls : unknown;
+export declare const AbstractControlContainerInterface = "@@AbstractControlContainerInterface_solidjs";
+/**
+ * Returns true if the provided object implements
+ * `IAbstractControlContainer`
+ */
+export declare function isAbstractControlContainer(object?: unknown): object is IAbstractControlContainer;
+export interface IAbstractControlContainer<Controls extends GenericControlsObject = any, Data = any> extends IAbstractControl<ControlsRawValue<Controls>, Data, ControlsValue<Controls>> {
+    /** Child controls associated with this container */
+    readonly controls: Controls;
+    /** The number of controls associated with this container */
+    readonly size: number;
+    /** Only returns values for enabled child controls. */
+    readonly value: ControlsValue<Controls>;
+    /**
+     * Returns values for both enabled and disabled child controls.
+     */
+    readonly rawValue: ControlsRawValue<Controls>;
+    /** Will return true if `this.self.isValid` and `this.children.areValid` */
+    readonly isValid: boolean;
+    /** Will return true if `this.self.isDisabled` or `this.children.areDisabled` */
+    readonly isDisabled: boolean;
+    /** Will return true if `this.self.isReadonly` or `this.children.areReadonly` */
+    readonly isReadonly: boolean;
+    /** Will return true if `this.self.isRequired` or `this.child.isRequired` */
+    readonly isRequired: boolean;
+    /** Will return true if `this.self.isPending` or `this.child.isPending` */
+    readonly isPending: boolean;
+    /** Will return true if `this.self.isTouched` or `this.child.isTouched` */
+    readonly isTouched: boolean;
+    /** Will return true if `this.self.isDirty` or `this.child.isDirty` */
+    readonly isDirty: boolean;
+    /** Will return true if `this.self.isSubmitted` or `this.children.areSubmitted` */
+    readonly isSubmitted: boolean;
+    /** Contains `{ ...this.children.errors, ...this.self.errors }` or `null` if there are none */
+    readonly errors: ValidationErrors | null;
+    readonly child: {
+        /** Will return true if *any* `enabled` direct child control is `valid` */
+        readonly isValid: boolean;
+        /** Will return true if *any* direct child control is `disabled` */
+        readonly isDisabled: boolean;
+        /** Will return true if *any* `enabled` direct child control is `readonly` */
+        readonly isReadonly: boolean;
+        /** Will return true if *any* `enabled` direct child control is `required` */
+        readonly isRequired: boolean;
+        /** Will return true if *any* `enabled` direct child control is `pending` */
+        readonly isPending: boolean;
+        /** Will return true if *any* `enabled` direct child control is `touched` */
+        readonly isTouched: boolean;
+        /** Will return true if *any* `enabled` direct child control is `dirty` */
+        readonly isDirty: boolean;
+        /** Will return true if *any* `enabled` direct child control is `submitted` */
+        readonly isSubmitted: boolean;
+    };
+    readonly children: {
+        /** Will return true if *all* `enabled` direct child control's are `valid` */
+        readonly areValid: boolean;
+        /** Will return true if *all* direct child control's are `disabled` */
+        readonly areDisabled: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `readonly` */
+        readonly areReadonly: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `required` */
+        readonly areRequired: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `pending` */
+        readonly arePending: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `touched` */
+        readonly areTouched: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `dirty` */
+        readonly areDirty: boolean;
+        /** Will return true if *all* `enabled` direct child control's are `submitted` */
+        readonly areSubmitted: boolean;
+        /** Contains *all* `enabled` child control errors or `null` if there are none */
+        readonly errors: ValidationErrors | null;
+        /**
+         * Mark all direct children as disabled. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as disabled.
+         */
+        markDisabled(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as touched. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as touched.
+         */
+        markTouched(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as dirty. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as dirty.
+         */
+        markDirty(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as readonly. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as readonly.
+         */
+        markReadonly(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as required. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as required.
+         */
+        markRequired(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as submitted. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as submitted.
+         */
+        markSubmitted(value: boolean, options?: {
+            deep?: boolean;
+        }): void;
+        /**
+         * Mark all direct children as pending. Use the `deep: true`
+         * option to instead mark all direct and indirect children
+         * as pending.
+         */
+        markPending(value: boolean, options?: {
+            source?: ControlId;
+            deep?: boolean;
+        }): void;
+    };
+    [AbstractControlContainerInterface]: true;
+    /**
+     * Apply a partial update to the values of some children but
+     * not all.
+     */
+    patchValue(value: unknown): void;
+    /** sets the `controls` property */
+    setControls(controls: Controls): void;
+    /** stores the provided control in `controls[key]` */
+    setControl(key: unknown, control: unknown): void;
+    /**
+     * If provided a control value, removes the given control from
+     * `controls`. If provided a control key value, removes the
+     * control associated with the given key from `controls`.
+     */
+    removeControl(keyOrControl: unknown): void;
+}
+export {};
+//# sourceMappingURL=abstract-control-container.d.ts.map

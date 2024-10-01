@@ -1,7 +1,0 @@
-{
-  "name": "solid-forms",
-  "sideEffects": false,
-  "main": "../dist/core/index.js",
-  "module": "../dist/core/index.js",
-  "types": "../dist/core/index.d.ts"
-}
