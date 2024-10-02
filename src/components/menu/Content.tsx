@@ -1,13 +1,15 @@
+import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
 import { createResource, For, Match, Show, Suspense, Switch, type JSX, type Resource, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
+import Heading from "~/components/typography/heading";
 import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { getData } from "~/server/scraper/mock";
-import { SEMESTER, type DataProviderTypes, type DEGREE, type GradeKey, type StudyOverview, type StudyProgramWithUrl } from "~/server/scraper/types";
+import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {
@@ -36,6 +38,7 @@ export default function Wrapper() {
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   // const [data] = resource
   const data = resource[0] as Resource<StudyOverview> & { state: "ready" }
+  const { refetch, mutate } = resource[1]
 
 
   const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
@@ -43,9 +46,16 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     return returnType.error ? { error: returnType.error } : null
   }
 
-  // const checkFetchableChange: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
+  // const checkFetchableChange: <K extends keyof StudyOverview["values"]>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
   //   // check if the value changed from data.values. if so call reload with new values
   //   if (data().values[name] === value) return null
+  //   const currentData: DataProviderTypes.getStudyOverviewConfig = {
+  //     year: data().values.year.value,
+  //     degree: data().values.degree,
+  //     isEnglish: false,
+  //     programId: data().values.program?.id
+  //   }
+  //   refetch({ ...currentData, [name]: value })
   //   return null
   // }
 
@@ -58,7 +68,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   }
 
   const group = createFormGroup({
-    year: createFormControl<string>(data().values.year.value, { required: true, validators: validator.bind(null, "year") }),
+    year: createFormControl<StudyOverviewYear>(data().values.year, { required: true, validators: validator.bind(null, "year") }),
     semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
     degree: createFormControl<DEGREE>(data().values.degree, { required: true, validators: validator.bind(null, "degree") }),
     grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
@@ -66,8 +76,27 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     programsObligatory: createFormControl<string[]>(defaultValues.programsObligatory, { required: true, validators: validator.bind(null, "programsObligatory") }),
     programsOptional: createFormControl<string[]>(defaultValues.programsOptional, { required: true, validators: validator.bind(null, "programsOptional") }),
   } satisfies {
-    [K in keyof NavigationSchema]: IFormControl<NavigationSchema[K] | undefined>;
+    [K in keyof NavigationSchema]: IFormControl<NavigationSchema[K]>;
   })
+
+  function onFetchableChange<K extends keyof DataProviderTypes.getStudyOverviewConfig & keyof NavigationSchema>(name: K, value: NavigationSchema[K], apiValue: DataProviderTypes.getStudyOverviewConfig[K]) {
+    console.table({ name, newValue: value, formValue: group.controls[name].value, realValue: data().values[name], realLatestValue: data.latest.values[name] })
+    console.log("🚀 ~ file: content.tsx:82 ~ Content ~ group.controls[name].value:", group.controls[name].value)
+    if (isEqual(group.controls[name].value, value)) return;
+    const currentData: DataProviderTypes.getStudyOverviewConfig = {
+      year: group.controls.year.value.value,
+      degree: group.controls.degree.value,
+      isEnglish: false,
+      program: group.controls.program.value
+    }
+    const nextData = { ...currentData, [name]: apiValue }
+    console.log("🚀 ~ file: content.tsx:56 ~ Content ~ nextData:", nextData)
+    // set value
+    group.controls[name].setValue(value as any)
+    void refetch(nextData)
+  }
+
+  console.log('DSDS', data().data.programs[DEGREE.MASTER])
 
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
     e.preventDefault();
@@ -77,21 +106,25 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   return (
     <form onSubmit={onSubmit}>
       <Select
-        options={data().data.years.map(y => y.value)}
+        options={data().data.years}
+        optionValue="value"
+        optionTextValue="label"
         value={group.controls.year.value}
         name="year"
-        onChange={group.controls.year.setValue as (value: string | null) => void}
+        onChange={(year) => year && onFetchableChange("year", year, year.value)}
         placeholder="Select a year"
+        selectionBehavior="replace"
         onBlur={() => group.controls.year.markTouched(true)}
         disabled={group.controls.year.isDisabled}
         required={group.controls.year.isRequired}
+        validationState={group.controls.year.errors ? "invalid" : "valid"}
         itemComponent={(props) => (
-          <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>
+          <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>
         )}
       >
         <Select.Label class={typographyVariants({ variant: "h5" })}>Rok</Select.Label>
         <SelectTrigger>
-          <SelectValue<string>>{(state) => state.selectedOption()}</SelectValue>
+          <SelectValue<StudyOverviewYear>>{(state) => state.selectedOption().label}</SelectValue>
         </SelectTrigger>
         <SelectContent />
       </Select>
@@ -138,21 +171,28 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
       <Show when={group.controls.degree.value && data().data.programs[group.controls.degree.value]?.length > 0}>
         <RadioGroup
           value={group.controls.program.value}
-          onChange={group.controls.program.setValue as (value: string) => void}
+          onChange={(program) => program && onFetchableChange("program", program, program)}
           name="specialization"
           onBlur={() => group.controls.program.markTouched(true)}
           disabled={group.controls.program.isDisabled}
           required={group.controls.program.isRequired}
           class="grid gap-x-2"
         >
-          <RadioGroup.Label class={typographyVariants({ variant: "h5" })} >Obor</RadioGroup.Label>
+          <RadioGroup.Label class={typographyVariants({ variant: "h5" })} >Obor / Specializace</RadioGroup.Label>
           <For each={data().data.programs[group.controls.degree.value]}>
             {(specialization) => (
-              <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
-                <RadioGroupItemInput />
-                <RadioGroupItemControl as="button" type="button" />
-                <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{specialization.abbreviation}</RadioGroupItemLabel>
-              </RadioGroupItem>
+              <section class="space-y-2 ml-2">
+                <Heading as="h6" variant="h6">{specialization.abbreviation}</Heading>
+                <For each={specialization.specializations}>
+                  {(specialization) => (
+                    <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
+                      <RadioGroupItemInput />
+                      <RadioGroupItemControl as="button" type="button" />
+                      <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{specialization.abbreviation}</RadioGroupItemLabel>
+                    </RadioGroupItem>
+                  )}
+                </For>
+              </section>
             )}
           </For>
         </RadioGroup>

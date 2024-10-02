@@ -3,7 +3,7 @@ import { SEMESTER, type StudyOverview } from "~/server/scraper/types";
 
 
 export const navigationSchema = z.object({
-  year: z.string(),
+  year: z.object({ value: z.string(), label: z.string() }),
   semester: z.nativeEnum(SEMESTER),
   grade: z.string(),
   degree: z.string(),

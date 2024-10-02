@@ -95,7 +95,7 @@ interface StudyOverview {
     semesters: SEMESTER[],
     degrees: DEGREE[],
     grades: StudyOverviewGrade[],
-    programs: Record<DEGREE, StudyProgramWithUrl[]>,
+    programs: Record<DEGREE, StudyProgram[]>,
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
@@ -164,7 +164,7 @@ export namespace StudyApiTypes {
 
 export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
-    programId?: StudyProgramWithUrl["id"];
+    program?: StudyProgramWithUrl["id"];
     isEnglish?: boolean
   }
 }

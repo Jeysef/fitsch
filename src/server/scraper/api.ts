@@ -150,7 +150,8 @@ export class StudyApi {
     const courses: ProgramStudyCourses = {};
     let prevYear: GradeKey = "0"; // this key does not exist
     $("main").has("#planh").find(".table-responsive").first().find("table").each((_, element) => {
-      const year: GradeKey = ($(element).children("caption").text().trim()[0]) || "ALL";
+      const year: GradeKey = (parseInt($(element).children("caption").text().trim()[0], 10) || "ALL").toString();
+      console.log("🚀 ~ file: api.ts:154 ~ StudyApi ~ $ ~ year:", year)
 
       const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
       prevYear = year;
@@ -189,6 +190,7 @@ export class StudyApi {
         list.push({ abbreviation, name, link, credits, obligation, completion, faculty, note, id });
       });
     })
+
     return courses;
   }
 
