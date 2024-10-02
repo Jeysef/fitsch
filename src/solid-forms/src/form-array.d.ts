@@ -18,4 +18,3 @@ export interface IFormArray<Controls extends ReadonlyArray<IAbstractControl> = R
  */
 export declare function isFormArray(object?: unknown): object is IFormArray;
 export declare function createFormArray<Controls extends ReadonlyArray<IAbstractControl> = ReadonlyArray<IAbstractControl>, Data extends Record<ControlId, any> = Record<ControlId, any>>(controls?: Controls, options?: IFormArrayOptions<Data>): IFormArray<Controls, Data>;
-//# sourceMappingURL=form-array.d.ts.map

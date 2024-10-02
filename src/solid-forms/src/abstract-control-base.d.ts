@@ -26,4 +26,3 @@ export declare function createAbstractControlBase<RawValue, Data extends Record<
     Store<IAbstractControl<RawValue, Data, Value>>,
     SetStoreFunction<IAbstractControl<RawValue, Data, Value>>
 ]>, untilInit: <T>(value: T) => T, initOptions?: Pick<IAbstractControlBaseOptions<Data>, 'id' | 'data'>): [base: IAbstractControlBase<Data>, initializer: () => void];
-//# sourceMappingURL=abstract-control-base.d.ts.map

@@ -9,30 +9,30 @@ declare type PickRequiredKeys<T> = {
 declare type ObjectControlsOptionalRawValue<T extends {
     [key: string]: IAbstractControl | undefined;
 }> = {
-    [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['rawValue'];
-};
+        [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['rawValue'];
+    };
 declare type ObjectControlsRequiredRawValue<T extends {
     [key: string]: IAbstractControl | undefined;
 }> = {
-    [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['rawValue'];
-};
+        [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['rawValue'];
+    };
 declare type ArrayControlsRawValue<T extends ReadonlyArray<IAbstractControl>> = T extends ReadonlyArray<infer C> ? C extends IAbstractControl ? ReadonlyArray<C['rawValue']> : never : never;
 declare type ObjectControlsOptionalValue<T extends {
     [key: string]: IAbstractControl | undefined;
 }> = {
-    [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['value'];
-};
+        [P in Exclude<PickUndefinedKeys<T>, undefined>]?: NonNullable<T[P]>['value'];
+    };
 declare type ObjectControlsRequiredValue<T extends {
     [key: string]: IAbstractControl | undefined;
 }> = {
-    [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['value'];
-};
+        [P in Exclude<PickRequiredKeys<T>, undefined>]: NonNullable<T[P]>['value'];
+    };
 declare type ArrayControlsValue<T extends ReadonlyArray<IAbstractControl>> = T extends ReadonlyArray<infer C> ? C extends IAbstractControl ? ReadonlyArray<C['value']> : never : never;
 export declare type GenericControlsObject = {
     readonly [key: string]: IAbstractControl;
 } | ReadonlyArray<IAbstractControl>;
 export declare type ControlsKey<Controls extends GenericControlsObject> = keyof ControlsRawValue<Controls> & keyof ControlsValue<Controls> & (Controls extends ReadonlyArray<any> ? keyof Controls & number : Controls extends object ? // the `& string` is needed or else
-keyof Controls & string : any);
+    keyof Controls & string : any);
 export declare type ControlsRawValue<Controls extends GenericControlsObject> = Controls extends ReadonlyArray<IAbstractControl> ? ArrayControlsRawValue<Controls> : Controls extends {
     readonly [key: string]: IAbstractControl | undefined;
 } ? ObjectControlsRequiredRawValue<Controls> & ObjectControlsOptionalRawValue<Controls> : never;
@@ -187,5 +187,4 @@ export interface IAbstractControlContainer<Controls extends GenericControlsObjec
      */
     removeControl(keyOrControl: unknown): void;
 }
-export {};
-//# sourceMappingURL=abstract-control-container.d.ts.map
+export { };

@@ -12,4 +12,3 @@ export interface IFormControl<Value = any, Data extends Record<ControlId, any> =
  */
 export declare function isFormControl(object?: unknown): object is IFormControl;
 export declare function createFormControl<Value, Data extends Record<ControlId, any> = Record<ControlId, any>>(value?: Value, options?: IFormControlOptions<Data>): IFormControl<Value, Data>;
-//# sourceMappingURL=form-control.d.ts.map

@@ -1,5 +1,5 @@
 import { Accessor, Component, JSX, ParentProps } from "solid-js";
-import { type IAbstractControl } from "..";
+import { type IAbstractControl } from "./core";
 declare type WithControlProps<Props, ControlFactory extends (...args: [any, ...any[]]) => IAbstractControl> = ParentProps<Props & (Parameters<ControlFactory>[number] extends never ? {} : Parameters<ControlFactory>[0] extends undefined ? {} : Parameters<ControlFactory>[0])>;
 export interface IWithControlOptions<Props extends {}, ControlFactory extends (...args: [any, ...any[]]) => IAbstractControl> {
     controlFactory: ControlFactory;
@@ -87,3 +87,4 @@ export declare function createClassList(control: IAbstractControl, prefix?: stri
     [x: string]: boolean;
 };
 export { };
+

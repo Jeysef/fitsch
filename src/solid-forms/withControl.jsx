@@ -1,5 +1,5 @@
 import { createMemo, createRoot, } from "solid-js";
-import { isAbstractControlContainer, } from "..";
+import { isAbstractControlContainer, } from "./core";
 export function withControl(options) {
     const prefix = options.classListPrefix || "sf";
     const wrappedComponent = (props) => {

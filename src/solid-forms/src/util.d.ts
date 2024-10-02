@@ -21,4 +21,3 @@ export declare function mergeObj<A, B>(a: A, b: Merge<Partial<A>, B>): Merge<A, 
  * ```
  */
 export declare function bindOwner<T>(fn: () => T): () => T;
-//# sourceMappingURL=util.d.ts.map

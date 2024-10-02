@@ -12,4 +12,3 @@ export declare function createAbstractControlContainerBase<Controls extends Gene
     Store<IAbstractControlContainer<Controls, Data>>,
     SetStoreFunction<IAbstractControlContainer<Controls, Data>>
 ]>, untilInit: <T>(value: T) => T, initOptions?: IAbstractControlContainerBaseArgs<Data>): [base: IAbstractControlContainerBase<Data>, initializer: () => void];
-//# sourceMappingURL=abstract-control-container-base.d.ts.map
