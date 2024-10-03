@@ -14,9 +14,11 @@ export default function App() {
       root={props => (
         <MetaProvider>
           <Title>SolidStart</Title>
-          <Layout>
-            <Suspense>{props.children}</Suspense>
-          </Layout>
+          <Suspense>
+            <Layout>
+              <Suspense>{props.children}</Suspense>
+            </Layout>
+          </Suspense>
         </MetaProvider>
       )}
     >
