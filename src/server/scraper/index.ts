@@ -2,7 +2,7 @@ import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
-import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms, type StudyProgramWithUrl } from './types';
+import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {
@@ -12,7 +12,6 @@ export class DataProvider {
   }
 
   async getStudyOverview(config?: DataProviderTypes.getStudyOverviewConfig): Promise<StudyOverview> {
-    console.log("🚀 ~ file: index.ts:15 ~ DataProvider ~ getStudyOverview ~ config:", config)
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config)
     const values: StudyOverview["values"] = {
       year: config ? years.find(year => year.value === config.year) ?? currentYear : currentYear,
@@ -25,7 +24,6 @@ export class DataProvider {
     const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === (config?.isEnglish ?? false)).map(([id, program]) => ([id, program] as const)))
 
     degreePrograms = filterLanguage(degreePrograms)
-    console.log("🚀 ~ file: index.ts:28 ~ DataProvider ~ getStudyOverview ~ degreePrograms:", degreePrograms)
     // selected program
     values["program"] = config?.program ? Object.values(degreePrograms).flatMap(program => [program, ...program.specializations]).find(programOrSpecialization => programOrSpecialization.id === config.program) : Object.values(degreePrograms).length === 1 ? Object.values(degreePrograms)[0] : undefined
     // all programs foe each degree
@@ -39,7 +37,6 @@ export class DataProvider {
     const programData = values.program ? await this.studyApi.getStudyProgramCourses({ programUrl: values.program.url }) : {}
 
     const grades = Object.entries(programData).map(([grade, data]) => ({ key: grade, label: constructGradeLabel(grade, data.abbreviation) } as StudyOverviewGrade))
-    console.log("🚀 ~ file: index.ts:39 ~ DataProvider ~ getStudyOverview ~ grades:", grades)
     const degrees = Object.values(DEGREE);
     const semesters = Object.values(SEMESTER);
 
