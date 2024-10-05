@@ -1,6 +1,7 @@
 import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createResource, For, Match, Show, Suspense, Switch, type JSX, type Resource, type ResourceReturn } from "solid-js";
+import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type Resource, type ResourceReturn, type Signal } from "solid-js";
+import { createStore, reconcile, unwrap } from "solid-js/store";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -9,28 +10,45 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { createDeepSignal } from "~/lib/solid";
 import { getData } from "~/server/scraper/mock";
 import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const resource = createResource(getData, { deferStream: true });
+  const resource = createResource(getData, { deferStream: true, storage: createDeepSignal });
 
 
   const [data] = resource
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <Suspense fallback={<div class="grid place-items-center h-full"><LoaderCircle class="animate-spin" /></div>}>
-        <Switch>
-          <Match when={data.error}>
-            <span>Error: {data.error}</span>
-          </Match>
-          <Match when={!!data()?.data}>
-            <Content resource={resource} />
-          </Match>
-        </Switch>
+      loading: {data.loading.toString()}
+      <ErrorBoundary fallback={<div>Something went wrong</div>} >
+        <Suspense fallback={<div class="grid place-items-center h-full"><LoaderCircle class="animate-spin" /></div>}>
+          {/* <Content resource={resource} /> */}
+          <MockContent resource={resource} />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  )
+}
+
+function MockContent({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
+  const [data] = resource
+  const { refetch, mutate } = resource[1]
+
+  setTimeout(() => {
+    refetch({ year: "2022", degree: DEGREE.BACHELOR, isEnglish: false })
+  }, 2000)
+
+  console.log("🚀 ~ file: content.tsx:44 ~ MockContent ~ data", data())
+  return (
+    <div>
+      hello
+      <Suspense fallback={<pre>{JSON.stringify(data.latest, null, 2)}</pre>}>
+        <pre>{JSON.stringify(data(), null, 2)}</pre>
       </Suspense>
     </div>
   )
@@ -41,6 +59,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   const data = resource[0] as Resource<StudyOverview> & { state: "ready" }
   console.log("🚀 ~ file: content.tsx:42 ~ Content ~ data:", data())
   const { refetch, mutate } = resource[1]
+
 
 
 
