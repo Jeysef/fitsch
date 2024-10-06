@@ -1,7 +1,6 @@
 import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type Resource, type ResourceReturn, type Signal } from "solid-js";
-import { createStore, reconcile, unwrap } from "solid-js/store";
+import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -24,40 +23,19 @@ export default function Wrapper() {
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      loading: {data.loading.toString()}
       <ErrorBoundary fallback={<div>Something went wrong</div>} >
         <Suspense fallback={<div class="grid place-items-center h-full"><LoaderCircle class="animate-spin" /></div>}>
-          {/* <Content resource={resource} /> */}
-          <MockContent resource={resource} />
+          <Show when={data()}>
+            <Content resource={resource} />
+          </Show>
         </Suspense>
       </ErrorBoundary>
     </div>
   )
 }
 
-function MockContent({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
-  const [data] = resource
-  const { refetch, mutate } = resource[1]
-
-  setTimeout(() => {
-    refetch({ year: "2022", degree: DEGREE.BACHELOR, isEnglish: false })
-  }, 2000)
-
-  console.log("🚀 ~ file: content.tsx:44 ~ MockContent ~ data", data())
-  return (
-    <div>
-      hello
-      <Suspense fallback={<pre>{JSON.stringify(data.latest, null, 2)}</pre>}>
-        <pre>{JSON.stringify(data(), null, 2)}</pre>
-      </Suspense>
-    </div>
-  )
-}
-
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
-  // const [data] = resource
-  const data = resource[0] as Resource<StudyOverview> & { state: "ready" }
-  console.log("🚀 ~ file: content.tsx:42 ~ Content ~ data:", data())
+  const data = resource[0]
   const { refetch, mutate } = resource[1]
 
 
@@ -77,11 +55,11 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
 
   const group = createFormGroup({
-    year: createFormControl<StudyOverviewYear>(data().values.year, { required: true, validators: validator.bind(null, "year") }),
+    year: createFormControl<StudyOverviewYear>(data()?.values.year, { required: true, validators: validator.bind(null, "year") }),
     semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
-    degree: createFormControl<DEGREE>(data().values.degree, { required: true, validators: validator.bind(null, "degree") }),
+    degree: createFormControl<DEGREE>(data()?.values.degree, { required: true, validators: validator.bind(null, "degree") }),
     grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
-    program: createFormControl<StudyProgramWithUrl["id"]>(data().values.program?.id, { required: true, validators: validator.bind(null, "program") }),
+    program: createFormControl<StudyProgramWithUrl["id"]>(data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
     programsObligatory: createFormControl<string[]>(defaultValues.programsObligatory, { required: true, validators: validator.bind(null, "programsObligatory") }),
     programsOptional: createFormControl<string[]>(defaultValues.programsOptional, { required: true, validators: validator.bind(null, "programsOptional") }),
   } satisfies {
@@ -110,7 +88,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   return (
     <form onSubmit={onSubmit}>
       <Select
-        options={data().data.years}
+        options={data()?.data.years ?? []}
         optionValue="value"
         optionTextValue="label"
         value={group.controls.year.value}
@@ -142,7 +120,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
         class="grid gap-x-2"
       >
         <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Semestr</RadioGroup.Label>
-        <For each={data()!.data.semesters}>
+        <For each={data()?.data.semesters}>
           {(semester) => (
             <RadioGroupItem value={semester} class="flex items-center gap-2">
               <RadioGroupItemInput />
@@ -172,7 +150,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
           )}
         </For>
       </RadioGroup>
-      <Show when={group.controls.degree.value && data().data.programs[group.controls.degree.value]?.length > 0}>
+      <Show when={group.controls.degree.value && data()?.data && data()!.data.programs[group.controls.degree.value]?.length > 0}>
         <RadioGroup
           value={group.controls.program.value}
           onChange={(program) => program && onFetchableChange("program", program, program)}
@@ -183,7 +161,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
           class="grid gap-x-2"
         >
           <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Program</RadioGroup.Label>
-          <For each={data().data.programs[group.controls.degree.value]}>
+          <For each={data()?.data.programs[group.controls.degree.value]}>
             {(specialization) => (
               <section class="ml-2">
                 <Heading as="h4" variant="h6">{specialization.abbreviation}</Heading>
@@ -211,7 +189,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
         class="grid gap-x-2"
       >
         <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Ročník</RadioGroup.Label>
-        <For each={data()!.data.grades}>
+        <For each={data()?.data.grades}>
           {(grade) => (
             <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
               <RadioGroupItemInput class="bottom-0" />
@@ -230,7 +208,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
         }>
           <Typography as="span" variant={"h6"}>Povinné</Typography>
-          <For each={data().data.courses[group.controls.grade.value!][group.controls.semester.value!].compulsory} >
+          <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value!].compulsory} >
             {(course) => (
               <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
@@ -241,7 +219,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
             )}
           </For>
           <Typography as="span" variant={"h6"}>Volitelné</Typography>
-          <For each={data().data.courses[group.controls.grade.value!][group.controls.semester.value].optional}>
+          <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value].optional}>
             {(course) => (
               <Checkbox class="flex items-start" value={`${course.id}`}>
                 <CheckboxControl />
