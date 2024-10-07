@@ -8,8 +8,8 @@ export const navigationSchema = z.object({
   grade: z.string(),
   degree: z.string(),
   program: z.string().optional(),
-  programsObligatory: z.array(z.string()).optional(),
-  programsOptional: z.array(z.string()).optional(),
+  coursesCompulsory: z.array(z.string()).optional(),
+  coursesOptional: z.array(z.string()).optional(),
 }) satisfies ZodObject<{ [V in keyof StudyOverview["values"]]: ZodTypeAny }>;
 
 export type NavigationSchema = z.infer<typeof navigationSchema>;

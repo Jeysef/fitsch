@@ -49,8 +49,8 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   const defaultValues = {
     semester: SEMESTER.WINTER,
     grade: undefined,
-    programsObligatory: [],
-    programsOptional: []
+    coursesCompulsory: [],
+    coursesOptional: []
   }
 
 
@@ -60,8 +60,8 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     degree: createFormControl<DEGREE>(data()?.values.degree, { required: true, validators: validator.bind(null, "degree") }),
     grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
     program: createFormControl<StudyProgramWithUrl["id"]>(data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
-    programsObligatory: createFormControl<string[]>(defaultValues.programsObligatory, { required: true, validators: validator.bind(null, "programsObligatory") }),
-    programsOptional: createFormControl<string[]>(defaultValues.programsOptional, { required: true, validators: validator.bind(null, "programsOptional") }),
+    coursesCompulsory: createFormControl<string[]>(defaultValues.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
+    coursesOptional: createFormControl<string[]>(defaultValues.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
   } satisfies {
     [K in keyof NavigationSchema]: IFormControl<NavigationSchema[K]>;
   })
