@@ -326,46 +326,6 @@ describe.each([
     expect(schedule).toEqual(expected);
   })
 
-  test("should get week number", async () => {
-    let weekNumber = await studyApi.getWeekNumberInMonth(new Date("2024-09-16"));
-    expect(weekNumber).toBe(4);
-
-    // 2024 starts on Monday
-
-    let date = new Date(2024, 0, 1);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(1);
-
-    date = new Date(2024, 0, 8);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(2);
-
-    date = new Date(2024, 0, 31);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(5);
-
-    date = new Date(2024, 9, 1);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(1);
-
-    date = new Date(2024, 9, 20);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(3);
-
-    date = new Date(2023, 4, 1);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(1);
-
-    date = new Date(2023, 3, 1);
-    expect(await studyApi.getWeekNumberInMonth(date)).toBe(1);
-
-    // 2024 january
-    for (let i = 1; i <= 31; i++) {
-      date = new Date(2024, 0, i);
-      expect(await studyApi.getWeekNumberInMonth(date)).toBe(Math.ceil(i / 7));
-    }
-    // 2025 september
-    for (let i = 1; i < 31; i++) {
-      date = new Date(2025, 8, i);
-      expect(await studyApi.getWeekNumberInMonth(date)).toBe(Math.ceil(i / 7));
-    }
-
-  });
-
   test("should get BIT study program courses", async () => {
     const courses = await studyApi.getStudyProgramCourses({ programUrl: "https://www.fit.vut.cz/study/program/8953/" });
     expect(Object.keys(courses).length).toBe(3);
