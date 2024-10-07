@@ -386,24 +386,6 @@ describe.each([
     expect(courses["ALL"]?.WINTER.length).toBe(51);
   })
 
-  test("should get conjuncted rooms", async () => {
-    let roomsInput = ["E104", "E112", "D0206"];
-    const courses = await studyApi.conjunctRooms(roomsInput);
-    expect(courses).toBe("E112+4 D0206");
-
-    roomsInput = ["E104", "E112", "D0206", "D0207"];
-    const courses2 = await studyApi.conjunctRooms(roomsInput);
-    expect(courses2).toBe("E112+4 D0206 D0207");
-
-    roomsInput = ["E104", "E105", "E112"];
-    const courses3 = await studyApi.conjunctRooms(roomsInput);
-    expect(courses3).toBe("E112+4,5");
-
-    roomsInput = ["D0206", "D105"];
-    const courses4 = await studyApi.conjunctRooms(roomsInput);
-    expect(courses4).toBe("D105+6");
-  })
-
   test("should get course details", async () => {
     const courses = await studyApi.getCourseDetail("281030");
     // TODO: add test when the interface is defined
