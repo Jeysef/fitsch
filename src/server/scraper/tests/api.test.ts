@@ -1,10 +1,10 @@
 // import { fromURL } from 'cheerio';
 import { fromURL } from 'cheerio';
 import fs from 'fs';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
-import { DEGREE, LANGUAGE, SEMESTER, type StudyOverviewConfig } from '~/server/scraper/types';
+import { DEGREE, LANGUAGE, SEMESTER, type StudyApiTypes } from '~/server/scraper/types';
 
 vi.mock("cheerio", async () => {
   const cheerio = await vi.importActual('cheerio') as any;
@@ -48,7 +48,7 @@ describe.each([
     studyApi = new StudyApi(languageProvider);
   });
 
-  afterEach(() => {
+  afterAll(() => {
     vi.clearAllMocks()
   })
 
@@ -68,7 +68,7 @@ describe.each([
   });
 
   test("should get programs", async () => {
-    const programs = await studyApi.getStudyPrograms(null);
+    const programs = await studyApi.getStudyPrograms();
     const expected = {
       programs: {
         BACHELOR: [
@@ -302,9 +302,9 @@ describe.each([
   });
 
   test.each(Object.values(DEGREE).map(d => [2024, 2023, 2022, 2020].map(y => [d, y] as [DEGREE, number])).flat())("should use config in url", async (degree, year) => {
-    const config: StudyOverviewConfig = {
+    const config: StudyApiTypes.getStudyProgramsConfig = {
       degree,
-      year
+      year: year.toString()
     }
     const urlTypeDegrees = {
       [DEGREE.BACHELOR]: 'B',
@@ -367,20 +367,20 @@ describe.each([
   });
 
   test("should get BIT study program courses", async () => {
-    const courses = await studyApi.getStudyProgramCourses("https://www.fit.vut.cz/study/program/8953/");
+    const courses = await studyApi.getStudyProgramCourses({ programUrl: "https://www.fit.vut.cz/study/program/8953/" });
     expect(Object.keys(courses).length).toBe(3);
     expect(courses[1].WINTER.length).toBe(34);
   })
 
   test("should get MIT study program courses", async () => {
-    const courses = await studyApi.getStudyProgramCourses("https://www.fit.vut.cz/study/program/8967/");
+    const courses = await studyApi.getStudyProgramCourses({ programUrl: "https://www.fit.vut.cz/study/program/8967/" });
     // MIT has specializations so there are no courses
     expect(Object.keys(courses).length).toBe(0);
   })
 
   test("should get MIT-NET study program courses", async () => {
     // real url is https://www.fit.vut.cz/study/field/16809/.en but for mocking purposes we use the program url
-    const courses = await studyApi.getStudyProgramCourses("https://www.fit.vut.cz/study/program/16809/.cs");
+    const courses = await studyApi.getStudyProgramCourses({ programUrl: "https://www.fit.vut.cz/study/program/16809/.cs" });
     expect(Object.keys(courses).length).toBe(3);
     expect(courses["ALL"]).toBeDefined();
     expect(courses["ALL"]?.WINTER.length).toBe(51);
