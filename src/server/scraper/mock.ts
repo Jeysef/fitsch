@@ -1,18 +1,4 @@
-import type { ResourceFetcher } from "solid-js";
 import { DEGREE, type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
-
-export const getData: ResourceFetcher<true, StudyOverview, DataProviderTypes.getStudyOverviewConfig> = async (source, { value, refetching }) => {
-  "use server";
-  // console.log("getting Data")
-  // const language = LANGUAGE.CZECH;
-
-  // const languageProvider = new LanguageProvider(language);
-  // const dataProvider = new DataProvider(languageProvider);
-  // // @ts-ignore
-  // const data = await dataProvider.getStudyOverview(refetching ?? undefined);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return mockData(typeof refetching === "boolean" ? undefined : refetching) as StudyOverview
-}
 
 
 const mockDataConstant = ({
@@ -1435,7 +1421,7 @@ const mockDataConstant = ({
   }
 })
 
-function mockData(config?: DataProviderTypes.getStudyOverviewConfig) {
+export function mockData(config?: DataProviderTypes.getStudyOverviewConfig) {
   const data = {
     "years": [
       {

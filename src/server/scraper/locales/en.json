@@ -7,9 +7,13 @@
     },
     "detail": {
       "timeSpan": {
-        "timeSpan": "Time span",
-        "lecture": "lectures",
-        "exercises": "exercises"
+        "title": "Time span",
+        "data": {
+          "LECTURE": "lectur",
+          "LABORATORY": "laborator",
+          "EXERCISE": "exercise",
+          "SEMINAR": "seminar"
+        }
       },
       "day": {
         "MON": "Mon",

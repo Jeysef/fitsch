@@ -8,5 +8,9 @@ type EnumType = Record<string, string | number>
 type EnumValue<T extends EnumType> = T[keyof T]
 
 export function valueToEnumValue<T extends EnumType>(value: string, anEnum: T): EnumValue<T> {
-  return Object.values(anEnum).find((enumValue) => enumValue === value) as EnumValue<T>;
+  const enumValue = Object.values(anEnum).find((enumValue) => enumValue === value) as EnumValue<T>;
+  if (!enumValue) {
+    throw new Error(`Value ${value} is not a valid enum value`);
+  }
+  return enumValue;
 }

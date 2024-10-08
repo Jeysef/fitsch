@@ -1,8 +1,8 @@
 import { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
+import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import type { StudyApiTypes } from "~/server/scraper/types";
-import { COURSE_TYPE, DEGREE, SEMESTER, type CourseDetail, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
+import { DEGREE, SEMESTER, StudyApiTypes, SUBJECT_TYPE, type CourseDetail, type CourseSubject, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
 import { conjunctRooms, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 
 export class StudyApi {
@@ -199,67 +199,50 @@ export class StudyApi {
   }
 
 
-  async getCourseDetail(courseId: string | number): Promise<CourseDetail[]> {
+  async getStudyCourseDetails(config: StudyApiTypes.getStudyCourseDetailsConfig): Promise<StudyApiTypes.getStudyCourseDetailsReturn> {
+    const { courseId } = config;
     const languageSet = await this.getLanguageSet();
     const timeSchedule = await this.getTimeSchedule()
     const courseUrl = `${this.baseUrl}course/${courseId}/${this.urlLanguage}`;
     const $ = await this.fetchDocument(courseUrl)
     const courseTypeBasedOnColor = {
-      "#e8ffff": COURSE_TYPE.DEMO_EXERCISE,
-      "#e0ffe0": COURSE_TYPE.LECTURE,
-      "#ffffdc": COURSE_TYPE.LABORATORY,
-      "#ffe6cc": COURSE_TYPE.EXAM
+      // "#e8ffff": // exercise & seminar
+      "#e0ffe0": SUBJECT_TYPE.LECTURE,
+      "#ffffdc": SUBJECT_TYPE.LABORATORY,
+      "#ffe6cc": SUBJECT_TYPE.EXAM
     }
 
     const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
+    const name = $("h1.b-detail__title").text().trim();
     const link = courseUrl;
 
     const range = $("main div.b-detail__body div.grid__cell").filter((_, element) => {
-      return $(element).find("p.b-detail__subtitle").text().trim().includes(languageSet.course.detail.timeSpan.timeSpan)
+      return $(element).find("p.b-detail__subtitle").text().trim().includes(languageSet.course.detail.timeSpan.title)
     })
     const rangeText = range.next().find("ul li").map((_, element) => $(element).text().trim()).get()
 
-    const hours = {
-      lecture: parseInt(rangeText.find((text) => text.includes(languageSet.course.detail.timeSpan.lecture))?.split(" ")[0] ?? "0"),
-      exercise: parseInt(rangeText.find((text) => text.includes(languageSet.course.detail.timeSpan.exercises))?.split(" ")[0] ?? "0"),
-    }
+    const timeSpan = ObjectTyped.fromEntries(ObjectTyped.entries(languageSet.course.detail.timeSpan.data).map(([type, text]) => {
+      const hours = parseInt(rangeText.find((rangeText) => rangeText.includes(text))?.split(" ")[0] ?? "0")
+      return [valueToEnumValue(type, SUBJECT_TYPE), hours] as const
+    }))
+
     const noteText = $("main div.b-detail .b-detail__body .footnote").text().trim()
 
-    let courses = [];
-    //   var lesson = {
-    //     "id": "",
-    //     "name": sub.name,
-    //     "link": sub.link,
-    //     "day":  parseDay($(tr).children("th").html()),
-    //     "week": parseWeek($(tr).children("td").eq(1).html()),
-    //     "from": parseTimeFrom($(tr).children("td").eq(3).html()),
-    //     "to":   parseTimeTo($(tr).children("td").eq(4).html()),
-    //     "group": $(tr).children("td").eq(7).html().replace("xx", "").trim(),
-    //     "info": $(tr).children("td").eq(8).html(),
-    //     "type": "unknown",
-    //     "rooms": [],
-    //     "layer": 1,
-    //     "selected": false,
-    //     "deleted": false
-    // };
-
-
-    return $("main table#schedule tbody tr").map((_, element) => {
+    const data: CourseSubject[] = $("main table#schedule tbody tr").map((_, element) => {
       const day = $(element).children("th").text().trim();
       const rowBgColor = $(element).css('background');
-      const type = rowBgColor && rowBgColor in courseTypeBasedOnColor ? courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor] : null;
+      let type = rowBgColor && rowBgColor in courseTypeBasedOnColor ? courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor] : null;
       const rooms = $(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get()
       const room = conjunctRooms(rooms)
       const lectureGroup = $(element).children("td").eq(6).children("a").map((_, element) => $(element).text().trim()).get()
-      const [_type, weeksText, __, start, end, capacity, ___, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
+      const [_type, weeksText, _room, start, end, capacity, _group, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
+      // retry type
+      type = type ?? ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) => _type.includes(type))?.[0] as SUBJECT_TYPE
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       // parseWeek may return null, but we expect an event not to
       const weeks = parseWeek(weeksText, timeSchedule) ?? ""
       return {
-        abbreviation,
-        name: abbreviation,
-        link,
         type,
         day: normalizedDay,
         weeks,
@@ -271,7 +254,16 @@ export class StudyApi {
         groups,
         info,
         note: hasNote ? noteText : null,
-      } satisfies CourseDetail
+      } satisfies CourseSubject
     }).get()
+
+    const detail: CourseDetail = {
+      abbreviation,
+      name,
+      link,
+      timeSpan
+    }
+
+    return { data, detail }
   }
 }

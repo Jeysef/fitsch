@@ -2,7 +2,7 @@ import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
-import { DEGREE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
+import { DEGREE, LANGUAGE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {
@@ -11,8 +11,9 @@ export class DataProvider {
     this.studyApi = new StudyApi(languageProvider)
   }
 
-  async getStudyOverview(config?: DataProviderTypes.getStudyOverviewConfig): Promise<StudyOverview> {
+  public async getStudyOverview(config?: DataProviderTypes.getStudyOverviewConfig): Promise<DataProviderTypes.getStudyOverviewReturn> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config)
+    const isEnglish = this.languageProvider.language === LANGUAGE.ENGLISH
     const values: StudyOverview["values"] = {
       year: config ? years.find(year => year.value === config.year) ?? currentYear : currentYear,
       degree: (config?.degree) ?? DEGREE.BACHELOR,
@@ -21,7 +22,7 @@ export class DataProvider {
     console.log("values.degree", values.degree)
     let degreePrograms = studyPrograms[values.degree]
     // filter language
-    const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === (config?.isEnglish ?? false)).map(([id, program]) => ([id, program] as const)))
+    const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === isEnglish).map(([id, program]) => ([id, program] as const)))
 
     degreePrograms = filterLanguage(degreePrograms)
     // selected program
@@ -69,6 +70,16 @@ export class DataProvider {
         courses
       }
     } satisfies StudyOverview;
+  }
+
+  public async getStudyCourseDetails(config: DataProviderTypes.getStudyCourseDetailsConfig): Promise<DataProviderTypes.getStudyCourseDetailsReturn> {
+    const { courseId } = config
+    return await this.studyApi.getStudyCourseDetails({ courseId })
+  }
+
+  public async getStudyCoursesDetails(config: DataProviderTypes.getStudyCoursesDetailsConfig): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
+    const { courses } = config
+    return Promise.all(courses.map(course => this.studyApi.getStudyCourseDetails({ courseId: course.courseId })))
   }
 };
 

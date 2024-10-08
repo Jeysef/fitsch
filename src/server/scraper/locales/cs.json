@@ -7,9 +7,13 @@
     },
     "detail": {
       "timeSpan": {
-        "timeSpan": "Rozsah",
-        "lecture": "přednášky",
-        "exercises": "cvičení"
+        "title": "Rozsah",
+        "data": {
+          "LECTURE": "přednášk",
+          "LABORATORY": "laboratoř",
+          "EXERCISE": "cvičení",
+          "SEMINAR": "seminář"
+        }
       },
       "day": {
         "MON": "Po",

@@ -36,6 +36,16 @@ vi.mock("cheerio", async () => {
   }
 })
 
+// mock assert ex: assert(enumValue, `Value ${value} is not a valid enum value`);
+vi.mock("assert", async () => {
+  return {
+    assert: vi.fn((value: any, message: string) => {
+      if (value === undefined) {
+        throw new Error(message);
+      }
+    })
+  }
+})
 
 describe.each([
   LANGUAGE.ENGLISH, LANGUAGE.CZECH
@@ -388,7 +398,8 @@ describe.each([
   })
 
   test("should get course details", async () => {
-    const courses = await studyApi.getCourseDetail("281030");
+    const courses = await studyApi.getStudyCourseDetails({ courseId: "281030" });
+    console.log("🚀 ~ file: api.test.ts:402 ~ test ~ courses:", courses)
     // TODO: add test when the interface is defined
   })
 

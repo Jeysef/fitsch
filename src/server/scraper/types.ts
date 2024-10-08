@@ -18,11 +18,12 @@ enum SEMESTER {
   SUMMER = "SUMMER"
 }
 
-enum COURSE_TYPE {
-  LECTURE = "LECTURE",
-  LABORATORY = "LABORATORY",
-  EXAM = "EXAM",
-  DEMO_EXERCISE = "DEMO_EXERCISE"
+enum SUBJECT_TYPE {
+  LECTURE = "LECTURE",        // presentation by lecturer
+  LABORATORY = "LABORATORY",  // exercises performed by students
+  EXERCISE = "EXERCISE",      // exercises performed by lecturer for few students
+  SEMINAR = "SEMINAR",        // exercises performed by lecturer for many students
+  EXAM = "EXAM",              // exam
 }
 
 enum DAY {
@@ -125,18 +126,17 @@ interface StudyCourse {
   note: boolean;
 }
 
+
+
 interface StudyTimeScheduleConfig {
   year: string | null;
 }
 
-interface CourseDetail {
-  abbreviation: string;
-  name: string;
-  link: string;
+interface CourseSubject {
   day: DAY;
   weeks: string;
   room: string;
-  type: COURSE_TYPE | null;
+  type: SUBJECT_TYPE | null;
   start: string;
   end: string;
   capacity: string;
@@ -145,6 +145,15 @@ interface CourseDetail {
   info: string;
   note: string | null;
 }
+
+interface CourseDetail {
+  abbreviation: string;
+  name: string;
+  link: string;
+  timeSpan: CourseTimeSpan;
+}
+
+type CourseTimeSpan = Record<SUBJECT_TYPE, number>
 
 export namespace StudyApiTypes {
   export interface getStudyProgramCoursesConfig {
@@ -159,16 +168,33 @@ export namespace StudyApiTypes {
     years: StudyOverviewYear[];
     currentYear: StudyOverviewYear;
   }
+
+  export interface getStudyCourseDetailsConfig {
+    courseId: string;
+  }
+
+  export interface getStudyCourseDetailsReturn {
+    detail: CourseDetail;
+    data: CourseSubject[];
+  }
 }
 
 export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
     program?: StudyProgramWithUrl["id"];
-    isEnglish?: boolean
   }
+  export interface getStudyOverviewReturn extends StudyOverview { }
+
+  export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig { }
+  export interface getStudyCourseDetailsReturn extends StudyApiTypes.getStudyCourseDetailsReturn { }
+
+  export interface getStudyCoursesDetailsConfig {
+    courses: StudyApiTypes.getStudyCourseDetailsConfig[]
+  }
+  export type getStudyCoursesDetailsReturn = StudyApiTypes.getStudyCourseDetailsReturn[]
 }
 
 
-export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER, gradeAll };
-export type { CourseDetail, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
+export { DAY, DEGREE, LANGUAGE, SEMESTER, SUBJECT_TYPE, gradeAll };
+export type { CourseDetail, CourseSubject, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
 

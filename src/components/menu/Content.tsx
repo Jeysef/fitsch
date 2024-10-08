@@ -1,6 +1,7 @@
+import { useAction, useSubmission } from "@solidjs/router";
 import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
+import { createEffect, createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -10,13 +11,13 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkb
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { createDeepSignal } from "~/lib/solid";
-import { getData } from "~/server/scraper/mock";
+import { getStudyOverview, getStudyProgramCourses } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const resource = createResource(getData, { deferStream: true, storage: createDeepSignal });
+  const resource = createResource(getStudyOverview, { deferStream: true, storage: createDeepSignal });
 
 
   const [data] = resource
@@ -37,7 +38,15 @@ export default function Wrapper() {
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
   const { refetch, mutate } = resource[1]
+  const submit = useAction(getStudyProgramCourses);
+  const submission = useSubmission(getStudyProgramCourses);
 
+  createEffect(() => {
+    if (submission.result) {
+      console.log("🚀 ~ file: content.tsx:47 ~ createEffect ~ submission.result:", submission.result)
+    }
+  }
+  )
 
 
 
@@ -71,7 +80,6 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     const currentData: DataProviderTypes.getStudyOverviewConfig = {
       year: group.controls.year.value.value,
       degree: group.controls.degree.value,
-      isEnglish: false,
       program: group.controls.program.value
     }
     const nextData = { ...currentData, [name]: apiValue }
@@ -83,7 +91,8 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
     e.preventDefault();
     group.markSubmitted(true);
-    group.value
+    submit({ courses: [...group.controls.coursesCompulsory.value, ...group.controls.coursesOptional.value].map(id => ({ courseId: id })) })
+
   };
   return (
     <form onSubmit={onSubmit}>
