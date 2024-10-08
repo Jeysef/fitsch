@@ -68,11 +68,6 @@ type GradeKey = string | GradeAll;
 
 interface StudyOverviewYear { value: string, label: string }
 interface StudyOverviewGrade { key: GradeKey, label: string }
-interface StudyOverviewCourse {
-  name: string;
-  abbreviation: string;
-  id: number;
-}
 interface StudyOverview {
   /**
    * current data
@@ -111,14 +106,17 @@ interface StudyOverview {
   }
 }
 
+interface StudyOverviewCourse {
+  abbreviation: string;
+  name: string;
+  id: string;
+}
+
 
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
-interface StudyCourse {
-  abbreviation: string;
-  name: string;
+interface StudyCourse extends StudyOverviewCourse {
   link: string;
-  id: number;
   credits: string;
   obligation: boolean;
   completion: string;

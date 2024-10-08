@@ -170,7 +170,7 @@ export class StudyApi {
         const abbreviation = $(element).children("th").text().trim();
         const name = $(element).children("td").first().children("a").text().trim();
         const link = $(element).children("td").first().children("a").attr("href")!;
-        const id = parseInt(link.match(/\/course\/(\d+)/)?.[1] ?? "", 10);
+        const id = link.match(/\/course\/(\d+)/)?.[1] ?? "";
         const credits = $(element).children("td").eq(1).text().trim();
         const obligationText = $(element).children("td").eq(2).text().trim();
         const completion = $(element).children("td").eq(3).text().trim();

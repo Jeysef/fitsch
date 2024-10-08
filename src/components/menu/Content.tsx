@@ -11,7 +11,8 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkb
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { createDeepSignal } from "~/lib/solid";
-import { getStudyOverview, getStudyProgramCourses } from "~/server/scraper/actions";
+import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
+import { getStudyOverview } from "~/server/scraper/functions";
 import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
@@ -38,16 +39,7 @@ export default function Wrapper() {
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
   const { refetch, mutate } = resource[1]
-  const submit = useAction(getStudyProgramCourses);
-  const submission = useSubmission(getStudyProgramCourses);
-
-  createEffect(() => {
-    if (submission.result) {
-      console.log("🚀 ~ file: content.tsx:47 ~ createEffect ~ submission.result:", submission.result)
-    }
-  }
-  )
-
+  const submit = useAction(getStudyCoursesDetailsAction);
 
 
   const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
@@ -219,7 +211,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
           <Typography as="span" variant={"h6"}>Povinné</Typography>
           <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value!].compulsory} >
             {(course) => (
-              <Checkbox class="flex items-start" value={`${course.id}`}>
+              <Checkbox class="flex items-start" value={`${course.id}`} onChange={(checked) => group.controls.coursesCompulsory.setValue(checked ? [...group.controls.coursesCompulsory.value, course.id] : group.controls.coursesCompulsory.value.filter(id => id !== course.id))}>
                 <CheckboxControl />
                 <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
                   {course.abbreviation}
@@ -230,7 +222,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
           <Typography as="span" variant={"h6"}>Volitelné</Typography>
           <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value].optional}>
             {(course) => (
-              <Checkbox class="flex items-start" value={`${course.id}`}>
+              <Checkbox class="flex items-start" value={`${course.id}`} onChange={(checked) => group.controls.coursesOptional.setValue(checked ? [...group.controls.coursesOptional.value, course.id] : group.controls.coursesOptional.value.filter(id => id !== course.id))}>
                 <CheckboxControl />
                 <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
                   {course.abbreviation}

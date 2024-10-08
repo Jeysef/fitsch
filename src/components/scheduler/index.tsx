@@ -1,5 +1,9 @@
+import { useSubmission } from "@solidjs/router";
+import { createEffect } from "solid-js";
 import type ScheduleEvent from "~/components/scheduler/Event";
 import { days, type IScheduleData, type ISchedulerSettings } from "~/components/scheduler/types";
+import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
+import { getStudyCoursesDetails } from "~/server/scraper/functions";
 
 export interface WorkScheduleProps {
   scheduleSettings: ISchedulerSettings;
@@ -10,6 +14,12 @@ export interface WorkScheduleProps {
 
 export default function Scheduler(props: WorkScheduleProps) {
   const { data, scheduleSettings, event } = props;
+  const submission = useSubmission(getStudyCoursesDetailsAction);
+  createEffect(() => {
+    if (submission.result) {
+      console.log("🚀 ~ file: index.tsx:17 ~ Scheduler ~ submission:", submission.result)
+    }
+  })
   return (
     <div
       class="relative grid overflow-auto h-full w-full justify-start"
