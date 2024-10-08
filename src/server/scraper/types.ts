@@ -62,12 +62,11 @@ const gradeAll = "ALL";
 type GradeAll = typeof gradeAll;
 type GradeNumber = number;
 type GradeWithoutAll = `${GradeNumber}${StudyProgramBase["abbreviation"]}`;
-type Grade = GradeWithoutAll | GradeAll;
 type GradeKey = string | GradeAll;
 
 
 interface StudyOverviewYear { value: string, label: string }
-interface StudyOverviewGrade { key: GradeKey, label: Grade }
+interface StudyOverviewGrade { key: GradeKey, label: string }
 interface StudyOverviewCourse {
   name: string;
   abbreviation: string;
@@ -127,7 +126,7 @@ interface StudyCourse {
 }
 
 interface StudyTimeScheduleConfig {
-  year: string | number | null;
+  year: string | null;
 }
 
 interface CourseDetail {
@@ -171,5 +170,5 @@ export namespace DataProviderTypes {
 
 
 export { COURSE_TYPE, DAY, DEGREE, LANGUAGE, SEMESTER, gradeAll };
-export type { CourseDetail, Grade, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
+export type { CourseDetail, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
 
