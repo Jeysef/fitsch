@@ -1,4 +1,5 @@
-import { gradeAll, type Grade, type StudyId } from "~/server/scraper/types";
+import { getWeekNumber } from "~/lib/date";
+import { gradeAll, SEMESTER, type StudyId } from "~/server/scraper/types";
 
 export function conjunctRooms(rooms: string[]): string {
   const conjunctedRooms = [
@@ -35,8 +36,8 @@ export function removeSpaces(text: string): string {
   return text.replaceAll("\n", "").replace(/\s+/g, ' ').trim()
 }
 
-export function constructGradeLabel(grade: string, programAbbreviation: string): Grade {
-  return grade === gradeAll ? grade : `${grade}${programAbbreviation}` as Grade;
+export function constructGradeLabel(grade: string, programAbbreviation: string): string {
+  return grade === gradeAll ? `${grade}-${programAbbreviation}` : `${grade}${programAbbreviation}`;
 }
 
 export function createStudyId(url: string): StudyId {
@@ -53,4 +54,42 @@ export function createStudyId(url: string): StudyId {
     console.error(`No match found for ${url}`);
     return url;
   }
+}
+
+export function parseWeek(week: string, startDate: Record<SEMESTER, Date>) {
+  const parsedWeek = week.replace("výuky", "").replaceAll(",", "").trim();
+  if (parsedWeek.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+    const weekNum = getSemesterWeekFromDate(new Date(parsedWeek), startDate);
+    if (!weekNum || weekNum < 1) return null;
+    return weekNum + ".";
+  }
+  return parsedWeek;
+}
+
+function getWeekDiff(date: Date, fromDate: Date) {
+  return getWeekNumber(date) - getWeekNumber(fromDate);
+}
+
+/**
+ * 
+ * @param date 
+ * @param startDate 
+ * @returns number of weeks from the start date of the semester or null if the date is before the start date
+ */
+function getSemesterWeekFromDate(date: Date, startDate: Record<SEMESTER, Date>) {
+  const getSemesterDate = () => {
+    const winterStartDate = startDate[SEMESTER.WINTER];
+    const summerStartDate = startDate[SEMESTER.SUMMER];
+    if (date < winterStartDate) {
+      return null; // Event is before both semesters
+    } else if (date < summerStartDate) {
+      return winterStartDate;
+    } else {
+      return summerStartDate;
+    }
+
+  }
+  const semesterDate = getSemesterDate();
+  if (!semesterDate) return null;
+  return getWeekDiff(date, semesterDate) + 1
 }
