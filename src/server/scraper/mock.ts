@@ -6058,5 +6058,5 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
       }
     }
   ]
-  return data
+  return data as DataProviderTypes.getStudyCoursesDetailsReturn
 }
