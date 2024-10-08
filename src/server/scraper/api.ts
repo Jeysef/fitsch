@@ -163,10 +163,9 @@ export class StudyApi {
       if (!courses[year]) {
         courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation, id: createStudyId(programUrl) };
       }
-      const list = courses[year][semester]
 
       const rows = $(element).find('tbody tr');
-      rows.each((_, element) => {
+      courses[year][semester] = rows.map((_, element) => {
         const rowBgColor = $(element).css('background-color');
         const abbreviation = $(element).children("th").text().trim();
         const name = $(element).children("td").first().children("a").text().trim();
@@ -192,8 +191,8 @@ export class StudyApi {
             else if (obligationText === locales.course.obligation.elective) { obligation = false }
             break;
         }
-        list.push({ abbreviation, name, link, credits, obligation, completion, faculty, note, id });
-      });
+        return ({ abbreviation, name, link, credits, obligation, completion, faculty, note, id });
+      }).get()
     })
 
     return courses;
