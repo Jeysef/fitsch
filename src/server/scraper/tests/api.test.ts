@@ -1,7 +1,7 @@
 // import { fromURL } from 'cheerio';
 import { fromURL } from 'cheerio';
 import fs from 'fs';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { DEGREE, LANGUAGE, SEMESTER, type StudyApiTypes } from '~/server/scraper/types';
@@ -70,233 +70,274 @@ describe.each([
   test("should get programs", async () => {
     const programs = await studyApi.getStudyPrograms();
     const expected = {
-      programs: {
-        BACHELOR: [
+      currentYear: { label: '2024/2025', value: '2024' },
+      programs:
+      {
+        BACHELOR:
+        {
+          'program-8953':
           {
-            name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8953/',
+            abbreviation: 'BIT',
+            attendanceType: 'full-time study',
+            id: 'program-8953',
             isEnglish: false,
-            specializations: [],
-            attendanceType: 'full-time study',
-            abbreviation: 'BIT'
-          },
-          {
             name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8954/',
-            isEnglish: true,
             specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8953/'
+          },
+          'program-8954':
+          {
+            abbreviation: 'BIT',
             attendanceType: 'full-time study',
-            abbreviation: 'BIT'
+            id: 'program-8954',
+            isEnglish: true,
+            name: 'Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8954/'
           }
-        ],
-        MASTER: [
+        },
+        DOCTORAL:
+        {
+          'program-8955':
           {
-            name: 'Master of Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8966/',
-            isEnglish: true,
-            specializations: [],
-            attendanceType: 'full-time study',
-            abbreviation: 'MIT-EN'
-          },
-          {
-            name: 'Information Technology and Artificial Intelligence',
-            url: 'https://www.fit.vut.cz/study/program/8967/',
+            abbreviation: 'DIT',
+            attendanceType: 'combined study',
+            id: 'program-8955',
             isEnglish: false,
-            specializations: [
-              {
+            name: 'Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8955/'
+          },
+          'program-8956':
+          {
+            abbreviation: 'DIT',
+            attendanceType: 'full-time study',
+            id: 'program-8956',
+            isEnglish: false,
+            name: 'Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8956/'
+          },
+          'program-8957':
+          {
+            abbreviation: 'DIT-EN',
+            attendanceType: 'full-time study',
+            id: 'program-8957',
+            isEnglish: true,
+            name: 'Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8957/'
+          },
+          'program-8958':
+          {
+            abbreviation: 'DIT-EN',
+            attendanceType: 'combined study',
+            id: 'program-8958',
+            isEnglish: true,
+            name: 'Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8958/'
+          },
+          'program-9229':
+          {
+            abbreviation: 'VTI-DR-4',
+            attendanceType: 'full-time study',
+            id: 'program-9229',
+            isEnglish: false,
+            name: 'Computer Science and Engineering',
+            specializations:
+              [{
+                abbreviation: 'DVI4',
+                id: 'field-17280',
+                name: 'Computer Science and Engineering',
+                url: 'https://www.fit.vut.cz/study/field/17280/'
+              }],
+            url: 'https://www.fit.vut.cz/study/program/9229/'
+          },
+          'program-9230':
+          {
+            abbreviation: 'VTI-DR-4',
+            attendanceType: 'combined study',
+            id: 'program-9230',
+            isEnglish: false,
+            name: 'Computer Science and Engineering',
+            specializations:
+              [{
+                abbreviation: 'DVI4',
+                id: 'field-17281',
+                name: 'Computer Science and Engineering',
+                url: 'https://www.fit.vut.cz/study/field/17281/'
+              }],
+            url: 'https://www.fit.vut.cz/study/program/9230/'
+          },
+          'program-9231':
+          {
+            abbreviation: 'VTI-DR-4',
+            attendanceType: 'full-time study',
+            id: 'program-9231',
+            isEnglish: true,
+            name: 'Computer Science and Engineering',
+            specializations:
+              [{
+                abbreviation: 'DVI4',
+                id: 'field-17282',
+                name: 'Computer Science and Engineering',
+                url: 'https://www.fit.vut.cz/study/field/17282/'
+              }],
+            url: 'https://www.fit.vut.cz/study/program/9231/'
+          }
+        },
+        MASTER:
+        {
+          'program-8966':
+          {
+            abbreviation: 'MIT-EN',
+            attendanceType: 'full-time study',
+            id: 'program-8966',
+            isEnglish: true,
+            name: 'Master of Information Technology',
+            specializations: [],
+            url: 'https://www.fit.vut.cz/study/program/8966/'
+          },
+          'program-8967':
+          {
+            abbreviation: 'MITAI',
+            attendanceType: 'full-time study',
+            id: 'program-8967',
+            isEnglish: false,
+            name: 'Information Technology and Artificial Intelligence',
+            specializations:
+              [{
                 abbreviation: 'NADE',
+                id: 'field-16809',
                 name: 'Application Development',
                 url: 'https://www.fit.vut.cz/study/field/16809/'
               },
               {
                 abbreviation: 'NBIO',
+                id: 'field-16824',
                 name: 'Bioinformatics and Biocomputing',
                 url: 'https://www.fit.vut.cz/study/field/16824/'
               },
               {
                 abbreviation: 'NGRI',
+                id: 'field-16808',
                 name: 'Computer Graphics and Interaction',
                 url: 'https://www.fit.vut.cz/study/field/16808/'
               },
               {
                 abbreviation: 'NNET',
+                id: 'field-16814',
                 name: 'Computer Networks',
                 url: 'https://www.fit.vut.cz/study/field/16814/'
               },
               {
                 abbreviation: 'NVIZ',
+                id: 'field-16826',
                 name: 'Computer Vision',
                 url: 'https://www.fit.vut.cz/study/field/16826/'
               },
               {
                 abbreviation: 'NCPS',
+                id: 'field-16816',
                 name: 'Cyberphysical Systems',
                 url: 'https://www.fit.vut.cz/study/field/16816/'
               },
               {
                 abbreviation: 'NSEC',
+                id: 'field-16812',
                 name: 'Cybersecurity',
                 url: 'https://www.fit.vut.cz/study/field/16812/'
               },
               {
                 abbreviation: 'NEMB',
+                id: 'field-16823',
                 name: 'Embedded Systems',
                 url: 'https://www.fit.vut.cz/study/field/16823/'
               },
               {
                 abbreviation: 'NHPC',
+                id: 'field-16817',
                 name: 'High Performance Computing',
                 url: 'https://www.fit.vut.cz/study/field/16817/'
               },
               {
                 abbreviation: 'NISD',
+                id: 'field-16810',
                 name: 'Information Systems and Databases',
                 url: 'https://www.fit.vut.cz/study/field/16810/'
               },
               {
                 abbreviation: 'NIDE',
+                id: 'field-16819',
                 name: 'Intelligent Devices',
                 url: 'https://www.fit.vut.cz/study/field/16819/'
               },
               {
                 abbreviation: 'NISY',
+                id: 'field-16820',
                 name: 'Intelligent Systems',
                 url: 'https://www.fit.vut.cz/study/field/16820/'
               },
               {
                 abbreviation: 'NMAL',
+                id: 'field-16815',
                 name: 'Machine Learning',
                 url: 'https://www.fit.vut.cz/study/field/16815/'
               },
               {
                 abbreviation: 'NMAT',
+                id: 'field-16811',
                 name: 'Mathematical Methods',
                 url: 'https://www.fit.vut.cz/study/field/16811/'
               },
               {
                 abbreviation: 'NSEN',
+                id: 'field-16825',
                 name: 'Software Engineering',
                 url: 'https://www.fit.vut.cz/study/field/16825/'
               },
               {
                 abbreviation: 'NVER',
+                id: 'field-16818',
                 name: 'Software Verification and Testing',
                 url: 'https://www.fit.vut.cz/study/field/16818/'
               },
               {
                 abbreviation: 'NSPE',
+                id: 'field-16822',
                 name: 'Sound, Speech and Natural Language Processing',
                 url: 'https://www.fit.vut.cz/study/field/16822/'
-              }
-            ],
-            attendanceType: 'full-time study',
-            abbreviation: 'MITAI'
+              }],
+            url: 'https://www.fit.vut.cz/study/program/8967/'
           }
-        ],
-        DOCTORAL: [
-          {
-            name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8956/',
-            isEnglish: false,
-            specializations: [],
-            attendanceType: 'full-time study',
-            abbreviation: 'DIT'
-          },
-          {
-            name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8955/',
-            isEnglish: false,
-            specializations: [],
-            attendanceType: 'combined study',
-            abbreviation: 'DIT'
-          },
-          {
-            name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8957/',
-            isEnglish: true,
-            specializations: [],
-            attendanceType: 'full-time study',
-            abbreviation: 'DIT-EN'
-          },
-          {
-            name: 'Information Technology',
-            url: 'https://www.fit.vut.cz/study/program/8958/',
-            isEnglish: true,
-            specializations: [],
-            attendanceType: 'combined study',
-            abbreviation: 'DIT-EN'
-          },
-          {
-            name: 'Computer Science and Engineering',
-            url: 'https://www.fit.vut.cz/study/program/9229/',
-            isEnglish: false,
-            specializations: [
-              {
-                abbreviation: 'FieldDVI42007-2024',
-                name: 'Computer Science and Engineering',
-                url: 'https://www.fit.vut.cz/study/field/17280/'
-              }
-            ],
-            attendanceType: 'full-time study',
-            abbreviation: 'VTI-DR-4'
-          },
-          {
-            name: 'Computer Science and Engineering',
-            url: 'https://www.fit.vut.cz/study/program/9230/',
-            isEnglish: false,
-            specializations: [
-              {
-                abbreviation: 'FieldDVI42007-2024',
-                name: 'Computer Science and Engineering',
-                url: 'https://www.fit.vut.cz/study/field/17281/'
-              }
-            ],
-            attendanceType: 'combined study',
-            abbreviation: 'VTI-DR-4'
-          },
-          {
-            name: 'Computer Science and Engineering',
-            url: 'https://www.fit.vut.cz/study/program/9231/',
-            isEnglish: true,
-            specializations: [
-              {
-                abbreviation: 'FieldDVI42007-2024English',
-                name: 'Computer Science and Engineering',
-                url: 'https://www.fit.vut.cz/study/field/17282/'
-              }
-            ],
-            attendanceType: 'full-time study',
-            abbreviation: 'VTI-DR-4'
-          }
-        ]
+        }
       },
-      years: [
-        { value: '2024', label: '2024/2025' },
-        { value: '2023', label: '2023/2024' },
-        { value: '2022', label: '2022/2023' },
-        { value: '2021', label: '2021/2022' },
-        { value: '2020', label: '2020/2021' },
-        { value: '2019', label: '2019/2020' },
-        { value: '2018', label: '2018/2019' },
-        { value: '2017', label: '2017/2018' },
-        { value: '2016', label: '2016/2017' },
-        { value: '2015', label: '2015/2016' },
-        { value: '2014', label: '2014/2015' },
-        { value: '2013', label: '2013/2014' },
-        { value: '2012', label: '2012/2013' },
-        { value: '2011', label: '2011/2012' },
-        { value: '2010', label: '2010/2011' },
-        { value: '2009', label: '2009/2010' },
-        { value: '2008', label: '2008/2009' },
-        { value: '2007', label: '2007/2008' },
-        { value: '2006', label: '2006/2007' },
-        { value: '2005', label: '2005/2006' },
-        { value: '2004', label: '2004/2005' },
-        { value: '2003', label: '2003/2004' },
-        { value: '2002', label: '2002/2003' },
-        { value: '2001', label: '2001/2002' }
-      ],
-      currentYear: { value: '2024', label: '2024/2025' }
+      years:
+        [{ label: '2024/2025', value: '2024' },
+        { label: '2023/2024', value: '2023' },
+        { label: '2022/2023', value: '2022' },
+        { label: '2021/2022', value: '2021' },
+        { label: '2020/2021', value: '2020' },
+        { label: '2019/2020', value: '2019' },
+        { label: '2018/2019', value: '2018' },
+        { label: '2017/2018', value: '2017' },
+        { label: '2016/2017', value: '2016' },
+        { label: '2015/2016', value: '2015' },
+        { label: '2014/2015', value: '2014' },
+        { label: '2013/2014', value: '2013' },
+        { label: '2012/2013', value: '2012' },
+        { label: '2011/2012', value: '2011' },
+        { label: '2010/2011', value: '2010' },
+        { label: '2009/2010', value: '2009' },
+        { label: '2008/2009', value: '2008' },
+        { label: '2007/2008', value: '2007' },
+        { label: '2006/2007', value: '2006' },
+        { label: '2005/2006', value: '2005' },
+        { label: '2004/2005', value: '2004' },
+        { label: '2003/2004', value: '2003' },
+        { label: '2002/2003', value: '2002' },
+        { label: '2001/2002', value: '2001' }]
     }
     expect(programs).toEqual(expected);
   });
@@ -316,7 +357,7 @@ describe.each([
 
   })
 
-  test.each([2024, 2023, 2022])(`should get calendar ${lang}`, async (year) => {
+  test.each(["2024", "2023", "2022"])(`should get calendar ${lang}`, async (year) => {
     const schedule = await studyApi.getTimeSchedule({ year });
     const expected = {
       [SEMESTER.WINTER]: new Date("2024-09-16"),
@@ -349,6 +390,12 @@ describe.each([
   test("should get course details", async () => {
     const courses = await studyApi.getCourseDetail("281030");
     // TODO: add test when the interface is defined
+  })
+
+  test("should get time schedule", async () => {
+    const schedule = await studyApi.getTimeSchedule();
+    expect(schedule).toBeDefined();
+    console.log("🚀 ~ file: api.test.ts:358 ~ test ~ schedule:", schedule)
   })
 })
 
