@@ -1,15 +1,16 @@
-import type { IData } from "./data";
-import { DayNumbers, DAYS, type IScheduleData, type ISchedulerSettings } from "~/components/scheduler/types";
+import { DayNumbers, type IScheduleData, type ISchedulerSettings } from "~/components/scheduler/types";
 import { valueToEnumValue } from "~/lib/utils";
+import { DAY } from "~/server/scraper/types";
+import type { IData } from "./data";
 
 
 export const formatData = (schedulerSettings: ISchedulerSettings, data: IData[]): IScheduleData => {
   const formattedData: IScheduleData = {
-    [DAYS.MO]: { events: [], rows: 1, row: 1 },
-    [DAYS.TU]: { events: [], rows: 1, row: 2 },
-    [DAYS.WE]: { events: [], rows: 1, row: 3 },
-    [DAYS.TH]: { events: [], rows: 1, row: 4 },
-    [DAYS.FR]: { events: [], rows: 1, row: 5 },
+    [DAY.MON]: { events: [], rows: 1, row: 1 },
+    [DAY.TUE]: { events: [], rows: 1, row: 2 },
+    [DAY.WED]: { events: [], rows: 1, row: 3 },
+    [DAY.THU]: { events: [], rows: 1, row: 4 },
+    [DAY.FRI]: { events: [], rows: 1, row: 5 },
   }
 
   for (const event of data) {
@@ -52,5 +53,5 @@ export const formatData = (schedulerSettings: ISchedulerSettings, data: IData[])
 };
 
 function dayToDayEnum(day: string) {
-  return valueToEnumValue(day, DAYS);
+  return valueToEnumValue(day, DAY);
 }

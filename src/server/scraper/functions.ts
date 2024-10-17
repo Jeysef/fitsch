@@ -2,7 +2,7 @@
 "use server"
 import type { ResourceFetcher } from "solid-js";
 import { getStudyCoursesDetailsMock, getStudyOverviewMock } from "~/server/scraper/mock";
-import { type DataProviderTypes, type StudyApiTypes, type StudyOverview } from "~/server/scraper/types";
+import { type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
 
 export const getStudyOverview: ResourceFetcher<true, StudyOverview, DataProviderTypes.getStudyOverviewConfig> = async (source, { value, refetching }) => {
   "use server";

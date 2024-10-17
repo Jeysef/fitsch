@@ -134,7 +134,7 @@ interface CourseSubject {
   day: DAY;
   weeks: string;
   room: string;
-  type: SUBJECT_TYPE | null;
+  type: SUBJECT_TYPE;
   start: string;
   end: string;
   capacity: string;
@@ -148,6 +148,7 @@ interface CourseDetail {
   abbreviation: string;
   name: string;
   link: string;
+  id: string;
   timeSpan: CourseTimeSpan;
 }
 

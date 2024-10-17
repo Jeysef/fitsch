@@ -3159,11 +3159,38 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "LABORATORY": 0,
           "EXERCISE": 26,
           "SEMINAR": 0
-        }
+        },
+        "id": "281068"
       }
     },
     {
       "data": [
+        {
+          "type": "EXAM",
+          "day": "MON",
+          "weeks": "10.",
+          "room": "E104",
+          "start": "10:00",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "02 - Půlsemestrální zkouška (18.11., 10:00, E104)",
+          "note": null
+        },
+        {
+          "type": "EXAM",
+          "day": "MON",
+          "weeks": "10.",
+          "room": "E112",
+          "start": "10:00",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "01 - Půlsemestrální zkouška (18.11., 10:00, E112)",
+          "note": null
+        },
         {
           "type": "LECTURE",
           "day": "MON",
@@ -3199,20 +3226,29 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
-          "type": "LECTURE",
+          "type": "EXAM",
           "day": "MON",
           "weeks": "10.",
-          "room": "E112+4,5",
-          "start": "10:00",
-          "end": "11:50",
-          "capacity": "319",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "30 - 49 xx",
-          "info": "",
+          "room": "E104",
+          "start": "11:00",
+          "end": "11:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "04 - Půlsemestrální zkouška (18.11., 11:00, E104)",
+          "note": null
+        },
+        {
+          "type": "EXAM",
+          "day": "MON",
+          "weeks": "10.",
+          "room": "E112",
+          "start": "11:00",
+          "end": "11:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "03 - Půlsemestrální zkouška (18.11., 11:00, E112)",
           "note": null
         },
         {
@@ -3386,6 +3422,32 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "EXAM",
+          "day": "TUE",
+          "weeks": "10.",
+          "room": "D0206",
+          "start": "10:00",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "06 - Půlsemestrální zkouška (19.11., 10:00, D0206)",
+          "note": null
+        },
+        {
+          "type": "EXAM",
+          "day": "TUE",
+          "weeks": "10.",
+          "room": "D105",
+          "start": "10:00",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "05 - Půlsemestrální zkouška (19.11., 10:00, D105)",
+          "note": null
+        },
+        {
           "type": "LECTURE",
           "day": "TUE",
           "weeks": "1. 2. 3. 6. 8. 12. 13.",
@@ -3420,156 +3482,191 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
-          "type": "LECTURE",
+          "type": "EXAM",
           "day": "TUE",
           "weeks": "10.",
-          "room": "D105+6",
+          "room": "D0206",
+          "start": "11:00",
+          "end": "11:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "08 - Půlsemestrální zkouška (19.11., 11:00, D0206)",
+          "note": null
+        },
+        {
+          "type": "EXAM",
+          "day": "TUE",
+          "weeks": "10.",
+          "room": "D105",
+          "start": "11:00",
+          "end": "11:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "07 - Půlsemestrální zkouška (19.11., 11:00, D105)",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": "3. 5. 7. 9. 11. 13.",
+          "room": "L306.1 L306.2",
+          "start": "15:00",
+          "end": "16:50",
+          "capacity": "21",
+          "lectureGroup": [
+            "1BIA",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": "lichý",
+          "room": "L306.1 L306.2",
+          "start": "15:00",
+          "end": "16:50",
+          "capacity": "21",
+          "lectureGroup": [
+            "1BIA",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": "3. 5. 7. 9. 11. 13.",
+          "room": "L306.1 L306.2",
+          "start": "17:00",
+          "end": "18:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": "lichý",
+          "room": "L306.1 L306.2",
+          "start": "17:00",
+          "end": "18:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": "3. 5. 7. 9. 11. 13.",
+          "room": "L306.1 L306.2",
+          "start": "07:00",
+          "end": "08:50",
+          "capacity": "21",
+          "lectureGroup": [
+            "1BIA",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": "lichý",
+          "room": "L306.1 L306.2",
+          "start": "07:00",
+          "end": "08:50",
+          "capacity": "21",
+          "lectureGroup": [
+            "1BIA",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": "3. 5. 7. 9. 11. 13.",
+          "room": "L306.1 L306.2",
+          "start": "09:00",
+          "end": "10:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Plevač",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": "lichý",
+          "room": "L306.1 L306.2",
+          "start": "09:00",
+          "end": "10:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Plevač",
+          "note": null
+        },
+        {
+          "type": "EXAM",
+          "day": "WED",
+          "weeks": "10.",
+          "room": "D0206",
           "start": "10:00",
-          "end": "11:50",
-          "capacity": "470",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "10 - 29 xx",
-          "info": "",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "10 - Půlsemestrální zkouška (20.11., 10:00, D0206)",
           "note": null
         },
         {
-          "type": "LABORATORY",
-          "day": "TUE",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
-          "start": "15:00",
-          "end": "16:50",
-          "capacity": "21",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Goldmann",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "TUE",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
-          "start": "15:00",
-          "end": "16:50",
-          "capacity": "21",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Goldmann",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "TUE",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
-          "start": "17:00",
-          "end": "18:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Goldmann",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "TUE",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
-          "start": "17:00",
-          "end": "18:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Goldmann",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
+          "type": "EXAM",
           "day": "WED",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
-          "start": "07:00",
-          "end": "08:50",
-          "capacity": "21",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Veigend",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "WED",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
-          "start": "07:00",
-          "end": "08:50",
-          "capacity": "21",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Veigend",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "WED",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
-          "start": "09:00",
-          "end": "10:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Plevač",
-          "note": null
-        },
-        {
-          "type": "LABORATORY",
-          "day": "WED",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
-          "start": "09:00",
-          "end": "10:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Plevač",
+          "weeks": "10.",
+          "room": "D105",
+          "start": "10:00",
+          "end": "10:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "09 - Půlsemestrální zkouška (20.11., 10:00, D105)",
           "note": null
         },
         {
@@ -3643,23 +3740,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "10.",
-          "room": "D105+6",
-          "start": "10:00",
-          "end": "10:50",
-          "capacity": "470",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "10 - 29 xx",
-          "info": "",
-          "note": null
-        },
-        {
-          "type": "LECTURE",
-          "day": "WED",
           "weeks": "13.",
           "room": "D105+6",
           "start": "10:00",
@@ -3675,9 +3755,22 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "EXAM",
+          "day": "WED",
+          "weeks": "10.",
+          "room": "D105",
+          "start": "11:00",
+          "end": "11:45",
+          "capacity": "",
+          "lectureGroup": [],
+          "groups": "",
+          "info": "11 - Půlsemestrální zkouška (20.11., 11:00, D105)",
+          "note": null
+        },
+        {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "3. 5. 7. 9. 11. 13.",
+          "weeks": "3. 7. 9. 11. 13.",
           "room": "L306.1 L306.2",
           "start": "11:00",
           "end": "12:50",
@@ -3706,6 +3799,23 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           ],
           "groups": "xx",
           "info": "Strnadel",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": "5.",
+          "room": "L306.1 L306.2",
+          "start": "11:00",
+          "end": "12:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Plevač",
           "note": null
         },
         {
@@ -3740,23 +3850,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           ],
           "groups": "10 - 29 xx",
           "info": "Veigend",
-          "note": null
-        },
-        {
-          "type": "SEMINAR",
-          "day": "WED",
-          "weeks": "5. 6. 8. 10. 12. 13.",
-          "room": "D105+6",
-          "start": "11:00",
-          "end": "11:50",
-          "capacity": "470",
-          "lectureGroup": [
-            "1BIA",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "10 - 29 xx",
-          "info": "",
           "note": null
         },
         {
@@ -3830,23 +3923,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "10.",
-          "room": "D105",
-          "start": "14:00",
-          "end": "14:50",
-          "capacity": "319",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "30 - 49 xx",
-          "info": "",
-          "note": null
-        },
-        {
-          "type": "LECTURE",
-          "day": "WED",
           "weeks": "13.",
           "room": "D105",
           "start": "14:00",
@@ -3876,23 +3952,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           ],
           "groups": "30 - 49 xx",
           "info": "Šátek",
-          "note": null
-        },
-        {
-          "type": "SEMINAR",
-          "day": "WED",
-          "weeks": "5. 6. 8. 10. 12. 13.",
-          "room": "D105",
-          "start": "15:00",
-          "end": "15:50",
-          "capacity": "320",
-          "lectureGroup": [
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "30 - 49 xx",
-          "info": "",
           "note": null
         },
         {
@@ -4228,7 +4287,8 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "LABORATORY": 12,
           "EXERCISE": 0,
           "SEMINAR": 6
-        }
+        },
+        "id": "281030"
       }
     },
     {
@@ -4601,7 +4661,8 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "LABORATORY": 0,
           "EXERCISE": 26,
           "SEMINAR": 0
-        }
+        },
+        "id": "281066"
       }
     },
     {
@@ -4737,7 +4798,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "room": "D0207",
           "start": "14:00",
           "end": "15:50",
-          "capacity": "48",
+          "capacity": "49",
           "lectureGroup": [
             "1BIA",
             "1BIB",
@@ -5044,29 +5105,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "LABORATORY": 0,
           "EXERCISE": 8,
           "SEMINAR": 0
-        }
+        },
+        "id": "281002"
       }
     },
     {
       "data": [
         {
-          "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N203",
-          "start": "08:00",
-          "end": "09:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "",
-          "note": "Na výuku se nelze registrovat ve Studis.\n                                    (Termíny cvičení mohou být v případě potřeby otevřeny dodatečně, ale nemusí být využity vůbec.)"
-        },
-        {
+          "type": "LABORATORY",
           "day": "MON",
           "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
@@ -5082,23 +5128,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "groups": "xx",
           "info": "Grézl",
           "note": null
-        },
-        {
-          "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104 N105",
-          "start": "12:00",
-          "end": "13:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "",
-          "note": "Na výuku se nelze registrovat ve Studis.\n                                    (Termíny cvičení mohou být v případě potřeby otevřeny dodatečně, ale nemusí být využity vůbec.)"
         },
         {
           "type": "LECTURE",
@@ -5118,6 +5147,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "MON",
           "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
@@ -5135,6 +5165,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "MON",
           "weeks": "4.",
           "room": "N103",
@@ -5152,6 +5183,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "MON",
           "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
@@ -5169,6 +5201,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "MON",
           "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
@@ -5186,8 +5219,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "08:00",
           "end": "09:50",
@@ -5203,8 +5237,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "10:00",
           "end": "11:50",
@@ -5220,8 +5255,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "12:00",
           "end": "13:50",
@@ -5237,8 +5273,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "14:00",
           "end": "15:50",
@@ -5254,8 +5291,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "14:00",
           "end": "15:50",
@@ -5271,25 +5309,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
-          "room": "N105",
-          "start": "14:00",
-          "end": "15:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "",
-          "note": "Na výuku se nelze registrovat ve Studis.\n                                    (Termíny cvičení mohou být v případě potřeby otevřeny dodatečně, ale nemusí být využity vůbec.)"
-        },
-        {
-          "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "16:00",
           "end": "17:50",
@@ -5305,8 +5327,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "16:00",
           "end": "17:50",
@@ -5322,8 +5345,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "16:00",
           "end": "17:50",
@@ -5339,6 +5363,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
           "weeks": "4.",
           "room": "N105",
@@ -5356,8 +5381,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "18:00",
           "end": "19:50",
@@ -5373,8 +5399,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "18:00",
           "end": "19:50",
@@ -5390,8 +5417,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "18:00",
           "end": "19:50",
@@ -5407,6 +5435,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "TUE",
           "weeks": "4.",
           "room": "N105",
@@ -5424,8 +5453,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "O204",
           "start": "08:00",
           "end": "09:50",
@@ -5441,8 +5471,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "O204",
           "start": "10:00",
           "end": "11:50",
@@ -5458,8 +5489,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "14:00",
           "end": "15:50",
@@ -5539,8 +5571,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "16:00",
           "end": "17:50",
@@ -5556,8 +5589,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "16:00",
           "end": "17:50",
@@ -5573,8 +5607,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "16:00",
           "end": "17:50",
@@ -5658,8 +5693,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "18:00",
           "end": "19:50",
@@ -5675,8 +5711,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "18:00",
           "end": "19:50",
@@ -5692,8 +5729,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "WED",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "18:00",
           "end": "19:50",
@@ -5718,7 +5756,7 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "capacity": "",
           "lectureGroup": [],
           "groups": "",
-          "info": "Půlsemestrální test (skupina 1)",
+          "info": "Půlsemestrální test (skupina 2)",
           "note": null
         },
         {
@@ -5756,8 +5794,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "08:00",
           "end": "09:50",
@@ -5790,25 +5829,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
-          "room": "N103",
-          "start": "16:00",
-          "end": "17:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "Zavřel",
-          "note": null
-        },
-        {
-          "day": "THU",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "16:00",
           "end": "17:50",
@@ -5824,8 +5847,27 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
+          "room": "N103",
+          "start": "16:00",
+          "end": "17:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIA",
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Zavřel",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "16:00",
           "end": "17:50",
@@ -5841,11 +5883,12 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
-          "room": "N103",
-          "start": "18:00",
-          "end": "19:50",
+          "weeks": "4.",
+          "room": "N103+5",
+          "start": "16:00",
+          "end": "17:50",
           "capacity": "20",
           "lectureGroup": [
             "1BIA",
@@ -5854,12 +5897,13 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
             "2BIB"
           ],
           "groups": "xx",
-          "info": "Zavřel",
+          "info": "Dolejška",
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "18:00",
           "end": "19:50",
@@ -5875,8 +5919,27 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "THU",
-          "weeks": "",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
+          "room": "N103",
+          "start": "18:00",
+          "end": "19:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIA",
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Zavřel",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "18:00",
           "end": "19:50",
@@ -5892,8 +5955,27 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": "4.",
+          "room": "N103+5",
+          "start": "18:00",
+          "end": "19:50",
+          "capacity": "20",
+          "lectureGroup": [
+            "1BIA",
+            "1BIB",
+            "2BIA",
+            "2BIB"
+          ],
+          "groups": "xx",
+          "info": "Dolejška",
+          "note": null
+        },
+        {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "08:00",
           "end": "09:50",
@@ -5909,8 +5991,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "08:00",
           "end": "09:50",
@@ -5926,8 +6009,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "08:00",
           "end": "09:50",
@@ -5943,8 +6027,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N103",
           "start": "12:00",
           "end": "13:50",
@@ -5960,8 +6045,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "12:00",
           "end": "13:50",
@@ -5977,8 +6063,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N105",
           "start": "12:00",
           "end": "13:50",
@@ -5994,25 +6081,9 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "note": null
         },
         {
+          "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "",
-          "room": "N103",
-          "start": "14:00",
-          "end": "15:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "",
-          "note": "Na výuku se nelze registrovat ve Studis.\n                                    (Termíny cvičení mohou být v případě potřeby otevřeny dodatečně, ale nemusí být využity vůbec.)"
-        },
-        {
-          "day": "FRI",
-          "weeks": "",
+          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
           "room": "N104",
           "start": "14:00",
           "end": "15:50",
@@ -6026,23 +6097,6 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "groups": "xx",
           "info": "Husa",
           "note": null
-        },
-        {
-          "day": "FRI",
-          "weeks": "",
-          "room": "N105",
-          "start": "14:00",
-          "end": "15:50",
-          "capacity": "20",
-          "lectureGroup": [
-            "1BIA",
-            "1BIB",
-            "2BIA",
-            "2BIB"
-          ],
-          "groups": "xx",
-          "info": "",
-          "note": "Na výuku se nelze registrovat ve Studis.\n                                    (Termíny cvičení mohou být v případě potřeby otevřeny dodatečně, ale nemusí být využity vůbec.)"
         }
       ],
       "detail": {
@@ -6054,7 +6108,8 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
           "LABORATORY": 20,
           "EXERCISE": 0,
           "SEMINAR": 12
-        }
+        },
+        "id": "280953"
       }
     }
   ]

@@ -1,3 +1,4 @@
+import { DAY } from "~/server/scraper/types";
 
 export interface IData {
   name: string;
@@ -14,7 +15,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "Po",
+      day: DAY.MON,
       room: "A1",
       start: "07:00",
       end: "09:00",
@@ -23,7 +24,7 @@ export function getData() {
     {
       name: "IEL",
       link: "https://www.google.com",
-      day: "Po",
+      day: DAY.MON,
       room: "A2",
       start: "07:00",
       end: "10:00",
@@ -32,7 +33,7 @@ export function getData() {
     {
       name: "IEL",
       link: "https://www.google.com",
-      day: "Po",
+      day: DAY.MON,
       room: "A2",
       start: "19:00",
       end: "20:00",
@@ -41,7 +42,7 @@ export function getData() {
     {
       name: "ILG",
       link: "https://www.google.com",
-      day: "Po",
+      day: DAY.MON,
       room: "A3",
       start: "08:00",
       end: "09:00",
@@ -50,7 +51,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "Út",
+      day: DAY.TUE,
       room: "A1",
       start: "08:00",
       end: "09:00",
@@ -59,7 +60,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "St",
+      day: DAY.WED,
       room: "A1",
       start: "09:00",
       end: "10:00",
@@ -68,7 +69,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "Čt",
+      day: DAY.THU,
       room: "A1",
       start: "10:00",
       end: "11:00",
@@ -77,7 +78,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "Pá",
+      day: DAY.FRI,
       room: "A1",
       start: "11:00",
       end: "12:00",
@@ -86,7 +87,7 @@ export function getData() {
     {
       name: "IUS",
       link: "https://www.google.com",
-      day: "Pá",
+      day: DAY.FRI,
       room: "A1",
       start: "11:00",
       end: "12:00",

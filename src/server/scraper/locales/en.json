@@ -10,7 +10,7 @@
         "title": "Time span",
         "data": {
           "LECTURE": "lectur",
-          "LABORATORY": "laborator",
+          "LABORATORY": "lab",
           "EXERCISE": "exercise",
           "SEMINAR": "seminar"
         }

@@ -1,20 +1,15 @@
-export enum DAYS {
-  MO = "Po",
-  TU = "Út",
-  WE = "St",
-  TH = "Čt",
-  FR = "Pá",
-}
+import { DAY } from "~/server/scraper/types";
 
-export const days = Object.values(DAYS);
+
+export const days = Object.values(DAY);
 
 export const DayNumbers = {
-  [DAYS.MO]: 1,
-  [DAYS.TU]: 2,
-  [DAYS.WE]: 3,
-  [DAYS.TH]: 4,
-  [DAYS.FR]: 5,
-} as const satisfies Record<DAYS, number>;
+  [DAY.MON]: 1,
+  [DAY.TUE]: 2,
+  [DAY.WED]: 3,
+  [DAY.THU]: 4,
+  [DAY.FRI]: 5,
+} as const satisfies Record<DAY, number>;
 
 export interface ISchedulerSettings {
   startHour: number;
@@ -25,7 +20,7 @@ export interface ISchedulerSettings {
   timeBlocks: string[];
 }
 
-export type IScheduleData = Record<DAYS, IScheduleDay>;
+export type IScheduleData = Record<DAY, IScheduleDay>;
 
 export interface IScheduleDay {
   events: IScheduleEvent[];
@@ -46,18 +41,18 @@ export interface IScheduleEvent {
   colEnd: number;
 }
 
-interface SchedulerConfig {
-  data: {
-    type: string;
-    color: string;
-    togglable: boolean;
-    events: {
-      start: string;
-      end: string;
-      day: DAYS;
-      name: string;
-      link: string;
-      room: string;
-    }[]
-  }[]
-}
+// interface SchedulerConfig {
+//   data: {
+//     type: string;
+//     color: string;
+//     togglable: boolean;
+//     events: {
+//       start: string;
+//       end: string;
+//       day: DAY;
+//       name: string;
+//       link: string;
+//       room: string;
+//     }[]
+//   }[]
+// }

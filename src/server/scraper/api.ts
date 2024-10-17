@@ -231,13 +231,14 @@ export class StudyApi {
     const data: CourseSubject[] = $("main table#schedule tbody tr").map((_, element) => {
       const day = $(element).children("th").text().trim();
       const rowBgColor = $(element).css('background');
-      let type = rowBgColor && rowBgColor in courseTypeBasedOnColor ? courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor] : null;
       const rooms = $(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get()
       const room = conjunctRooms(rooms)
       const lectureGroup = $(element).children("td").eq(6).children("a").map((_, element) => $(element).text().trim()).get()
       const [_type, weeksText, _room, start, end, capacity, _group, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
-      // retry type
-      type = type ?? ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) => _type.includes(type))?.[0] as SUBJECT_TYPE
+      const type = rowBgColor && rowBgColor in courseTypeBasedOnColor ?
+        courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor]
+        : ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) => _type.includes(type))?.[0] as SUBJECT_TYPE;
+
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       // parseWeek may return null, but we expect an event not to
@@ -261,7 +262,8 @@ export class StudyApi {
       abbreviation,
       name,
       link,
-      timeSpan
+      timeSpan,
+      id: courseId
     }
 
     return { data, detail }

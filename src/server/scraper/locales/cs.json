@@ -10,7 +10,7 @@
         "title": "Rozsah",
         "data": {
           "LECTURE": "přednášk",
-          "LABORATORY": "laboratoř",
+          "LABORATORY": "lab",
           "EXERCISE": "cvičení",
           "SEMINAR": "seminář"
         }

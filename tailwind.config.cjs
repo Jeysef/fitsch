@@ -16,7 +16,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Geist Sans', ...defaultTheme.fontFamily.sans],
-        mono: ['Geist Mono', ...defaultTheme.fontFamily.mono],
+        mono: ['Courier Prime', ...defaultTheme.fontFamily.mono],
       },
       colors: {
         border: "hsl(var(--border))",

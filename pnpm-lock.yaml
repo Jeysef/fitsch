@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/courier-prime':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@fontsource/geist-mono':
         specifier: ^5.1.0
         version: 5.1.0
@@ -511,6 +514,9 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@fontsource/courier-prime@5.1.0':
+    resolution: {integrity: sha512-yCPhcX/h6oOL8qBbT7lVKDbJzloaUqaLdS8g/YkohO9L0hcrFhOEPhWvuQOzxXIJbmyCVGDW8i2sNnc+OSw7dw==}
 
   '@fontsource/geist-mono@5.1.0':
     resolution: {integrity: sha512-MDFgmKUdDbV357vD2bOZAro597Nd2md01GAdr3GSZteCJQdPT/UhHUBCAxl9KUiH03aMPFM9Rx7x8/EtrJmpKg==}
@@ -3675,6 +3681,8 @@ snapshots:
       '@floating-ui/utils': 0.2.8
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@fontsource/courier-prime@5.1.0': {}
 
   '@fontsource/geist-mono@5.1.0': {}
 
