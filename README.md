@@ -55,6 +55,7 @@ In this project I am using specific naming so I want to explain:
 - **program**: programme in british english {Bachelor, Magister, Doctorat}
 - **study program** ordered by importance:
   - year: Rok {2024, ...}
+  - grade: Bakalář, magistr, doktor
   - program: Studijní program {BIT, MIT, DIT}
   - field: Specializace {NADE, NBIO, ...}
   - semester: Semestr {Zimní, Letní}
