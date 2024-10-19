@@ -2,7 +2,7 @@ import { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { StudyApiTypes, type CourseDetail, type CourseSubject, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
+import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 import { DEGREE, SEMESTER, SUBJECT_TYPE, type DAY } from "./enums";
 
@@ -38,7 +38,7 @@ export class StudyApi {
   /**
    * I strongly recommend passing the year parameter, it helps caching the data
    */
-  getTimeSchedule = async (config: StudyTimeScheduleConfig = { year: null }) => {
+  getTimeSchedule = async (config: StudyApiTypes.getStudyTimeScheduleConfig = { year: null }): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
     const { year } = config
     if (year && this._timeSchedule?.has(year)) return this._timeSchedule.get(year)!
     const languageSet = await this.getLanguageSet();
@@ -162,7 +162,7 @@ export class StudyApi {
       const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
       prevYear = year;
       if (!courses[year]) {
-        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation, id: createStudyId(programUrl) };
+        courses[year] = { [SEMESTER.WINTER]: [], [SEMESTER.SUMMER]: [], name, abbreviation, id: createStudyId(programUrl), url: programUrl };
       }
 
       const rows = $(element).find('tbody tr');
@@ -229,7 +229,7 @@ export class StudyApi {
 
     const noteText = $("main div.b-detail .b-detail__body .footnote").text().trim()
 
-    const data: CourseSubject[] = $("main table#schedule tbody tr").map((_, element) => {
+    const data: StudyApiTypes.getStudyCourseDetailsReturn["data"] = $("main table#schedule tbody tr").map((_, element) => {
       const day = $(element).children("th").text().trim();
       const rowBgColor = $(element).css('background');
       const rooms = $(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get()
@@ -255,10 +255,10 @@ export class StudyApi {
         groups,
         info,
         note: hasNote ? noteText : null,
-      } satisfies CourseSubject
+      }
     }).get()
 
-    const detail: CourseDetail = {
+    const detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"] = {
       abbreviation,
       name,
       link,
