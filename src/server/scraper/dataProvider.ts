@@ -4,7 +4,7 @@ import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
 import { DEGREE, LANGUAGE, SEMESTER } from "./enums";
-import { type DataProviderTypes, type StudyCourse, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
+import { type CourseLecture, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {
@@ -43,7 +43,7 @@ export class DataProvider {
     const degrees = Object.values(DEGREE);
     const semesters = Object.values(SEMESTER);
 
-    const courses = ObjectTyped.fromEntries(ObjectTyped.entries(programData).map(([grade, gradeData]) => ([
+    const courses: DataProviderTypes.getStudyOverviewReturn["data"]["courses"] = ObjectTyped.fromEntries(ObjectTyped.entries(programData).map(([grade, gradeData]) => ([
       grade,
       ObjectTyped.fromEntries(semesters.map(semester => ([
         semester,
@@ -51,12 +51,12 @@ export class DataProvider {
           const { name, abbreviation, id, url } = course;
           return {
             ...acc,
-            [course.obligation ? 'compulsory' : 'optional']: [...acc[course.obligation ? 'compulsory' : 'optional'], { name, abbreviation, id } as StudyOverviewCourse]
+            [course.obligation ? 'compulsory' : 'optional']: [...acc[course.obligation ? 'compulsory' : 'optional'], { name, abbreviation, id, url } satisfies StudyOverviewCourse]
           }
-        }, { compulsory: [], optional: [] } as Record<"compulsory" | "optional", StudyOverviewCourse[]>)
+        }, { compulsory: [], optional: [] } satisfies Record<"compulsory" | "optional", StudyOverviewCourse[]>)
       ] as const
       )))
-    ] as [string, Record<SEMESTER, Record<"compulsory" | "optional", StudyOverviewCourse[]>>]
+    ] satisfies [string, Record<SEMESTER, Record<"compulsory" | "optional", StudyOverviewCourse[]>>]
     )))
 
 
@@ -86,3 +86,41 @@ export class DataProvider {
     return Promise.all(courses.map(course => this.studyApi.getStudyCourseDetails({ courseId: course.courseId })))
   }
 };
+
+function coonjunctLectures(lectures: CourseLecture[]): CourseLecture[] {
+  // go through all lectures.
+  // check the next (right) lecture, if same day and time, merge them
+  // if not, end search from current lecture, move to next
+  // merge means, add the room and teacher to the current lecture, remove the next (similar) lecture
+  // repeat until no more lectures
+  // lectures are sorted by day and time
+
+  lectures.forEach((lecture, i) => {
+    const lectureRooms = lecture.room.split(' ')
+    // check next lectures one by one
+    for (let j = i + 1; j < lectures.length; j++) {
+      const nextLecture = lectures[j]
+      // if same day and time
+      if (nextLecture.day === lecture.day && nextLecture.start === lecture.start && nextLecture.end === lecture.end) {
+        if (nextLecture.weeks === lecture.weeks || nextLecture.lectureGroup === lecture.lectureGroup || nextLecture.weeks.length === 1) {
+
+          // merge them
+          lecture.room = `${lecture.room}, ${nextLecture.room}`
+          lecture.info = `${lecture.info}, ${nextLecture.info}`
+          // remove next lecture
+          lectures.splice(j, 1)
+          // repeat
+          j--
+        }
+        // else {
+        //   // no more lectures to merge
+        //   break
+        // }
+      } else {
+        // no more lectures to merge
+        break
+      }
+    }
+  })
+  return lectures
+}

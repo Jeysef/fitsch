@@ -10,11 +10,11 @@ export const getStudyOverview: ResourceFetcher<true, StudyOverview, DataProvider
   // const language = LANGUAGE.CZECH;
 
   // const languageProvider = new LanguageProvider(language);
-  // const dataProvider = new DataProvider(languageProvider);
-  // // @ts-ignore
-  // const data = await dataProvider.getStudyOverview(refetching ?? undefined);
+  // const dataProvider = new DataProvider(languageProvider, fromURL);
+  // const data = await dataProvider.getStudyOverview(typeof refetching === "boolean" ? undefined : refetching);
+  // return data
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  return getStudyOverviewMock(typeof refetching === "boolean" ? undefined : refetching) as StudyOverview
+  return getStudyOverviewMock(typeof refetching === "boolean" ? undefined : refetching)
 }
 
 export const getStudyCoursesDetails = async (config: DataProviderTypes.getStudyCoursesDetailsConfig): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> => {
@@ -24,9 +24,8 @@ export const getStudyCoursesDetails = async (config: DataProviderTypes.getStudyC
   // const language = LANGUAGE.CZECH;
 
   // const languageProvider = new LanguageProvider(language);
-  // const dataProvider = new DataProvider(languageProvider);
+  // const dataProvider = new DataProvider(languageProvider, fromURL);
   // const data = await dataProvider.getStudyCoursesDetails(config)
-  // console.log("🚀 ~ file: actions.ts:27 ~ submitData ~ data:", data)
   // return data
   return getStudyCoursesDetailsMock(config)
 }

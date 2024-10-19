@@ -81,6 +81,19 @@ interface StudyCourse extends StudyOverviewCourse {
 }
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
+interface CourseLecture {
+  day: DAY;
+  weeks: string;
+  room: string;
+  type: LECTURE_TYPE;
+  start: string;
+  end: string;
+  capacity: string;
+  lectureGroup: string[];
+  groups: string;
+  info: string;
+  note: string | null;
+}
 
 export namespace StudyApiTypes {
   export interface getStudyTimeScheduleConfig {
@@ -105,19 +118,6 @@ export namespace StudyApiTypes {
     courseId: string;
   }
 
-  interface CourseLecture {
-    day: DAY;
-    weeks: string;
-    room: string;
-    type: LECTURE_TYPE;
-    start: string;
-    end: string;
-    capacity: string;
-    lectureGroup: string[];
-    groups: string;
-    info: string;
-    note: string | null;
-  }
 
   type CourseTimeSpan = Record<LECTURE_TYPE, number>
 
@@ -151,5 +151,5 @@ export namespace DataProviderTypes {
 }
 
 
-export type { GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
+export type { CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
 
