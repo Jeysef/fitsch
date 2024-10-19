@@ -74,7 +74,9 @@ export class DataProvider {
 
   public async getStudyCourseDetails(config: DataProviderTypes.getStudyCourseDetailsConfig): Promise<DataProviderTypes.getStudyCourseDetailsReturn> {
     const { courseId } = config
-    return await this.studyApi.getStudyCourseDetails({ courseId })
+    const data = await this.studyApi.getStudyCourseDetails({ courseId })
+    return data
+
   }
 
   public async getStudyCoursesDetails(config: DataProviderTypes.getStudyCoursesDetailsConfig): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {

@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import { DEGREE, SEMESTER, StudyApiTypes, SUBJECT_TYPE, type CourseDetail, type CourseSubject, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
-import { conjunctRooms, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
@@ -232,7 +232,6 @@ export class StudyApi {
       const day = $(element).children("th").text().trim();
       const rowBgColor = $(element).css('background');
       const rooms = $(element).children("td").eq(2).children("a").map((_, element) => $(element).text().trim()).get()
-      const room = conjunctRooms(rooms)
       const lectureGroup = $(element).children("td").eq(6).children("a").map((_, element) => $(element).text().trim()).get()
       const [_type, weeksText, _room, start, end, capacity, _group, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
       const type = rowBgColor && rowBgColor in courseTypeBasedOnColor ?
@@ -247,7 +246,7 @@ export class StudyApi {
         type,
         day: normalizedDay,
         weeks,
-        room,
+        room: rooms.join(" "),
         start,
         end,
         capacity,
