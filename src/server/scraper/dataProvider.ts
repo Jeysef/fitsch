@@ -4,7 +4,7 @@ import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
 import { DEGREE, LANGUAGE, SEMESTER } from "./enums";
-import { type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
+import { type DataProviderTypes, type StudyCourse, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {
@@ -86,4 +86,3 @@ export class DataProvider {
     return Promise.all(courses.map(course => this.studyApi.getStudyCourseDetails({ courseId: course.courseId })))
   }
 };
-

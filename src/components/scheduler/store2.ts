@@ -1,5 +1,5 @@
 import { ObjectTyped } from "object-typed";
-import { DAY, SUBJECT_TYPE } from "~/server/scraper/enums";
+import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { DataProviderTypes } from "~/server/scraper/types";
 
 interface ISchedulerTime {
@@ -73,7 +73,7 @@ export interface ParsedEvent extends TimeFrame {
   link: string;
   id: string;
   room: string;
-  type: SUBJECT_TYPE;
+  type: LECTURE_TYPE;
 }
 
 type ParsedEvents = {
@@ -119,12 +119,12 @@ export class SchedulerStore {
     this.data = ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: this.getDayRow(day), dayRows: 1, events: [] as ParsedEvents }])) satisfies ParsedDayData
   }
 
-  private getEventTypePriority(type: SUBJECT_TYPE): number {
+  private getEventTypePriority(type: LECTURE_TYPE): number {
     switch (type) {
-      case SUBJECT_TYPE.LECTURE: return 0;
-      case SUBJECT_TYPE.SEMINAR: return 1;
-      case SUBJECT_TYPE.EXERCISE: return 2;
-      case SUBJECT_TYPE.LABORATORY: return 3;
+      case LECTURE_TYPE.LECTURE: return 0;
+      case LECTURE_TYPE.SEMINAR: return 1;
+      case LECTURE_TYPE.EXERCISE: return 2;
+      case LECTURE_TYPE.LABORATORY: return 3;
       default: return 4; // For any other types
     }
   }

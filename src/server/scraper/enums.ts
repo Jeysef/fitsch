@@ -18,7 +18,7 @@ export enum SEMESTER {
   WINTER = "WINTER",
   SUMMER = "SUMMER"
 }
-export enum SUBJECT_TYPE {
+export enum LECTURE_TYPE {
   LECTURE = "LECTURE",// presentation by lecturer
   LABORATORY = "LABORATORY",// exercises performed by students
   EXERCISE = "EXERCISE",// exercises performed by lecturer for few students

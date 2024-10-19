@@ -1,5 +1,5 @@
 import type { gradeAll } from "~/server/scraper/constants";
-import type { DAY, DEGREE, SEMESTER, SUBJECT_TYPE } from "~/server/scraper/enums";
+import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER } from "~/server/scraper/enums";
 
 /**
  * @example "program-8956", "course-xxxxx"
@@ -105,11 +105,11 @@ export namespace StudyApiTypes {
     courseId: string;
   }
 
-  interface CourseSubject {
+  interface CourseLecture {
     day: DAY;
     weeks: string;
     room: string;
-    type: SUBJECT_TYPE;
+    type: LECTURE_TYPE;
     start: string;
     end: string;
     capacity: string;
@@ -119,7 +119,7 @@ export namespace StudyApiTypes {
     note: string | null;
   }
 
-  type CourseTimeSpan = Record<SUBJECT_TYPE, number>
+  type CourseTimeSpan = Record<LECTURE_TYPE, number>
 
   interface CourseDetail {
     abbreviation: string;
@@ -131,7 +131,7 @@ export namespace StudyApiTypes {
 
   export interface getStudyCourseDetailsReturn {
     detail: CourseDetail;
-    data: CourseSubject[];
+    data: CourseLecture[];
   }
 }
 

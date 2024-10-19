@@ -4,7 +4,7 @@ import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { DEGREE, SEMESTER, SUBJECT_TYPE, type DAY } from "./enums";
+import { DEGREE, LECTURE_TYPE, SEMESTER, type DAY } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
@@ -208,9 +208,9 @@ export class StudyApi {
     const $ = await this.fetchDocument(courseUrl)
     const courseTypeBasedOnColor = {
       // "#e8ffff": // exercise & seminar
-      "#e0ffe0": SUBJECT_TYPE.LECTURE,
-      "#ffffdc": SUBJECT_TYPE.LABORATORY,
-      "#ffe6cc": SUBJECT_TYPE.EXAM
+      "#e0ffe0": LECTURE_TYPE.LECTURE,
+      "#ffffdc": LECTURE_TYPE.LABORATORY,
+      "#ffe6cc": LECTURE_TYPE.EXAM
     }
 
     const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
@@ -224,7 +224,7 @@ export class StudyApi {
 
     const timeSpan = ObjectTyped.fromEntries(ObjectTyped.entries(languageSet.course.detail.timeSpan.data).map(([type, text]) => {
       const hours = parseInt(rangeText.find((rangeText) => rangeText.includes(text))?.split(" ")[0] ?? "0")
-      return [valueToEnumValue(type, SUBJECT_TYPE), hours] as const
+      return [valueToEnumValue(type, LECTURE_TYPE), hours] as const
     }))
 
     const noteText = $("main div.b-detail .b-detail__body .footnote").text().trim()
@@ -237,7 +237,7 @@ export class StudyApi {
       const [_type, weeksText, _room, start, end, capacity, _group, groups, info] = $(element).children("td").map((_, element) => (removeSpaces($(element).text()))).get();
       const type = rowBgColor && rowBgColor in courseTypeBasedOnColor ?
         courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor]
-        : ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) => _type.includes(type))?.[0] as SUBJECT_TYPE;
+        : ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) => _type.includes(type))?.[0] as LECTURE_TYPE;
 
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
