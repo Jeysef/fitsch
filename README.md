@@ -41,3 +41,22 @@ To run them, simply start:
 npm test
 ```
 
+
+# Fit Scheduler (FITSCH)
+
+## Abstract
+
+This is a student's project to enhance students's experience with selecting their study programmes (programs), replace the current version and nevertheless important make me learn programming by building new Projects
+
+# For future mainteinters
+
+In this project I am using specific naming so I want to explain:
+
+- **program**: programme in british english {Bachelor, Magister, Doctorat}
+- **study program** ordered by importance:
+  - year: Rok {2024, ...}
+  - program: Studijní program {BIT, MIT, DIT}
+  - field: Specializace {NADE, NBIO, ...}
+  - semester: Semestr {Zimní, Letní}
+  - course: Předmět {IDM, IZP, ...}
+  - lecture: Použito v širším slova smyslu {přednáška, cvičení, laboratoř, ...}
