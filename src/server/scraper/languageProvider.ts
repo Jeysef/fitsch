@@ -1,4 +1,4 @@
-import { LANGUAGE } from '~/server/scraper/types';
+import { LANGUAGE } from "./enums";
 
 export class LanguageProvider {
   readonly languageSet;

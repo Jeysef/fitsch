@@ -1,5 +1,6 @@
 import { z, type ZodObject, type ZodTypeAny } from "zod";
-import { SEMESTER, type StudyOverview } from "~/server/scraper/types";
+import { SEMESTER } from "~/server/scraper/enums";
+import { type StudyOverview } from "~/server/scraper/types";
 
 
 export const navigationSchema = z.object({

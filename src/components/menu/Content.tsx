@@ -1,7 +1,7 @@
-import { useAction, useSubmission } from "@solidjs/router";
+import { useAction } from "@solidjs/router";
 import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createEffect, createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
+import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -12,8 +12,9 @@ import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { createDeepSignal } from "~/lib/solid";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
+import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import { DEGREE, SEMESTER, type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
+import { type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {

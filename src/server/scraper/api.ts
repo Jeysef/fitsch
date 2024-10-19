@@ -2,8 +2,9 @@ import { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { DEGREE, SEMESTER, StudyApiTypes, SUBJECT_TYPE, type CourseDetail, type CourseSubject, type DAY, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
+import { StudyApiTypes, type CourseDetail, type CourseSubject, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type StudyTimeScheduleConfig } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { DEGREE, SEMESTER, SUBJECT_TYPE, type DAY } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'

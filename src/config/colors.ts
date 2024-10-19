@@ -1,4 +1,4 @@
-import { SUBJECT_TYPE } from "~/server/scraper/types";
+import { SUBJECT_TYPE } from "~/server/scraper/enums";
 
 /**
  * These colors are taken from the official VUT mobile app

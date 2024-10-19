@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { SEMESTER } from '~/server/scraper/types';
 import { conjunctRooms, constructGradeLabel, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { SEMESTER } from "../enums";
 
 describe('utils', () => {
   test("should get conjuncted rooms", async () => {

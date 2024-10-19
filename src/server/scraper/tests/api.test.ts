@@ -4,7 +4,8 @@ import fs from 'fs';
 import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
-import { DEGREE, LANGUAGE, SEMESTER, type StudyApiTypes } from '~/server/scraper/types';
+import { type StudyApiTypes } from '~/server/scraper/types';
+import { DEGREE, LANGUAGE, SEMESTER } from "../enums";
 
 vi.mock("cheerio", async () => {
   const cheerio = await vi.importActual('cheerio') as any;

@@ -1,5 +1,6 @@
 import { getWeekNumber } from "~/lib/date";
-import { gradeAll, SEMESTER, type StudyId } from "~/server/scraper/types";
+import { gradeAll, type StudyId } from "~/server/scraper/types";
+import { SEMESTER } from "./enums";
 
 export function conjunctRooms(rooms: string[]): string {
   const conjunctedRooms = [

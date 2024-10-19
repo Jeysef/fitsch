@@ -1,5 +1,6 @@
 import { ObjectTyped } from "object-typed";
-import { DataProviderTypes, DAY, SUBJECT_TYPE } from "~/server/scraper/types";
+import { DAY, SUBJECT_TYPE } from "~/server/scraper/enums";
+import { DataProviderTypes } from "~/server/scraper/types";
 
 interface ISchedulerTime {
   hour: number;

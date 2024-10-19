@@ -1,4 +1,4 @@
-import { DAY } from "~/server/scraper/types";
+import { DAY } from "~/server/scraper/enums";
 
 export interface IData {
   name: string;

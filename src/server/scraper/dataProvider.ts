@@ -2,7 +2,8 @@ import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { constructGradeLabel } from '~/server/scraper/utils';
-import { DEGREE, LANGUAGE, SEMESTER, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
+import { DEGREE, LANGUAGE, SEMESTER } from "./enums";
+import { type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {

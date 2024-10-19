@@ -1,38 +1,4 @@
-enum LANGUAGE {
-  ENGLISH = 'en',
-  CZECH = 'cs',
-}
-/**
- * translation: Studium
- * 
- * ends with title of the study program
- */
-enum DEGREE {
-  BACHELOR = "BACHELOR",
-  MASTER = "MASTER",
-  DOCTORAL = "DOCTORAL",
-}
-/** Yeah, they are only two */
-enum SEMESTER {
-  WINTER = "WINTER",
-  SUMMER = "SUMMER"
-}
-
-enum SUBJECT_TYPE {
-  LECTURE = "LECTURE",        // presentation by lecturer
-  LABORATORY = "LABORATORY",  // exercises performed by students
-  EXERCISE = "EXERCISE",      // exercises performed by lecturer for few students
-  SEMINAR = "SEMINAR",        // exercises performed by lecturer for many students
-  EXAM = "EXAM",              // exam
-}
-
-enum DAY {
-  MON = "MON",
-  TUE = "TUE",
-  WED = "WED",
-  THU = "THU",
-  FRI = "FRI",
-}
+import type { DAY, DEGREE, SEMESTER, SUBJECT_TYPE } from "~/server/scraper/enums";
 
 /**
  * @example "program-8956"
@@ -194,6 +160,6 @@ export namespace DataProviderTypes {
 }
 
 
-export { DAY, DEGREE, LANGUAGE, SEMESTER, SUBJECT_TYPE, gradeAll };
-export type { CourseDetail, CourseSubject, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyProgramWithUrl, StudyPrograms, StudySpecialization, StudyTimeScheduleConfig };
+export { gradeAll };
+export type { CourseDetail, CourseSubject, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyPrograms, StudyProgramWithUrl, StudySpecialization, StudyTimeScheduleConfig };
 

@@ -1,4 +1,5 @@
-import { DEGREE, type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
+import { type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
+import { DEGREE } from "./enums";
 
 
 const mockDataConstant = ({

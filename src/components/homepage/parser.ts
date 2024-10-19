@@ -1,6 +1,6 @@
 import { DayNumbers, type IScheduleData, type ISchedulerSettings } from "~/components/scheduler/types";
 import { valueToEnumValue } from "~/lib/utils";
-import { DAY } from "~/server/scraper/types";
+import { DAY } from "~/server/scraper/enums";
 import type { IData } from "./data";
 
 
