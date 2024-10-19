@@ -1,15 +1,12 @@
+import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, SEMESTER, SUBJECT_TYPE } from "~/server/scraper/enums";
 
 /**
- * @example "program-8956"
+ * @example "program-8956", "course-xxxxx"
  */
 type StudyId = string;
 
-interface StudyPrograms {
-  [DEGREE.BACHELOR]: { [id: StudyId]: StudyProgram };
-  [DEGREE.MASTER]: { [id: StudyId]: StudyProgram };
-  [DEGREE.DOCTORAL]: { [id: StudyId]: StudyProgram };
-}
+type StudyPrograms = Record<DEGREE, Record<StudyId, StudyProgram>>;
 interface StudyProgramBase {
   name: string;
   abbreviation: string;
@@ -25,13 +22,7 @@ interface StudyProgram extends StudyProgramWithUrl {
 }
 interface StudySpecialization extends StudyProgramWithUrl { }
 
-const gradeAll = "ALL";
-type GradeAll = typeof gradeAll;
-type GradeNumber = number;
-type GradeWithoutAll = `${GradeNumber}${StudyProgramBase["abbreviation"]}`;
-type GradeKey = string | GradeAll;
-
-
+type GradeKey = string | typeof gradeAll;
 interface StudyOverviewYear { value: string, label: string }
 interface StudyOverviewGrade { key: GradeKey, label: string }
 interface StudyOverview {
@@ -67,28 +58,23 @@ interface StudyOverview {
      * because pages are structured like this
      */
     courses: {
+      // TODO: StudyOverviewCourse -> StudyOverviewCourse with url
       [grade: GradeKey]: { [S in SEMESTER]: { [T in "compulsory" | "optional"]: StudyOverviewCourse[] } },
     }
   }
 }
 
-interface StudyOverviewCourse {
-  abbreviation: string;
-  name: string;
-  id: string;
-}
-
-
-type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
-type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
+interface StudyOverviewCourse extends StudyProgramBase { }
 interface StudyCourse extends StudyOverviewCourse {
-  link: string;
+  url: string;
   credits: string;
   obligation: boolean;
   completion: string;
   faculty: string;
   note: boolean;
 }
+type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
+type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
 
 
 
@@ -160,6 +146,5 @@ export namespace DataProviderTypes {
 }
 
 
-export { gradeAll };
-export type { CourseDetail, CourseSubject, GradeKey, GradeWithoutAll, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyPrograms, StudyProgramWithUrl, StudySpecialization, StudyTimeScheduleConfig };
+export type { CourseDetail, CourseSubject, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramWithUrl as StudyProgramBase, StudyPrograms, StudyProgramWithUrl, StudySpecialization, StudyTimeScheduleConfig };
 

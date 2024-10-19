@@ -47,7 +47,7 @@ export class DataProvider {
       ObjectTyped.fromEntries(semesters.map(semester => ([
         semester,
         gradeData![semester].reduce((acc, course) => {
-          const { name, abbreviation, id } = course;
+          const { name, abbreviation, id, url } = course;
           return {
             ...acc,
             [course.obligation ? 'compulsory' : 'optional']: [...acc[course.obligation ? 'compulsory' : 'optional'], { name, abbreviation, id } as StudyOverviewCourse]

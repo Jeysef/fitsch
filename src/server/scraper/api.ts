@@ -170,8 +170,8 @@ export class StudyApi {
         const rowBgColor = $(element).css('background-color');
         const abbreviation = $(element).children("th").text().trim();
         const name = $(element).children("td").first().children("a").text().trim();
-        const link = $(element).children("td").first().children("a").attr("href")!;
-        const id = link.match(/\/course\/(\d+)/)?.[1] ?? "";
+        const url = $(element).children("td").first().children("a").attr("href")!;
+        const id = url.match(/\/course\/(\d+)/)?.[1] ?? "";
         const credits = $(element).children("td").eq(1).text().trim();
         const obligationText = $(element).children("td").eq(2).text().trim();
         const completion = $(element).children("td").eq(3).text().trim();
@@ -192,7 +192,7 @@ export class StudyApi {
             else if (obligationText === locales.course.obligation.elective) { obligation = false }
             break;
         }
-        return ({ abbreviation, name, link, credits, obligation, completion, faculty, note, id });
+        return ({ abbreviation, name, url, credits, obligation, completion, faculty, note, id });
       }).get()
     })
 
