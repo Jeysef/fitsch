@@ -14,7 +14,7 @@ import { createDeepSignal } from "~/lib/solid";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import { type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgramWithUrl } from "~/server/scraper/types";
+import { type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type ValidatorFn } from "~/solid-forms/";
 
 export default function Wrapper() {
@@ -61,7 +61,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
     degree: createFormControl<DEGREE>(data()?.values.degree, { required: true, validators: validator.bind(null, "degree") }),
     grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
-    program: createFormControl<StudyProgramWithUrl["id"]>(data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
+    program: createFormControl<StudyProgram["id"]>(data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
     coursesCompulsory: createFormControl<string[]>(defaultValues.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
     coursesOptional: createFormControl<string[]>(defaultValues.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
   } satisfies {
