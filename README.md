@@ -53,11 +53,11 @@ This is a student's project to enhance students's experience with selecting thei
 In this project I am using specific naming so I want to explain:
 
 - **program**: programme in british english {Bachelor, Magister, Doctorat}
-- **study program** ordered by importance:
+- **study overview** ordered by importance:
   - year: Rok {2024, ...}
-  - grade: Bakalář, magistr, doktor
-  - program: Studijní program {BIT, MIT, DIT}
-  - field: Specializace {NADE, NBIO, ...}
+  - degree: Bakalář, magistr, doktor
+  - program: Studijní program {BIT, MIT, DIT} i specializace(field) {NADE, NBIO, ...}
+  - grade: Ročník studia {1, 2, ...}
   - semester: Semestr {Zimní, Letní}
   - course: Předmět {IDM, IZP, ...}
   - lecture: Použito v širším slova smyslu {přednáška, cvičení, laboratoř, ...}

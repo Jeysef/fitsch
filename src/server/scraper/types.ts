@@ -23,6 +23,9 @@ interface StudySpecialization extends StudyProgramBase { }
 type GradeKey = string | typeof gradeAll;
 interface StudyOverviewYear { value: string, label: string }
 interface StudyOverviewGrade { key: GradeKey, label: string }
+/**
+ * For documentation refer to readme
+ */
 interface StudyOverview {
   /**
    * current data
@@ -32,20 +35,21 @@ interface StudyOverview {
   values: {
     year: StudyOverviewYear,
     degree: DEGREE,
-    /**
-     * Programs and specializations.
-    */
     program?: StudyProgramBase,
+    // grade: is loaded
+    // semester is loaded
+    // coureses are loaded
+    // lectures are not needed
   },
   /**
    * Data coresponding to the chosen values
   */
   data: {
     years: StudyOverviewYear[],
-    semesters: SEMESTER[],
     degrees: DEGREE[],
-    grades: StudyOverviewGrade[],
     programs: Record<DEGREE, StudyProgram[]>,
+    grades: StudyOverviewGrade[],
+    semesters: SEMESTER[],
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
