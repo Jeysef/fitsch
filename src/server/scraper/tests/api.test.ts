@@ -1,52 +1,36 @@
 // import { fromURL } from 'cheerio';
-import { fromURL } from 'cheerio';
+import { load } from 'cheerio';
 import fs from 'fs';
-import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { type StudyApiTypes } from '~/server/scraper/types';
 import { DEGREE, LANGUAGE, SEMESTER } from "../enums";
 
-vi.mock("cheerio", async () => {
-  const cheerio = await vi.importActual('cheerio') as any;
-  const loadWebsite = (url: string) => {
-    const getUrl = () => {
-      const lang = url.includes('.en') ? 'en' : 'cs'
-      if (url.includes('programs')) {
-        return "/htmls/programs.html"
-      } if (url.includes('program')) {
-        // right after program
-        const program = url.split('program/')[1].split('/')[0]
-        return `/htmls/program-${program}.html`
-      } if (url.includes('calendar')) {
-        return `/htmls/calendar.${lang}.html`
-      } if (url.includes('course')) {
-        const id = url.split('course/')[1].split('/')[0]
-        console.log("🚀 ~ file: api.test.ts:24 ~ getUrl ~ id:", id)
-        return `/htmls/course-${id}.html`
-      }
-      return
+const loadWebsite = (url: string) => {
+  const getUrl = () => {
+    const lang = url.includes('.en') ? 'en' : 'cs'
+    if (url.includes('programs')) {
+      return "/htmls/programs.html"
+    } if (url.includes('program')) {
+      // right after program
+      const program = url.split('program/')[1].split('/')[0]
+      return `/htmls/program-${program}.html`
+    } if (url.includes('calendar')) {
+      return `/htmls/calendar.${lang}.html`
+    } if (url.includes('course')) {
+      const id = url.split('course/')[1].split('/')[0]
+      console.log("🚀 ~ file: api.test.ts:24 ~ getUrl ~ id:", id)
+      return `/htmls/course-${id}.html`
     }
-    const htmlUrl = getUrl()
-    if (!htmlUrl) return ""
-    const website = fs.readFileSync(__dirname + htmlUrl).toString()
-    return website
+    return
   }
-  return {
-    fromURL: vi.fn(async (url: string) => cheerio.load(loadWebsite(url)))
-  }
-})
-
-// mock assert ex: assert(enumValue, `Value ${value} is not a valid enum value`);
-vi.mock("assert", async () => {
-  return {
-    assert: vi.fn((value: any, message: string) => {
-      if (value === undefined) {
-        throw new Error(message);
-      }
-    })
-  }
-})
+  const htmlUrl = getUrl()
+  if (!htmlUrl) return ""
+  const website = fs.readFileSync(__dirname + htmlUrl).toString()
+  return website
+}
+const fetcher = vi.fn().mockImplementation(async (url: string) => load(loadWebsite(url)))
 
 describe.each([
   LANGUAGE.ENGLISH, LANGUAGE.CZECH
@@ -56,12 +40,8 @@ describe.each([
 
   beforeEach(() => {
     languageProvider = new LanguageProvider(lang);
-    studyApi = new StudyApi(languageProvider);
+    studyApi = new StudyApi(languageProvider, fetcher);
   });
-
-  afterAll(() => {
-    vi.clearAllMocks()
-  })
 
   test(`should be correct language for ${lang} lang`, async () => {
     const language = await studyApi["languageProvider"].language;
@@ -364,7 +344,7 @@ describe.each([
       [DEGREE.DOCTORAL]: 'D',
     }
     const programs = await studyApi.getStudyPrograms(config);
-    expect(fromURL).toBeCalledWith(`https://www.fit.vut.cz/study/programs/.${lang}?degree=${urlTypeDegrees[degree]}&year=${year}`);
+    expect(fetcher).toBeCalledWith(`https://www.fit.vut.cz/study/programs/.${lang}?degree=${urlTypeDegrees[degree]}&year=${year}`);
 
   })
 
@@ -374,7 +354,7 @@ describe.each([
       [SEMESTER.WINTER]: new Date("2024-09-16"),
       [SEMESTER.SUMMER]: new Date("2025-02-10")
     }
-    expect(fromURL).toBeCalledWith(`https://www.fit.vut.cz/study/calendar/${year}/.${lang}`);
+    expect(fetcher).toBeCalledWith(`https://www.fit.vut.cz/study/calendar/${year}/.${lang}`);
     expect(schedule).toEqual(expected);
   })
 

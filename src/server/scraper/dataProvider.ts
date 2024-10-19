@@ -1,3 +1,4 @@
+import type { fromURL } from 'cheerio';
 import { ObjectTyped } from 'object-typed';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
@@ -8,8 +9,8 @@ import { type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, t
 
 export class DataProvider {
   readonly studyApi: StudyApi;
-  constructor(private readonly languageProvider: LanguageProvider) {
-    this.studyApi = new StudyApi(languageProvider)
+  constructor(private readonly languageProvider: LanguageProvider, private readonly fetcher: typeof fromURL) {
+    this.studyApi = new StudyApi(languageProvider, fetcher)
   }
 
   public async getStudyOverview(config?: DataProviderTypes.getStudyOverviewConfig): Promise<DataProviderTypes.getStudyOverviewReturn> {

@@ -10,7 +10,7 @@ export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
   private _languageSet: Awaited<typeof this.languageProvider.languageSet> | undefined;
   private _timeSchedule: Map<string, Awaited<Record<SEMESTER, Date>>>;
-  constructor(private readonly languageProvider: LanguageProvider) {
+  constructor(private readonly languageProvider: LanguageProvider, private readonly fetcher: typeof fromURL) {
     this._languageSet = undefined
     this._timeSchedule = new Map()
   }
@@ -28,7 +28,7 @@ export class StudyApi {
   // }
 
   private fetchDocument(url: string) {
-    return fromURL(url)
+    return this.fetcher(url)
   }
 
   private get urlLanguage() {
