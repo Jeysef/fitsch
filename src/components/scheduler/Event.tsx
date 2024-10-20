@@ -17,7 +17,7 @@ export default function ScheduleEvent(props: EventProps) {
       <Checkbox class="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none ">
         <CheckboxControl />
       </Checkbox>
-      <Text variant="largeText" class="w-full px-7">{event.abbreviation}</Text>
+      <Text variant="largeText" class="w-full">{event.abbreviation}</Text>
       <Text variant="smallText">{event.room}</Text>
       <div class="flex flex-1" />
       <Text variant="smallText" class={cn(ellipsis2line, "text-xs")}>{formatWeeks(event.weeks.weeks!)}</Text>
