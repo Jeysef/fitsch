@@ -3,8 +3,8 @@ import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization } from "~/server/scraper/types";
-import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { DEGREE, LECTURE_TYPE, SEMESTER, type DAY } from "./enums";
+import { createStudyId, getParityOfWeeks, getWeekFromSemesterStart, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY, type DAY } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
@@ -201,9 +201,9 @@ export class StudyApi {
 
 
   async getStudyCourseDetails(config: StudyApiTypes.getStudyCourseDetailsConfig): Promise<StudyApiTypes.getStudyCourseDetailsReturn> {
-    const { courseId } = config;
+    const { courseId, semester, year } = config;
     const languageSet = await this.getLanguageSet();
-    const timeSchedule = await this.getTimeSchedule()
+    const timeSchedule = await this.getTimeSchedule({ year: year })
     const courseUrl = `${this.baseUrl}course/${courseId}/${this.urlLanguage}`;
     const $ = await this.fetchDocument(courseUrl)
     const courseTypeBasedOnColor = {
@@ -242,12 +242,12 @@ export class StudyApi {
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       // parseWeek may return null, but we expect an event not to
-      const weeks = parseWeek(weeksText, timeSchedule) ?? ""
+      const weeks = parseWeek(weeksText, timeSchedule[semester], languageSet)
       return {
         type,
         day: normalizedDay,
         weeks,
-        room: rooms.join(" "),
+        room: rooms,
         start,
         end,
         capacity,

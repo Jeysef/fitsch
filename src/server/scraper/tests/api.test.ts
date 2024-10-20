@@ -379,7 +379,7 @@ describe.each([
   })
 
   test("should get course details", async () => {
-    const courses = await studyApi.getStudyCourseDetails({ courseId: "281030" });
+    const courses = await studyApi.getStudyCourseDetails({ courseId: "281030", semester: SEMESTER.WINTER, year: "2024" });
     console.log("🚀 ~ file: api.test.ts:402 ~ test ~ courses:", courses)
     // TODO: add test when the interface is defined
   })

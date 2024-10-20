@@ -31,9 +31,8 @@
         "laboratory": "laboratory"
       },
       "weeks": {
-        "odd": "odd",
-        "even": "even",
-        "of lectures": "of lectures"
+        "ODD": "odd",
+        "EVEN": "even"
       }
     }
   },

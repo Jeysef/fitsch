@@ -2,6 +2,7 @@ import { useAction } from "@solidjs/router";
 import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
 import { createResource, ErrorBoundary, For, Show, Suspense, type JSX, type ResourceReturn } from "solid-js";
+import { unwrap } from "solid-js/store";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -39,6 +40,7 @@ export default function Wrapper() {
 
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
+  console.log("🚀 ~ file: Content.tsx:42 ~ Content ~ data:", unwrap(data()))
   const { refetch, mutate } = resource[1]
   const submit = useAction(getStudyCoursesDetailsAction);
 
@@ -84,7 +86,13 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
     e.preventDefault();
     group.markSubmitted(true);
-    submit({ courses: [...group.controls.coursesCompulsory.value, ...group.controls.coursesOptional.value].map(id => ({ courseId: id })) })
+    const c = group.controls
+    const submitData = {
+      year: c.year.value.value,
+      semester: c.semester.value,
+      courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
+    }
+    submit(submitData)
 
   };
   return (

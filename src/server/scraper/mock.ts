@@ -1661,8 +1661,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "64",
@@ -1679,8 +1697,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "56",
@@ -1697,8 +1733,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "56",
@@ -1715,8 +1769,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "TUE",
-          "weeks": "",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "470",
@@ -1732,8 +1792,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "64",
@@ -1750,8 +1828,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "64",
@@ -1768,8 +1864,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "TUE",
-          "weeks": "",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "470",
@@ -1785,8 +1887,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "64",
@@ -1803,8 +1923,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "56",
@@ -1821,8 +1959,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "56",
@@ -1839,8 +1995,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "66",
@@ -1857,8 +2031,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "67",
@@ -1875,8 +2067,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "0",
@@ -1893,8 +2092,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "64",
@@ -1911,8 +2128,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "1.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "0",
@@ -1929,8 +2153,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "64",
@@ -1947,8 +2189,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "64",
@@ -1981,8 +2241,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "MON",
-          "weeks": "10.",
-          "room": "E104",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "E104"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -1994,8 +2261,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "MON",
-          "weeks": "10.",
-          "room": "E112",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "E112"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -2007,8 +2281,23 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "MON",
-          "weeks": "1. 2. 3. 6. 8. 12. 13.",
-          "room": "E104 E105 E112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              6,
+              8,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "E104",
+            "E105",
+            "E112"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "319",
@@ -2024,8 +2313,20 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "MON",
-          "weeks": "4. 5. 9. 11.",
-          "room": "E104 E105 E112",
+          "weeks": {
+            "weeks": [
+              4,
+              5,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "E104",
+            "E105",
+            "E112"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "319",
@@ -2041,8 +2342,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "MON",
-          "weeks": "10.",
-          "room": "E104",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "E104"
+          ],
           "start": "11:00",
           "end": "11:45",
           "capacity": "",
@@ -2054,8 +2362,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "MON",
-          "weeks": "10.",
-          "room": "E112",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "E112"
+          ],
           "start": "11:00",
           "end": "11:45",
           "capacity": "",
@@ -2067,8 +2382,20 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "3. 5. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -2084,8 +2411,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -2101,8 +2434,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -2118,8 +2464,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -2135,8 +2487,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "20",
@@ -2152,8 +2517,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "20",
@@ -2169,8 +2540,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2186,8 +2570,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2203,8 +2593,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "20",
@@ -2220,8 +2623,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "20",
@@ -2237,8 +2646,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "TUE",
-          "weeks": "10.",
-          "room": "D0206",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -2250,8 +2666,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "TUE",
-          "weeks": "10.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -2263,8 +2686,22 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "TUE",
-          "weeks": "1. 2. 3. 6. 8. 12. 13.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              6,
+              8,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "470",
@@ -2280,8 +2717,20 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "TUE",
-          "weeks": "4. 5. 7. 9. 11.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              4,
+              5,
+              7,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "470",
@@ -2297,8 +2746,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "TUE",
-          "weeks": "10.",
-          "room": "D0206",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206"
+          ],
           "start": "11:00",
           "end": "11:45",
           "capacity": "",
@@ -2310,8 +2766,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "TUE",
-          "weeks": "10.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "11:00",
           "end": "11:45",
           "capacity": "",
@@ -2323,8 +2786,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "21",
@@ -2340,8 +2816,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "21",
@@ -2357,8 +2839,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2374,8 +2869,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2391,8 +2892,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "21",
@@ -2408,8 +2922,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "21",
@@ -2425,8 +2945,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "20",
@@ -2442,8 +2975,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "20",
@@ -2459,8 +2998,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "WED",
-          "weeks": "10.",
-          "room": "D0206",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -2472,8 +3018,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "WED",
-          "weeks": "10.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:45",
           "capacity": "",
@@ -2485,8 +3038,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "1. 2.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:50",
           "capacity": "470",
@@ -2502,8 +3064,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "3. 7.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              3,
+              7
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:50",
           "capacity": "470",
@@ -2519,8 +3090,19 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "4. 5. 9. 11.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              4,
+              5,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:50",
           "capacity": "470",
@@ -2536,8 +3118,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "6. 8. 12.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              6,
+              8,
+              12
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:50",
           "capacity": "470",
@@ -2553,8 +3145,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "13.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "10:00",
           "end": "10:50",
           "capacity": "470",
@@ -2570,8 +3170,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "WED",
-          "weeks": "10.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "11:00",
           "end": "11:45",
           "capacity": "",
@@ -2583,8 +3190,19 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "3. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -2600,8 +3218,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "5. 7.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              5,
+              7
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -2617,8 +3244,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -2634,8 +3267,20 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "1. 2. 4. 9. 11.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              4,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "11:00",
           "end": "11:50",
           "capacity": "470",
@@ -2651,8 +3296,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "3. 7.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              3,
+              7
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "11:00",
           "end": "11:50",
           "capacity": "470",
@@ -2668,8 +3322,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "1. 2. 3.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "14:00",
           "end": "14:50",
           "capacity": "319",
@@ -2685,8 +3348,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "4. 5. 9. 11.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              4,
+              5,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "14:00",
           "end": "14:50",
           "capacity": "319",
@@ -2702,8 +3375,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "6. 8. 12.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              6,
+              8,
+              12
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D105"
+          ],
           "start": "14:00",
           "end": "14:50",
           "capacity": "319",
@@ -2719,8 +3401,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "7.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              7
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "14:00",
           "end": "14:50",
           "capacity": "319",
@@ -2736,8 +3425,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "13.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "14:00",
           "end": "14:50",
           "capacity": "319",
@@ -2753,8 +3449,20 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 9. 11.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "15:00",
           "end": "15:50",
           "capacity": "320",
@@ -2770,8 +3478,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "7.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              7
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "15:00",
           "end": "15:50",
           "capacity": "320",
@@ -2787,8 +3502,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "21",
@@ -2804,8 +3532,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "21",
@@ -2821,8 +3555,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -2838,8 +3585,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -2855,8 +3608,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "21",
@@ -2872,8 +3638,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "20",
@@ -2889,8 +3661,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2906,8 +3691,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "20",
@@ -2923,8 +3714,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "20",
@@ -2940,8 +3744,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "20",
@@ -2957,8 +3767,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "20",
@@ -2974,8 +3797,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "20",
@@ -2991,8 +3820,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "20",
@@ -3008,8 +3850,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "21",
@@ -3025,8 +3873,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -3042,8 +3903,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "20",
@@ -3059,8 +3926,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "3. 5. 7. 9. 11. 13.",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9,
+              11,
+              13
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "20",
@@ -3076,8 +3956,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "lichý",
-          "room": "L306.1 L306.2",
+          "weeks": {
+            "weeks": "lichý",
+            "parity": "ODD"
+          },
+          "room": [
+            "L306.1",
+            "L306.2"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "20",
@@ -3109,8 +3995,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "63",
@@ -3127,8 +4031,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "60",
@@ -3145,8 +4067,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "60",
@@ -3163,8 +4103,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "1. 2. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.12",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.12"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "0",
@@ -3181,8 +4138,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.12",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.12"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "56",
@@ -3199,8 +4174,13 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "TUE",
-          "weeks": "",
-          "room": "Aula profesora Braunera",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "Aula profesora Braunera"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "338",
@@ -3216,8 +4196,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "0",
@@ -3234,8 +4221,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "60",
@@ -3252,8 +4257,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "60",
@@ -3270,8 +4293,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "",
-          "room": "D0207 D105",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "D0207",
+            "D105"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "503",
@@ -3287,8 +4316,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A112",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A112"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "60",
@@ -3305,8 +4352,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "60",
@@ -3323,8 +4388,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "60",
@@ -3341,8 +4424,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "T8/T 3.02",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.02"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "56",
@@ -3359,8 +4460,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "60",
@@ -3377,8 +4496,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1.",
-          "room": "T8/T 5.22",
+          "weeks": {
+            "weeks": [
+              1
+            ],
+            "parity": null
+          },
+          "room": [
+            "T8/T 5.22"
+          ],
           "start": "07:00",
           "end": "08:50",
           "capacity": "0",
@@ -3395,8 +4521,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "60",
@@ -3413,8 +4557,13 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "",
-          "room": "T8/T 3.12",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "T8/T 3.12"
+          ],
           "start": "09:00",
           "end": "10:50",
           "capacity": "0",
@@ -3431,8 +4580,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "60",
@@ -3449,8 +4616,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "1.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              1
+            ],
+            "parity": null
+          },
+          "room": [
+            "A113"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "0",
@@ -3483,8 +4657,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "3. 5. 8. 10.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              8,
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "48",
@@ -3501,8 +4685,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "4. 6. 9. 11.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "48",
@@ -3519,8 +4713,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "MON",
-          "weeks": "1. 2. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "16:00",
           "end": "18:50",
           "capacity": "670",
@@ -3536,8 +4748,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "MON",
-          "weeks": "3. 4.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              3,
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "16:00",
           "end": "18:50",
           "capacity": "670",
@@ -3553,8 +4774,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "3. 5. 8. 10.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              8,
+              10
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "48",
@@ -3571,8 +4802,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "MON",
-          "weeks": "4. 6. 9. 11.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              9,
+              11
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "48",
@@ -3589,8 +4830,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "49",
@@ -3607,8 +4858,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "4. 6. 8. 10.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "49",
@@ -3625,8 +4886,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "A113"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "48",
@@ -3643,8 +4914,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "4. 6. 8. 10.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "A113"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "48",
@@ -3661,8 +4942,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "3. 5. 7. 9.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "A113"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "48",
@@ -3679,8 +4970,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "TUE",
-          "weeks": "4. 6. 8. 10.",
-          "room": "A113",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "A113"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "48",
@@ -3697,8 +4998,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "3. 5. 7. 9.",
-          "room": "G202",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "G202"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "48",
@@ -3715,8 +5026,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "4. 6. 8. 10.",
-          "room": "G202",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "G202"
+          ],
           "start": "15:00",
           "end": "16:50",
           "capacity": "48",
@@ -3733,8 +5054,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "3. 5. 7. 9.",
-          "room": "G202",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "G202"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "48",
@@ -3751,8 +5082,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "WED",
-          "weeks": "4. 6. 8. 10.",
-          "room": "G202",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "G202"
+          ],
           "start": "17:00",
           "end": "18:50",
           "capacity": "48",
@@ -3769,8 +5110,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "3. 5. 7. 9.",
-          "room": "IO/E339",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "IO/E339"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "47",
@@ -3787,8 +5138,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "4. 6. 8. 10.",
-          "room": "IO/E339",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "IO/E339"
+          ],
           "start": "11:00",
           "end": "12:50",
           "capacity": "48",
@@ -3805,8 +5166,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "3. 5. 7. 9.",
-          "room": "IO/E339",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "IO/E339"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "47",
@@ -3823,8 +5194,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "4. 6. 8. 10.",
-          "room": "IO/E339",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "IO/E339"
+          ],
           "start": "13:00",
           "end": "14:50",
           "capacity": "47",
@@ -3841,8 +5222,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "THU",
-          "weeks": "3. 5. 7. 9.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              3,
+              5,
+              7,
+              9
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "48",
@@ -3859,8 +5250,28 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 6. 7. 8. 9. 10. 11. 12. 13.",
-          "room": "D0206 D0207 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D0207",
+            "D105"
+          ],
           "start": "13:00",
           "end": "15:50",
           "capacity": "560",
@@ -3876,8 +5287,17 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "FRI",
-          "weeks": "5.",
-          "room": "D0206 D0207 D105",
+          "weeks": {
+            "weeks": [
+              5
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D0207",
+            "D105"
+          ],
           "start": "13:00",
           "end": "15:50",
           "capacity": "560",
@@ -3893,8 +5313,18 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXERCISE",
           "day": "FRI",
-          "weeks": "4. 6. 8. 10.",
-          "room": "D0207",
+          "weeks": {
+            "weeks": [
+              4,
+              6,
+              8,
+              10
+            ],
+            "parity": "EVEN"
+          },
+          "room": [
+            "D0207"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "48",
@@ -3927,8 +5357,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "20",
@@ -3945,8 +5393,27 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "470",
@@ -3962,8 +5429,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",
@@ -3980,8 +5464,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "4.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",
@@ -3998,8 +5489,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4016,8 +5525,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "MON",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4034,8 +5561,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4052,8 +5597,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "20",
@@ -4070,8 +5633,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "20",
@@ -4088,8 +5669,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",
@@ -4106,8 +5705,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",
@@ -4124,8 +5741,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4142,8 +5777,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4160,8 +5813,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4178,8 +5848,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "4.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4196,8 +5873,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4214,8 +5909,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4232,8 +5945,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4250,8 +5980,15 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "TUE",
-          "weeks": "4.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4268,8 +6005,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "O204",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "O204"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4286,8 +6041,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "O204",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "O204"
+          ],
           "start": "10:00",
           "end": "11:50",
           "capacity": "20",
@@ -4304,8 +6077,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",
@@ -4322,8 +6113,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "WED",
-          "weeks": "7.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              7
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "16:00",
           "end": "17:00",
           "capacity": "",
@@ -4335,8 +6134,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "1. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              1,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "16:00",
           "end": "16:50",
           "capacity": "470",
@@ -4352,8 +6169,24 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "1. 3. 4. 5. 6. 7. 8. 11. 12. 13.",
-          "room": "D0206",
+          "weeks": {
+            "weeks": [
+              1,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206"
+          ],
           "start": "16:00",
           "end": "16:50",
           "capacity": "470",
@@ -4369,8 +6202,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "WED",
-          "weeks": "2.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              2
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "16:00",
           "end": "16:50",
           "capacity": "470",
@@ -4386,8 +6227,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4404,8 +6263,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4422,8 +6299,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4440,8 +6335,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "1. 3. 4. 5. 6. 7. 8. 9. 10. 11. 13.",
-          "room": "D105",
+          "weeks": {
+            "weeks": [
+              1,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D105"
+          ],
           "start": "17:00",
           "end": "17:50",
           "capacity": "470",
@@ -4457,8 +6369,23 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "1. 3. 4. 5. 6. 7. 8. 11. 13.",
-          "room": "D0206",
+          "weeks": {
+            "weeks": [
+              1,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              11,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206"
+          ],
           "start": "17:00",
           "end": "17:50",
           "capacity": "470",
@@ -4474,8 +6401,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "2.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              2
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "17:00",
           "end": "17:50",
           "capacity": "470",
@@ -4491,8 +6426,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "WED",
-          "weeks": "12.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              12
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "17:00",
           "end": "17:50",
           "capacity": "470",
@@ -4508,8 +6451,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4526,8 +6487,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4544,8 +6523,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "WED",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4562,8 +6559,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "EXAM",
           "day": "THU",
-          "weeks": "7.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              7
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "08:00",
           "end": "09:00",
           "capacity": "",
@@ -4575,8 +6580,22 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "THU",
-          "weeks": "1. 2. 3. 10. 11. 12. 13.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "08:00",
           "end": "10:50",
           "capacity": "470",
@@ -4592,8 +6611,21 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LECTURE",
           "day": "THU",
-          "weeks": "4. 5. 6. 7. 8. 9.",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "08:00",
           "end": "10:50",
           "capacity": "470",
@@ -4609,8 +6641,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4627,8 +6677,14 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "SEMINAR",
           "day": "THU",
-          "weeks": "",
-          "room": "D0206 D105",
+          "weeks": {
+            "weeks": "výuky",
+            "parity": null
+          },
+          "room": [
+            "D0206",
+            "D105"
+          ],
           "start": "11:00",
           "end": "11:50",
           "capacity": "470",
@@ -4644,8 +6700,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4662,8 +6736,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4680,8 +6771,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4698,8 +6806,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "4.",
-          "room": "N103 N105",
+          "weeks": {
+            "weeks": [
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103",
+            "N105"
+          ],
           "start": "16:00",
           "end": "17:50",
           "capacity": "20",
@@ -4716,8 +6832,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4734,8 +6868,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4752,8 +6903,25 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "1. 2. 3. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4770,8 +6938,16 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "THU",
-          "weeks": "4.",
-          "room": "N103 N105",
+          "weeks": {
+            "weeks": [
+              4
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103",
+            "N105"
+          ],
           "start": "18:00",
           "end": "19:50",
           "capacity": "20",
@@ -4788,8 +6964,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4806,8 +7000,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4824,8 +7036,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "08:00",
           "end": "09:50",
           "capacity": "20",
@@ -4842,8 +7072,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N103",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N103"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "20",
@@ -4860,8 +7108,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "20",
@@ -4878,8 +7144,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N105",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N105"
+          ],
           "start": "12:00",
           "end": "13:50",
           "capacity": "20",
@@ -4896,8 +7180,26 @@ export function getStudyCoursesDetailsMock(config: DataProviderTypes.getStudyCou
         {
           "type": "LABORATORY",
           "day": "FRI",
-          "weeks": "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13.",
-          "room": "N104",
+          "weeks": {
+            "weeks": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "parity": null
+          },
+          "room": [
+            "N104"
+          ],
           "start": "14:00",
           "end": "15:50",
           "capacity": "20",

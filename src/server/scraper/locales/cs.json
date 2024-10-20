@@ -31,9 +31,8 @@
         "laboratory": "laboratoř"
       },
       "weeks": {
-        "odd": "lichý",
-        "even": "sudý",
-        "of lectures": " výuky"
+        "ODD": "lichý",
+        "EVEN": "sudý"
       }
     }
   },

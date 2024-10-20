@@ -16,8 +16,15 @@ export default function ScheduleEvent(props: EventProps) {
       </Checkbox>
       <span class="w-full px-7 items-center flex justify-center">{event.abbreviation}</span>
       <span>{event.room}</span>
-      <span>weeks</span>
-      <span>Teacher</span>
+      <span class="text-sm">{formatWeeks(event.weeks.weeks!)}</span>
+      <span>{event.info}</span>
     </div>
   )
+}
+
+function formatWeeks(weeks: string | number[]) {
+  if (Array.isArray(weeks)) {
+    return weeks.join(", ");
+  }
+  return weeks;
 }

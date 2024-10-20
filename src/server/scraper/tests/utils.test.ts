@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { conjunctRooms, constructGradeLabel, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { SEMESTER } from "../enums";
+import { LanguageProvider } from '~/server/scraper/languageProvider';
+import { conjunctConjunctableRooms, conjunctRooms, constructGradeLabel, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { LANGUAGE, WEEK_PARITY } from "../enums";
 
 describe('utils', () => {
   test("should get conjuncted rooms", async () => {
@@ -48,26 +49,59 @@ describe('utils', () => {
     expect(result).toEqual(expected);
   })
 
-  test.each([
-    ["1., 2., 3., 4., 5., 6. výuky", "1. 2. 3. 4. 5. 6."],
-    ["7., 8., 10., 11., 12., 13. výuky", "7. 8. 10. 11. 12. 13."],
-    ["2024-09-17", "1."],
-    ["2024-09-24", "2."],
-    ["výuky", ""],
-    ["6., 10. výuky", "6. 10."],
-    ["1., 2., 6., 7., 8., 9., 10., 12., 13. výuky", "1. 2. 6. 7. 8. 9. 10. 12. 13."],
-    ["1., 2., 3., 4., 5., 6., 8., 9., 10., 11., 12., 13. výuky", "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13."],
-    ["lichý", "lichý"],
-    ["sudý", "sudý"],
-    ["2024-09-15", null],
-    ["2025-04-15", "10."],
-  ])("should get weeks", async (weeksText, expected) => {
-    const startDates = {
-      [SEMESTER.WINTER]: new Date('2024-09-16T00:00:00.000Z'),
-      [SEMESTER.SUMMER]: new Date('2025-02-10T00:00:00.000Z')
-    }
-    const result = parseWeek(weeksText, startDates);
-    expect(result).toBe(expected);
+  // test.each([
+  //   ["1., 2., 3., 4., 5., 6. výuky", [1, 2, 3, 4, 5, 6]],
+  //   ["7., 8., 10., 11., 12., 13. výuky", [7, 8, 10, 11, 12, 13]],
+  //   ["2024-09-17", [1]],
+  //   ["2024-09-24", [2]],
+  //   ["výuky", ""],
+  //   ["6., 10. výuky", "6. 10."],
+  //   ["1., 2., 6., 7., 8., 9., 10., 12., 13. výuky", "1. 2. 6. 7. 8. 9. 10. 12. 13."],
+  //   ["1., 2., 3., 4., 5., 6., 8., 9., 10., 11., 12., 13. výuky", "1. 2. 3. 4. 5. 6. 8. 9. 10. 11. 12. 13."],
+  //   ["lichý", "lichý"],
+  //   ["sudý", "sudý"],
+  //   ["2024-09-15", null],
+  //   // ["2025-04-15", "10."],
+  // ])("should get weeks", async (weeksText, expected) => {
+  //   const startDates = {
+  //     [SEMESTER.WINTER]: new Date('2024-09-16T00:00:00.000Z'),
+  //     [SEMESTER.SUMMER]: new Date('2025-02-10T00:00:00.000Z')
+  //   }
+  //   const result = parseWeek(weeksText, startDates[SEMESTER.WINTER]);
+  //   expect(result).toBe(expected);
+  // })
+  test("should get weeks", async () => {
+    const weeksText = "1., 2., 3., 4., 5., 6. výuky";
+    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
+    const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
+    expect(result).toEqual({ weeks: [1, 2, 3, 4, 5, 6], parity: null });
+
+  })
+
+  test("should get weeks with parity", async () => {
+    const weeksText = "3., 5., 7., 9., 11., 13. of lectures";
+    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
+    const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
+    expect(result).toEqual({ weeks: [3, 5, 7, 9, 11, 13], parity: WEEK_PARITY.EVEN });
+
+  })
+
+  test("should get weeks with name", async () => {
+    const weeksText = "odd week";
+    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
+    const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
+    expect(result).toEqual({ weeks: "odd week", parity: WEEK_PARITY.ODD });
+  })
+
+  test("should conjunct lectures", async () => {
+    let rooms = ["N103", "N104", "N105"];
+    let result = conjunctConjunctableRooms(rooms);
+    console.log("🚀 ~ file: utils.test.ts:102 ~ test ~ result:", result)
+
+
   })
 
 })

@@ -1,7 +1,15 @@
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
+import type { Locales } from "~/server/scraper/locales/types";
 import type { StudyId } from "~/server/scraper/types";
-import { SEMESTER } from "./enums";
+import { SEMESTER, WEEK_PARITY } from "./enums";
+
+const conjunctedRooms = [
+  { main: "E112", streamed: ["E104", "E105"] },
+  { main: "D105", streamed: ["D0206", "D0207"] },
+  { main: "N103", streamed: ["N104", "N105"] },
+];
+
 
 export function conjunctRooms(rooms: string[]): string {
   const conjunctedRooms = [
@@ -58,40 +66,113 @@ export function createStudyId(url: string): StudyId {
   }
 }
 
-export function parseWeek(week: string, startDate: Record<SEMESTER, Date>) {
-  const parsedWeek = week.replace("výuky", "").replaceAll(",", "").trim();
-  if (parsedWeek.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
-    const weekNum = getSemesterWeekFromDate(new Date(parsedWeek), startDate);
-    if (!weekNum || weekNum < 1) return null;
-    return weekNum + ".";
+export function getWeekParityFromName(week: string, languageSet: Locales) {
+  if (week.includes(languageSet.course.detail.weeks.EVEN)) return WEEK_PARITY.EVEN;
+  if (week.includes(languageSet.course.detail.weeks.ODD)) return WEEK_PARITY.ODD;
+  return null;
+}
+
+export function parseWeek(week: string, semesterStart: Date, languageSet: Locales) {
+  // '1., 2., 3., 4., 5., 6. výuky' => [1, 2, 3, 4, 5, 6]
+  if (week.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+    const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
+    if (!weekNum || weekNum < 1) return { weeks: null, parity: null };
+    return {
+      weeks: [weekNum],
+      parity: null
+    };
   }
-  return parsedWeek;
+  // const parsedWeek = week.replace("výuky", "").
+  //use regex to get the week numbers
+  const parsedWeek = week.match(/\d+/g) ?? week
+  // if is array of numbers, return the array
+  if (Array.isArray(parsedWeek)) {
+    const numberized = parsedWeek.map(Number);
+    return {
+      weeks: numberized,
+      parity: getParityOfWeeks(numberized, semesterStart)
+    }
+  }
+  return {
+    weeks: week,
+    parity: getWeekParityFromName(week, languageSet)
+  };
 }
 
 function getWeekDiff(date: Date, fromDate: Date) {
   return getWeekNumber(date) - getWeekNumber(fromDate);
 }
 
-/**
- * 
- * @param date 
- * @param startDate 
- * @returns number of weeks from the start date of the semester or null if the date is before the start date
- */
-function getSemesterWeekFromDate(date: Date, startDate: Record<SEMESTER, Date>) {
-  const getSemesterDate = () => {
-    const winterStartDate = startDate[SEMESTER.WINTER];
-    const summerStartDate = startDate[SEMESTER.SUMMER];
-    if (date < winterStartDate) {
-      return null; // Event is before both semesters
-    } else if (date < summerStartDate) {
-      return winterStartDate;
-    } else {
-      return summerStartDate;
-    }
 
+export function getWeekFromSemesterStart(date: Date, startDate: Date) {
+  return getWeekDiff(date, startDate) + 1;
+}
+
+// /**
+//  * 
+//  * @param date 
+//  * @param startDate 
+//  * @returns number of weeks from the start date of the semester or null if the date is before the start date
+//  */
+// function getSemesterWeekFromDate(date: Date, startDate: Record<SEMESTER, Date>) {
+//   const getSemesterDate = () => {
+//     const winterStartDate = startDate[SEMESTER.WINTER];
+//     const summerStartDate = startDate[SEMESTER.SUMMER];
+//     if (date < winterStartDate) {
+//       return null; // Event is before both semesters
+//     } else if (date < summerStartDate) {
+//       return winterStartDate;
+//     } else {
+//       return summerStartDate;
+//     }
+
+//   }
+//   const semesterDate = getSemesterDate();
+//   if (!semesterDate) return null;
+//   return getWeekFromSemesterStart(date, semesterDate);
+// }
+
+function getSchoolWeekAsSemesterWeek(week: number, startDate: Record<SEMESTER, Date>) { }
+// ex: semester starts on 2024-09-16, school week 1 is 4 week of month
+
+
+export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
+  // [1,3,5,7] > check if the week is odd or even > check against the start of the semester > return odd or even or weeks
+  const odd = weeks.every(week => week % 2 === 1);
+  const even = weeks.every(week => week % 2 === 0);
+  if (odd && even || !odd && !even) return null;
+
+  // check against the start of the semester
+  const weekOfSemesterStart = getWeekNumber(semesterStartDate);
+  const isLectureWeekOdd = weekOfSemesterStart + weeks[0] % 2 === 1;
+  return isLectureWeekOdd ? WEEK_PARITY.ODD : WEEK_PARITY.EVEN;
+}
+
+export const conjunctConjunctableRooms = (roomsInput: string[]): string => {
+  // find main room
+  const mainRoom = conjunctedRooms.find(room => roomsInput.includes(room.main))
+  if (!mainRoom) return roomsInput.join(', ')
+  // find streamed rooms
+  const streamedRooms = mainRoom.streamed.filter(room => roomsInput.includes(room))
+  // find other rooms
+  const otherRooms = roomsInput.filter(room => ![mainRoom.main, ...mainRoom.streamed].includes(room))
+  // conjunct streamed rooms
+  const conjunctedRoomsData = streamedRooms.length ? `${mainRoom.main}+${streamedRooms.map(room => room.slice(-1)).join(',')}${otherRooms.length ? `, ${otherRooms.join(', ')}` : ""}` : mainRoom.main
+  return conjunctedRoomsData
+}
+
+// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+export function uniq_fast<T extends string | number = string | number>(a: T[]): T[] {
+  const seen: Record<string | number, boolean> = {};
+  const out: T[] = [];
+  const len = a.length;
+  let j = 0;
+  for (let i = 0; i < len; i++) {
+    const key = a[i];
+    if (!seen[key]) {
+      seen[key] = true;
+      out[j++] = key;
+    }
   }
-  const semesterDate = getSemesterDate();
-  if (!semesterDate) return null;
-  return getWeekDiff(date, semesterDate) + 1
+  return out;
 }

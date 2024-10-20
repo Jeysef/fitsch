@@ -1,6 +1,6 @@
 import { ObjectTyped } from "object-typed";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import { DataProviderTypes } from "~/server/scraper/types";
+import { DataProviderTypes, type CourseLecture } from "~/server/scraper/types";
 
 interface ISchedulerTime {
   hour: number;
@@ -67,13 +67,12 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   return columns;
 }
 
-export interface ParsedEvent extends TimeFrame {
+export type ParsedEvent = Omit<CourseLecture, "start" | "end" | "room"> & TimeFrame & {
   abbreviation: string;
   name: string;
   link: string;
   id: string;
   room: string;
-  type: LECTURE_TYPE;
 }
 
 type ParsedEvents = {
@@ -207,10 +206,9 @@ export class SchedulerStore {
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
       const ParsedEvent: ParsedEvent = {
         ...courseDetail,
+        ...event,
         start: this.parseTime(start),
         end: this.parseTime(end),
-        room: event.room,
-        type: event.type,
       }
       // padding in percentage
       const eventDuration = schedulerTimeToMinutes(ParsedEvent.end) - schedulerTimeToMinutes(ParsedEvent.start)

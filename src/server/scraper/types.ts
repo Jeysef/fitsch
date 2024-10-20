@@ -1,5 +1,5 @@
 import type { gradeAll } from "~/server/scraper/constants";
-import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER } from "~/server/scraper/enums";
+import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 
 /**
  * @example "program-8956", "course-xxxxx"
@@ -83,8 +83,8 @@ type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
 interface CourseLecture {
   day: DAY;
-  weeks: string;
-  room: string;
+  weeks: LectureWeeks;
+  room: string[];
   type: LECTURE_TYPE;
   start: string;
   end: string;
@@ -93,6 +93,17 @@ interface CourseLecture {
   groups: string;
   info: string;
   note: string | null;
+}
+
+type LectureWeeks = {
+  weeks: null;
+  parity: null;
+} | {
+  weeks: number[];
+  parity: WEEK_PARITY | null;
+} | {
+  weeks: string;
+  parity: WEEK_PARITY | null;
 }
 
 export namespace StudyApiTypes {
@@ -115,6 +126,8 @@ export namespace StudyApiTypes {
   }
 
   export interface getStudyCourseDetailsConfig {
+    year: StudyOverviewYear["value"];
+    semester: SEMESTER;
     courseId: string;
   }
 
@@ -142,12 +155,17 @@ export namespace DataProviderTypes {
   export interface getStudyOverviewReturn extends StudyOverview { }
 
   export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig { }
-  export interface getStudyCourseDetailsReturn extends StudyApiTypes.getStudyCourseDetailsReturn { }
+  export interface getStudyCourseDetailsReturn {
+    detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"];
+    data: (Omit<CourseLecture, "room"> & { room: string })[];
+  }
 
   export interface getStudyCoursesDetailsConfig {
-    courses: StudyApiTypes.getStudyCourseDetailsConfig[]
+    courses: Omit<StudyApiTypes.getStudyCourseDetailsConfig, "year" | "semester">[]
+    year: StudyOverviewYear["value"];
+    semester: SEMESTER;
   }
-  export type getStudyCoursesDetailsReturn = StudyApiTypes.getStudyCourseDetailsReturn[]
+  export type getStudyCoursesDetailsReturn = getStudyCourseDetailsReturn[]
 }
 
 

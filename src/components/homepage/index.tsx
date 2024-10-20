@@ -29,6 +29,7 @@ export default function Home() {
 
   createEffect(() => {
     if (!data.result) return;
+    console.log("🚀 ~ file: index.tsx:35 ~ createEffect ~ data.result:", data.result)
     const newData = schedulerStore.parseCourses(data.result);
     setStore({ settings: schedulerStore.settings, data: newData });
   })

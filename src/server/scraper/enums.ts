@@ -32,3 +32,8 @@ export enum DAY {
   THU = "THU",
   FRI = "FRI"
 }
+
+export enum WEEK_PARITY {
+  EVEN = "EVEN",
+  ODD = "ODD"
+}
