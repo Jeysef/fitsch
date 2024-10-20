@@ -5,7 +5,7 @@ import type { ResourceFetcher } from "solid-js";
 import { DataProvider } from "~/server/scraper/dataProvider";
 import { LANGUAGE } from "~/server/scraper/enums";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
-import { getStudyCoursesDetailsMock, getStudyOverviewMock } from "~/server/scraper/mock";
+import { getStudyCoursesDetailsMock } from "~/server/scraper/mock";
 import { type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
 
 export const getStudyOverview: ResourceFetcher<true, StudyOverview, DataProviderTypes.getStudyOverviewConfig> = async (source, { value, refetching }) => {

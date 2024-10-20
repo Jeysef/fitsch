@@ -128,7 +128,7 @@ export class SchedulerStore {
     }
   }
 
-  // TODO: test
+  // TODO: test 0 based
   getEventColumn = (event: TimeFrame, columns: TimeFrame[]): { start: number, end: number } => {
     // const colStart = this.settings.columns.findIndex(column => {
     //       const { start, end } = column;
@@ -155,9 +155,12 @@ export class SchedulerStore {
   //   )
   // }
 
-  hasOverlap = (event: TimeFrame, e: TimeFrame) => {
-    return schedulerTimeToMinutes(e.start) < schedulerTimeToMinutes(event.end) &&
-      schedulerTimeToMinutes(e.end) > schedulerTimeToMinutes(event.start)
+  hasOverlap = (event: TimeFrame, otherEvent: TimeFrame) => {
+    // return schedulerTimeToMinutes(e.start) < schedulerTimeToMinutes(event.end) &&
+    //   schedulerTimeToMinutes(e.end) > schedulerTimeToMinutes(event.start)
+    // has overlap if event is in time frame of other event
+    return schedulerTimeToMinutes(otherEvent.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(otherEvent.end) > schedulerTimeToMinutes(event.start) ||
+      schedulerTimeToMinutes(otherEvent.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(otherEvent.end) >= schedulerTimeToMinutes(event.end)
   }
 
   /**
@@ -166,7 +169,7 @@ export class SchedulerStore {
    * @param events previous events to check against
    * @returns length of the overlaps + 1
    */
-  getEventRow = (event: ParsedEvent, events: ParsedEvent[]) => {
+  getEventRow = (event: ParsedEvent, events: ParsedEvents) => {
     // event and events are in the same day, check if there is an overlap, if there is, return the biggest row + 1
     // let row = 1;
     // for (const e of events) {
@@ -174,10 +177,18 @@ export class SchedulerStore {
     //     row = Math.max(row, e.row + 1)
     //   }
     // }
-    const overlappingEvents = events.filter(e => this.hasOverlap(event, e))
-    if (overlappingEvents.length === 0) return 1;
-    const rows = overlappingEvents.length + 1
-    return rows
+    // const overlappingEvents =
+    // const rows = overlappingEvents.length + 1
+
+    // if there is event spanning 2 rows and there are 2 events spanning row 1 and row 2 in the same time, the event should be in row 2
+    const row = events.reduce((acc, e) => {
+      if (this.hasOverlap(event, e.event)) {
+        return Math.max(acc, e.row + 1)
+      }
+      return acc
+    }, 1)
+
+    return row
 
   }
 
@@ -204,6 +215,8 @@ export class SchedulerStore {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
+      console.log("🚀 ~ file: store2.ts:207 ~ SchedulerStore ~ parseCourse ~ colEnd:", colStart, colEnd)
+      console.log("🚀 ~ file: store2.ts:207 ~ SchedulerStore ~ parseCourse ~ colStart:", colStart)
       const ParsedEvent: ParsedEvent = {
         ...courseDetail,
         ...event,
@@ -222,15 +235,16 @@ export class SchedulerStore {
     ObjectTyped.entries(data).forEach(([day, { events }]) => {
       events.sort((a, b) => {
         const priorityDiff = this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type)
-        if (priorityDiff !== 0) return priorityDiff
-        // If priority is the same, sort by start time
-        return schedulerTimeToMinutes(a.event.start) - schedulerTimeToMinutes(b.event.start)
+        if (a.event.start.hour === 16 && a.event.day === DAY.WED) {
+          console.log(a.event.type, b.event.type, priorityDiff)
+        }
+        return priorityDiff
       })
 
       let dayRows = 1
       // Assign rows based on the new order
       const parsedEvents = events.reduce((acc, eventData) => {
-        const row = this.getEventRow(eventData.event, acc.map(e => e.event))
+        const row = this.getEventRow(eventData.event, acc)
         dayRows = Math.max(dayRows, row)
         acc.push({ row, ...eventData } satisfies ParsedEvents[number])
         return acc
@@ -260,12 +274,12 @@ export class SchedulerStore {
     // })
 
     // Object.values(DAY).forEach(day => {
-    //   this.data[day].events.sort((a, b) => {
-    //     const priorityDiff = this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type)
-    //     if (priorityDiff !== 0) return priorityDiff
-    //     // If priority is the same, sort by start time
-    //     return schedulerTimeToMinutes(a.event.start) - schedulerTimeToMinutes(b.event.start)
-    //   })
+    //   // this.data[day].events.sort((a, b) => {
+    //   //   const priorityDiff = this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type)
+    //   //   if (priorityDiff !== 0) return priorityDiff
+    //   //   // If priority is the same, sort by start time
+    //   //   return schedulerTimeToMinutes(a.event.start) - schedulerTimeToMinutes(b.event.start)
+    //   // })
 
     //   // Assign rows based on the new order
     //   let currentRow = 1
