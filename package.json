@@ -7,7 +7,8 @@
     "start": "vinxi start",
     "test": "vitest run",
     "test-watch": "vitest",
-    "test-ui": "vitest --ui"
+    "test-ui": "vitest --ui",
+    "typed-css-modules": "tcm src -c"
   },
   "dependencies": {
     "@fontsource/courier-prime": "^5.1.0",
@@ -45,6 +46,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@types/deep-equal": "^1.0.4"
+    "@types/deep-equal": "^1.0.4",
+    "typed-css-modules": "^0.9.1"
   }
 }
