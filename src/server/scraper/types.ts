@@ -132,7 +132,7 @@ export namespace StudyApiTypes {
   }
 
 
-  type CourseTimeSpan = Record<LECTURE_TYPE, number>
+  type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>
 
   interface CourseDetail {
     abbreviation: string;
