@@ -1,12 +1,12 @@
-import type { ParsedEvent } from "~/components/scheduler/store2";
+import type { Event } from "~/components/scheduler/store2";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
-import { ellipsis2line } from "./event.module.css";
 import { cn } from "~/lib/utils";
+import { ellipsis2line } from "./event.module.css";
 
 interface EventProps {
-  event: ParsedEvent;
+  event: Event;
 }
 
 export default function ScheduleEvent(props: EventProps) {

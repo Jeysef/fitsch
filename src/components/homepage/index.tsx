@@ -23,7 +23,7 @@ export default function Home() {
 
   const [store, setStore] = createSignal({
     settings: schedulerStore.settings,
-    data: schedulerStore.data,
+    data: schedulerStore.getEmptyData(),
   })
 
 
@@ -31,7 +31,7 @@ export default function Home() {
     if (!data.result) return;
     console.log("🚀 ~ file: index.tsx:35 ~ createEffect ~ data.result:", data.result)
     const newData = schedulerStore.parseCourses(data.result);
-    setStore({ settings: schedulerStore.settings, data: newData });
+    setStore(prev => ({ ...prev, data: newData }));
   })
   return (
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">

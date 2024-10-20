@@ -67,7 +67,7 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   return columns;
 }
 
-export type ParsedEvent = Omit<CourseLecture, "start" | "end" | "room"> & TimeFrame & {
+export type Event = Omit<CourseLecture, "start" | "end" | "room"> & TimeFrame & {
   abbreviation: string;
   name: string;
   link: string;
@@ -75,19 +75,20 @@ export type ParsedEvent = Omit<CourseLecture, "start" | "end" | "room"> & TimeFr
   room: string;
 }
 
-type ParsedEvents = {
+
+interface ParsedEvent {
   row: number;
   colStart: number;
   colEnd: number;
   paddingStart: number;
   paddingEnd: number;
-  event: ParsedEvent;
-}[]
+  event: Event;
+}
 
 interface ParsedData {
   dayRow: number;
   dayRows: number;
-  events: ParsedEvents
+  events: ParsedEvent[];
 }
 
 export type ParsedDayData = Record<DAY, ParsedData>
@@ -115,7 +116,7 @@ export class SchedulerStore {
   public readonly settings: ISchedulerSettings;
   constructor(settings: ISchedulerSettings) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
-    this.data = ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: this.getDayRow(day), dayRows: 1, events: [] as ParsedEvents }])) satisfies ParsedDayData
+    this.data = this.getEmptyData()
   }
 
   private getEventTypePriority(type: LECTURE_TYPE): number {
@@ -126,6 +127,10 @@ export class SchedulerStore {
       case LECTURE_TYPE.LABORATORY: return 3;
       default: return 4; // For any other types
     }
+  }
+
+  getEmptyData(): ParsedDayData {
+    return ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: this.getDayRow(day), dayRows: 1, events: [] }]))
   }
 
   // TODO: test 0 based
@@ -156,8 +161,8 @@ export class SchedulerStore {
   // }
 
   hasOverlap = (event: TimeFrame, otherEvent: TimeFrame) => {
-    // return schedulerTimeToMinutes(e.start) < schedulerTimeToMinutes(event.end) &&
-    //   schedulerTimeToMinutes(e.end) > schedulerTimeToMinutes(event.start)
+    // return schedulerTimeToMinutes(otherEvent.start) < schedulerTimeToMinutes(event.end) &&
+    //   schedulerTimeToMinutes(otherEvent.end) > schedulerTimeToMinutes(event.start)
     // has overlap if event is in time frame of other event
     return schedulerTimeToMinutes(otherEvent.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(otherEvent.end) > schedulerTimeToMinutes(event.start) ||
       schedulerTimeToMinutes(otherEvent.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(otherEvent.end) >= schedulerTimeToMinutes(event.end)
@@ -169,7 +174,7 @@ export class SchedulerStore {
    * @param events previous events to check against
    * @returns length of the overlaps + 1
    */
-  getEventRow = (event: ParsedEvent, events: ParsedEvents) => {
+  getEventRow = (event: Event, events: ParsedEvent[]) => {
     // event and events are in the same day, check if there is an overlap, if there is, return the biggest row + 1
     // let row = 1;
     // for (const e of events) {
@@ -181,15 +186,40 @@ export class SchedulerStore {
     // const rows = overlappingEvents.length + 1
 
     // if there is event spanning 2 rows and there are 2 events spanning row 1 and row 2 in the same time, the event should be in row 2
-    const row = events.reduce((acc, e) => {
+    // if there is not continuous series of rows, ex: 2,3 then 1,2,3, the event should be in row 1
+    const occupiedRows = new Set<number>();
+    events.forEach(e => {
       if (this.hasOverlap(event, e.event)) {
-        return Math.max(acc, e.row + 1)
+        occupiedRows.add(e.row);
       }
-      return acc
-    }, 1)
+    });
+
+    let row = 1;
+    while (occupiedRows.has(row)) {
+      row++;
+    }
 
     return row
 
+  }
+
+  private computeData = (data: ParsedDayData) => {
+    ObjectTyped.entries(data).forEach(([day, { events }]) => {
+      events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
+
+      let dayRows = 1
+      // Assign rows based on the new order
+      const parsedEvents = events.reduce((acc, eventData) => {
+        const row = this.getEventRow(eventData.event, acc)
+        dayRows = Math.max(dayRows, row)
+        acc.push({ ...eventData, row } satisfies ParsedEvent)
+        return acc
+      }, [] as ParsedEvent[])
+
+      data[day].dayRows = dayRows
+      data[day].events = parsedEvents
+    })
+    return data
   }
 
   parseTime = (time: string): ISchedulerTime => {
@@ -202,99 +232,62 @@ export class SchedulerStore {
   getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
 
   parseCourses = (courses: DataProviderTypes.getStudyCoursesDetailsReturn) => {
-    courses.map(course => this.parseCourse(course))
-    return this.data
+    const data = this.getEmptyData()
+    courses.forEach(course => {
+      const { timeSpan: _, ...courseDetail } = course.detail
+      course.data.forEach(event => {
+        const { day, start, end } = event
+        const timeFrame = this.frameTime(start, end)
+        const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
+        const filledEvent: Event = {
+          ...courseDetail,
+          ...event,
+          start: this.parseTime(start),
+          end: this.parseTime(end),
+        }
+        // padding in percentage
+        const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
+        const paddingStart = Math.round((schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) * 100) / eventDuration
+        const paddingEnd = Math.round((schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end)) * 100) / eventDuration
+        const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
+        data[day].events.push(parsedEvents)
+      })
+    })
+    return this.computeData(data)
   }
 
-  parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number]) {
+  parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
     const { timeSpan: _, ...courseDetail } = course.detail
 
     // even though this day may not have any events, it will still have atleast 1 row
-    const data = ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { events: [] as Omit<ParsedEvents[number], "row">[] }]))
+    // const data: ParsedDayData = this.getEmptyData()
     course.data.forEach(event => {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
-      console.log("🚀 ~ file: store2.ts:207 ~ SchedulerStore ~ parseCourse ~ colEnd:", colStart, colEnd)
-      console.log("🚀 ~ file: store2.ts:207 ~ SchedulerStore ~ parseCourse ~ colStart:", colStart)
-      const ParsedEvent: ParsedEvent = {
+      const filledEvent: Event = {
         ...courseDetail,
         ...event,
         start: this.parseTime(start),
         end: this.parseTime(end),
       }
       // padding in percentage
-      const eventDuration = schedulerTimeToMinutes(ParsedEvent.end) - schedulerTimeToMinutes(ParsedEvent.start)
-      const paddingStart = (schedulerTimeToMinutes(ParsedEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) / eventDuration * 100
-      const paddingEnd = (schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(ParsedEvent.end)) / eventDuration * 100
-      const parsedEvents: Omit<ParsedEvents[number], "row"> = { colStart, colEnd, event: ParsedEvent, paddingStart, paddingEnd }
+      const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
+      const paddingStart = Math.round(schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start) * 100) / eventDuration
+      const paddingEnd = Math.round(schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end) * 100) / eventDuration
+      const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
       data[day].events.push(parsedEvents)
     })
 
+    // merge new data with existing data
+    // const mergedData = ObjectTyped.entries(data).reduce((acc, [day, { events }]) => {
+    //   const mergedEvents = [...this.data[day].events, ...events]
+    //   acc[day] = { ...this.data[day], events: uniqWith(mergedEvents, isEqual) }
+    //   return acc
+    // }, {} as ParsedDayData)
+
     // transform data to ParsedDayData with prioritised events
-    ObjectTyped.entries(data).forEach(([day, { events }]) => {
-      events.sort((a, b) => {
-        const priorityDiff = this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type)
-        if (a.event.start.hour === 16 && a.event.day === DAY.WED) {
-          console.log(a.event.type, b.event.type, priorityDiff)
-        }
-        return priorityDiff
-      })
-
-      let dayRows = 1
-      // Assign rows based on the new order
-      const parsedEvents = events.reduce((acc, eventData) => {
-        const row = this.getEventRow(eventData.event, acc)
-        dayRows = Math.max(dayRows, row)
-        acc.push({ row, ...eventData } satisfies ParsedEvents[number])
-        return acc
-      }, [] as ParsedEvents)
-
-      this.data[day].dayRows = dayRows
-      this.data[day].events = parsedEvents
-    })
-
-    // course.data.forEach(event => {
-    //   const { day, start, end } = event
-    //   const timeFrame = this.frameTime(start, end)
-    //   const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
-    //   const ParsedEvent: ParsedEvent = {
-    //     ...courseDetail,
-    //     start: this.parseTime(start),
-    //     end: this.parseTime(end),
-    //     room: event.room,
-    //     type: event.type,
-    //   }
-    //   const row = this.getEventRow(ParsedEvent, this.data[day].events)
-    //   const parsedEvents: ParsedEvents[number] = { row, colStart, colEnd, event: ParsedEvent }
-    //   console.log("🚀 ~ file: store2.ts:182 ~ SchedulerStore ~ parseCourse ~ row:", row)
-
-    //   this.data[day].dayRows = Math.max(this.data[day].dayRows, row)
-    //   this.data[day].events.push(parsedEvents)
-    // })
-
-    // Object.values(DAY).forEach(day => {
-    //   // this.data[day].events.sort((a, b) => {
-    //   //   const priorityDiff = this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type)
-    //   //   if (priorityDiff !== 0) return priorityDiff
-    //   //   // If priority is the same, sort by start time
-    //   //   return schedulerTimeToMinutes(a.event.start) - schedulerTimeToMinutes(b.event.start)
-    //   // })
-
-    //   // Assign rows based on the new order
-    //   let currentRow = 1
-    //   this.data[day].events.forEach(eventData => {
-    //     if (currentRow > 1 && !this.hasOverlap(eventData.event, this.data[day].events[currentRow - 2].event)) {
-    //       currentRow = 1
-    //     }
-    //     eventData.row = currentRow
-    //     currentRow++
-    //   })
-
-    //   this.data[day].dayRows = Math.max(...this.data[day].events.map(e => e.row))
-    // })
-
-    return this.data
+    return this.computeData(data)
   }
 }
 
