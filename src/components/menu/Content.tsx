@@ -218,9 +218,19 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
         }>
           <Typography as="span" variant={"h6"}>Povinné</Typography>
-          <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value!].compulsory} >
+          <Checkbox
+            class="flex items-start"
+            value="all"
+            checked={group.controls.coursesCompulsory.value.length === data()?.data.courses[group.controls.grade.value][group.controls.semester.value].compulsory.length}
+            onChange={(checked) => checked && data() && group.controls.coursesCompulsory.setValue(data()!.data.courses[group.controls.grade.value][group.controls.semester.value].compulsory.map(e => e.id))}>
+            <CheckboxControl />
+            <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
+              Všechny
+            </CheckboxLabel>
+          </Checkbox>
+          <For each={data()?.data.courses[group.controls.grade.value][group.controls.semester.value].compulsory} >
             {(course) => (
-              <Checkbox class="flex items-start" value={`${course.id}`} onChange={(checked) => group.controls.coursesCompulsory.setValue(checked ? [...group.controls.coursesCompulsory.value, course.id] : group.controls.coursesCompulsory.value.filter(id => id !== course.id))}>
+              <Checkbox checked={group.controls.coursesCompulsory.value.includes(course.id)} class="flex items-start" value={`${course.id}`} onChange={(checked) => group.controls.coursesCompulsory.setValue(checked ? [...group.controls.coursesCompulsory.value, course.id] : group.controls.coursesCompulsory.value.filter(id => id !== course.id))}>
                 <CheckboxControl />
                 <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
                   {course.abbreviation}
@@ -229,7 +239,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
             )}
           </For>
           <Typography as="span" variant={"h6"}>Volitelné</Typography>
-          <For each={data()?.data.courses[group.controls.grade.value!][group.controls.semester.value].optional}>
+          <For each={data()?.data.courses[group.controls.grade.value][group.controls.semester.value].optional}>
             {(course) => (
               <Checkbox class="flex items-start" value={`${course.id}`} onChange={(checked) => group.controls.coursesOptional.setValue(checked ? [...group.controls.coursesOptional.value, course.id] : group.controls.coursesOptional.value.filter(id => id !== course.id))}>
                 <CheckboxControl />
