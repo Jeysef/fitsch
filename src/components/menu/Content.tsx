@@ -40,7 +40,6 @@ export default function Wrapper() {
 
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
-  console.log("🚀 ~ file: Content.tsx:42 ~ Content ~ data:", unwrap(data()))
   const { refetch, mutate } = resource[1]
   const submit = useAction(getStudyCoursesDetailsAction);
 

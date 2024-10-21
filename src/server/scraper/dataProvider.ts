@@ -21,7 +21,6 @@ export class DataProvider {
       degree: (config?.degree) ?? DEGREE.BACHELOR,
     }
 
-    console.log("values.degree", values.degree)
     let degreePrograms = studyPrograms[values.degree]
     // filter language
     const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === isEnglish).map(([id, program]) => ([id, program] as const)))
@@ -118,7 +117,6 @@ export function coonjunctLectures(lectures: APICourseLecture[]): CourseLecture[]
       // check next lectures one by one
       for (let j = i + 1; j < lectures.length; j++) {
         const nextLecture = lectures[j]
-        console.log("ha new lecture", nextLecture.room)
         const nextLectureRooms = nextLecture.room
         // if same day and time
         if (nextLecture.day === lecture.day && nextLecture.start === lecture.start && nextLecture.end === lecture.end) {
@@ -126,13 +124,11 @@ export function coonjunctLectures(lectures: APICourseLecture[]): CourseLecture[]
           // array1.length === array2.length && array1.every((value, index) => value === array2[index])
           const compareArrays = (array1: any[], array2: any[]) => array1.length === array2.length && array1.every((value, index) => value === array2[index])
           if ((compareArrays(lecture.lectureGroup, nextLecture.lectureGroup)) !== (lecture.groups == nextLecture.groups)) {
-            console.log('Different groups from lecture groups', lecture, nextLecture)
+            console.warn('Different groups from lecture groups', lecture, nextLecture)
           }
-          // console.log("same weeks", nextLecture.weeks, lecture.weeks, nextLecture.weeks == lecture.weeks)
           // weeks dont have to be same, ex: 1. 2. 4. and 1. 2. 3. 4. => 1. 2. 3. 4. and there will probably be 3. lonely lecture with different teacher
           const areWeeksSame = !!nextLecture.weeks.weeks && typeof lecture.weeks.weeks && typeof nextLecture.weeks.weeks === typeof lecture.weeks.weeks && (typeof nextLecture.weeks.weeks === "string" ? nextLecture.weeks.weeks === lecture.weeks.weeks : compareArrays(nextLecture.weeks.weeks, lecture.weeks.weeks as number[]))
           if (areWeeksSame || nextLecture.weeks.parity === lecture.weeks.parity) {
-            console.log("add lecture", nextLecture.room)
             // check if is next lecture is conjunctable and also at the same list as the current lecture
             if (nextLectureRooms.some(room => anyConjunctable.some(conjunctable => conjunctable.includes(room) && lectureRooms.some(lectureRoom => conjunctable.includes(lectureRoom))))) {
               // add lecture
