@@ -36,14 +36,6 @@ export default function Home() {
     filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(store.data).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }]))
   })
 
-
-
-
-  setTimeout(() => {
-    console.log("store", unwrap(store))
-    console.log("filteredStore", unwrap(filteredStore))
-  }, 10000)
-
   createEffect(() => {
     if (!data.result) return;
     store.courses = data.result
