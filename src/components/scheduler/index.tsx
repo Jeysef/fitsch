@@ -1,6 +1,8 @@
+import { ObjectTyped } from "object-typed";
 import { Accessor, createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
-import type { ISchedulerSettings, ParsedDayData } from "~/components/scheduler/store2";
+import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store2";
+import { launchDayTime } from "~/server/scraper/constants";
 
 export interface WorkScheduleProps {
   store: {
@@ -72,6 +74,7 @@ function Days() {
 
 function Week() {
   return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] border-l">
+    <LaunchHighlight />
     <WeekSchedule />
   </div>;
 }
@@ -83,6 +86,37 @@ function ColumnLines() {
       {() => <div class="border-l border-dashed" />}
     </For>
   </div>;
+}
+
+function LaunchHighlight() {
+  const store = useContext(SchedulerStoreContext)!;
+  // semi transparent block to represent time of launch
+  return ObjectTyped.entries(launchDayTime).map(([day, time]) => {
+    const [start, end] = time.split(" – ");
+    const event = {
+      start: { hour: parseInt(start.split(":")[0]), minute: parseInt(start.split(":")[1]) },
+      end: { hour: parseInt(end.split(":")[0]), minute: parseInt(end.split(":")[1]) },
+    };
+    const row = store().settings.rows.findIndex(row => row.day === day) + 1;
+    const colStart = store().settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(column.end) > schedulerTimeToMinutes(event.start))
+    const colEnd = store().settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(column.end) >= schedulerTimeToMinutes(event.end))
+    const columnsDuration = schedulerTimeToMinutes(store().settings.columns[colEnd].end) - schedulerTimeToMinutes(store().settings.columns[colStart].start);
+    const marginStart = Math.round((schedulerTimeToMinutes(event.start) - schedulerTimeToMinutes(store().settings.columns[colStart].start)) * 100) / columnsDuration;
+    const marginEnd = Math.round((schedulerTimeToMinutes(store().settings.columns[colEnd].end) - schedulerTimeToMinutes(event.end)) * 100) / columnsDuration;
+    return (
+      <div
+        style={{
+          "grid-row": `${row} / span 1`,
+          "grid-column": `${colStart + 1} / ${colEnd + 2}`,
+          "margin-inline-start": `${marginStart}%`,
+          "margin-inline-end": `${marginEnd}%`,
+        }}
+        class="bg-fuchsia-300 bg-opacity-10 -z-20"
+      >
+
+      </div>
+    )
+  });
 }
 
 function Corner() {

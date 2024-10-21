@@ -272,9 +272,9 @@ export class SchedulerStore {
         end: this.parseTime(end),
       }
       // padding in percentage
-      const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
-      const paddingStart = Math.round(schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start) * 100) / eventDuration
-      const paddingEnd = Math.round(schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end) * 100) / eventDuration
+      const columnsDuration = schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(this.settings.columns[colStart].start)
+      const paddingStart = Math.round(schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start) * 100) / columnsDuration
+      const paddingEnd = Math.round(schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end) * 100) / columnsDuration
       const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
       data[day].events.push(parsedEvents)
     })
@@ -291,9 +291,9 @@ export class SchedulerStore {
   }
 }
 
-function schedulerTimeToMinutes(time: ISchedulerTime) {
+export function schedulerTimeToMinutes(time: ISchedulerTime) {
   return time.hour * 60 + time.minute;
 }
-function minutesToSchedulerTime(minutes: number): ISchedulerTime {
+export function minutesToSchedulerTime(minutes: number): ISchedulerTime {
   return { hour: Math.floor(minutes / 60), minute: minutes % 60 }
 }
