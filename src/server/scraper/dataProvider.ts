@@ -4,7 +4,7 @@ import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { conjunctConjunctableRooms, constructGradeLabel, uniq_fast } from '~/server/scraper/utils';
 import { DEGREE, LANGUAGE, SEMESTER } from "./enums";
-import { type CourseLecture, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
+import { type APICourseLecture, type CourseLecture, type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 
 export class DataProvider {
@@ -85,13 +85,13 @@ export class DataProvider {
     return Promise.all(courses.map(course => this.getStudyCourseDetails({ courseId: course.courseId, semester, year })))
   }
 };
-function filterLectures(lectures: CourseLecture[]) {
+function filterLectures(lectures: APICourseLecture[]) {
   // filter out lectures that do not have a week
   return lectures.filter(lecture => lecture.weeks.weeks)
 }
 
 
-export function coonjunctLectures(lectures: CourseLecture[]): DataProviderTypes.getStudyCourseDetailsReturn["data"] {
+export function coonjunctLectures(lectures: APICourseLecture[]): CourseLecture[] {
   // go through all lectures.
   // check the next (right) lecture, if same day and time, merge them
   // if not, end search from current lecture, move to next
@@ -149,7 +149,7 @@ export function coonjunctLectures(lectures: CourseLecture[]): DataProviderTypes.
         }
       }
       // conjunct savedLectures
-      (lecture as unknown as DataProviderTypes.getStudyCourseDetailsReturn["data"][number]).room = conjunctConjunctableRooms(savedLectures.flatMap(lecture => lecture.room))
+      (lecture as unknown as CourseLecture).room = conjunctConjunctableRooms(savedLectures.flatMap(lecture => lecture.room))
       lecture.info = savedLectures.map(lecture => lecture.info).join(', ')
       lecture.note = savedLectures.map(lecture => lecture.note).join(', ')
       // weeks are combined 1. 3., 2. => 1. 2. 3.
@@ -162,7 +162,6 @@ export function coonjunctLectures(lectures: CourseLecture[]): DataProviderTypes.
       lecture.capacity = savedLectures.every(lecture => lecture.capacity === savedLectures[0].capacity) ? savedLectures[0].capacity : savedLectures.map(lecture => lecture.capacity).join(', ')
     }
   })
-  console.log("🚀 ~ file: dataProvider.ts:168 ~ coonjunctLectures ~ lectures:", lectures)
-  return lectures as unknown as DataProviderTypes.getStudyCourseDetailsReturn["data"]
+  return lectures as unknown as CourseLecture[]
 }
 

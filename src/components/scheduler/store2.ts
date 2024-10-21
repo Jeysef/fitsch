@@ -67,12 +67,11 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   return columns;
 }
 
-export type Event = Omit<CourseLecture, "start" | "end" | "room"> & TimeFrame & {
+export type Event = Omit<CourseLecture, "start" | "end"> & TimeFrame & {
   abbreviation: string;
   name: string;
   link: string;
   id: string;
-  room: string;
 }
 
 

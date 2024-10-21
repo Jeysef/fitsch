@@ -81,7 +81,8 @@ interface StudyCourse extends StudyOverviewCourse {
 }
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
-interface CourseLecture {
+
+interface APICourseLecture {
   day: DAY;
   weeks: LectureWeeks;
   room: string[];
@@ -93,6 +94,9 @@ interface CourseLecture {
   groups: string;
   info: string;
   note: string | null;
+}
+interface CourseLecture extends Omit<APICourseLecture, "room"> {
+  room: string;
 }
 
 type LectureWeeks = {
@@ -144,7 +148,7 @@ export namespace StudyApiTypes {
 
   export interface getStudyCourseDetailsReturn {
     detail: CourseDetail;
-    data: CourseLecture[];
+    data: APICourseLecture[];
   }
 }
 
@@ -169,5 +173,5 @@ export namespace DataProviderTypes {
 }
 
 
-export type { CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
+export type { CourseLecture, APICourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
 
