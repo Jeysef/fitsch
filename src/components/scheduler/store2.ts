@@ -135,30 +135,10 @@ export class SchedulerStore {
 
   // TODO: test 0 based
   getEventColumn = (event: TimeFrame, columns: TimeFrame[]): { start: number, end: number } => {
-    // const colStart = this.settings.columns.findIndex(column => {
-    //       const { start, end } = column;
-    //       // find in which column the event starts, not necessarily at the same time as start of the column just inside and before next column
-    //       return (start.hour < startHour || (start.hour === startHour && start.minute <= startMinute)) &&
-    //         (end.hour > startHour || (end.hour === startHour && end.minute > startMinute));
-    //     });
-    //     const colEnd = this.settings.columns.findIndex(column => {
-    //       const { start, end } = column;
-    //       // find in which column the event ends, not necessarily at the same time as end of the column just inside and after previous column
-    //       return (start.hour < endHour || (start.hour === endHour && start.minute < endMinute)) &&
-    //         (end.hour > endHour || (end.hour === endHour && end.minute >= endMinute));
-    //     });
     const colStart = columns.findIndex(column => schedulerTimeToMinutes(column.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(column.end) > schedulerTimeToMinutes(event.start))
     const colEnd = columns.findIndex(column => schedulerTimeToMinutes(column.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(column.end) >= schedulerTimeToMinutes(event.end))
     return { start: colStart, end: colEnd }
   }
-
-  // TODO: test
-  // hasOverlap = (event: TimeFrame, events: TimeFrame[]) => {
-  //   return events.some(e =>
-  //     schedulerTimeToMinutes(e.start) < schedulerTimeToMinutes(event.end) &&
-  //     schedulerTimeToMinutes(e.end) > schedulerTimeToMinutes(event.start)
-  //   )
-  // }
 
   hasOverlap = (event: TimeFrame, otherEvent: TimeFrame) => {
     // return schedulerTimeToMinutes(otherEvent.start) < schedulerTimeToMinutes(event.end) &&
@@ -279,14 +259,6 @@ export class SchedulerStore {
       data[day].events.push(parsedEvents)
     })
 
-    // merge new data with existing data
-    // const mergedData = ObjectTyped.entries(data).reduce((acc, [day, { events }]) => {
-    //   const mergedEvents = [...this.data[day].events, ...events]
-    //   acc[day] = { ...this.data[day], events: uniqWith(mergedEvents, isEqual) }
-    //   return acc
-    // }, {} as ParsedDayData)
-
-    // transform data to ParsedDayData with prioritised events
     return this.computeData(data)
   }
 }
