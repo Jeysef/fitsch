@@ -161,7 +161,7 @@ export namespace DataProviderTypes {
   export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig { }
   export interface getStudyCourseDetailsReturn {
     detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"];
-    data: (Omit<CourseLecture, "room"> & { room: string })[];
+    data: CourseLecture[];
   }
 
   export interface getStudyCoursesDetailsConfig {
