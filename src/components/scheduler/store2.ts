@@ -183,7 +183,7 @@ export class SchedulerStore {
 
   }
 
-  private computeData = (data: ParsedDayData) => {
+  private organiseData = (data: ParsedDayData) => {
     ObjectTyped.entries(data).forEach(([day, { events }]) => {
       events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
 
@@ -237,7 +237,7 @@ export class SchedulerStore {
         data[day].events.push(parsedEvents)
       })
     })
-    return this.computeData(data)
+    return this.organiseData(data)
   }
 
   parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
@@ -263,7 +263,7 @@ export class SchedulerStore {
       data[day].events.push(parsedEvents)
     })
 
-    return this.computeData(data)
+    return this.organiseData(data)
   }
 }
 
