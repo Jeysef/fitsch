@@ -215,55 +215,35 @@ export class SchedulerStore {
     return courseData.filter(event => !event.note)
   }
 
-  parseCourses = (courses: DataProviderTypes.getStudyCoursesDetailsReturn) => {
-    const data = this.getEmptyData()
-    courses.forEach(course => {
-      const { timeSpan: _, ...courseDetail } = course.detail
-      this.filterCourse(course.data).forEach(event => {
-        const { day, start, end } = event
-        const timeFrame = this.frameTime(start, end)
-        const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
-        const filledEvent: Event = {
-          ...courseDetail,
-          ...event,
-          start: this.parseTime(start),
-          end: this.parseTime(end),
-        }
-        // padding in percentage
-        const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
-        const paddingStart = Math.round((schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) * 100) / eventDuration
-        const paddingEnd = Math.round((schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end)) * 100) / eventDuration
-        const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
-        data[day].events.push(parsedEvents)
-      })
-    })
-    return this.organiseData(data)
-  }
-
-  parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
-    const { timeSpan: _, ...courseDetail } = course.detail
-
-    // even though this day may not have any events, it will still have atleast 1 row
-    // const data: ParsedDayData = this.getEmptyData()
-    this.filterCourse(course.data).forEach(event => {
+  fillData = (course: DataProviderTypes.getStudyCourseDetailsReturn, data: ParsedDayData = this.getEmptyData()) => {
+    this.filterCourse(course.data).map(event => {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
       const filledEvent: Event = {
-        ...courseDetail,
+        ...course.detail,
         ...event,
         start: this.parseTime(start),
         end: this.parseTime(end),
       }
       // padding in percentage
-      const columnsDuration = schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(this.settings.columns[colStart].start)
-      const paddingStart = Math.round(schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start) * 100) / columnsDuration
-      const paddingEnd = Math.round(schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end) * 100) / columnsDuration
+      const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
+      const paddingStart = Math.round((schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) * 100) / eventDuration
+      const paddingEnd = Math.round((schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end)) * 100) / eventDuration
       const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
       data[day].events.push(parsedEvents)
     })
+    return data
+  }
 
+  parseCourses = (courses: DataProviderTypes.getStudyCoursesDetailsReturn) => {
+    const data = this.getEmptyData()
+    courses.forEach(course => this.fillData(course, data))
     return this.organiseData(data)
+  }
+
+  parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
+    return this.organiseData(this.fillData(course, data))
   }
 }
 

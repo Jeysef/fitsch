@@ -1,5 +1,4 @@
 import { useSubmission } from "@solidjs/router";
-import { ObjectTyped } from "object-typed";
 import { createEffect, createSignal } from "solid-js";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
@@ -8,15 +7,16 @@ import { days } from "~/components/scheduler/types";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
-import { launchDayTime } from "~/server/scraper/constants";
+import type { DAY } from "~/server/scraper/enums";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
   `${start.hour.toString().padStart(2, '0')}:${start.minute.toString().padStart(2, '0')} - ${end.hour.toString().padStart(2, '0')}:${end.minute.toString().padStart(2, '0')}`
+const formatDay = (day: DAY) => ({ title: day, day })
 
 const schedulerStore = new SchedulerStore({
   columns: createColumns({ start: { hour: 7, minute: 0 }, step: { hour: 1, minute: 0 }, end: { hour: 20, minute: 0 }, getTimeHeader: formatTime }),
-  rows: days.map(day => ({ title: day, day })),
+  rows: days.map(formatDay),
 })
 
 export default function Home() {
