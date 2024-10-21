@@ -127,9 +127,10 @@ function WeekSchedule() {
   const store = useContext(SchedulerStoreContext)!;
   const days = createMemo(() => Object.values(store.data));
 
+  // for info, I need to use fragmeents to wrap the days in solid jsx observer
   return (
     <>
-      {days().map((data) => (
+      <For each={days()}>{(data) => (
         <div
           class="schedule-row grid grid-cols-subgrid col-span-full py-2 gap-y-2 border-t"
           style={{
@@ -144,7 +145,8 @@ function WeekSchedule() {
           )}
           </For>
         </div>
-      ))}
+      )}
+      </For>
     </>
   )
 }
