@@ -242,6 +242,10 @@ export class SchedulerStore {
     return this.organiseData(data)
   }
 
+  set courses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
+    this.data = this.parseCourses(courses)
+  }
+
   parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
     return this.organiseData(this.fillData(course, data))
   }

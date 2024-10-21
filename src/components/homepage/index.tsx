@@ -1,5 +1,6 @@
 import { useSubmission } from "@solidjs/router";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect } from "solid-js";
+import { createMutable } from "solid-js/store";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store2";
@@ -22,17 +23,12 @@ const schedulerStore = new SchedulerStore({
 export default function Home() {
   const data = useSubmission(getStudyCoursesDetailsAction)
 
-  const [store, setStore] = createSignal({
-    settings: schedulerStore.settings,
-    data: schedulerStore.getEmptyData(),
-  })
+  const store = createMutable(schedulerStore)
 
 
   createEffect(() => {
     if (!data.result) return;
-    console.log("🚀 ~ file: index.tsx:35 ~ createEffect ~ data.result:", data.result)
-    const newData = schedulerStore.parseCourses(data.result);
-    setStore(prev => ({ ...prev, data: newData }));
+    store.courses = data.result
   })
   return (
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">
@@ -44,11 +40,11 @@ export default function Home() {
         <TabsIndicator variant="underline" />
       </TabsList>
       <TabsContent value="workSchedule" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
-        <Scheduler store={store()} />
+        <Scheduler store={store} />
       </TabsContent>
       <TabsContent value="finalResult" class="w-full h-full !mt-0 pt-2">
         <div class="grid items-center" >
-          {store().data.TUE.events.length}
+          {store.data.TUE.events.length}
         </div>
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 pt-2">

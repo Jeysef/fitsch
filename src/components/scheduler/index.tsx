@@ -1,5 +1,5 @@
 import { ObjectTyped } from "object-typed";
-import { Accessor, createContext, createMemo, For, useContext } from "solid-js";
+import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
 import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store2";
 import { launchDayTime } from "~/server/scraper/constants";
@@ -12,17 +12,17 @@ export interface WorkScheduleProps {
 }
 
 
-const SchedulerStoreContext = createContext<Accessor<{
+const SchedulerStoreContext = createContext<{
   settings: ISchedulerSettings;
   data: ParsedDayData;
-}> | null>(null);
+} | null>(null);
 
 
 
 export default function Scheduler(props: WorkScheduleProps) {
 
   return (
-    <SchedulerStoreContext.Provider value={() => props.store}>
+    <SchedulerStoreContext.Provider value={props.store}>
       <SchedulerGrid />
     </SchedulerStoreContext.Provider>
   );
@@ -35,8 +35,8 @@ function SchedulerGrid() {
     <div
       class="relative grid overflow-auto max-h-full h-auto w-full justify-start"
       style={{
-        "grid-template-columns": `max-content repeat(${store().settings.columns.length}, minmax(5.5rem, 10rem))`,
-        "grid-template-rows": `auto repeat(${store().settings.rows.length}, auto)`,
+        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.5rem, 10rem))`,
+        "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
       }}
     >
       <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate">
@@ -53,7 +53,7 @@ function SchedulerGrid() {
 function Heading() {
   const store = useContext(SchedulerStoreContext)!;
   return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-10 bg-background font-mono">
-    <For each={store().settings.columns}>
+    <For each={store.settings.columns}>
       {(column) => (
         <div class="hour border-l flex items-center justify-center [text-align-last:right] p-1">{column.title}</div>
       )}
@@ -64,7 +64,7 @@ function Heading() {
 function Days() {
   const store = useContext(SchedulerStoreContext)!;
   return <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background">
-    <For each={store().settings.rows}>
+    <For each={store.settings.rows}>
       {(day) => (
         <div class="items-center justify-center p-4 flex border-t">{day.title}</div>
       )}
@@ -82,7 +82,7 @@ function Week() {
 function ColumnLines() {
   const store = useContext(SchedulerStoreContext)!;
   return <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30">
-    <For each={store().settings.columns} >
+    <For each={store.settings.columns} >
       {() => <div class="border-l border-dashed" />}
     </For>
   </div>;
@@ -97,12 +97,12 @@ function LaunchHighlight() {
       start: { hour: parseInt(start.split(":")[0]), minute: parseInt(start.split(":")[1]) },
       end: { hour: parseInt(end.split(":")[0]), minute: parseInt(end.split(":")[1]) },
     };
-    const row = store().settings.rows.findIndex(row => row.day === day) + 1;
-    const colStart = store().settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(column.end) > schedulerTimeToMinutes(event.start))
-    const colEnd = store().settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(column.end) >= schedulerTimeToMinutes(event.end))
-    const columnsDuration = schedulerTimeToMinutes(store().settings.columns[colEnd].end) - schedulerTimeToMinutes(store().settings.columns[colStart].start);
-    const marginStart = Math.round((schedulerTimeToMinutes(event.start) - schedulerTimeToMinutes(store().settings.columns[colStart].start)) * 100) / columnsDuration;
-    const marginEnd = Math.round((schedulerTimeToMinutes(store().settings.columns[colEnd].end) - schedulerTimeToMinutes(event.end)) * 100) / columnsDuration;
+    const row = store.settings.rows.findIndex(row => row.day === day) + 1;
+    const colStart = store.settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) <= schedulerTimeToMinutes(event.start) && schedulerTimeToMinutes(column.end) > schedulerTimeToMinutes(event.start))
+    const colEnd = store.settings.columns.findIndex(column => schedulerTimeToMinutes(column.start) < schedulerTimeToMinutes(event.end) && schedulerTimeToMinutes(column.end) >= schedulerTimeToMinutes(event.end))
+    const columnsDuration = schedulerTimeToMinutes(store.settings.columns[colEnd].end) - schedulerTimeToMinutes(store.settings.columns[colStart].start);
+    const marginStart = Math.round((schedulerTimeToMinutes(event.start) - schedulerTimeToMinutes(store.settings.columns[colStart].start)) * 100) / columnsDuration;
+    const marginEnd = Math.round((schedulerTimeToMinutes(store.settings.columns[colEnd].end) - schedulerTimeToMinutes(event.end)) * 100) / columnsDuration;
     return (
       <div
         style={{
@@ -125,7 +125,7 @@ function Corner() {
 
 function WeekSchedule() {
   const store = useContext(SchedulerStoreContext)!;
-  const days = createMemo(() => Object.values(store().data));
+  const days = createMemo(() => Object.values(store.data));
 
   return (
     <>
