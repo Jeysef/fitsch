@@ -1,7 +1,6 @@
 import { useAction } from "@solidjs/router";
-import isEqual from "deep-equal";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createContext, createMemo, createResource, ErrorBoundary, For, Show, Suspense, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { createContext, createMemo, createRenderEffect, createResource, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -50,6 +49,7 @@ type onFetchableChangeParams<K extends onFetchableChangeName> = { name: K, value
 
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
+  const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
   const { refetch, mutate } = resource[1]
   const submit = useAction(getStudyCoursesDetailsAction);
 
@@ -80,21 +80,31 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
   })
 
-  group.controls.grade
-
-  function onFetchableChange<K extends onFetchableChangeName>(params: onFetchableChangeParams<K>) {
-    const { name, value, apiValue } = params
-    if (isEqual(group.controls[name].value, value)) return;
-    const currentData: DataProviderTypes.getStudyOverviewConfig = {
-      year: group.controls.year.value?.value,
-      degree: group.controls.degree.value,
-      program: group.controls.program.value
+  const getFetchableData = () => ({
+    year: group.controls.year.value?.value,
+    program: group.controls.program.value
+  })
+  createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
+    if (firstEffect) return false
+    const c = group.controls
+    const fullData: DataProviderTypes.getStudyOverviewConfig = {
+      ...data,
+      degree: c.degree.value
     }
-    const nextData = { ...currentData, [name]: apiValue }
-    // set value
-    group.controls[name].setValue(value as any)
-    void refetch(nextData)
-  }
+    void refetch(fullData)
+    return false
+  }), true)
+
+  createRenderEffect(() => {
+    const value = group.controls.degree.value
+    const dataProgram = untrack(data)?.data.programs[value]
+    if (!dataProgram) return;
+    const programsLength = dataProgram.flatMap(e => [e, ...e.specializations]).length
+    const isAssignedAtDifferentDegree = createMemo(() => group.controls.program.value ? !dataProgram.flatMap(e => [e, ...e.specializations]).find(e => e.id === group.controls.program.value) : true)
+    if (programsLength === 1 && isAssignedAtDifferentDegree()) {
+      group.controls.program.setValue(dataProgram[0].id)
+    }
+  })
 
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
     e.preventDefault();
@@ -109,17 +119,15 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
   };
 
-  const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
-
   return (
     <form onSubmit={onSubmit}>
       <GroupContext.Provider value={group}>
         <DataContext.Provider value={cData}>
-          <YearSelect onFetchableChange={onFetchableChange} />
+          <YearSelect />
           {/* semester up top coz it dosn't change much */}
           <SemesterSelect />
           <DegreeSelect />
-          <ProgramSelect onFetchableChange={onFetchableChange} />
+          <ProgramSelect />
         </DataContext.Provider>
         <DataContext.Provider value={data}>
           <GradeSelect />
@@ -145,7 +153,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 //   )
 // }
 
-function YearSelect({ onFetchableChange }: { onFetchableChange: <K extends onFetchableChangeName>(params: onFetchableChangeParams<K>) => void }) {
+function YearSelect() {
   const group = useContext(GroupContext)!
   const data = useContext(DataContext)!
 
@@ -157,7 +165,7 @@ function YearSelect({ onFetchableChange }: { onFetchableChange: <K extends onFet
       optionTextValue="label"
       value={group.controls.year.value}
       name="year"
-      onChange={(year) => year && onFetchableChange({ name: "year", value: year, apiValue: year.value })}
+      onChange={(year) => year && group.controls.year.setValue(year)}
       placeholder="Select a year"
       selectionBehavior="replace"
       onBlur={() => group.controls.year.markTouched(true)}
@@ -206,19 +214,19 @@ function DegreeSelect() {
   )
 }
 
-function ProgramSelect({ onFetchableChange }: { onFetchableChange: <K extends onFetchableChangeName>(params: onFetchableChangeParams<K>) => void }) {
+function ProgramSelect() {
   const group = useContext(GroupContext)!
   const data = useContext(DataContext)!
 
   return (
-    <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree!.value].length}>
+    <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree.value].length}>
       <RadioGroup
-        value={group.controls.program!.value}
-        onChange={(program) => program && onFetchableChange({ name: "program", value: program, apiValue: program })}
+        value={group.controls.program.value}
+        onChange={(program) => program && group.controls.program.setValue(program)}
         name="specialization"
         onBlur={() => group.controls.program!.markTouched(true)}
-        disabled={group.controls.program!.isDisabled}
-        required={group.controls.program!.isRequired}
+        disabled={group.controls.program.isDisabled}
+        required={group.controls.program.isRequired}
         class="grid gap-x-2"
       >
         <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Program</RadioGroup.Label>
