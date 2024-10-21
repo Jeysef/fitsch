@@ -152,7 +152,7 @@ export class SchedulerStore {
    * 
    * @param event event to check for overlap
    * @param events previous events to check against
-   * @returns length of the overlaps + 1
+   * @returns biggest overlapping row + 1
    */
   getEventRow = (event: Event, events: ParsedEvent[]) => {
     // event and events are in the same day, check if there is an overlap, if there is, return the biggest row + 1
