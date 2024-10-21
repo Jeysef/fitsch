@@ -211,11 +211,15 @@ export class SchedulerStore {
 
   getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
 
+  filterCourse = (courseData: DataProviderTypes.getStudyCourseDetailsReturn["data"]) => {
+    return courseData.filter(event => !event.note)
+  }
+
   parseCourses = (courses: DataProviderTypes.getStudyCoursesDetailsReturn) => {
     const data = this.getEmptyData()
     courses.forEach(course => {
       const { timeSpan: _, ...courseDetail } = course.detail
-      course.data.forEach(event => {
+      this.filterCourse(course.data).forEach(event => {
         const { day, start, end } = event
         const timeFrame = this.frameTime(start, end)
         const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
@@ -241,7 +245,7 @@ export class SchedulerStore {
 
     // even though this day may not have any events, it will still have atleast 1 row
     // const data: ParsedDayData = this.getEmptyData()
-    course.data.forEach(event => {
+    this.filterCourse(course.data).forEach(event => {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
