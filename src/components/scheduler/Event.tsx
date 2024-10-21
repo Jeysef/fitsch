@@ -10,11 +10,15 @@ interface EventProps {
 }
 
 export default function ScheduleEvent(props: EventProps) {
-  const { event } = props;
+  const event = props.event;
   const color = subjectTypeColors[event.type];
   return (
     <div class="relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden" style={{ "background-color": color }} >
-      <Checkbox class="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none ">
+      <Checkbox
+        checked={props.event.checked}
+        class="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none "
+        onChange={(e) => props.event.checked = e}
+      >
         <CheckboxControl />
       </Checkbox>
       <Text variant="largeText" class="w-full">{event.abbreviation}</Text>

@@ -33,6 +33,7 @@ export interface ISchedulerSettings {
   blockDimensions?: Partial<IScheduleDimensions>;
   columns: IScheduleColumn[];
   rows: IScheduleRow[];
+  filter?: (event: Event) => boolean;
 }
 
 interface ICreateColumns {
@@ -72,6 +73,8 @@ export type Event = Omit<CourseLecture, "start" | "end"> & TimeFrame & {
   name: string;
   link: string;
   id: string;
+  checked: boolean;
+
 }
 
 
@@ -210,12 +213,9 @@ export class SchedulerStore {
 
   getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
 
-  filterCourse = (courseData: DataProviderTypes.getStudyCourseDetailsReturn["data"]) => {
-    return courseData.filter(event => !event.note)
-  }
 
   fillData = (course: DataProviderTypes.getStudyCourseDetailsReturn, data: ParsedDayData = this.getEmptyData()) => {
-    this.filterCourse(course.data).map(event => {
+    course.data.forEach(event => {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
@@ -224,7 +224,9 @@ export class SchedulerStore {
         ...event,
         start: this.parseTime(start),
         end: this.parseTime(end),
+        checked: false,
       }
+      if (this.settings.filter && !this.settings.filter(filledEvent)) return
       // padding in percentage
       const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
       const paddingStart = Math.round((schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) * 100) / eventDuration
