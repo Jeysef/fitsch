@@ -165,16 +165,13 @@ export class DataProvider {
       // check next lectures one by one
       lectures.slice(i + 1).some((nextLecture, j) => {
         const nextLectureRooms = nextLecture.room
-        console.log("comparing lecture", j, "with", i)
         if (!isSameTimeLecture(lecture, nextLecture)) return true; // no more lectures to merge with
         if (!(isSameConjunctable(lectureRooms, nextLectureRooms) || deepEqual(lectureRooms, nextLectureRooms))) return;
         if (lecture.groups !== nextLecture.groups) return;
         if (!deepEqual(lecture.lectureGroup, nextLecture.lectureGroup)) return; // console.warn('Different groups from lecture groups', lecture, nextLecture)
         if (typeof (lecture.weeks.weeks) === "string" || typeof (nextLecture.weeks.weeks) === "string") return
         const lectureLectures = this.getLectureLectures(lecture, detail)
-        console.log("🚀 ~ file: dataProvider.ts:172 ~ DataProvider ~ lectures.slice ~ lectureLectures:", lectureLectures, lecture.weeks.weeks.length > (lectureLectures || 0))
         if (lectureLectures && uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length > lectureLectures) return;
-        console.log("pushing new lecture", i + j + 1)
         preConjunctedLectures[i + j + 1] = nextLecture
         return false
       })
