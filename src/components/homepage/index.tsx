@@ -30,10 +30,9 @@ export default function Home() {
 
   const filteredStoreData: Accessor<ParsedDayData> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries(unwrap(store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
   const filteredStore = createMutable({ ...store, data: filteredStoreData() })
-  // filteredStore.data = filteredStoreData()
 
   createEffect(() => {
-    filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(store.data).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }]))
+    filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(store.data).map(([key, value]) => [key, store.organiseDayData({ ...value, events: value.events.filter((event) => event.event.checked) })]))
   })
 
   createEffect(() => {

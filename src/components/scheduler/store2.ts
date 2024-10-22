@@ -185,22 +185,26 @@ export class SchedulerStore {
 
   }
 
-  private organiseData = (data: ParsedDayData) => {
-    ObjectTyped.entries(data).forEach(([day, { events }]) => {
-      events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
+  organiseData = (data: ParsedDayData) => {
+    ObjectTyped.entries(data).forEach(([day, odata]) => data[day] = this.organiseDayData(odata))
+    return data
+  }
 
-      let dayRows = 1
-      // Assign rows based on the new order
-      const parsedEvents = events.reduce((acc, eventData) => {
-        const row = this.getEventRow(eventData.event, acc)
-        dayRows = Math.max(dayRows, row)
-        acc.push({ ...eventData, row } satisfies ParsedEvent)
-        return acc
-      }, [] as ParsedEvent[])
+  organiseDayData = (data: ParsedData) => {
+    const { events } = data
+    events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
 
-      data[day].dayRows = dayRows
-      data[day].events = parsedEvents
-    })
+    let dayRows = 1
+    // Assign rows based on the new order
+    const parsedEvents = events.reduce((acc, eventData) => {
+      const row = this.getEventRow(eventData.event, acc)
+      dayRows = Math.max(dayRows, row)
+      acc.push({ ...eventData, row } satisfies ParsedEvent)
+      return acc
+    }, [] as ParsedEvent[])
+
+    data.dayRows = dayRows
+    data.events = parsedEvents
     return data
   }
 
