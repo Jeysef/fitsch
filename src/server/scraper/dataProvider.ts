@@ -173,7 +173,6 @@ export class DataProvider {
         const lectureLectures = this.getLectureLectures(lecture, detail)
         if (lectureLectures && uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length > lectureLectures) return;
         preConjunctedLectures[i + j + 1] = nextLecture
-        return false
       })
       const preConjunctedLecturesValues = Object.values(preConjunctedLectures)
       // check if main lecture is present
