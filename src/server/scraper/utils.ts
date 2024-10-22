@@ -1,7 +1,7 @@
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
 import type { Locales } from "~/server/scraper/locales/types";
-import type { StudyId } from "~/server/scraper/types";
+import type { APICourseLecture, CourseDetail, StudyId } from "~/server/scraper/types";
 import { SEMESTER, WEEK_PARITY } from "./enums";
 
 const conjunctedRooms = [
@@ -76,7 +76,6 @@ export function parseWeek(week: string, semesterStart: Date, languageSet: Locale
   // '1., 2., 3., 4., 5., 6. výuky' => [1, 2, 3, 4, 5, 6]
   if (week.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
     const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
-    if (!weekNum || weekNum < 1) return { weeks: null, parity: null };
     return {
       weeks: [weekNum],
       parity: null
@@ -176,3 +175,4 @@ export function uniq_fast<T extends string | number = string | number>(a: T[]): 
   }
   return out;
 }
+

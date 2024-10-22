@@ -24,7 +24,7 @@ export default function ScheduleEvent(props: EventProps) {
       <Text variant="largeText" class="w-full">{event.abbreviation}</Text>
       <Text variant="smallText">{event.room}</Text>
       <div class="flex flex-1" />
-      <Text variant="smallText" class={cn(ellipsis2line, "text-xs")}>{formatWeeks(event.weeks.weeks!)}</Text>
+      <Text variant="smallText" class={cn(ellipsis2line, "text-xs")}>{formatWeeks(event.weeks.weeks)}</Text>
       <Text variant="smallText" class={"text-ellipsis overflow-hidden whitespace-nowrap w-full"}>{event.info}</Text>
     </div>
   )

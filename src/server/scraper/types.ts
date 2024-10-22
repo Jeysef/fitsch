@@ -87,7 +87,13 @@ interface APICourseLecture {
   weeks: LectureWeeks;
   room: string[];
   type: LECTURE_TYPE;
+  /**
+   * @example "16:00"
+   */
   start: string;
+  /**
+   * @example "17:50"
+   */
   end: string;
   capacity: string;
   lectureGroup: string[];
@@ -99,22 +105,32 @@ interface CourseLecture extends Omit<APICourseLecture, "room"> {
   room: string;
 }
 
-type LectureWeeks = {
-  weeks: null;
-  parity: null;
-} | {
+type LectureWeeks = ({
   weeks: number[];
   parity: WEEK_PARITY | null;
 } | {
   weeks: string;
   parity: WEEK_PARITY | null;
 }
+) & {
+  calculated?: boolean
+}
+
+type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>
+
+interface CourseDetail {
+  abbreviation: string;
+  name: string;
+  link: string;
+  id: string;
+  timeSpan: CourseTimeSpan;
+}
 
 export namespace StudyApiTypes {
   export interface getStudyTimeScheduleConfig {
     year: string | null;
   }
-  export type getStudyTimeScheduleReturn = Record<SEMESTER, Date>
+  export type getStudyTimeScheduleReturn = Record<SEMESTER, { start: Date, end: Date }>
 
   export interface getStudyProgramCoursesConfig {
     programUrl: string;
@@ -133,17 +149,6 @@ export namespace StudyApiTypes {
     year: StudyOverviewYear["value"];
     semester: SEMESTER;
     courseId: string;
-  }
-
-
-  type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>
-
-  interface CourseDetail {
-    abbreviation: string;
-    name: string;
-    link: string;
-    id: string;
-    timeSpan: CourseTimeSpan;
   }
 
   export interface getStudyCourseDetailsReturn {
@@ -173,5 +178,5 @@ export namespace DataProviderTypes {
 }
 
 
-export type { CourseLecture, APICourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
+export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
 

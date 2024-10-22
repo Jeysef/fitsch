@@ -3,13 +3,13 @@ import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization } from "~/server/scraper/types";
-import { createStudyId, getParityOfWeeks, getWeekFromSemesterStart, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY, type DAY } from "./enums";
+import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { DEGREE, LECTURE_TYPE, SEMESTER, type DAY } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = 'https://www.fit.vut.cz/study/'
   private _languageSet: Awaited<typeof this.languageProvider.languageSet> | undefined;
-  private _timeSchedule: Map<string, Awaited<Record<SEMESTER, Date>>>;
+  private _timeSchedule: Map<string, StudyApiTypes.getStudyTimeScheduleReturn>;
   constructor(private readonly languageProvider: LanguageProvider, private readonly fetcher: typeof fromURL) {
     this._languageSet = undefined
     this._timeSchedule = new Map()
@@ -44,14 +44,15 @@ export class StudyApi {
     const languageSet = await this.getLanguageSet();
     const calendarUrl = `${this.baseUrl}calendar/${year ? `${year}/` : ""}${this.urlLanguage}`;
     const $ = await this.fetchDocument(calendarUrl);
-    const dates = $("main .grid .grid__cell").filter(":has(.c-schedule__subtitle)").map((_, element) => {
+    const dates: [string, string][] = []
+    $("main .grid .grid__cell").filter(":has(.c-schedule__subtitle)").each((_, element) => {
       // const title = $(element).find(".c-schedule__subtitle").text().trim();
       const date = $(element).find("ul.c-schedule__list li.c-schedule__item")
         .filter((_, element) => (Object.values(languageSet.studyPlan).some((text) => $(element).find(".c-schedule__label").text().includes(text))))
-        .children(".c-schedule__time").children("time").first().attr("datetime")
-      return date
-    }).get().slice(0, 2) as [string, string]
-    const timeSchedule = ObjectTyped.fromEntries(Object.values(SEMESTER).map((semester, index) => [semester, new Date(dates[index])]))
+        .children(".c-schedule__time").find("time").map((_, element) => $(element).attr("datetime")).get()
+      dates.push(date as [string, string])
+    })
+    const timeSchedule = ObjectTyped.fromEntries(Object.values(SEMESTER).map((semester, index) => [semester, { start: new Date(dates[index][0]), end: new Date(dates[index][1]) }] as const))
 
     let currentYear = {
       value: "",
@@ -242,7 +243,7 @@ export class StudyApi {
       const hasNote = _type.includes("*)")
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       // parseWeek may return null, but we expect an event not to
-      const weeks = parseWeek(weeksText, timeSchedule[semester], languageSet)
+      const weeks = parseWeek(weeksText, timeSchedule[semester].start, languageSet)
       return {
         type,
         day: normalizedDay,
