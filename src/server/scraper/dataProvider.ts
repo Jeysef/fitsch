@@ -167,7 +167,6 @@ export class DataProvider {
         const nextLectureRooms = nextLecture.room
         console.log("comparing lecture", j, "with", i)
         if (!isSameTimeLecture(lecture, nextLecture)) return true; // no more lectures to merge with
-        // if (!isAnyConjunctable(nextLectureRooms)) return;
         if (!(isSameConjunctable(lectureRooms, nextLectureRooms) || deepEqual(lectureRooms, nextLectureRooms))) return;
         if (lecture.groups !== nextLecture.groups) return;
         if (!deepEqual(lecture.lectureGroup, nextLecture.lectureGroup)) return; // console.warn('Different groups from lecture groups', lecture, nextLecture)
