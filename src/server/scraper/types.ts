@@ -166,7 +166,7 @@ export namespace DataProviderTypes {
   export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig { }
   export interface getStudyCourseDetailsReturn {
     detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"];
-    data: CourseLecture[];
+    data: APICourseLecture[];
   }
 
   export interface getStudyCoursesDetailsConfig {
