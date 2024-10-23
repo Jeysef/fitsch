@@ -1,4 +1,4 @@
-import type { Event } from "~/components/scheduler/store2";
+import type { Event } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";

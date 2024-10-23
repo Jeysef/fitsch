@@ -1,8 +1,5 @@
-import { getData } from "~/components/homepage/data";
-import { formatData } from "~/components/homepage/parser";
 import Scheduler from "~/components/scheduler";
-import ScheduleEvent from "~/components/scheduler/Event";
-import type { SchedulerStore } from "~/components/scheduler/store2";
+import type { SchedulerStore } from "~/components/scheduler/store";
 
 export default function WorkSchedule({ store }: { store: SchedulerStore }) {
   // class schedulerSettings {

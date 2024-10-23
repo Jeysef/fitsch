@@ -1,7 +1,7 @@
 import { ObjectTyped } from "object-typed";
 import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
-import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store2";
+import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store";
 import { launchDayTime } from "~/server/scraper/constants";
 
 export interface WorkScheduleProps {

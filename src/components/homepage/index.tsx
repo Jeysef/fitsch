@@ -4,7 +4,7 @@ import { createEffect, createMemo, type Accessor } from "solid-js";
 import { createMutable, unwrap } from "solid-js/store";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
-import { createColumns, SchedulerStore, type Event, type ParsedDayData } from "~/components/scheduler/store2";
+import { createColumns, SchedulerStore, type Event, type ParsedDayData } from "~/components/scheduler/store";
 import { days } from "~/components/scheduler/types";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";

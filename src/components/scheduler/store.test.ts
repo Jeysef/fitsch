@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { createColumns, SchedulerStore } from "~/components/scheduler/store2";
+import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days } from "~/components/scheduler/types";
 
 describe("scheduler store", () => {
