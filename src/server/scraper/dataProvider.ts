@@ -171,7 +171,9 @@ export class DataProvider {
         if (!deepEqual(lecture.lectureGroup, nextLecture.lectureGroup)) return; // console.warn('Different groups from lecture groups', lecture, nextLecture)
         if (typeof (lecture.weeks.weeks) === "string" || typeof (nextLecture.weeks.weeks) === "string") return
         const lectureLectures = this.getLectureLectures(lecture, detail)
-        if (lectureLectures && uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length > lectureLectures) return;
+        const lengthOfCombinedLectures = uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length
+        // TODO: rewiew this
+        if (lectureLectures && lectureLectures <= 6 && lengthOfCombinedLectures > lectureLectures) return;
         preConjunctedLectures[i + j + 1] = nextLecture
       })
       const preConjunctedLecturesValues = Object.values(preConjunctedLectures)
@@ -189,7 +191,7 @@ export class DataProvider {
         // add capacity
         (lecture as unknown as CourseLecture).room = conjunctConjunctableRooms(uniq_fast(preConjunctedLecturesValues.flatMap(lecture => lecture.room)))
         lecture.info = preConjunctedLecturesValues.map(lecture => lecture.info).join(', ')
-        // lecture.note = preConjunctedLecturesValues.map(lecture => lecture.note).join(', ')
+        lecture.note = preConjunctedLecturesValues.map(lecture => lecture.note).filter(Boolean).join(', ')
         // // weeks are combined 1. 3., 2. => 1. 2. 3.
         const conjunctedWeeks = uniq_fast(preConjunctedLecturesValues.flatMap(lecture => lecture.weeks.weeks as number[]).sort((a, b) => a - b))
         lecture.weeks = {
@@ -289,10 +291,3 @@ function isSameTimeLecture(lecture1: APICourseLecture, lecture2: APICourseLectur
 //   })
 //   return lectures as unknown as CourseLecture[]
 // }
-
-
-{
-  {
-    uniq_fast([...[3, 9, 11, 13], ...[5, 7]]).length
-  }
-}
