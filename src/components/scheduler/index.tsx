@@ -140,7 +140,7 @@ function WeekSchedule() {
         >
           <For each={data.events}>{(event) => (
             <div style={{ "grid-row": `${event.row} / span 1`, "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`, "padding-inline-start": `${event.paddingStart}%`, "padding-inline-end": `${event.paddingEnd}%` }}>
-              <ScheduleEvent event={event.event} />
+              <ScheduleEvent event={event.event} store={store} />
             </div>
           )}
           </For>

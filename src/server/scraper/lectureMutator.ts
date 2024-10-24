@@ -128,6 +128,7 @@ export class LectureMutator {
       course.data.forEach((lecture, i) => {
         // go through all other lectures and find the one that completes the lecture weeks and has the same type and group
         const lect = lecture as unknown as MCourseLecture
+        if (!/\d/.test(lecture.groups)) return;
         const linkedLectures = (course.data as unknown as MCourseLecture[]).filter(otherLecture => {
           if (this.isSameTimeLecture(lect, otherLecture)) return false;
           if (otherLecture.type !== lect.type) return false;
