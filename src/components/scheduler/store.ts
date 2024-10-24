@@ -1,6 +1,6 @@
 import { ObjectTyped } from "object-typed";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import { DataProviderTypes, type CourseLecture } from "~/server/scraper/types";
+import { DataProviderTypes } from "~/server/scraper/types";
 
 interface ISchedulerTime {
   hour: number;
@@ -68,12 +68,13 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   return columns;
 }
 
-export type Event = Omit<CourseLecture, "start" | "end"> & TimeFrame & {
+export type Event = Omit<DataProviderTypes.getStudyCoursesDetailsReturn[number]["data"][number], "start" | "end"> & TimeFrame & {
   abbreviation: string;
   name: string;
   link: string;
   id: string;
   checked: boolean;
+  hovered: boolean;
 
 }
 
@@ -218,7 +219,7 @@ export class SchedulerStore {
   getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
 
 
-  fillData = (course: DataProviderTypes.getStudyCourseDetailsReturn, data: ParsedDayData = this.getEmptyData()) => {
+  fillData = (course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()) => {
     course.data.forEach(event => {
       const { day, start, end } = event
       const timeFrame = this.frameTime(start, end)
@@ -229,6 +230,7 @@ export class SchedulerStore {
         start: this.parseTime(start),
         end: this.parseTime(end),
         checked: false,
+        hovered: false
       }
       if (this.settings.filter && !this.settings.filter(filledEvent)) return
       // padding in percentage

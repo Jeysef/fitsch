@@ -1,5 +1,6 @@
 import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
+import type { MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 
 /**
  * @example "program-8956", "course-xxxxx"
@@ -174,7 +175,7 @@ export namespace DataProviderTypes {
     year: StudyOverviewYear["value"];
     semester: SEMESTER;
   }
-  export type getStudyCoursesDetailsReturn = getStudyCourseDetailsReturn[]
+  export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[]
 }
 
 

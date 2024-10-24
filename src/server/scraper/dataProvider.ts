@@ -84,11 +84,11 @@ export class DataProvider {
   public async getStudyCoursesDetails(config: DataProviderTypes.getStudyCoursesDetailsConfig): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
     const { courses, semester, year } = config
     const d = Promise.all(courses.map(course => this.getStudyCourseDetails({ courseId: course.courseId, semester, year })))
+    console.time("mutate DATA")
     const mutator = new LectureMutator({ semester, year }, await d, this.studyApi)
-    mutator.filterLectures(lecture => !!lecture.weeks.weeks)
-    mutator.fillLectureWeeks()
-    mutator.conjunctLectures()
-    return mutator.courses
+    const data = mutator.getData()
+    data.then(() => console.timeEnd("mutate DATA"))
+    return data
   }
 
   private async getStudyCourseDetails(config: DataProviderTypes.getStudyCourseDetailsConfig): Promise<DataProviderTypes.getStudyCourseDetailsReturn> {
