@@ -120,7 +120,7 @@ function LaunchHighlight() {
 }
 
 function Corner() {
-  return <div class="row-span-1 col-span-1 border-r border-b sticky top-0 left-0 z-20 bg-background" />;
+  return <div class="row-span-1 col-span-1 border-r border-b left-0 outline-1 sticky top-px outline outline-border z-20 bg-background font-mono" />;
 }
 
 function WeekSchedule() {
