@@ -9,9 +9,14 @@ import { WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
 import type { APICourseLecture, CourseDetail, CourseLecture, DataProviderTypes, StudyApiTypes, StudyOverviewYear } from "~/server/scraper/types";
 import { conjunctConjunctableRooms, getWeekFromSemesterStart, uniq_fast } from "~/server/scraper/utils";
 
+interface LinkedLectureData {
+  id: string;
+  day: DAY;
+}
 export interface MCourseLecture extends CourseLecture {
   id: string;
-  linked: { id: string, day: DAY }[];
+  strongLinked: LinkedLectureData[];
+  linked: LinkedLectureData[];
 }
 
 export interface MgetStudyCourseDetailsReturn {
@@ -47,8 +52,42 @@ export class LectureMutator {
     const anyConjunctable: string[][] = conjunctableRooms.map(room => Array.isArray(room) ? room : [room.main, ...room.streamed])
     const isAnyConjunctable = (rooms: string[]) => rooms.some(room => anyConjunctable.some(conjunctable => conjunctable.includes(room)))
     const isSameConjunctable = (rooms1: string[], rooms2: string[]) => rooms1.some(room => anyConjunctable.some(conjunctable => conjunctable.includes(room) && rooms2.some(lectureRoom => conjunctable.includes(lectureRoom))))
-
-
+    const isStrongLinkedLecture = (lecture: MCourseLecture, otherLecture: MCourseLecture, course: DataProviderTypes.getStudyCourseDetailsReturn) => {
+      if (otherLecture.type !== lecture.type) return false;
+      if (typeof (lecture.weeks.weeks) === "string" || typeof (otherLecture.weeks.weeks) === "string") return false
+      const lectureLectures = this.getLectureLectures(lecture, course.detail)
+      const otherLectureLectures = this.getLectureLectures(otherLecture, course.detail)
+      if (!(lectureLectures && otherLectureLectures)) return false;
+      return !(lectureLectures <= semesterWeeks)
+    }
+    const linkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
+      const linkedIds = linked.map(lecture => ({ id: lecture.id, day: lecture.day })) ?? [];
+      lecture.linked = lecture.linked ?? [];
+      lecture.strongLinked = lecture.strongLinked ?? [];
+      linkedIds.forEach(linkedId => {
+        if (!lecture.linked.some(linked => linked.id === linkedId.id)) {
+          lecture.linked.push(linkedId)
+        }
+      })
+      linked.forEach((linkedLecture) => {
+        linkedLecture.linked = [{ id: lecture.id, day: lecture.day }]
+        linkedLecture.linked.push(...linked.filter(linkedId => linkedId.id !== linkedLecture.id))
+      })
+    }
+    const strongLinkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
+      const linkedIds = linked.map(lecture => ({ id: lecture.id, day: lecture.day })) ?? [];
+      lecture.strongLinked = lecture.strongLinked ?? [];
+      lecture.strongLinked = lecture.strongLinked ?? [];
+      linkedIds.forEach(linkedId => {
+        if (!lecture.strongLinked.some(strongLinked => strongLinked.id === linkedId.id)) {
+          lecture.strongLinked.push(linkedId)
+        }
+      })
+      linked.forEach((linkedLecture) => {
+        linkedLecture.strongLinked = [{ id: lecture.id, day: lecture.day }]
+        linkedLecture.strongLinked.push(...linked.filter(linkedId => linkedId.id !== linkedLecture.id))
+      })
+    }
 
     this.courses.forEach((course) => {
       // FILTER
@@ -129,36 +168,19 @@ export class LectureMutator {
         // go through all other lectures and find the one that completes the lecture weeks and has the same type and group
         const lect = lecture as unknown as MCourseLecture
         if (!/\d/.test(lecture.groups)) return;
+        const strongLinkedLectures: MCourseLecture[] = []
         const linkedLectures = (course.data as unknown as MCourseLecture[]).filter(otherLecture => {
           if (this.isSameTimeLecture(lect, otherLecture)) return false;
-          if (otherLecture.type !== lect.type) return false;
           if (otherLecture.groups !== lect.groups) return false;
           if (!deepEqual(otherLecture.lectureGroup, lect.lectureGroup)) return false;
-          if (typeof (lect.weeks.weeks) === "string" || typeof (otherLecture.weeks.weeks) === "string") return false
-          const lectureLectures = this.getLectureLectures(lect, course.detail)
-          const otherLectureLectures = this.getLectureLectures(otherLecture, course.detail)
-          if (!(lectureLectures && otherLectureLectures)) return false;
-          if (lectureLectures <= semesterWeeks) return false;
-          // const linkedLectureWeeks = uniq_fast([...lect.weeks.weeks, ...otherLecture.weeks.weeks])
-          // return linkedLectureWeeks.length === lectureLectures
-          return true
-        })
-        // if (lect.id == "1522513374") {
-        //   console.log('linkedLectures', linkedLectures)
-        //   console.log("lecturesLectures", this.getLectureLectures(lect, course.detail))
-        // }
-        const linkedIds = linkedLectures.map(lecture => ({ id: lecture.id, day: lecture.day })) ?? []
-        lect.linked = lect.linked ?? []
-        // lect.linked = linkedId from linkedIds if linkedId not in lect.linked
-        linkedIds.forEach(linkedId => {
-          if (!lect.linked.some(linked => linked.id === linkedId.id)) {
-            lect.linked.push(linkedId)
+
+          if (isStrongLinkedLecture(lect, otherLecture, course)) {
+            strongLinkedLectures.push(otherLecture)
           }
+          return true;
         })
-        linkedLectures.forEach((linkedLecture) => {
-          linkedLecture.linked = [{ id: lect.id, day: lect.day }]
-          linkedLecture.linked.push(...linkedIds.filter(linkedId => linkedId.id !== linkedLecture.id))
-        })
+        linkThrough(lect, linkedLectures)
+        strongLinkThrough(lect, strongLinkedLectures)
       })
     }
     )

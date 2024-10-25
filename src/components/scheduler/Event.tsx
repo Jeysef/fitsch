@@ -1,3 +1,4 @@
+import { createMemo } from "solid-js";
 import type { Event, ISchedulerSettings, ParsedDayData } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
@@ -29,7 +30,7 @@ export default function ScheduleEvent(props: EventProps) {
     props.event.checked = e;
     // check linked events
     if (event.linked) {
-      for (const linked of event.linked) {
+      for (const linked of event.strongLinked) {
         const event = getLinkedEvent(linked);
         event && (event.event.checked = e);
       }
@@ -37,17 +38,13 @@ export default function ScheduleEvent(props: EventProps) {
   }
   const handleHover = (is: boolean) => {
     props.event.hovered = is;
-    console.log("is hovered")
-    if (event.linked) {
-      for (const linked of event.linked) {
-        const event = getLinkedEvent(linked);
-        event && (event.event.hovered = is);
-      }
-    }
   }
-  // console.log("🚀 ~ file: Event.tsx:27 ~ ScheduleEvent ~ event.linked:", event.linked)
+  const strongHovered = createMemo(() => event.hovered || event.strongLinked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered))
+  const hovered = createMemo(() => !strongHovered() && (event.hovered || event.linked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered)))
   return (
-    <div class={cn("relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden", { "outline outline-orange-500 outline-2 outline-offset-2": props.event.hovered })} style={{ "background-color": color }}
+    <div
+      class={cn("relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2", { "outline  outline-orange-500": strongHovered(), "outline outline-slate-400": hovered() })}
+      style={{ "background-color": color }}
       onmouseover={() => handleHover(true)}
       onmouseout={() => handleHover(false)}
       ondblclick={() => handleCheck(!props.event.checked)}
@@ -64,7 +61,7 @@ export default function ScheduleEvent(props: EventProps) {
       {/* <Text variant="smallText">{event.linked?.join(",")}</Text> */}
       <Text variant="smallText">{event.room}</Text>
       <div class="flex flex-1" />
-      <Text variant="smallText" class={cn(ellipsis2line, "text-xs")}>{formatWeeks(event.weeks.weeks)}</Text>
+      <Text variant="smallText" class={cn(ellipsis2line, "text-xxs")}>{formatWeeks(event.weeks.weeks)}</Text>
       <Text variant="smallText" class={"text-ellipsis overflow-hidden whitespace-nowrap w-full"}>{event.info}</Text>
     </div>
   )

@@ -12,7 +12,7 @@ export interface WorkScheduleProps {
 }
 
 
-export const SchedulerStoreContext = createContext<{
+const SchedulerStoreContext = createContext<{
   settings: ISchedulerSettings;
   data: ParsedDayData;
 } | null>(null);

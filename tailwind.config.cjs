@@ -18,6 +18,9 @@ module.exports = {
         sans: ['Geist Sans', ...defaultTheme.fontFamily.sans],
         mono: ['Courier Prime', ...defaultTheme.fontFamily.mono],
       },
+      fontSize: {
+        xxs: "0.625rem",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
