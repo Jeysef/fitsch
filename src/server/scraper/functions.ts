@@ -10,7 +10,6 @@ import { type DataProviderTypes, type StudyOverview } from "~/server/scraper/typ
 
 export const getStudyOverview: ResourceFetcher<true, StudyOverview, DataProviderTypes.getStudyOverviewConfig> = async (source, { value, refetching }) => {
   "use server";
-  // console.log("getting Data")
   const language = LANGUAGE.CZECH;
 
   const languageProvider = new LanguageProvider(language);

@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { createDeepSignal } from "~/lib/solid";
+// import { createDeepSignal } from "~/lib/solid";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
@@ -22,22 +22,19 @@ const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as a
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const resource = createResource(getStudyOverview, { deferStream: true, storage: createDeepSignal });
+  const resource = createResource(getStudyOverview, { deferStream: true });
 
-
-  const [data] = resource
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary fallback={(err, reset) => <div>
+      <ErrorBoundary fallback={(err, reset) => (<div>
         <Typography variant="h5">Error</Typography>
         <pre>{err.message}</pre>
         <Button onClick={reset}>Retry</Button>
-      </div>} >
+      </div>
+      )} >
         <Suspense fallback={<LoaderFallback />}>
-          {/* <Show when={data() && data.state !== "pending"}> */}
           <Content resource={resource} />
-          {/* </Show> */}
         </Suspense>
       </ErrorBoundary>
     </div>
@@ -56,6 +53,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
   const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
     const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
+    console.log("🚀 ~ file: Content.tsx:58 ~ Content ~ name, value:", name, value, returnType)
     return returnType.error ? { error: returnType.error } : null
   }
 
@@ -84,17 +82,17 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
     year: group.controls.year.value?.value,
     program: group.controls.program.value
   })
+
+  /** refetch data */
   createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
     if (firstEffect) return false
-    const c = group.controls
-    const fullData: DataProviderTypes.getStudyOverviewConfig = {
-      ...data,
-      degree: c.degree.value
-    }
+    const degree = group.controls.degree.value
+    const fullData: DataProviderTypes.getStudyOverviewConfig = { ...data, degree }
     void refetch(fullData)
     return false
   }), true)
 
+  /** Check changed degree grade */
   createRenderEffect(() => {
     const value = group.controls.degree.value
     const dataProgram = untrack(data)?.data.programs[value]
@@ -115,7 +113,8 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
       semester: c.semester.value,
       courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
     }
-    submit(submitData)
+    // submit(submitData)
+    console.log("🚀 ~ file: Content.tsx:118 ~ constonSubmit:JSX.EventHandlerUnion<HTMLFormElement,SubmitEvent>|undefined= ~ submitData:", submitData)
 
   };
 
@@ -227,6 +226,7 @@ function ProgramSelect() {
         onBlur={() => group.controls.program!.markTouched(true)}
         disabled={group.controls.program.isDisabled}
         required={group.controls.program.isRequired}
+        validationState={group.controls.program.errors ? "invalid" : "valid"}
         class="grid gap-x-2"
       >
         <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Program</RadioGroup.Label>
@@ -277,6 +277,7 @@ function GradeSelect() {
       onBlur={() => group.controls.grade.markTouched(true)}
       disabled={group.controls.grade.isDisabled}
       required={group.controls.grade.isRequired}
+      validationState={group.controls.grade.errors ? "invalid" : "valid"}
       class="grid gap-x-2"
     >
       <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Grade</RadioGroup.Label>
