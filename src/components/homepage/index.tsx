@@ -1,7 +1,8 @@
 import { useSubmission } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
 import { createEffect, createMemo, type Accessor } from "solid-js";
-import { createMutable, unwrap } from "solid-js/store";
+import { createMutable } from "solid-js/store";
+import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { createColumns, SchedulerStore, type Event, type ParsedDayData } from "~/components/scheduler/store";
@@ -28,16 +29,30 @@ export default function Home() {
 
   const store = createMutable(schedulerStore)
 
-  const filteredStoreData: Accessor<ParsedDayData> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries(unwrap(store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
-  const filteredStore = createMutable({ ...store, data: filteredStoreData() })
-
-  createEffect(() => {
-    filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(store.data).map(([key, value]) => [key, store.organiseDayData({ ...value, events: value.events.filter((event) => event.event.checked) })]))
+  const filteredStoreData: Accessor<ParsedDayData> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries((store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
+  const filteredStore = new Proxy(store, {
+    get(store, prop) {
+      if (prop === 'data') {
+        // Return filtered data when accessing data property
+        return filteredStoreData()
+      }
+      // Forward all other property access to original store
+      // @ts-ignore
+      return store[prop]
+    },
+    set(store, prop, value) {
+      // Forward all property sets to original store
+      // @ts-ignore
+      store[prop] = value
+      return true
+    }
   })
+
 
   createEffect(() => {
     if (!data.result) return;
     store.courses = data.result
+    console.log("🚀 ~ file: index.tsx:46 ~ createEffect ~ filteredStore.courses:", filteredStore.courses)
     // filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(unwrap(store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }]))
   })
   return (
@@ -56,9 +71,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
-        <div class="grid items-center" >
-          NOT YET IMPLEMENTED
-        </div>
+        <TimeSpan store={filteredStore} />
       </TabsContent>
     </Tabs>
   )
