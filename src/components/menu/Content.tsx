@@ -113,8 +113,7 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
       semester: c.semester.value,
       courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
     }
-    // submit(submitData)
-    console.log("🚀 ~ file: Content.tsx:118 ~ constonSubmit:JSX.EventHandlerUnion<HTMLFormElement,SubmitEvent>|undefined= ~ submitData:", submitData)
+    submit(submitData)
 
   };
 
