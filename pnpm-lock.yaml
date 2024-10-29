@@ -92,6 +92,9 @@ importers:
       type-fest:
         specifier: ^4.26.1
         version: 4.26.1
+      uuid:
+        specifier: ^11.0.2
+        version: 11.0.2
       vinxi:
         specifier: ^0.4.3
         version: 0.4.3(@types/node@22.7.4)(ioredis@5.4.1)(terser@5.34.1)
@@ -3253,6 +3256,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  uuid@11.0.2:
+    resolution: {integrity: sha512-14FfcOJmqdjbBPdDjFQyk/SdT4NySW4eM0zcG+HqbHP5jzuH56xO3J1DGhgs/cEMCfwYi3HQI1gnTO62iaG+tQ==}
+    hasBin: true
 
   validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}
@@ -6733,6 +6740,8 @@ snapshots:
   urlpattern-polyfill@8.0.2: {}
 
   util-deprecate@1.0.2: {}
+
+  uuid@11.0.2: {}
 
   validate-html-nesting@1.2.2: {}
 
