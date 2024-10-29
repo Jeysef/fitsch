@@ -4,5 +4,5 @@ import type { DataProviderTypes } from "~/server/scraper/types";
 
 export const getStudyCoursesDetailsAction = action(async (config: DataProviderTypes.getStudyCoursesDetailsConfig) => {
   "use server";
-  return json(getStudyCoursesDetails(config))
+  return json(await getStudyCoursesDetails(config))
 })
