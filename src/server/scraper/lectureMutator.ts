@@ -3,6 +3,7 @@
 
 import deepEqual from "deep-equal";
 import { ObjectTyped } from "object-typed";
+import { v4 as uuidv4 } from 'uuid';
 import { getWeekOfMonth } from "~/lib/date";
 import type { StudyApi } from "~/server/scraper/api";
 import { WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
@@ -60,10 +61,12 @@ export class LectureMutator {
       if (!(lectureLectures && otherLectureLectures)) return false;
       return !(lectureLectures <= semesterWeeks)
     }
+    const getLinkedData = (lectures: MCourseLecture[]) => {
+      return lectures.map(lecture => ({ id: lecture.id, day: lecture.day }));
+    }
     const linkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
-      const linkedIds = linked.map(lecture => ({ id: lecture.id, day: lecture.day })) ?? [];
+      const linkedIds = getLinkedData(linked);
       lecture.linked = lecture.linked ?? [];
-      lecture.strongLinked = lecture.strongLinked ?? [];
       linkedIds.forEach(linkedId => {
         if (!lecture.linked.some(linked => linked.id === linkedId.id)) {
           lecture.linked.push(linkedId)
@@ -71,11 +74,11 @@ export class LectureMutator {
       })
       linked.forEach((linkedLecture) => {
         linkedLecture.linked = [{ id: lecture.id, day: lecture.day }]
-        linkedLecture.linked.push(...linked.filter(linkedId => linkedId.id !== linkedLecture.id))
+        linkedLecture.linked.push(...getLinkedData(linked.filter(linkedId => linkedId.id !== linkedLecture.id)))
       })
     }
     const strongLinkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
-      const linkedIds = linked.map(lecture => ({ id: lecture.id, day: lecture.day })) ?? [];
+      const linkedIds = getLinkedData(linked);
       lecture.strongLinked = lecture.strongLinked ?? [];
       lecture.strongLinked = lecture.strongLinked ?? [];
       linkedIds.forEach(linkedId => {
@@ -85,18 +88,21 @@ export class LectureMutator {
       })
       linked.forEach((linkedLecture) => {
         linkedLecture.strongLinked = [{ id: lecture.id, day: lecture.day }]
-        linkedLecture.strongLinked.push(...linked.filter(linkedId => linkedId.id !== linkedLecture.id))
+        linkedLecture.strongLinked.push(...getLinkedData(linked.filter(linkedId => linkedId.id !== linkedLecture.id)))
       })
+    }
+    const convertToMCourseLecture = (lecture: APICourseLecture): MCourseLecture => {
+      // @ts-expect-error the rooms will be changed elsewhere
+      return Object.assign(lecture, { strongLinked: [], linked: [] })
     }
 
     this.courses.forEach((course) => {
+      // @ts-ignore ID LECTURE
+      course.data.forEach((lecture) => { lecture.id = this.idLecture(lecture) })
       // FILTER
       course.data = course.data.filter(this.filterPredicate);
+      // FILL WEEKS
       course.data.forEach((lecture, i) => {
-        // LINK p.1
-        // @ts-ignore
-        lecture.id = this.idLecture(lecture)
-        // FILL WEEKS
         if (!Array.isArray(lecture.weeks.weeks)) {
           const lectureLectures = this.getLectureLectures(lecture, course.detail)
           if (!lectureLectures) return console.warn('Lecture type not found in detail', lecture)
@@ -164,9 +170,11 @@ export class LectureMutator {
           ObjectTyped.keys(preConjunctedLectures).slice(1).reverse().forEach((i) => course.data.splice(Number(i), 1))
         }
       })
+      // LINK
       course.data.forEach((lecture, i) => {
         // go through all other lectures and find the one that completes the lecture weeks and has the same type and group
-        const lect = lecture as unknown as MCourseLecture
+        const lect = convertToMCourseLecture(lecture)
+        console.log("🚀 ~ file: lectureMutator.ts:177 ~ LectureMutator ~ course.data.forEach ~ lect:", lect.id)
         if (!/\d/.test(lecture.groups)) return;
         const strongLinkedLectures: MCourseLecture[] = []
         const linkedLectures = (course.data as unknown as MCourseLecture[]).filter(otherLecture => {
@@ -218,15 +226,16 @@ export class LectureMutator {
   }
 
   private idLecture(lecture: APICourseLecture) {
-    // unique id for lecture
-    const hashString = `${lecture.day}-${lecture.type}-${lecture.start}-${lecture.end}-${lecture.room.toString()}-${lecture.groups}`;
-    let hash = 0;
-    for (let i = 0; i < hashString.length; i++) {
-      const char = hashString.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
+    // // unique id for lecture
+    // const hashString = `${lecture.day}-${lecture.type}-${lecture.start}-${lecture.end}-${lecture.room.toString()}-${lecture.groups}`;
+    // let hash = 0;
+    // for (let i = 0; i < hashString.length; i++) {
+    //   const char = hashString.charCodeAt(i);
+    //   hash = (hash << 5) - hash + char;
+    //   hash |= 0; // Convert to 32bit integer
+    // }
+    // return hash;
+    return uuidv4()
   }
 
 }
