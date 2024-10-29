@@ -15,6 +15,8 @@
     "@fontsource/geist-mono": "^5.1.0",
     "@fontsource/geist-sans": "^5.1.0",
     "@kobalte/core": "^0.13.6",
+    "@solid-primitives/deep": "^0.2.9",
+    "@solid-primitives/resource": "^0.3.1",
     "@solid-primitives/storage": "^4.2.1",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.14.7",
