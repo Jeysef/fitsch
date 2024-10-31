@@ -52,10 +52,10 @@ function SchedulerGrid() {
 
 function Heading() {
   const store = useContext(SchedulerStoreContext)!;
-  return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono">
+  return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono divide-x">
     <For each={store.settings.columns}>
       {(column) => (
-        <div class="hour border-l flex items-center justify-center [text-align-last:right] p-1">{column.title}</div>
+        <div class="flex items-center justify-center [text-align-last:right] p-1">{column.title}</div>
       )}
     </For>
   </div>;
@@ -63,17 +63,17 @@ function Heading() {
 
 function Days() {
   const store = useContext(SchedulerStoreContext)!;
-  return <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background">
+  return <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
     <For each={store.settings.rows}>
       {(day) => (
-        <div class="items-center justify-center p-4 flex border-t">{day.title}</div>
+        <div class="items-center justify-center p-4 flex">{day.title}</div>
       )}
     </For>
   </div>;
 }
 
 function Week() {
-  return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] border-l z-10">
+  return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]">
     <LaunchHighlight />
     <WeekSchedule />
   </div>;
@@ -81,9 +81,9 @@ function Week() {
 
 function ColumnLines() {
   const store = useContext(SchedulerStoreContext)!;
-  return <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30">
+  return <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed">
     <For each={store.settings.columns} >
-      {() => <div class="border-l border-dashed" />}
+      {() => <div role="separator" />}
     </For>
   </div>;
 }
@@ -120,7 +120,7 @@ function LaunchHighlight() {
 }
 
 function Corner() {
-  return <div class="row-span-1 col-span-1 border-r border-b left-0 outline-1 sticky top-px outline outline-border z-20 bg-background font-mono" />;
+  return <div class="row-span-1 col-span-1 left-0  sticky top-px outline-border z-30 bg-background font-mono" />;
 }
 
 function WeekSchedule() {
