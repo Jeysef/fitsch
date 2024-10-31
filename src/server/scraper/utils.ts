@@ -1,7 +1,7 @@
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
 import type { Locales } from "~/server/scraper/locales/types";
-import type { APICourseLecture, CourseDetail, StudyId } from "~/server/scraper/types";
+import type { StudyId } from "~/server/scraper/types";
 import { SEMESTER, WEEK_PARITY } from "./enums";
 
 const conjunctedRooms = [
@@ -78,7 +78,7 @@ export function parseWeek(week: string, semesterStart: Date, languageSet: Locale
     const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
     return {
       weeks: [weekNum],
-      parity: null
+      parity: getParityOfWeeks([weekNum], semesterStart)
     };
   }
   // const parsedWeek = week.replace("výuky", "").
@@ -143,8 +143,8 @@ export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
 
   // check against the start of the semester
   const weekOfSemesterStart = getWeekNumber(semesterStartDate);
-  const isLectureWeekOdd = (weekOfSemesterStart + +even) % 2 === 1;
-  return isLectureWeekOdd ? WEEK_PARITY.ODD : WEEK_PARITY.EVEN;
+  const isLectureWeekEven = (weekOfSemesterStart + +odd) % 2;
+  return isLectureWeekEven ? WEEK_PARITY.EVEN : WEEK_PARITY.ODD;
 }
 
 export const conjunctConjunctableRooms = (roomsInput: string[]): string => {

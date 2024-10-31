@@ -165,7 +165,7 @@ export class LectureMutator {
           lect.note = preConjunctedLecturesValues.map(lect => lect.note).filter(Boolean).join(', ')
           const conjunctedWeeks = uniq_fast(preConjunctedLecturesValues.flatMap(lect => lect.weeks.weeks as number[]).sort((a, b) => a - b))
           lect.weeks = {
-            parity: preConjunctedLecturesValues.find(lect => lect.weeks.parity)?.weeks.parity ?? null,
+            parity: preConjunctedLecturesValues.every(lect => lect.weeks.parity === main.weeks.parity) ? main.weeks.parity : null,
             weeks: conjunctedWeeks
           }
           // // if capacity is same, keep it, if not, join them
