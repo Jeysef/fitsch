@@ -52,7 +52,7 @@ function SchedulerGrid() {
 
 function Heading() {
   const store = useContext(SchedulerStoreContext)!;
-  return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-10 bg-background font-mono">
+  return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono">
     <For each={store.settings.columns}>
       {(column) => (
         <div class="hour border-l flex items-center justify-center [text-align-last:right] p-1">{column.title}</div>
@@ -73,7 +73,7 @@ function Days() {
 }
 
 function Week() {
-  return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] border-l">
+  return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] border-l z-10">
     <LaunchHighlight />
     <WeekSchedule />
   </div>;

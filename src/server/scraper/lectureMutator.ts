@@ -1,6 +1,3 @@
-// this will have a class as builder pattern to mutate the lecture object
-// constructor(lectureData: StudyApiTypes.getStudyCourseDetailsReturn, studyApi: StudyApi) {
-
 import deepEqual from "deep-equal";
 import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +15,8 @@ export interface MCourseLecture extends CourseLecture {
   id: string;
   strongLinked: LinkedLectureData[];
   linked: LinkedLectureData[];
+  /** required number of lectures througout the semester */
+  lecturesCount: number | false;
 }
 
 export interface MgetStudyCourseDetailsReturn {
@@ -54,12 +53,11 @@ export class LectureMutator {
     const isAnyConjunctable = (rooms: string[]) => rooms.some(room => anyConjunctable.some(conjunctable => conjunctable.includes(room)))
     const isSameConjunctable = (rooms1: string[], rooms2: string[]) => rooms1.some(room => anyConjunctable.some(conjunctable => conjunctable.includes(room) && rooms2.some(lectureRoom => conjunctable.includes(lectureRoom))))
     const isStrongLinkedLecture = (lecture: MCourseLecture, otherLecture: MCourseLecture, course: DataProviderTypes.getStudyCourseDetailsReturn) => {
-      if (otherLecture.type !== lecture.type) return false;
+      if (lecture.type !== otherLecture.type) return false;
       if (typeof (lecture.weeks.weeks) === "string" || typeof (otherLecture.weeks.weeks) === "string") return false
-      const lectureLectures = this.getLectureLectures(lecture, course.detail)
-      const otherLectureLectures = this.getLectureLectures(otherLecture, course.detail)
-      if (!(lectureLectures && otherLectureLectures)) return false;
-      return !(lectureLectures <= semesterWeeks)
+      if (!lecture.lecturesCount || !otherLecture.lecturesCount) return false;
+      const combinedLecturesCount = (lecture.lecturesCount * otherLecture.lecturesCount) / (lecture.lecturesCount + otherLecture.lecturesCount)
+      return Math.round(combinedLecturesCount) == semesterWeeks
     }
     const getLinkedData = (lectures: MCourseLecture[]) => {
       return lectures.map(lecture => ({ id: lecture.id, day: lecture.day }));
@@ -95,29 +93,35 @@ export class LectureMutator {
       // @ts-expect-error the rooms will be changed elsewhere
       return Object.assign(lecture, { strongLinked: [], linked: [] })
     }
+    type FilledLecture = APICourseLecture & { id: string; lecturesCount: number | false; }
 
     this.courses.forEach((course) => {
-      // @ts-ignore ID LECTURE
-      course.data.forEach((lecture) => { lecture.id = this.idLecture(lecture) })
+      // ID LECTURE
+      course.data.forEach((lecture) => Object.assign(lecture, { id: this.idLecture(lecture), lecturesCount: this.getLectureLectures(lecture, course.detail) }))
       // FILTER
-      course.data = course.data.filter(this.filterPredicate);
+      course.data = (course.data as FilledLecture[]).filter(this.filterPredicate);
       // FILL WEEKS
-      course.data.forEach((lecture, i) => {
+      (course.data as FilledLecture[]).forEach((lecture, i) => {
         if (!Array.isArray(lecture.weeks.weeks)) {
-          const lectureLectures = this.getLectureLectures(lecture, course.detail)
-          if (!lectureLectures) return console.warn('Lecture type not found in detail', lecture)
+          if (!lecture.lecturesCount) return console.warn('Lecture type not found in detail', lecture)
           const maxParityLectures = Math.floor(semesterWeeks / 2)
-          if (lectureLectures < maxParityLectures) return console.log("Cannot safely determine lecture weeks", lecture)
+          if (lecture.lecturesCount < maxParityLectures) return console.warn("Cannot safely determine lecture weeks", lecture)
           const semesterStartWeekOffset = getWeekOfMonth(semesterStart) % 2
           switch (lecture.weeks.parity) {
             case WEEK_PARITY.EVEN:
-              lecture.weeks.weeks = Array.from({ length: lectureLectures }, (_, i) => semesterStartWeekOffset + 2 * (i + 1) + 1)
+              lecture.weeks.weeks = Array.from({ length: lecture.lecturesCount }, (_, i) => semesterStartWeekOffset + 2 * (i + 1) + 1)
               lecture.weeks.calculated = true
               break;
             case WEEK_PARITY.ODD:
-              lecture.weeks.weeks = Array.from({ length: lectureLectures }, (_, i) => semesterStartWeekOffset + 2 * (i + 1))
+              lecture.weeks.weeks = Array.from({ length: lecture.lecturesCount }, (_, i) => semesterStartWeekOffset + 2 * (i + 1))
               lecture.weeks.calculated = true
               break;
+            default:
+              // does not have parity nor weeks
+              if (lecture.lecturesCount === semesterWeeks) {
+                lecture.weeks.weeks = Array.from({ length: lecture.lecturesCount }, (_, i) => semesterStartWeekOffset + i + 1)
+                lecture.weeks.calculated = true
+              }
           }
         }
         // CONJUNCT
@@ -125,20 +129,21 @@ export class LectureMutator {
 
         const lectureRooms = lecture.room
 
-        const preConjunctedLectures = { [i]: lecture }
+        const preConjunctedLectures = { [i]: lecture };
 
         // check next lectures one by one
-        course.data.slice(i + 1).some((nextLecture, j) => {
+        (course.data as FilledLecture[]).slice(i + 1).some((nextLecture, j) => {
           const nextLectureRooms = nextLecture.room
+          if (lecture.type !== nextLecture.type) return true;
           if (!this.isSameTimeLecture(lecture, nextLecture)) return true; // no more lectures to merge with
           if (!(isSameConjunctable(lectureRooms as string[], nextLectureRooms) || deepEqual(lectureRooms, nextLectureRooms))) return;
           if (lecture.groups !== nextLecture.groups) return;
           if (!deepEqual(lecture.lectureGroup, nextLecture.lectureGroup)) return; // console.warn('Different groups from lecture groups', lecture, nextLecture)
           if (typeof (lecture.weeks.weeks) === "string" || typeof (nextLecture.weeks.weeks) === "string") return
-          const lectureLectures = this.getLectureLectures(lecture, course.detail)
-          const lengthOfCombinedLectures = uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length
+          // const lengthOfCombinedLectures = uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length
           // TODO: rewiew this
-          if (lectureLectures && lectureLectures <= 6 && lengthOfCombinedLectures > lectureLectures) return;
+          // if (lectureLectures && lectureLectures <= 7 && lengthOfCombinedLectures > lectureLectures) return;
+          // if (lecture.lectureCount && lecture.weeks.parity === nextLecture.weeks.parity ) return;
           preConjunctedLectures[i + j + 1] = nextLecture
         })
         const preConjunctedLecturesValues = Object.values(preConjunctedLectures)
@@ -157,7 +162,6 @@ export class LectureMutator {
           lect.room = conjunctConjunctableRooms(uniq_fast(preConjunctedLecturesValues.flatMap(lect => lect.room)))
           lect.info = preConjunctedLecturesValues.map(lect => lect.info).join(', ')
           lect.note = preConjunctedLecturesValues.map(lect => lect.note).filter(Boolean).join(', ')
-          // // weeks are combined 1. 3., 2. => 1. 2. 3.
           const conjunctedWeeks = uniq_fast(preConjunctedLecturesValues.flatMap(lect => lect.weeks.weeks as number[]).sort((a, b) => a - b))
           lect.weeks = {
             parity: preConjunctedLecturesValues.find(lect => lect.weeks.parity)?.weeks.parity ?? null,
@@ -167,14 +171,13 @@ export class LectureMutator {
           lect.capacity = preConjunctedLecturesValues.every(lect => lect.capacity === main.capacity) ? main.capacity : preConjunctedLecturesValues.map(lect => lect.capacity).join(', ')
 
           // remove next lectures
-          ObjectTyped.keys(preConjunctedLectures).slice(1).reverse().forEach((i) => course.data.splice(Number(i), 1))
+          ObjectTyped.keys(preConjunctedLectures).slice(1).reverse().forEach((i) => course.data.splice(i, 1))
         }
-      })
+      });
       // LINK
-      course.data.forEach((lecture, i) => {
+      (course.data as FilledLecture[]).forEach((lecture, i) => {
         // go through all other lectures and find the one that completes the lecture weeks and has the same type and group
         const lect = convertToMCourseLecture(lecture)
-        console.log("🚀 ~ file: lectureMutator.ts:177 ~ LectureMutator ~ course.data.forEach ~ lect:", lect.id)
         if (!/\d/.test(lecture.groups)) return;
         const strongLinkedLectures: MCourseLecture[] = []
         const linkedLectures = (course.data as unknown as MCourseLecture[]).filter(otherLecture => {
@@ -186,7 +189,7 @@ export class LectureMutator {
             strongLinkedLectures.push(otherLecture)
           }
           return true;
-        })
+        });
         linkThrough(lect, linkedLectures)
         strongLinkThrough(lect, strongLinkedLectures)
       })
@@ -205,6 +208,11 @@ export class LectureMutator {
     return { weeks: this._semesterWeeks, start: this._semesterSchedule.start, end: this._semesterSchedule.end }
   }
 
+  /**
+   * This function calculates the number of lectures that should be in the semester based on the length of given lecture
+   * Problem n.1: In a week there may be more lectures with different lengths -> solved by concatenating the lectures elsewhere
+   * Problem n.2: the calculation doesn't have to reflect what's written in the detail. Viz README.md
+   */
   private getLectureLectures(lecture: Pick<CourseLecture, "type" | "start" | "end">, detail: CourseDetail) {
     const lectureTimeSpan = detail.timeSpan[lecture.type]
     if (lectureTimeSpan === undefined) return false;
@@ -214,10 +222,11 @@ export class LectureMutator {
     // round up to nearest hour, 7:00 - 7:50 => 50 minutes => 1 hour
 
     // ---- when assuming lecture duration is in atleast 60 minute intervals
-    // const lectureDuration = Math.ceil(duration / 60)
-    // const lectureLectures = lectureTimeSpan / lectureDuration
+    const lectureDuration = Math.ceil(duration / 60)
+    const lectureLectures = Math.round(lectureTimeSpan / lectureDuration)
 
-    const lectureLectures = Math.floor(lectureTimeSpan * 60 / duration)
+    // ---- when assuming lecture duration in minutes -- WRONG
+    // const lectureLectures = Math.floor(lectureTimeSpan * 60 / duration)
     return lectureLectures
   }
 

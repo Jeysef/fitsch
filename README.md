@@ -61,3 +61,26 @@ In this project I am using specific naming so I want to explain:
   - semester: Semestr {Zimní, Letní}
   - course: Předmět {IDM, IZP, ...}
   - lecture: Použito v širším slova smyslu {přednáška, cvičení, laboratoř, ...}
+
+### Notes
+their course timespan makes no sense, 
+- IDM:\
+    26 hrs lectures\
+    weekly 1 2 hour lecture (110 min) 13 weeks\
+    = 2 * 13 = 36 ✓
+
+- IEL:
+    39 hrs lectures\
+    weekly 1 2 hour & 1 1 hour lectures 13 weeks \
+    = 3 * 13 = 39 ✓\
+    ----\
+    6 hrs seminar\
+    weekly 1 1 hour (50 min) seminar 7 weeks\
+    = 1 * 7 = 7 ✗\
+    but \
+    = (1 * 50) * 7 /60 = 5.8333333333 = 6 ✓\
+    but then \
+    39 hrs lectures\
+    weekly 1 2 hour & 1 1 hour lectures 13 weeks \
+    = (3 * 50) * 13 /60 = 32.5 ✗\
+    WTF

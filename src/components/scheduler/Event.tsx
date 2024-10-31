@@ -41,6 +41,10 @@ export default function ScheduleEvent(props: EventProps) {
   }
   const strongHovered = createMemo(() => event.hovered || event.strongLinked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered))
   const hovered = createMemo(() => !strongHovered() && (event.hovered || event.linked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered)))
+
+  // const isStrongHovered = createSelector(strongHovered)
+  // const isHovered = createSelector(hovered)
+
   return (
     <div
       class={cn("relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2", { "outline  outline-orange-500": strongHovered(), "outline outline-slate-400": hovered() })}

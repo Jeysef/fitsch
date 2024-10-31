@@ -79,7 +79,7 @@ export type Event = Omit<DataProviderTypes.getStudyCoursesDetailsReturn[number][
 }
 
 
-interface ParsedEvent {
+export interface ParsedEvent {
   row: number;
   colStart: number;
   colEnd: number;
@@ -103,7 +103,6 @@ interface TimeFrame {
 }
 
 export class SchedulerStore {
-  test: string = "test"
   private static readonly defaultSettings: ISchedulerSettings = {
     blockDimensions: {
       width: {
@@ -117,6 +116,7 @@ export class SchedulerStore {
   }
   public data: ParsedDayData;
   public readonly settings: ISchedulerSettings;
+  private _courses: DataProviderTypes.getStudyCoursesDetailsReturn = [];
   constructor(settings: ISchedulerSettings) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this.data = this.getEmptyData()
@@ -250,12 +250,21 @@ export class SchedulerStore {
   }
 
   set courses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
+    this._courses = courses;
     this.data = this.parseCourses(courses)
+  }
+
+  get courses() {
+    return this._courses;
   }
 
   parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
     return this.organiseData(this.fillData(course, data))
   }
+}
+
+export function schedulerTimeDuration(start: ISchedulerTime, end: ISchedulerTime) {
+  return schedulerTimeToMinutes(end) - schedulerTimeToMinutes(start)
 }
 
 export function schedulerTimeToMinutes(time: ISchedulerTime) {

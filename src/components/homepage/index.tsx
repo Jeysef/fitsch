@@ -34,7 +34,7 @@ export default function Home() {
     get(store, prop) {
       if (prop === 'data') {
         // Return filtered data when accessing data property
-        return filteredStoreData()
+        return store.organiseData(filteredStoreData())
       }
       // Forward all other property access to original store
       // @ts-ignore
@@ -52,8 +52,6 @@ export default function Home() {
   createEffect(() => {
     if (!data.result) return;
     store.courses = data.result
-    console.log("🚀 ~ file: index.tsx:46 ~ createEffect ~ filteredStore.courses:", filteredStore.courses)
-    // filteredStore.data = ObjectTyped.fromEntries(ObjectTyped.entries(unwrap(store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }]))
   })
   return (
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">

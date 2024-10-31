@@ -125,6 +125,7 @@ interface CourseDetail {
   link: string;
   id: string;
   timeSpan: CourseTimeSpan;
+  timeSpanText: string[];
 }
 
 export namespace StudyApiTypes {

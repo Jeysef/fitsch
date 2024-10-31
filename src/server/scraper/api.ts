@@ -228,6 +228,8 @@ export class StudyApi {
       return [valueToEnumValue(type, LECTURE_TYPE), hours] as const
     }))
 
+    const timeSpanText = rangeText
+
     const noteText = $("main div.b-detail .b-detail__body .footnote").text().trim()
 
     const data: StudyApiTypes.getStudyCourseDetailsReturn["data"] = $("main table#schedule tbody tr").map((_, element) => {
@@ -264,6 +266,7 @@ export class StudyApi {
       name,
       link,
       timeSpan,
+      timeSpanText,
       id: courseId
     }
 
