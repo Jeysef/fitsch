@@ -139,11 +139,11 @@ export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
   // [1,3,5,7] > check if the week is odd or even > check against the start of the semester > return odd or even or weeks
   const odd = weeks.every(week => week % 2 === 1);
   const even = weeks.every(week => week % 2 === 0);
-  if (odd && even || !odd && !even) return null;
+  if (odd === even) return null;
 
   // check against the start of the semester
   const weekOfSemesterStart = getWeekNumber(semesterStartDate);
-  const isLectureWeekOdd = weekOfSemesterStart + weeks[0] % 2 === 1;
+  const isLectureWeekOdd = (weekOfSemesterStart + +even) % 2 === 1;
   return isLectureWeekOdd ? WEEK_PARITY.ODD : WEEK_PARITY.EVEN;
 }
 

@@ -4,7 +4,7 @@ import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
-import type { DAY } from "~/server/scraper/enums";
+import { WEEK_PARITY, type DAY } from "~/server/scraper/enums";
 import { ellipsis2line } from "./event.module.css";
 
 interface EventProps {
@@ -41,13 +41,23 @@ export default function ScheduleEvent(props: EventProps) {
   }
   const strongHovered = createMemo(() => event.hovered || event.strongLinked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered))
   const hovered = createMemo(() => !strongHovered() && (event.hovered || event.linked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered)))
+  const isOdd = createMemo(() => event.weeks.parity === WEEK_PARITY.ODD)
+  const isEven = createMemo(() => event.weeks.parity === WEEK_PARITY.EVEN)
 
   // const isStrongHovered = createSelector(strongHovered)
   // const isHovered = createSelector(hovered)
 
   return (
     <div
-      class={cn("relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2", { "outline  outline-orange-500": strongHovered(), "outline outline-slate-400": hovered() })}
+      class={cn(
+        "relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2",
+        {
+          "outline  outline-orange-500": strongHovered(),
+          "outline outline-slate-400": hovered(),
+          "border-red-500 border-dashed border-2": isEven(),
+          "border-blue-500 border-dashed border-2": isOdd(),
+        }
+      )}
       style={{ "background-color": color }}
       onmouseover={() => handleHover(true)}
       onmouseout={() => handleHover(false)}

@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from 'uuid';
 import { getWeekOfMonth } from "~/lib/date";
 import type { StudyApi } from "~/server/scraper/api";
-import { WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
+import { LECTURE_TYPE, WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
 import type { APICourseLecture, CourseDetail, CourseLecture, DataProviderTypes, StudyApiTypes, StudyOverviewYear } from "~/server/scraper/types";
 import { conjunctConjunctableRooms, getWeekFromSemesterStart, uniq_fast } from "~/server/scraper/utils";
 
@@ -140,6 +140,7 @@ export class LectureMutator {
           if (lecture.groups !== nextLecture.groups) return;
           if (!deepEqual(lecture.lectureGroup, nextLecture.lectureGroup)) return; // console.warn('Different groups from lecture groups', lecture, nextLecture)
           if (typeof (lecture.weeks.weeks) === "string" || typeof (nextLecture.weeks.weeks) === "string") return
+          if (lecture.weeks.parity && nextLecture.weeks.parity && lecture.weeks.parity !== nextLecture.weeks.parity) return;
           // const lengthOfCombinedLectures = uniq_fast([...lecture.weeks.weeks, ...nextLecture.weeks.weeks]).length
           // TODO: rewiew this
           // if (lectureLectures && lectureLectures <= 7 && lengthOfCombinedLectures > lectureLectures) return;

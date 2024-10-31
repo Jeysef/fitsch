@@ -37,11 +37,12 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEven
       if (!linkedLecture) return acc
       return acc + getLectureDuration(linkedLecture)
     }, getLectureDuration(lecture))
-    return [lecture.type, Math.ceil(finalDuration / 60)]
-  }))
+    return [lecture.type, Math.ceil(finalDuration / 60)] as const
+  }) as [LECTURE_TYPE, number][])
   // filter out exams
   ObjectTyped.entries(weeklyLectureLength).forEach(([key, value]) => {
-    if (key === LECTURE_TYPE.EXAM) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
+    if (value === 0) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
+    else if (key === LECTURE_TYPE.EXAM) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
   })
   const selected: Record<LECTURE_TYPE, number> = Object.values(events).reduce((acc, curr) => {
     acc[curr.event.type] += Math.ceil(schedulerTimeDuration(curr.event.start, curr.event.end) / 60)
@@ -56,16 +57,37 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEven
   //   selected[key] = Math.ceil(value / 60)
   // })
 
-  const lectureLectures: Record<LECTURE_TYPE, number> = Object.values(course.data).reduce((acc, { weeks, type, lecturesCount }) => {
-    if (!Array.isArray(weeks.weeks)) return acc
-    acc[type] = Math.max(acc[type], lecturesCount || weeks.weeks.length)
+  const lectureWeeks: Record<LECTURE_TYPE, number> = Object.values(course.data).reduce((acc, { weeks, type }) => {
+    if (type === LECTURE_TYPE.EXAM) return acc;
+    if (!Array.isArray(weeks.weeks)) return acc;
+    console.log("🚀 ~ file: TimeSpan.tsx:64 ~ constlectureWeeks:Record<LECTURE_TYPE,number>=Object.values ~ weeks.weeks.length:", weeks.weeks.length)
+    acc[type] = Math.max(acc[type], weeks.weeks.length)
     return acc
   }, ObjectTyped.fromEntries(trackedLectureType.map(t => [t, 0])))
   // filter out null values
-  ObjectTyped.entries(lectureLectures).forEach(([key, value]) => {
-    if (value === 0) delete lectureLectures[key as keyof typeof lectureLectures]
-    else if (key === LECTURE_TYPE.EXAM) delete lectureLectures[key as keyof typeof lectureLectures]
+  ObjectTyped.entries(lectureWeeks).forEach(([key, value]) => {
+    if (value === 0) delete lectureWeeks[key as keyof typeof lectureWeeks]
+    else if (key === LECTURE_TYPE.EXAM) delete lectureWeeks[key as keyof typeof lectureWeeks]
   })
+
+  // let weeklyLectureLength: Record<LECTURE_TYPE, number> = ObjectTyped.fromEntries(trackedLectureType.map(t => [t, 0]))
+  // let lectureWeeks: Record<LECTURE_TYPE, number | string> = ObjectTyped.fromEntries(trackedLectureType.map(t => [t, 0]))
+
+  // for (const lecture of course.data) {
+  //   if (lecture.type === LECTURE_TYPE.EXAM) continue;
+  //   const finalDuration = lecture.strongLinked.reduce((acc, linked) => {
+  //     const linkedLecture = course.data.find((l) => l.id === linked.id)
+  //     if (!linkedLecture) return acc
+  //     return acc + getLectureDuration(linkedLecture)
+  //   }, getLectureDuration(lecture))
+  //   weeklyLectureLength[lecture.type] = Math.max(weeklyLectureLength[lecture.type], Math.ceil(finalDuration / 60))
+
+  //   if (Array.isArray(lecture.weeks.weeks)) {
+  //     lectureWeeks[lecture.type] = typeof lectureWeeks[lecture.type] === "string" ? lecture.lecturesCount || lecture.weeks.weeks.length : Math.max(lectureWeeks[lecture.type] as number, lecture.lecturesCount || lecture.weeks.weeks.length)
+  //   } else {
+  //     lectureWeeks[lecture.type] = lecture.weeks.weeks
+  //   }
+  // }
 
 
   return (
@@ -117,7 +139,7 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEven
             <div>
               <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Semester Sessions</h3>
               <div class="space-y-2">
-                <For each={ObjectTyped.entries(lectureLectures)}>
+                <For each={ObjectTyped.entries(lectureWeeks)}>
                   {([type, count]) => (
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-gray-600 capitalize">{type}</span>
