@@ -53,7 +53,6 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
 
   const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
     const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
-    console.log("🚀 ~ file: Content.tsx:58 ~ Content ~ name, value:", name, value, returnType)
     return returnType.error ? { error: returnType.error } : null
   }
 

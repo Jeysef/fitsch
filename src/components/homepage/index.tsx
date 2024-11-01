@@ -1,6 +1,8 @@
+import { trackStore } from "@solid-primitives/deep";
+import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { createEffect, createMemo, type Accessor } from "solid-js";
+import { createEffect, createMemo, createSignal, untrack, type Accessor } from "solid-js";
 import { createMutable } from "solid-js/store";
 import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
@@ -26,8 +28,9 @@ const schedulerStore = new SchedulerStore({
 
 export default function Home() {
   const data = useSubmission(getStudyCoursesDetailsAction)
+  const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore' })
 
-  const store = createMutable(schedulerStore)
+  const store = createMutable(Object.assign(schedulerStore, untrack(persistedStore)))
 
   const filteredStoreData: Accessor<ParsedDayData> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries((store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
   const filteredStore = new Proxy(store, {
@@ -53,6 +56,14 @@ export default function Home() {
     if (!data.result) return;
     store.courses = data.result
   })
+
+  createEffect(() => {
+    const updatedStore = trackStore(store)
+    console.log("🚀 ~ file: index.tsx:62 ~ createEffect ~ updatedStore:")
+    setPersistedStore(updatedStore)
+  })
+
+
   return (
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">
       {/* not the best solution, coz it shrinks it from the right side too */}

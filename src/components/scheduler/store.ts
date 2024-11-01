@@ -114,12 +114,12 @@ export class SchedulerStore {
     columns: [],
     rows: [],
   }
-  public data: ParsedDayData;
+  private _data: ParsedDayData;
   public readonly settings: ISchedulerSettings;
   private _courses: DataProviderTypes.getStudyCoursesDetailsReturn = [];
   constructor(settings: ISchedulerSettings) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
-    this.data = this.getEmptyData()
+    this._data = this.getEmptyData()
   }
 
   private getEventTypePriority(type: LECTURE_TYPE): number {
@@ -251,11 +251,14 @@ export class SchedulerStore {
 
   set courses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     this._courses = courses;
-    this.data = this.parseCourses(courses)
+    this._data = this.parseCourses(courses)
   }
 
   get courses() {
     return this._courses;
+  }
+  get data() {
+    return this._data
   }
 
   parseCourse(course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: ParsedDayData = this.getEmptyData()): ParsedDayData {
