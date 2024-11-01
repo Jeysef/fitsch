@@ -234,9 +234,9 @@ export class SchedulerStore {
       }
       if (this.settings.filter && !this.settings.filter(filledEvent)) return
       // padding in percentage
-      const eventDuration = schedulerTimeToMinutes(filledEvent.end) - schedulerTimeToMinutes(filledEvent.start)
-      const paddingStart = Math.round((schedulerTimeToMinutes(filledEvent.start) - schedulerTimeToMinutes(this.settings.columns[colStart].start)) * 100) / eventDuration
-      const paddingEnd = Math.round((schedulerTimeToMinutes(this.settings.columns[colEnd].end) - schedulerTimeToMinutes(filledEvent.end)) * 100) / eventDuration
+      const eventDuration = schedulerTimeDuration(filledEvent.start, filledEvent.end)
+      const paddingStart = Math.round(schedulerTimeDuration(this.settings.columns[colStart].start, filledEvent.start) * 100) / eventDuration
+      const paddingEnd = Math.round(schedulerTimeDuration(filledEvent.end, this.settings.columns[colEnd].end) * 100) / eventDuration
       const parsedEvents: ParsedEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
       data[day].events.push(parsedEvents)
     })
