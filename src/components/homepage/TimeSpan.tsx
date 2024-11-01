@@ -1,5 +1,5 @@
 import { ObjectTyped } from "object-typed";
-import { createEffect, For } from "solid-js";
+import { createEffect, For, Show } from "solid-js";
 import { schedulerTimeDuration, type ParsedEvent, type SchedulerStore } from "~/components/scheduler/store";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
@@ -31,19 +31,19 @@ function getLectureDuration(lecture: MCourseLecture) {
 function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEvent[]) {
   const trackedLectureType = [LECTURE_TYPE.LECTURE, LECTURE_TYPE.SEMINAR, LECTURE_TYPE.EXERCISE, LECTURE_TYPE.LABORATORY]
 
-  const weeklyLectureLength: Record<LECTURE_TYPE, number> = ObjectTyped.fromEntries(course.data.map((lecture) => {
-    const finalDuration = lecture.strongLinked.reduce((acc, linked) => {
-      const linkedLecture = course.data.find((l) => l.id === linked.id)
-      if (!linkedLecture) return acc
-      return acc + getLectureDuration(linkedLecture)
-    }, getLectureDuration(lecture))
-    return [lecture.type, Math.ceil(finalDuration / 60)] as const
-  }) as [LECTURE_TYPE, number][])
-  // filter out exams
-  ObjectTyped.entries(weeklyLectureLength).forEach(([key, value]) => {
-    if (value === 0) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
-    else if (key === LECTURE_TYPE.EXAM) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
-  })
+  // const weeklyLectureLength: Record<LECTURE_TYPE, number> = ObjectTyped.fromEntries(course.data.map((lecture) => {
+  //   const finalDuration = lecture.strongLinked.reduce((acc, linked) => {
+  //     const linkedLecture = course.data.find((l) => l.id === linked.id)
+  //     if (!linkedLecture) return acc
+  //     return acc + getLectureDuration(linkedLecture)
+  //   }, getLectureDuration(lecture))
+  //   return [lecture.type, Math.ceil(finalDuration / 60)] as const
+  // }) as [LECTURE_TYPE, number][])
+  // // filter out exams
+  // ObjectTyped.entries(weeklyLectureLength).forEach(([key, value]) => {
+  //   if (value === 0) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
+  //   else if (key === LECTURE_TYPE.EXAM) delete weeklyLectureLength[key as keyof typeof weeklyLectureLength]
+  // })
   const selected: Record<LECTURE_TYPE, number> = Object.values(events).reduce((acc, curr) => {
     acc[curr.event.type] += Math.ceil(schedulerTimeDuration(curr.event.start, curr.event.end) / 60)
     return acc
@@ -57,16 +57,25 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEven
   //   selected[key] = Math.ceil(value / 60)
   // })
 
-  const lectureWeeks: Record<LECTURE_TYPE, number> = Object.values(course.data).reduce((acc, { weeks, type }) => {
+  const lectureWeeks: Record<LECTURE_TYPE, { weeks: number, weeklyLectures: number }> = Object.values(course.data).reduce((acc, lecture) => {
+    const { weeks, type, strongLinked } = lecture
     if (type === LECTURE_TYPE.EXAM) return acc;
+    // weeklyLectureLength
+    const finalDuration = strongLinked.reduce((acc, linked) => {
+      const linkedLecture = course.data.find((l) => l.id === linked.id)
+      if (!linkedLecture) return acc
+      return acc + getLectureDuration(linkedLecture)
+    }, getLectureDuration(lecture))
+    acc[type].weeklyLectures = Math.max(acc[type].weeklyLectures, Math.ceil(finalDuration / 60))
+    // lectureWeeks
     if (!Array.isArray(weeks.weeks)) return acc;
     console.log("🚀 ~ file: TimeSpan.tsx:64 ~ constlectureWeeks:Record<LECTURE_TYPE,number>=Object.values ~ weeks.weeks.length:", weeks.weeks.length)
-    acc[type] = Math.max(acc[type], weeks.weeks.length)
+    acc[type].weeks = Math.max(acc[type].weeks, weeks.weeks.length)
     return acc
-  }, ObjectTyped.fromEntries(trackedLectureType.map(t => [t, 0])))
+  }, ObjectTyped.fromEntries(trackedLectureType.map(t => [t, { weeks: 0, weeklyLectures: 0 }])))
   // filter out null values
   ObjectTyped.entries(lectureWeeks).forEach(([key, value]) => {
-    if (value === 0) delete lectureWeeks[key as keyof typeof lectureWeeks]
+    if (value.weeks === 0 && value.weeklyLectures === 0) delete lectureWeeks[key as keyof typeof lectureWeeks]
     else if (key === LECTURE_TYPE.EXAM) delete lectureWeeks[key as keyof typeof lectureWeeks]
   })
 
@@ -110,41 +119,25 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEven
 
         {/* Right Column - Weekly & Semester Details */}
         <div class="p-4">
-          <div class="grid grid-cols-2 gap-8">
-            {/* Weekly Hours */}
-            <div>
-              <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Weekly Hours</h3>
-              <div class="space-y-2">
-                <For each={ObjectTyped.entries(weeklyLectureLength)}>
-                  {(weekly) => (
-                    <div class="grid grid-cols-3 items-center justify-between">
-                      <div class="flex items-center gap-2">
-                        <div
-                          class={`w-2 h-2 rounded-full ${selected[weekly[0]] === weekly[1] ? 'bg-emerald-500' : 'bg-red-500'}`}
-                        />
-                        <span class="text-sm text-gray-600 capitalize">{weekly[0]}</span>
-                      </div>
-                      <span class="text-sm font-medium">{weekly[1]} hrs/week</span>
-                      {
-                        selected[weekly[0]] !== weekly[1] &&
-                        <span class="text-sm font-medium">selected {selected[weekly[0]]}</span>
-                      }
-                    </div>
-                  )}
-                </For>
-              </div>
-            </div>
-
-            {/* Semester Sessions */}
-            <div>
-              <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Semester Sessions</h3>
-              <div class="space-y-2">
+          <div class="flex flex-col">
+            <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Weekly Hours</h3>
+            <div class="space-y-2">
+              <div class="grid grid-cols-[repeat(3,_minmax(0,_auto)),_1fr] gap-x-4 items-center justify-start">
                 <For each={ObjectTyped.entries(lectureWeeks)}>
-                  {([type, count]) => (
-                    <div class="flex items-center justify-between">
-                      <span class="text-sm text-gray-600 capitalize">{type}</span>
-                      <span class="text-sm font-medium">{count}</span>
-                    </div>
+                  {([type, { weeks, weeklyLectures }]) => (
+                    <>
+                      <div class="flex items-center gap-2">
+                        <div class={`w-2 h-2 rounded-full shrink-0 ${selected[type] === weeklyLectures ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                        <span class="text-sm text-gray-600 capitalize">{type}</span>
+                      </div>
+                      <span class="text-sm font-medium">{weeklyLectures} hrs/week</span>
+                      <span class="text-sm font-medium">
+                        <Show when={selected[type] !== weeklyLectures}>
+                          selected {selected[type]}
+                        </Show>
+                      </span>
+                      <span class="text-sm font-medium w-full flex justify-end">{weeks} weeks</span>
+                    </>
                   )}
                 </For>
               </div>
