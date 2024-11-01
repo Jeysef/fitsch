@@ -62,13 +62,13 @@ export default function Home() {
         <TabsTrigger class="w-auto whitespace-break-spaces" value="rules">Rozsahy</TabsTrigger>
         <TabsIndicator variant="underline" />
       </TabsList>
-      <TabsContent value="workSchedule" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
+      <TabsContent value="workSchedule" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
         <Scheduler store={store} />
       </TabsContent>
-      <TabsContent value="finalResult" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
+      <TabsContent value="finalResult" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
         <Scheduler store={filteredStore} />
       </TabsContent>
-      <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
+      <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
         <TimeSpan store={filteredStore} />
       </TabsContent>
     </Tabs>
