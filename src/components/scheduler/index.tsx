@@ -1,5 +1,5 @@
 import { ObjectTyped } from "object-typed";
-import { createContext, createEffect, createMemo, For, useContext } from "solid-js";
+import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
 import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store";
 import { launchDayTime } from "~/server/scraper/constants";
@@ -126,9 +126,6 @@ function Corner() {
 function WeekSchedule() {
   const store = useContext(SchedulerStoreContext)!;
   const days = createMemo(() => Object.values(store.data));
-  createEffect(() => {
-    console.log("🚀 ~ file: index.tsx:129 ~ WeekSchedule ~ days:", days())
-  })
   // for info, I need to use fragmeents to wrap the days in solid jsx observer
   return (
     <>

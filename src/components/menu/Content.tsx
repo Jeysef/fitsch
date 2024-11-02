@@ -1,6 +1,7 @@
+import { makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createContext, createMemo, createRenderEffect, createResource, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { createContext, createMemo, createRenderEffect, createResource, createSignal, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -22,7 +23,7 @@ const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as a
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const resource = createResource(getStudyOverview, { deferStream: true });
+  const resource = createResource(getStudyOverview, { deferStream: true, storage: (init) => { const m = makePersisted(createSignal<StudyOverview>(), { name: "studyOverview" }); return [m[0], m[1]] } });
 
   return (
     <div class="w-44 space-y-2">

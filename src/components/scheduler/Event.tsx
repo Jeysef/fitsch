@@ -36,11 +36,8 @@ export default function ScheduleEvent(props: EventProps) {
       }
     }
   }
-  const handleHover = (is: boolean) => {
-    props.event.hovered = is;
-  }
-  const strongHovered = createMemo(() => event.hovered || event.strongLinked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered))
-  const hovered = createMemo(() => !strongHovered() && (event.hovered || event.linked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered)))
+  // const strongHovered = createMemo(() => event.hovered || event.strongLinked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered))
+  // const hovered = createMemo(() => !strongHovered() && (event.hovered || event.linked?.map((linked) => getLinkedEvent(linked)?.event.hovered).some((hovered) => hovered)))
   const isOdd = createMemo(() => event.weeks.parity === WEEK_PARITY.ODD)
   const isEven = createMemo(() => event.weeks.parity === WEEK_PARITY.EVEN)
 
@@ -52,15 +49,16 @@ export default function ScheduleEvent(props: EventProps) {
       class={cn(
         "relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2",
         {
-          "outline  outline-orange-500": strongHovered(),
-          "outline outline-slate-400": hovered(),
+          // "outline  outline-orange-500": strongHovered(),
+          // "outline outline-slate-400": hovered(),
           "border-red-500 border-dashed border-2": isEven(),
           "border-blue-500 border-dashed border-2": isOdd(),
         }
       )}
+      data-id={event.id}
       style={{ "background-color": color }}
-      onmouseover={() => handleHover(true)}
-      onmouseout={() => handleHover(false)}
+      // onmouseover={() => handleHover(true)}
+      // onmouseout={() => handleHover(false)}
       ondblclick={() => handleCheck(!props.event.checked)}
     >
       <Checkbox

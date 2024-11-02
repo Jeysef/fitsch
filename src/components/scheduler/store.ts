@@ -74,8 +74,6 @@ export type Event = Omit<DataProviderTypes.getStudyCoursesDetailsReturn[number][
   link: string;
   id: string;
   checked: boolean;
-  hovered: boolean;
-
 }
 
 
@@ -230,7 +228,6 @@ export class SchedulerStore {
         start: this.parseTime(start),
         end: this.parseTime(end),
         checked: false,
-        hovered: false
       }
       if (this.settings.filter && !this.settings.filter(filledEvent)) return
       // padding in percentage
