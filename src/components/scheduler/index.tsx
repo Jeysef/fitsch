@@ -1,7 +1,9 @@
+import { css } from "@emotion/css";
 import { ObjectTyped } from "object-typed";
 import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
 import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store";
+import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 
 export interface WorkScheduleProps {
@@ -73,7 +75,42 @@ function Days() {
 }
 
 function Week() {
-  return <div class="schedule grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]">
+  const store = useContext(SchedulerStoreContext)!;
+  const linkedHighlightClass = css`
+    ${Object.values(store.data).flatMap(data => data.events.flatMap(event => `
+      &:has([data-id~="${event.event.id}"]:hover) {
+        & .event[data-id="${event.event.id}"] {
+          outline-style: solid;
+          outline-color: #94a3b8;
+        }
+        ${event.event.linked.map(linked => `
+          & .event[data-id="${linked.id}"] {
+            outline-style: solid;
+            outline-color: #94a3b8;
+          }
+        `)}
+      }
+      `
+  )).join('\n')}
+  `;
+  const strongLinkedHighlightClass = css`
+    ${Object.values(store.data).flatMap(data => data.events.flatMap(event => `
+      &:has([data-id~="${event.event.id}"]:hover) {
+        & .event[data-id="${event.event.id}"] {
+          outline-style: solid;
+          outline-color: #f97316;
+        }
+        ${event.event.strongLinked.map(linked => `
+          & .event[data-id="${linked.id}"] {
+            outline-style: solid;
+            outline-color: #f97316;
+          }
+        `)}
+      }
+      `
+  )).join('\n')}
+  `;
+  return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass, strongLinkedHighlightClass)}>
     <LaunchHighlight />
     <WeekSchedule />
   </div>;

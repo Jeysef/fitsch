@@ -11,6 +11,7 @@
     "typed-css-modules": "tcm src -c"
   },
   "dependencies": {
+    "@emotion/css": "^11.13.4",
     "@fontsource/courier-prime": "^5.1.0",
     "@fontsource/geist-mono": "^5.1.0",
     "@fontsource/geist-sans": "^5.1.0",
