@@ -4,16 +4,15 @@ import { useSubmission } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
 import { createEffect, createMemo, createSignal, untrack, type Accessor } from "solid-js";
 import { createMutable } from "solid-js/store";
-import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
+import { days } from "~/components/scheduler/constants";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { type Data, type Event } from "../scheduler/types";
-import { days } from "~/components/scheduler/constants";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
@@ -33,12 +32,11 @@ export default function Home() {
 
   const store = createMutable(Object.assign(schedulerStore, untrack(persistedStore)))
 
-  const filteredStoreData: Accessor<Data> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries((store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
   const filteredStore = new Proxy(store, {
     get(store, prop) {
       if (prop === 'data') {
         // Return filtered data when accessing data property
-        return store.sortData(filteredStoreData())
+        return store.sortData(store.checkedData)
       }
       // Forward all other property access to original store
       // @ts-ignore
@@ -81,7 +79,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
-        <TimeSpan store={filteredStore} />
+        {/* <TimeSpan store={filteredStore} /> */}
       </TabsContent>
     </Tabs>
   )

@@ -2,6 +2,7 @@ import { ObjectTyped } from "object-typed";
 import type { Data, DayData, DayEvent, Event, ICreateColumns, IScheduleColumn, ISchedulerSettings, ISchedulerTime, TimeFrame } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { DataProviderTypes } from "~/server/scraper/types";
+import { mapValues } from 'lodash-es';
 
 // TODO: test
 export function createColumns(config: ICreateColumns): IScheduleColumn[] {
@@ -92,12 +93,12 @@ export class SchedulerStore {
     return row;
   }
 
-  sortData = (data: Data) => {
+  public sortData = (data: Data) => {
     ObjectTyped.entries(data).forEach(([day, odata]) => data[day] = this.sortDayData(odata))
     return data
   }
 
-  sortDayData = (data: DayData) => {
+  private sortDayData = (data: DayData) => {
     const { events } = data
     events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
 
@@ -159,6 +160,13 @@ export class SchedulerStore {
 
   get data() {
     return this._data
+  }
+
+  get checkedData() {
+    return mapValues(this.data, (dayData) => ({
+      ...dayData,
+      events: dayData.events.filter(event => event.event.checked)
+    }));
   }
 }
 
