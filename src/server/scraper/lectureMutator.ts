@@ -7,7 +7,7 @@ import { LECTURE_TYPE, WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scr
 import type { APICourseLecture, CourseDetail, CourseLecture, DataProviderTypes, StudyApiTypes, StudyOverviewYear } from "~/server/scraper/types";
 import { conjunctConjunctableRooms, getWeekFromSemesterStart, uniq_fast } from "~/server/scraper/utils";
 
-interface LinkedLectureData {
+export interface LinkedLectureData {
   id: string;
   day: DAY;
 }
