@@ -1,8 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
-import { ObjectTyped } from "object-typed";
-import { createEffect, createMemo, createSignal, untrack, type Accessor } from "solid-js";
+import { createEffect, createMemo, createSignal, untrack } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
@@ -12,7 +11,7 @@ import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/compo
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import { type Data, type Event } from "../scheduler/types";
+import { type Event } from "../scheduler/types";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
@@ -36,7 +35,7 @@ export default function Home() {
     get(store, prop) {
       if (prop === 'data') {
         // Return filtered data when accessing data property
-        return store.sortData(store.checkedData)
+        return createMemo(() => store.sortData(store.checkedData))()
       }
       // Forward all other property access to original store
       // @ts-ignore
@@ -59,7 +58,7 @@ export default function Home() {
   createEffect(() => {
     const updatedStore = trackStore(store)
     console.log("🚀 ~ file: index.tsx:62 ~ createEffect ~ updatedStore:")
-    setPersistedStore(updatedStore)
+    // setPersistedStore(updatedStore)
   })
 
 

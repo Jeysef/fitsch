@@ -1,8 +1,8 @@
+import { mapValues } from 'lodash-es';
 import { ObjectTyped } from "object-typed";
 import type { Data, DayData, DayEvent, Event, ICreateColumns, IScheduleColumn, ISchedulerSettings, ISchedulerTime, TimeFrame } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { DataProviderTypes } from "~/server/scraper/types";
-import { mapValues } from 'lodash-es';
 
 // TODO: test
 export function createColumns(config: ICreateColumns): IScheduleColumn[] {
@@ -35,10 +35,11 @@ export class SchedulerStore {
     columns: [],
     rows: [],
   }
-  private _data: Data = this.getEmptyData()
+  private _data: Data;
   public readonly settings: ISchedulerSettings;
   constructor(settings: ISchedulerSettings) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
+    this._data = this.getEmptyData()
   }
 
   private getEventTypePriority(type: LECTURE_TYPE): number {
@@ -53,7 +54,8 @@ export class SchedulerStore {
   }
 
   getEmptyData(): Data {
-    return ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: this.getDayRow(day), dayRows: 1, events: [] }]))
+    const getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
+    return ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: getDayRow(day), dayRows: 1, events: [] }]))
   }
 
   // TODO: test 0 based
@@ -121,9 +123,6 @@ export class SchedulerStore {
   }
 
   frameTime = (start: string, end: string): TimeFrame => ({ start: this.parseTime(start), end: this.parseTime(end) })
-
-  private getDayRow = (day: DAY): number => this.settings.rows.findIndex(row => row.day === day) + 1;
-
 
   fillData = (course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: Data) => {
     course.data.forEach(event => {

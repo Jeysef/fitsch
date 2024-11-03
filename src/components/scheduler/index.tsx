@@ -2,25 +2,26 @@ import { css } from "@emotion/css";
 import { ObjectTyped } from "object-typed";
 import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
-import { schedulerTimeToMinutes } from "~/components/scheduler/store";
+import { schedulerTimeToMinutes, type SchedulerStore } from "~/components/scheduler/store";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
-import { type Data, type ISchedulerSettings } from "./types";
 
 export interface WorkScheduleProps {
-  store: {
-    settings: ISchedulerSettings;
-    data: Data;
-  }
+  store: SchedulerStore;
 }
 
 
-const SchedulerStoreContext = createContext<{
-  settings: ISchedulerSettings;
-  data: Data;
-} | null>(null);
+const SchedulerStoreContext = createContext<SchedulerStore>();
 
+function useStore() {
+  const value = useContext(SchedulerStoreContext);
+  if (value === undefined) {
+    throw new Error("useStore must be used within a SchedulerStoreContext.Provider");
+  }
+  return value;
+
+}
 
 
 export default function Scheduler(props: WorkScheduleProps) {
@@ -33,7 +34,7 @@ export default function Scheduler(props: WorkScheduleProps) {
 }
 
 function SchedulerGrid() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
 
   return (
     <div
@@ -55,7 +56,7 @@ function SchedulerGrid() {
 }
 
 function Heading() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   return <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono divide-x">
     <For each={store.settings.columns}>
       {(column) => (
@@ -66,7 +67,7 @@ function Heading() {
 }
 
 function Days() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   return <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
     <For each={store.settings.rows}>
       {(day) => (
@@ -94,7 +95,7 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 }
 
 function Week() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   const linkedHighlightClass = createMemo(() => css`${Object.values(store.data).flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.linked, "#94a3b8"))).join('\n')}`);
   const strongLinkedHighlightClass = createMemo(() => css`${Object.values(store.data).flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.strongLinked, "#f97316"))).join('\n')}`);
   return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass(), strongLinkedHighlightClass())}>
@@ -104,7 +105,7 @@ function Week() {
 }
 
 function ColumnLines() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   return <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed">
     <For each={store.settings.columns} >
       {() => <div role="separator" />}
@@ -113,7 +114,7 @@ function ColumnLines() {
 }
 
 function LaunchHighlight() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   // semi transparent block to represent time of launch
   return ObjectTyped.entries(launchDayTime).map(([day, time]) => {
     const [start, end] = time.split(" – ");
@@ -148,7 +149,7 @@ function Corner() {
 }
 
 function WeekSchedule() {
-  const store = useContext(SchedulerStoreContext)!;
+  const store = useStore();
   const days = createMemo(() => Object.values(store.data));
   // for info, I need to use fragmeents to wrap the days in solid jsx observer
   return (
