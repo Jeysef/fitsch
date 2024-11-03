@@ -124,6 +124,8 @@ export class SchedulerStore {
 
   frameTime = (start: string, end: string): TimeFrame => ({ start: this.parseTime(start), end: this.parseTime(end) })
 
+  public columnDuration = (colStart: number, colEnd: number) => schedulerTimeDuration(this.settings.columns[colStart].start, this.settings.columns[colEnd].end)
+
   fillData = (course: DataProviderTypes.getStudyCoursesDetailsReturn[number], data: Data) => {
     course.data.forEach(event => {
       const { day, start, end } = event
@@ -139,7 +141,7 @@ export class SchedulerStore {
 
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
       // padding in percentage
-      const eventDuration = schedulerTimeDuration(filledEvent.start, filledEvent.end)
+      const eventDuration = this.columnDuration(colStart, colEnd)
       const paddingStart = schedulerTimeDuration(this.settings.columns[colStart].start, filledEvent.start) * 100 / eventDuration
       const paddingEnd = schedulerTimeDuration(filledEvent.end, this.settings.columns[colEnd].end) * 100 / eventDuration
       const parsedEvent: DayEvent = { colStart, colEnd, event: filledEvent, paddingStart, paddingEnd, row: 1 }
