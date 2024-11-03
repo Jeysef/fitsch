@@ -8,12 +8,12 @@ import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
-import { days } from "~/components/scheduler/types";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { type Data, type Event } from "../scheduler/types";
+import { days } from "~/components/scheduler/constants";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
