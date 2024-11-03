@@ -7,12 +7,13 @@ import { createMutable } from "solid-js/store";
 import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
-import { createColumns, SchedulerStore, type Event, type ParsedDayData } from "~/components/scheduler/store";
+import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days } from "~/components/scheduler/types";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
+import { type Data, type Event } from "../scheduler/types";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
@@ -32,12 +33,12 @@ export default function Home() {
 
   const store = createMutable(Object.assign(schedulerStore, untrack(persistedStore)))
 
-  const filteredStoreData: Accessor<ParsedDayData> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries((store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
+  const filteredStoreData: Accessor<Data> = createMemo(() => ObjectTyped.fromEntries(ObjectTyped.entries((store.data)).map(([key, value]) => [key, { ...value, events: value.events.filter((event) => event.event.checked) }])))
   const filteredStore = new Proxy(store, {
     get(store, prop) {
       if (prop === 'data') {
         // Return filtered data when accessing data property
-        return store.organiseData(filteredStoreData())
+        return store.sortData(filteredStoreData())
       }
       // Forward all other property access to original store
       // @ts-ignore

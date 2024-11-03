@@ -1,12 +1,13 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import { ObjectTyped } from "object-typed";
 import { createEffect, For, Show } from "solid-js";
-import { schedulerTimeDuration, type ParsedEvent, type SchedulerStore } from "~/components/scheduler/store";
+import { schedulerTimeDuration, type SchedulerStore } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
+import { type DayEvent } from "../scheduler/types";
 
 export interface TimeSpanProps {
   store: SchedulerStore
@@ -30,7 +31,7 @@ function getLectureDuration(lecture: MCourseLecture) {
   return (end[0] * 60 + end[1]) - (start[0] * 60 + start[1])
 }
 
-function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: ParsedEvent[]) {
+function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: DayEvent[]) {
   const trackedLectureType = [LECTURE_TYPE.LECTURE, LECTURE_TYPE.SEMINAR, LECTURE_TYPE.EXERCISE, LECTURE_TYPE.LABORATORY]
 
   const selected: Record<LECTURE_TYPE, number> = Object.values(events).reduce((acc, curr) => {

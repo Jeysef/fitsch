@@ -2,22 +2,23 @@ import { css } from "@emotion/css";
 import { ObjectTyped } from "object-typed";
 import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
-import { schedulerTimeToMinutes, type ISchedulerSettings, type ParsedDayData } from "~/components/scheduler/store";
+import { schedulerTimeToMinutes } from "~/components/scheduler/store";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
+import { type Data, type ISchedulerSettings } from "./types";
 
 export interface WorkScheduleProps {
   store: {
     settings: ISchedulerSettings;
-    data: ParsedDayData;
+    data: Data;
   }
 }
 
 
 const SchedulerStoreContext = createContext<{
   settings: ISchedulerSettings;
-  data: ParsedDayData;
+  data: Data;
 } | null>(null);
 
 

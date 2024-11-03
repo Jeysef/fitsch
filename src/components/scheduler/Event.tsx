@@ -1,17 +1,17 @@
 import { createMemo } from "solid-js";
-import type { Event, ISchedulerSettings, ParsedDayData } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { WEEK_PARITY, type DAY } from "~/server/scraper/enums";
 import { ellipsis2line } from "./event.module.css";
+import type { Data, Event, ISchedulerSettings } from "./types";
 
 interface EventProps {
   event: Event;
   store: {
     settings: ISchedulerSettings;
-    data: ParsedDayData;
+    data: Data;
   }
 }
 
