@@ -84,3 +84,9 @@ their course timespan makes no sense,
     weekly 1 2 hour & 1 1 hour lectures 13 weeks \
     = (3 * 50) * 13 /60 = 32.5 ✗\
     WTF
+
+
+
+todo:
+streaming courses via server action
+when getting new courses, fetch only necessary, return others empty, my be filled in store
