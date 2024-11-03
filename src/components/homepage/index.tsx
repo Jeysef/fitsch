@@ -12,6 +12,7 @@ import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { type Event } from "../scheduler/types";
+import TimeSpan from "~/components/homepage/TimeSpan";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
@@ -58,7 +59,7 @@ export default function Home() {
   createEffect(() => {
     const updatedStore = trackStore(store)
     console.log("🚀 ~ file: index.tsx:62 ~ createEffect ~ updatedStore:")
-    // setPersistedStore(updatedStore)
+    setPersistedStore(updatedStore)
   })
 
 
@@ -78,7 +79,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
-        {/* <TimeSpan store={filteredStore} /> */}
+        <TimeSpan store={filteredStore} />
       </TabsContent>
     </Tabs>
   )

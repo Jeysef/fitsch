@@ -1,7 +1,9 @@
-import { makePersisted } from "@solid-primitives/storage";
+import { trackStore } from "@solid-primitives/deep";
+import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
+import { mapValues } from "lodash-es";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createContext, createMemo, createRenderEffect, createResource, createSignal, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -23,21 +25,27 @@ const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as a
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const resource = createResource(getStudyOverview, { deferStream: true, storage: (init) => { const m = makePersisted(createSignal<StudyOverview>(), { name: "studyOverview" }); return [m[0], m[1]] } });
+  const [groupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) }) })
+  const d = {
+    year: groupData()?.year?.value,
+    degree: groupData()?.degree,
+    program: groupData()?.program,
+  }
+  const resource = createResource(d, getStudyOverview, { deferStream: true });
 
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary fallback={(err, reset) => (<div>
+      {/* <ErrorBoundary fallback={(err, reset) => (<div>
         <Typography variant="h5">Error</Typography>
         <pre>{err.message}</pre>
         <Button onClick={reset}>Retry</Button>
       </div>
-      )} >
-        <Suspense fallback={<LoaderFallback />}>
-          <Content resource={resource} />
-        </Suspense>
-      </ErrorBoundary>
+      )} > */}
+      <Suspense fallback={<LoaderFallback />}>
+        <Content resource={resource} />
+      </Suspense>
+      {/* </ErrorBoundary> */}
     </div>
   )
 }
@@ -66,17 +74,25 @@ function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataPro
   }
 
 
+  const [groupData, setGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) }) })
+
   const group = createFormGroup({
-    year: createFormControl<StudyOverviewYear | undefined>(data()?.values.year, { required: true, validators: validator.bind(null, "year") }),
-    degree: createFormControl<DEGREE>(data()?.values.degree ?? defaultValues.degree, { required: true, validators: validator.bind(null, "degree") }),
-    program: createFormControl<StudyProgram["id"] | undefined>(data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
-    grade: createFormControl<GradeKey>(defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
-    semester: createFormControl<typeof SEMESTER[SEMESTER]>(defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
-    coursesCompulsory: createFormControl<string[]>(defaultValues.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
-    coursesOptional: createFormControl<string[]>(defaultValues.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
+    year: createFormControl<StudyOverviewYear | undefined>(groupData()?.year ?? data()?.values.year, { required: true, validators: validator.bind(null, "year") }),
+    degree: createFormControl<DEGREE>(groupData()?.degree ?? data()?.values.degree ?? defaultValues.degree, { required: true, validators: validator.bind(null, "degree") }),
+    program: createFormControl<StudyProgram["id"] | undefined>(groupData()?.program ?? data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
+    grade: createFormControl<GradeKey>(groupData()?.grade ?? defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
+    semester: createFormControl<typeof SEMESTER[SEMESTER]>(groupData()?.semester ?? defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
+    coursesCompulsory: createFormControl<string[]>(groupData()?.coursesCompulsory ?? defaultValues.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
+    coursesOptional: createFormControl<string[]>(groupData()?.coursesOptional ?? defaultValues.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
   } satisfies {
     [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
   })
+
+  createEffect(() => {
+    setGroupData(mapValues(trackStore(group).controls, (value) => (value.rawValue)) as { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] })
+  })
+
+
 
   const getFetchableData = () => ({
     year: group.controls.year.value?.value,
@@ -176,7 +192,7 @@ function YearSelect() {
     >
       <Select.Label as="h3" class={typographyVariants({ variant: "h5" })}>Year</Select.Label>
       <SelectTrigger>
-        <SelectValue<StudyOverviewYear>>{(state) => state.selectedOption().label}</SelectValue>
+        <SelectValue<StudyOverviewYear>>{(state) => state.selectedOption()?.label}</SelectValue>
       </SelectTrigger>
       <SelectContent />
     </Select>
@@ -268,6 +284,7 @@ function GradeSelect() {
     </Text>
   )
 
+  console.log("🚀 ~ file: Content.tsx:304 ~ GradeSelect ~ group.controls.degree.value === data()!.values.degree:", group.controls.degree.value, data()?.values.degree)
   return (
     <RadioGroup
       value={group.controls.grade.value}
@@ -339,8 +356,8 @@ function CoursesSelect() {
       </Text>
   )
 
-  const compulsoryCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value][group.controls.semester.value].compulsory)
-  const optionalCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value][group.controls.semester.value].optional)
+  const compulsoryCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory)
+  const optionalCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].optional)
 
   const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesOptional", courseId: string,) => {
     group.controls[type].setValue(checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter(id => id !== courseId))
