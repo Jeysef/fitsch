@@ -2,6 +2,8 @@ import { DAY } from "~/server/scraper/enums";
 
 export const gradeAll = "ALL";
 
+
+// imported from https://www.kam.vutbr.cz/21default.aspx?p=otdo
 export const launchDayTime = {
   [DAY.MON]: "11:00 – 14:30",
   [DAY.TUE]: "11:00 – 14:30",
