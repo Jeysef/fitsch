@@ -58,7 +58,6 @@ export default function Home() {
 
   createEffect(() => {
     const updatedStore = trackStore(store)
-    console.log("🚀 ~ file: index.tsx:62 ~ createEffect ~ updatedStore:")
     setPersistedStore(updatedStore)
   })
 

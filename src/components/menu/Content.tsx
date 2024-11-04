@@ -277,7 +277,6 @@ function GradeSelect() {
     </Text>
   )
 
-  console.log("🚀 ~ file: Content.tsx:304 ~ GradeSelect ~ group.controls.degree.value === data()!.values.degree:", group.controls.degree.value, data()?.values.degree)
   return (
     <RadioGroup
       value={group.controls.grade.value}

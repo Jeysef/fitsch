@@ -39,10 +39,6 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: DayEvent[]
     return acc
   }, ObjectTyped.fromEntries(trackedLectureType.map(t => [t, 0])))
 
-  createEffect(() => {
-    console.log("🚀 ~ file: TimeSpan.tsx:46 ~ constselected:Record<LECTURE_TYPE,number>=Object.values ~ selected:", selected)
-  })
-
   const lectureWeeks: Record<LECTURE_TYPE, { weeks: number, weeklyLectures: number }> = Object.values(course.data).reduce((acc, lecture) => {
     const { weeks, type, strongLinked } = lecture
     if (type === LECTURE_TYPE.EXAM) return acc;
@@ -55,7 +51,6 @@ function TimeSpanCourse(course: MgetStudyCourseDetailsReturn, events: DayEvent[]
     acc[type].weeklyLectures = Math.max(acc[type].weeklyLectures, Math.ceil(finalDuration / 60))
     // lectureWeeks
     if (!Array.isArray(weeks.weeks)) return acc;
-    console.log("🚀 ~ file: TimeSpan.tsx:64 ~ constlectureWeeks:Record<LECTURE_TYPE,number>=Object.values ~ weeks.weeks.length:", weeks.weeks.length)
     acc[type].weeks = Math.max(acc[type].weeks, weeks.weeks.length)
     return acc
   }, ObjectTyped.fromEntries(trackedLectureType.map(t => [t, { weeks: 0, weeklyLectures: 0 }])))
