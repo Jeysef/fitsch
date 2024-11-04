@@ -180,5 +180,5 @@ export namespace DataProviderTypes {
 }
 
 
-export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
+export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyCourseObligation, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
 

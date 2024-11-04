@@ -13,26 +13,27 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-// import { createDeepSignal } from "~/lib/solid";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import { type DataProviderTypes, type GradeKey, type StudyOverview, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
+import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type StudyOverview, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type IFormGroup, type ValidatorFn } from "~/solid-forms/";
 
 
 const GroupContext = createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>(null as any)
 const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as any)
+const yearCookie = cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const [groupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) }) })
-  const d = {
-    year: groupData()?.year?.value,
-    degree: groupData()?.degree,
-    program: groupData()?.program,
+  const [persistentGroupData, setPersistentGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: yearCookie })
+  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], optional: [] }), { name: "submittedCourses", storage: yearCookie })
+  const initialConfig = {
+    year: persistentGroupData()?.year?.value,
+    degree: persistentGroupData()?.degree,
+    program: persistentGroupData()?.program,
   }
-  const resource = createResource(d, getStudyOverview, { deferStream: true });
+  const resource = createResource(initialConfig, getStudyOverview, { deferStream: true });
 
   return (
     <div class="w-44 space-y-2">
@@ -44,109 +45,120 @@ export default function Wrapper() {
       </ErrorBoundary>
     </div>
   )
+  function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
+    const data = resource[0]
+    const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
+    const { refetch, mutate } = resource[1]
+    const submit = useAction(getStudyCoursesDetailsAction);
+
+
+    const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
+      const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
+      return returnType.error ? { error: returnType.error } : null
+    }
+
+    const defaultValues = {
+      semester: SEMESTER.WINTER,
+      degree: DEGREE.BACHELOR,
+      grade: undefined,
+      coursesCompulsory: [],
+      coursesOptional: []
+    }
+    const isSubmittedCompulsory = submittedCourses().compulsory.length > 0
+    const isSubmittedOptional = submittedCourses().optional.length > 0
+
+    const values: { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] } = {
+      year: persistentGroupData()?.year ?? data()?.values.year,
+      degree: persistentGroupData()?.degree ?? data()?.values.degree ?? defaultValues.degree,
+      program: persistentGroupData()?.program ?? data()?.values.program?.id,
+      grade: persistentGroupData()?.grade ?? defaultValues.grade,
+      semester: persistentGroupData()?.semester ?? defaultValues.semester,
+      coursesCompulsory: (isSubmittedCompulsory && submittedCourses().compulsory) || persistentGroupData()?.coursesCompulsory || defaultValues.coursesCompulsory,
+      coursesOptional: (isSubmittedOptional && submittedCourses().optional) || persistentGroupData()?.coursesOptional || defaultValues.coursesOptional,
+    }
+
+
+    const group = createFormGroup({
+      year: createFormControl<StudyOverviewYear | undefined>(values.year, { required: true, validators: validator.bind(null, "year") }),
+      degree: createFormControl<DEGREE>(values.degree, { required: true, validators: validator.bind(null, "degree") }),
+      program: createFormControl<StudyProgram["id"] | undefined>(values.program, { required: true, validators: validator.bind(null, "program") }),
+      grade: createFormControl<GradeKey>(values.grade, { required: true, validators: validator.bind(null, "grade") }),
+      semester: createFormControl<typeof SEMESTER[SEMESTER]>(values.semester, { required: true, validators: validator.bind(null, "semester") }),
+      coursesCompulsory: createFormControl<string[]>(values.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
+      coursesOptional: createFormControl<string[]>(values.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
+    } satisfies {
+      [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
+    })
+
+    createEffect(() => {
+      setPersistentGroupData(mapValues(trackStore(group).controls, (value) => (value.rawValue)) as { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] })
+    })
+
+
+
+    const getFetchableData = () => ({
+      year: group.controls.year.value?.value,
+      program: group.controls.program.value
+    })
+
+    /** refetch data */
+    createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
+      if (firstEffect) return false
+      const degree = group.controls.degree.value
+      const fullData: DataProviderTypes.getStudyOverviewConfig = { ...data, degree }
+      void refetch(fullData)
+      return false
+    }), true)
+
+    /** Check changed degree grade */
+    createRenderEffect(() => {
+      const value = group.controls.degree.value
+      const dataProgram = untrack(data)?.data.programs[value]
+      if (!dataProgram) return;
+      const programsLength = dataProgram.flatMap(e => [e, ...e.specializations]).length
+      const isAssignedAtDifferentDegree = createMemo(() => group.controls.program.value ? !dataProgram.flatMap(e => [e, ...e.specializations]).find(e => e.id === group.controls.program.value) : true)
+      if (programsLength === 1 && isAssignedAtDifferentDegree()) {
+        group.controls.program.setValue(dataProgram[0].id)
+      }
+    })
+
+    const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
+      e.preventDefault();
+      group.markSubmitted(true);
+      const c = group.controls
+      const submitData = {
+        year: c.year.value!.value,
+        semester: c.semester.value,
+        courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
+      }
+      submit(submitData)
+      setSubmittedCourses({ compulsory: c.coursesCompulsory.value, optional: c.coursesOptional.value })
+
+    };
+
+    return (
+      <form onSubmit={onSubmit}>
+        <GroupContext.Provider value={group}>
+          <DataContext.Provider value={cData}>
+            <YearSelect />
+            {/* semester up top coz it dosn't change much */}
+            <SemesterSelect />
+            <DegreeSelect />
+            <ProgramSelect />
+          </DataContext.Provider>
+          <DataContext.Provider value={data}>
+            <GradeSelect />
+            <Suspense>
+              <CoursesSelect />
+            </Suspense>
+          </DataContext.Provider>
+          <Button class="w-full !mt-8 sticky bottom-0" type="submit">Generate</Button>
+        </GroupContext.Provider>
+      </form>
+    )
+  }
 }
 
-function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
-  const data = resource[0]
-  const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
-  const { refetch, mutate } = resource[1]
-  const submit = useAction(getStudyCoursesDetailsAction);
-
-
-  const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
-    const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
-    return returnType.error ? { error: returnType.error } : null
-  }
-
-  const defaultValues = {
-    semester: SEMESTER.WINTER,
-    degree: DEGREE.BACHELOR,
-    grade: undefined,
-    coursesCompulsory: [],
-    coursesOptional: []
-  }
-
-
-  const [groupData, setGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) }) })
-
-  const group = createFormGroup({
-    year: createFormControl<StudyOverviewYear | undefined>(groupData()?.year ?? data()?.values.year, { required: true, validators: validator.bind(null, "year") }),
-    degree: createFormControl<DEGREE>(groupData()?.degree ?? data()?.values.degree ?? defaultValues.degree, { required: true, validators: validator.bind(null, "degree") }),
-    program: createFormControl<StudyProgram["id"] | undefined>(groupData()?.program ?? data()?.values.program?.id, { required: true, validators: validator.bind(null, "program") }),
-    grade: createFormControl<GradeKey>(groupData()?.grade ?? defaultValues.grade, { required: true, validators: validator.bind(null, "grade") }),
-    semester: createFormControl<typeof SEMESTER[SEMESTER]>(groupData()?.semester ?? defaultValues.semester, { required: true, validators: validator.bind(null, "semester") }),
-    coursesCompulsory: createFormControl<string[]>(groupData()?.coursesCompulsory ?? defaultValues.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
-    coursesOptional: createFormControl<string[]>(groupData()?.coursesOptional ?? defaultValues.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
-  } satisfies {
-    [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
-  })
-
-  createEffect(() => {
-    setGroupData(mapValues(trackStore(group).controls, (value) => (value.rawValue)) as { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] })
-  })
-
-
-
-  const getFetchableData = () => ({
-    year: group.controls.year.value?.value,
-    program: group.controls.program.value
-  })
-
-  /** refetch data */
-  createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
-    if (firstEffect) return false
-    const degree = group.controls.degree.value
-    const fullData: DataProviderTypes.getStudyOverviewConfig = { ...data, degree }
-    void refetch(fullData)
-    return false
-  }), true)
-
-  /** Check changed degree grade */
-  createRenderEffect(() => {
-    const value = group.controls.degree.value
-    const dataProgram = untrack(data)?.data.programs[value]
-    if (!dataProgram) return;
-    const programsLength = dataProgram.flatMap(e => [e, ...e.specializations]).length
-    const isAssignedAtDifferentDegree = createMemo(() => group.controls.program.value ? !dataProgram.flatMap(e => [e, ...e.specializations]).find(e => e.id === group.controls.program.value) : true)
-    if (programsLength === 1 && isAssignedAtDifferentDegree()) {
-      group.controls.program.setValue(dataProgram[0].id)
-    }
-  })
-
-  const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
-    e.preventDefault();
-    group.markSubmitted(true);
-    const c = group.controls
-    const submitData = {
-      year: c.year.value!.value,
-      semester: c.semester.value,
-      courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
-    }
-    submit(submitData)
-
-  };
-
-  return (
-    <form onSubmit={onSubmit}>
-      <GroupContext.Provider value={group}>
-        <DataContext.Provider value={cData}>
-          <YearSelect />
-          {/* semester up top coz it dosn't change much */}
-          <SemesterSelect />
-          <DegreeSelect />
-          <ProgramSelect />
-        </DataContext.Provider>
-        <DataContext.Provider value={data}>
-          <GradeSelect />
-          <Suspense>
-            <CoursesSelect />
-          </Suspense>
-        </DataContext.Provider>
-        <Button class="w-full !mt-8 sticky bottom-0" type="submit">Generate</Button>
-      </GroupContext.Provider>
-    </form>
-  )
-}
 
 // function ErrorMessage({ control }: { control: IFormControl<string> }) {
 //   const { isTouched, errors } = control;
