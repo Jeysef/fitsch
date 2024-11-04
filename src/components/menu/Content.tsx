@@ -111,16 +111,15 @@ export default function Wrapper() {
     }), true)
 
     /** Check changed degree grade */
-    createRenderEffect(() => {
-      const value = group.controls.degree.value
-      const dataProgram = untrack(data)?.data.programs[value]
+    createRenderEffect(on(() => group.controls.degree.value, (degree, prevDegree) => {
+      if (degree === prevDegree) return false
+      const dataProgram = untrack(data)?.data.programs[degree]
       if (!dataProgram) return;
       const programsLength = dataProgram.flatMap(e => [e, ...e.specializations]).length
-      const isAssignedAtDifferentDegree = createMemo(() => group.controls.program.value ? !dataProgram.flatMap(e => [e, ...e.specializations]).find(e => e.id === group.controls.program.value) : true)
-      if (programsLength === 1 && isAssignedAtDifferentDegree()) {
+      if (programsLength === 1) {
         group.controls.program.setValue(dataProgram[0].id)
       }
-    })
+    }))
 
     const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
       e.preventDefault();
