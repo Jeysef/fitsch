@@ -230,26 +230,26 @@ function ProgramSelect() {
       <RadioGroup
         value={group.controls.program.value}
         onChange={(program) => program && group.controls.program.setValue(program)}
-        name="specialization"
+        name="program"
         onBlur={() => group.controls.program!.markTouched(true)}
         disabled={group.controls.program.isDisabled}
         required={group.controls.program.isRequired}
         validationState={group.controls.program.errors ? "invalid" : "valid"}
         class="grid gap-x-2"
       >
-        <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Program</RadioGroup.Label>
+        <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>Program</RadioGroup.Label>
         <For each={data()!.data.programs[group.controls.degree!.value]}>
-          {(specialization) => (
+          {(program) => (
             <section class="ml-2">
-              <Show when={specialization.specializations.length > 0} fallback={
-                <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
+              <Show when={program.specializations.length > 0} fallback={
+                <RadioGroupItem value={program.id} class="flex items-center gap-2">
                   <RadioGroupItemInput />
                   <RadioGroupItemControl as="button" type="button" />
-                  <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{specialization.abbreviation}</RadioGroupItemLabel>
+                  <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{program.abbreviation}</RadioGroupItemLabel>
                 </RadioGroupItem>
               }>
-                <Heading as="h4" variant="h6">{specialization.abbreviation}</Heading>
-                <For each={specialization.specializations} >
+                <Heading as="h4" variant="h6">{program.abbreviation}</Heading>
+                <For each={program.specializations} >
                   {(specialization) => (
                     <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
                       <RadioGroupItemInput />
@@ -292,13 +292,32 @@ function GradeSelect() {
       <Suspense fallback={<LoaderFallback />}>
         <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
           <For each={data()!.data.grades}>
-            {(grade) => (
-              <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
-                <RadioGroupItemInput class="bottom-0" />
-                <RadioGroupItemControl as="button" type="button" />
-                <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{grade.label}</RadioGroupItemLabel>
-              </RadioGroupItem>
-            )}
+            {(grade) => {
+              const count = createMemo(() => {
+                const courses = data()!.data.courses[grade.key][group.controls.semester.value]
+                const compulsorySelected = courses.compulsory.filter(course => group.controls.coursesCompulsory.value.includes(course.id)).length
+                const optionalSelected = courses.optional.filter(course => group.controls.coursesOptional.value.includes(course.id)).length
+                return compulsorySelected + optionalSelected || null
+              })
+              return (
+                <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
+                  {/* <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20</div> */}
+                  <RadioGroupItemInput class="bottom-0" />
+                  <RadioGroupItemControl as="button" type="button" />
+                  <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{grade.label}</RadioGroupItemLabel>
+                  {/* <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20</div> */}
+                  <Show when={group.controls.grade.value !== grade.key && count()} keyed>
+                    {(count) => (
+                      <span
+                        class="inline-block whitespace-nowrap rounded-full bg-orange-400 px-2 py-1 text-center align-baseline text-xxs font-bold leading-none text-white">
+                        {count}
+                      </span>
+
+                    )}
+                  </Show>
+                </RadioGroupItem>
+              )
+            }}
           </For>
         </Show>
       </Suspense>
@@ -339,19 +358,18 @@ function CoursesSelect() {
   const data = useContext(DataContext)!
 
   const Fallback = () => (
-    group.controls.grade.value ?
-      <Text variant="smallText">
-        no courses to show
-      </Text>
-      : <Text variant="smallText">
-        select grade to show
-      </Text>
+    <Text variant="smallText">
+      {group.controls.grade.value ?
+        "no courses to show" :
+        "select grade to show"
+      }
+    </Text>
   )
 
   const compulsoryCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory)
   const optionalCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].optional)
 
-  const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesOptional", courseId: string,) => {
+  const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesOptional", courseId: string) => {
     group.controls[type].setValue(checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter(id => id !== courseId))
   }
 
