@@ -50,9 +50,6 @@ export default function Wrapper() {
   )
 }
 
-type onFetchableChangeName = keyof DataProviderTypes.getStudyOverviewConfig & keyof NavigationSchema
-type onFetchableChangeParams<K extends onFetchableChangeName> = { name: K, value: NavigationSchema[K], apiValue: DataProviderTypes.getStudyOverviewConfig[K] }
-
 function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
   const data = resource[0]
   const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
