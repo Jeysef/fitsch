@@ -4,6 +4,7 @@ import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
 import { createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import ErrorFallback from "~/components/menu/ErrorFallback";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
@@ -36,12 +37,7 @@ export default function Wrapper() {
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary fallback={(err, reset) => (<div>
-        <Typography variant="h5">Error</Typography>
-        <pre>{err.message}</pre>
-        <Button onClick={reset}>Retry</Button>
-      </div>
-      )} >
+      <ErrorBoundary fallback={(error, reset) => <ErrorFallback error={error} reset={reset} />} >
         <Suspense fallback={<LoaderFallback />}>
           <Content resource={resource} />
         </Suspense>
