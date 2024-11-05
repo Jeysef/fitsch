@@ -22,12 +22,15 @@ import { createFormControl, createFormGroup, type IFormControl, type IFormGroup,
 
 const GroupContext = createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>(null as any)
 const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as any)
-const yearCookie = cookieStorage.withOptions({ expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+/**
+ * Will be prolonged every time updated
+ */
+const monthCookie = cookieStorage.withOptions({ expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), sameSite: "Strict" })
 
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
-  const [persistentGroupData, setPersistentGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: yearCookie })
-  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], optional: [] }), { name: "submittedCourses", storage: yearCookie })
+  const [persistentGroupData, setPersistentGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: monthCookie })
+  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], optional: [] }), { name: "submittedCourses", storage: monthCookie })
   const initialConfig = {
     year: persistentGroupData()?.year?.value,
     degree: persistentGroupData()?.degree,
