@@ -20,8 +20,10 @@ import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type
 import { createFormControl, createFormGroup, type IFormControl, type IFormGroup, type ValidatorFn } from "~/solid-forms/";
 
 
-const GroupContext = createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>(null as any)
-const DataContext = createContext<Accessor<StudyOverview | undefined>>(null as any)
+const GroupContext = createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>()
+const getGroup = () => useContext(GroupContext)!
+const DataContext = createContext<Accessor<StudyOverview | undefined>>()
+const getData = () => useContext(DataContext)!
 /**
  * Will be prolonged every time updated
  */
@@ -175,8 +177,8 @@ export default function Wrapper() {
 // }
 
 function YearSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
 
   return (
@@ -207,8 +209,8 @@ function YearSelect() {
 }
 
 function DegreeSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
 
   return (
@@ -236,8 +238,8 @@ function DegreeSelect() {
 }
 
 function ProgramSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
   return (
     <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree.value].length}>
@@ -282,8 +284,8 @@ function ProgramSelect() {
 }
 
 function GradeSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
   const Fallback = () => (
     <Text class={typographyVariants({ class: "!mt-0 text-sm ml-2" })}>
@@ -340,8 +342,8 @@ function GradeSelect() {
 }
 
 function SemesterSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
   return (
     <RadioGroup
@@ -368,8 +370,8 @@ function SemesterSelect() {
 }
 
 function CoursesSelect() {
-  const group = useContext(GroupContext)!
-  const data = useContext(DataContext)!
+  const group = getGroup()
+  const data = getData()
 
   const Fallback = () => (
     <Text variant="smallText">
