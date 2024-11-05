@@ -58,7 +58,6 @@ export interface ISchedulerSettings {
   blockDimensions?: Partial<IScheduleDimensions>;
   columns: IScheduleColumn[];
   rows: IScheduleRow[];
-  filter?: (event: Event) => boolean;
 }
 export interface ICreateColumns {
   start: ISchedulerTime;

@@ -2,7 +2,8 @@ import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
-import { createMutable } from "solid-js/store";
+import { createMutable, unwrap } from "solid-js/store";
+import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
@@ -12,19 +13,16 @@ import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import { type Event } from "../scheduler/types";
-import TimeSpan from "~/components/homepage/TimeSpan";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
   `${start.hour.toString().padStart(2, '0')}:${start.minute.toString().padStart(2, '0')} - ${end.hour.toString().padStart(2, '0')}:${end.minute.toString().padStart(2, '0')}`
 const formatDay = (day: DAY) => ({ title: day, day })
 const filter = (event: Event) => !(event.note || event.type === LECTURE_TYPE.EXAM)
-
 const schedulerStore = new SchedulerStore({
   columns: createColumns({ start: { hour: 7, minute: 0 }, step: { hour: 1, minute: 0 }, end: { hour: 20, minute: 0 }, getTimeHeader: formatTime }),
   rows: days.map(formatDay),
-  filter
-})
+}, filter)
 
 export default function Home() {
   const data = useSubmission(getStudyCoursesDetailsAction)
@@ -58,7 +56,7 @@ export default function Home() {
 
   createEffect(() => {
     const updatedStore = trackStore(store)
-    setPersistedStore(updatedStore)
+    setPersistedStore(unwrap(updatedStore))
   })
 
 

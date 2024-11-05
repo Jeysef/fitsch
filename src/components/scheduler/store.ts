@@ -37,7 +37,7 @@ export class SchedulerStore {
   }
   private _data: Data;
   public readonly settings: ISchedulerSettings;
-  constructor(settings: ISchedulerSettings) {
+  constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: Event) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this._data = this.getEmptyData()
   }
@@ -137,7 +137,7 @@ export class SchedulerStore {
         end: timeFrame.end,
         checked: false,
       }
-      if (this.settings.filter && !this.settings.filter(filledEvent)) return;
+      if (this.eventFilter && !this.eventFilter(filledEvent)) return;
 
       const { start: colStart, end: colEnd } = this.getEventColumn(timeFrame, this.settings.columns)
       // padding in percentage
