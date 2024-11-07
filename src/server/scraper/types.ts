@@ -82,20 +82,17 @@ interface StudyCourse extends StudyOverviewCourse {
 }
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
-
+interface Time {
+  hour: number;
+  minute: number;
+}
 interface APICourseLecture {
   day: DAY;
   weeks: LectureWeeks;
   room: string[];
   type: LECTURE_TYPE;
-  /**
-   * @example "16:00"
-   */
-  start: string;
-  /**
-   * @example "17:50"
-   */
-  end: string;
+  start: Time;
+  end: Time;
   capacity: string;
   lectureGroup: string[];
   groups: string;
@@ -180,5 +177,5 @@ export namespace DataProviderTypes {
 }
 
 
-export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyCourseObligation, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization };
+export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyCourseObligation, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, Time };
 

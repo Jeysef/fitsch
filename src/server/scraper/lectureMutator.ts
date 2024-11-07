@@ -3,8 +3,8 @@ import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from 'uuid';
 import { getWeekOfMonth } from "~/lib/date";
 import type { StudyApi } from "~/server/scraper/api";
-import { LECTURE_TYPE, WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
-import type { APICourseLecture, CourseDetail, CourseLecture, DataProviderTypes, StudyApiTypes, StudyOverviewYear } from "~/server/scraper/types";
+import { WEEK_PARITY, type DAY, type SEMESTER } from "~/server/scraper/enums";
+import type { APICourseLecture, CourseDetail, CourseLecture, DataProviderTypes, StudyOverviewYear, Time } from "~/server/scraper/types";
 import { conjunctConjunctableRooms, getWeekFromSemesterStart, uniq_fast } from "~/server/scraper/utils";
 
 export interface LinkedLectureData {
@@ -20,7 +20,7 @@ export interface MCourseLecture extends CourseLecture {
 }
 
 export interface MgetStudyCourseDetailsReturn {
-  detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"];
+  detail: CourseDetail;
   data: MCourseLecture[];
 }
 
@@ -93,11 +93,18 @@ export class LectureMutator {
       // @ts-expect-error the rooms will be changed elsewhere
       return Object.assign(lecture, { strongLinked: [], linked: [] })
     }
+    const convertLectureTime = (time: string): { hour: number, minute: number } => {
+      const [hour, minute] = time.split(':').map(Number)
+      return { hour, minute }
+    }
     type FilledLecture = APICourseLecture & { id: string; lecturesCount: number | false; }
 
     this.courses.forEach((course) => {
       // ID LECTURE
-      course.data.forEach((lecture) => Object.assign(lecture, { id: this.idLecture(lecture), lecturesCount: this.getLectureLectures(lecture, course.detail) }))
+      course.data.forEach((lecture) => Object.assign(lecture, {
+        id: this.idLecture(lecture),
+        lecturesCount: this.getLectureLectures(lecture, course.detail),
+      }))
       // FILTER
       course.data = (course.data as FilledLecture[]).filter(this.filterPredicate);
       // FILL WEEKS
@@ -217,9 +224,8 @@ export class LectureMutator {
   private getLectureLectures(lecture: Pick<CourseLecture, "type" | "start" | "end">, detail: CourseDetail) {
     const lectureTimeSpan = detail.timeSpan[lecture.type]
     if (lectureTimeSpan === undefined) return false;
-    const start = lecture.start.split(':').map(Number)
-    const end = lecture.end.split(':').map(Number)
-    const duration = (end[0] * 60 + end[1]) - (start[0] * 60 + start[1])
+    const { start, end } = lecture
+    const duration = (end.hour * 60 + end.minute) - (start.hour * 60 + start.minute)
     // round up to nearest hour, 7:00 - 7:50 => 50 minutes => 1 hour
 
     // ---- when assuming lecture duration is in atleast 60 minute intervals
@@ -231,8 +237,9 @@ export class LectureMutator {
     return lectureLectures
   }
 
-  private isSameTimeLecture(lecture1: { day: DAY, start: string, end: string }, lecture2: { day: DAY, start: string, end: string }) {
-    return lecture1.day === lecture2.day && lecture1.start === lecture2.start && lecture1.end === lecture2.end
+  private isSameTimeLecture(lecture1: { day: DAY, start: Time, end: Time }, lecture2: { day: DAY, start: Time, end: Time }) {
+    const isSameTime = (time1: Time, time2: Time) => time1.hour === time2.hour && time1.minute === time2.minute
+    return lecture1.day === lecture2.day && isSameTime(lecture1.start, lecture2.start) && isSameTime(lecture1.end, lecture2.end)
   }
 
   private idLecture(lecture: APICourseLecture) {

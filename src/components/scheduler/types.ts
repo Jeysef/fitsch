@@ -1,12 +1,12 @@
+import type { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DAY } from "~/server/scraper/enums";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { MCourseLecture } from "~/server/scraper/lectureMutator";
+import type { CourseDetail } from "~/server/scraper/types";
 
 
-export type Event = Omit<DataProviderTypes.getStudyCoursesDetailsReturn[number]["data"][number], "start" | "end"> & TimeFrame & {
-  abbreviation: string;
-  name: string;
-  link: string;
-  id: string;
+export type Event = Omit<MCourseLecture, "start" | "end"> & {
+  courseDetail: CourseDetail;
+  timeSpan: TimeSpan;
   /** @default false */
   checked: boolean;
 };
@@ -27,10 +27,7 @@ export interface DayData {
 }
 
 export type Data = Record<DAY, DayData>;
-export interface TimeFrame {
-  start: ISchedulerTime;
-  end: ISchedulerTime;
-}export interface ISchedulerTime {
+export interface ISchedulerTime {
   hour: number;
   minute: number;
 }
@@ -40,8 +37,7 @@ interface IScheduleRow {
 }
 export interface IScheduleColumn {
   title: string;
-  start: ISchedulerTime;
-  end: ISchedulerTime;
+  duration: TimeSpan;
 }
 interface IScheduleDimensions {
   width: {

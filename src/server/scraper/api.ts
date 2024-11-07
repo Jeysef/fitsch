@@ -2,7 +2,7 @@ import { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization } from "~/server/scraper/types";
+import { StudyApiTypes, type GradeKey, type ProgramStudyCourses, type StudyPrograms, type StudySpecialization, type Time } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 import { DEGREE, LECTURE_TYPE, SEMESTER, type DAY } from "./enums";
 
@@ -214,6 +214,8 @@ export class StudyApi {
       "#ffe6cc": LECTURE_TYPE.EXAM
     }
 
+    const convertTime = (time: string): Time => { const [hour, minute] = time.split(':').map(Number); return { hour, minute } }
+
     const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
     const name = $("h1.b-detail__title").text().trim();
     const link = courseUrl;
@@ -246,13 +248,14 @@ export class StudyApi {
       const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(([_, value]) => value === day)?.[0] as DAY
       // parseWeek may return null, but we expect an event not to
       const weeks = parseWeek(weeksText, timeSchedule[semester].start, languageSet)
+
       return {
         type,
         day: normalizedDay,
         weeks,
         room: rooms,
-        start,
-        end,
+        start: convertTime(start),
+        end: convertTime(end),
         capacity,
         lectureGroup,
         groups,

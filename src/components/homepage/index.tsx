@@ -1,24 +1,24 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
+import { mapValues } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
-import { createMutable, unwrap } from "solid-js/store";
-import TimeSpan from "~/components/homepage/TimeSpan";
+import { createMutable, produce, unwrap } from "solid-js/store";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
-import { createColumns, SchedulerStore } from "~/components/scheduler/store";
+import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import { type Event } from "../scheduler/types";
+import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
   `${start.hour.toString().padStart(2, '0')}:${start.minute.toString().padStart(2, '0')} - ${end.hour.toString().padStart(2, '0')}:${end.minute.toString().padStart(2, '0')}`
 const formatDay = (day: DAY) => ({ title: day, day })
-const filter = (event: Event) => !(event.note || event.type === LECTURE_TYPE.EXAM)
+const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM)
 const schedulerStore = new SchedulerStore({
   columns: createColumns({ start: { hour: 7, minute: 0 }, step: { hour: 1, minute: 0 }, end: { hour: 20, minute: 0 }, getTimeHeader: formatTime }),
   rows: days.map(formatDay),
@@ -26,16 +26,29 @@ const schedulerStore = new SchedulerStore({
 
 export default function Home() {
   const data = useSubmission(getStudyCoursesDetailsAction)
-  const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore' })
+  const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore', })
 
-  const store = createMutable(Object.assign(schedulerStore, untrack(persistedStore)))
+  const store = createMutable(
+    produce<SchedulerStore>((draft) => {
+      const untrackedStore = untrack(persistedStore);
+      Object.assign(draft, untrackedStore);
+      draft.settings.columns = recreateColumns(untrackedStore.settings.columns);
+    })(schedulerStore)
+  );
+
+  const checkedDataMemo = createMemo(() => {
+    const checkedData = mapValues(unwrap(store.checkedData), (dayData) => ({
+      // unlink dayData
+      ...dayData,
+      // link events to the original store except for the row
+      events: dayData.events.map(e => ({ ...e, row: unwrap(e.row) }))
+    }))
+    return store.sortData(checkedData)
+  })
 
   const filteredStore = new Proxy(store, {
     get(store, prop) {
-      if (prop === 'data') {
-        // Return filtered data when accessing data property
-        return createMemo(() => store.sortData(store.checkedData))()
-      }
+      if (prop === 'data') return checkedDataMemo()
       // Forward all other property access to original store
       // @ts-ignore
       return store[prop]
@@ -76,7 +89,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
-        <TimeSpan store={filteredStore} />
+        {/* <TimeSpan store={filteredStore} /> */}
       </TabsContent>
     </Tabs>
   )

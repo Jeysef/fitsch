@@ -3,11 +3,11 @@ import { DAY } from "~/server/scraper/enums";
 export const gradeAll = "ALL";
 
 
-// imported from https://www.kam.vutbr.cz/21default.aspx?p=otdo
+
 export const launchDayTime = {
-  [DAY.MON]: "11:00 – 14:30",
-  [DAY.TUE]: "11:00 – 14:30",
-  [DAY.WED]: "11:00 – 14:30",
-  [DAY.THU]: "11:00 – 14:30",
-  [DAY.FRI]: "11:00 – 14:00",
+  [DAY.MON]: { start: "11:00", end: "14:30" },
+  [DAY.TUE]: { start: "11:00", end: "14:30" },
+  [DAY.WED]: { start: "11:00", end: "14:30" },
+  [DAY.THU]: { start: "11:00", end: "14:30" },
+  [DAY.FRI]: { start: "11:00", end: "14:00" },
 }

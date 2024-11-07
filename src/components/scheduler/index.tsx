@@ -2,7 +2,8 @@ import { css } from "@emotion/css";
 import { ObjectTyped } from "object-typed";
 import { createContext, createMemo, For, useContext } from "solid-js";
 import ScheduleEvent from "~/components/scheduler/Event";
-import { schedulerTimeDuration, type SchedulerStore } from "~/components/scheduler/store";
+import { getDayEventData, type SchedulerStore } from "~/components/scheduler/store";
+import { Time, TimeSpan } from "~/components/scheduler/time";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
@@ -96,10 +97,11 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 
 function Week() {
   const store = useStore();
-  const linkedHighlightClass = createMemo(() => css`${Object.values(store.data).flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.linked, "#94a3b8"))).join('\n')}`);
-  const strongLinkedHighlightClass = createMemo(() => css`${Object.values(store.data).flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.strongLinked, "#f97316"))).join('\n')}`);
+  const storeData = createMemo(() => Object.values(store.data));
+  const linkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => event.event.linked && createLinkedCss(event.event.id, event.event.linked, "#94a3b8"))).join('\n')}`);
+  const strongLinkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.strongLinked, "#f97316"))).join('\n')}`);
   return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass(), strongLinkedHighlightClass())}>
-    <LaunchHighlight />
+    {/* <LaunchHighlight /> */}
     <WeekSchedule />
   </div>;
 }
@@ -117,25 +119,20 @@ function LaunchHighlight() {
   const store = useStore();
   // semi transparent block to represent time of launch
   return ObjectTyped.entries(launchDayTime).map(([day, time]) => {
-    const [start, end] = time.split(" – ");
-    const timeFrame = store.frameTime(start, end);
+    const convertTime = (time: string) => { const [hour, minute] = time.split(':').map(Number); return { hour, minute } }
+    const timeSpan = new TimeSpan(new Time(convertTime(time.start)), new Time(convertTime(time.end)));
     const row = store.settings.rows.findIndex(row => row.day === day) + 1;
-    const { start: colStart, end: colEnd } = store.getEventColumn(timeFrame, store.settings.columns);
-    const columnsDuration = store.columnDuration(colStart, colEnd);
-    const marginStart = schedulerTimeDuration(store.settings.columns[colStart].start, timeFrame.start) * 100 / columnsDuration;
-    const marginEnd = schedulerTimeDuration(timeFrame.end, store.settings.columns[colEnd].end) * 100 / columnsDuration;
+    const data = getDayEventData(store.settings.columns, timeSpan);
     return (
       <div
         style={{
           "grid-row": `${row} / span 1`,
-          "grid-column": `${colStart + 1} / ${colEnd + 2}`,
-          "margin-inline-start": `${marginStart}%`,
-          "margin-inline-end": `${marginEnd}%`,
+          "grid-column": `${data.colStart + 1} / ${data.colEnd + 2}`,
+          "margin-inline-start": `${data.paddingStart}%`,
+          "margin-inline-end": `${data.paddingEnd}%`,
         }}
         class="bg-fuchsia-300 bg-opacity-10 -z-20"
-      >
-
-      </div>
+      />
     )
   });
 }

@@ -13,7 +13,7 @@ import { cn } from "~/lib/utils";
 
 export default function AppInfo() {
   return (
-    <Dialog open>
+    <Dialog>
       <DialogTrigger><Info size={32} color='white' /></DialogTrigger>
       <DialogContent class="max-w-screen-lg w-11/12">
         <DialogHeader>
