@@ -44,7 +44,7 @@ export class SchedulerStore {
     rows: [],
   }
   public readonly settings: ISchedulerSettings;
-  private _courses: Course[];
+  public _courses: Course[];
   // private _courses: DataProviderTypes.getStudyCoursesDetailsReturn;
   constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: MCourseLecture) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
@@ -130,6 +130,10 @@ export class SchedulerStore {
     this._courses.forEach(course => course.fillData(this.settings, this.eventFilter))
   }
 
+  // get courses(): Course[] {
+  //   return this._courses
+  // }
+
 
   get data(): Data {
     const coursesData = this._courses.map(course => course.data)
@@ -164,14 +168,13 @@ export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan):
 interface LectureMetrics {
   weeks: number;
   weeklyLectures: number;
-  selected: number;
 }
-class Course {
+export class Course {
   private _courseMetrics: Record<LECTURE_TYPE, LectureMetrics>;
   public data: Data;
   /** settings are not saved to save space, rather they are passed */
   constructor(private courseData: MgetStudyCourseDetailsReturn, settings: ISchedulerSettings) {
-    this._courseMetrics = mapValues(LECTURE_TYPE, () => ({ weeks: 0, weeklyLectures: 0, selected: 0 }))
+    this._courseMetrics = mapValues(LECTURE_TYPE, () => ({ weeks: 0, weeklyLectures: 0 }))
     this.data = this.getEmptyData(settings)
   }
 
@@ -201,7 +204,6 @@ class Course {
       }, timeSpan.minutes)
       this._courseMetrics[event.type].weeklyLectures = Math.max(this._courseMetrics[event.type].weeklyLectures, Time.fromMinutes(linkedDuration).hours)
       this._courseMetrics[event.type].weeks = Math.max(this._courseMetrics[event.type].weeks, event.weeks.weeks.length)
-      // this._courseMetrics[event.type].selected += filledEvent.checked ? Time.fromMinutes(linkedDuration).hours : 0
 
       // ------------------------------
 
@@ -211,17 +213,29 @@ class Course {
   }
 
   get detail() {
-    const filterLectureData = <T>(data: Record<LECTURE_TYPE, T>) => ObjectTyped.entries(data).reduce((acc, [key, value]) => {
-      if (value === 0) return acc
+    return this.courseData.detail
+  }
+
+  get courseMetrics() {
+    const filterLectureData = <T>(data: Record<LECTURE_TYPE, LectureMetrics>) => ObjectTyped.entries(data).reduce((acc, [key, value]) => {
+      if (value.weeklyLectures === 0 || value.weeks === 0) return acc
       return { ...acc, [key]: value }
-    }, {} as Record<LECTURE_TYPE, T>)
+    }, {} as Record<LECTURE_TYPE, LectureMetrics>)
+    console.log("🚀 ~ file: store.ts:226 ~ Course ~ getcourseMetrics ~ filterLectureData(this._courseMetrics):", filterLectureData(this._courseMetrics))
+    return filterLectureData(this._courseMetrics)
+  }
 
-
-    return {
-      ...this.courseData.detail,
-      courseMetrics: filterLectureData(this._courseMetrics),
-    }
+  get selected() {
+    const selected: Record<LECTURE_TYPE, number> = Object.values(this.data).reduce((acc, dayData) => {
+      dayData.events.forEach(event => {
+        if (event.event.checked) {
+          acc[event.event.type] += Math.ceil(event.event.timeSpan.minutes / 60)
+        }
+      })
+      return acc
+    }, ObjectTyped.fromEntries(Object.values(LECTURE_TYPE).map(t => [t, 0])))
+    return selected
   }
 }
-export type { Course };
+
 

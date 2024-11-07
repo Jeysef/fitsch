@@ -13,10 +13,10 @@ export interface TimeSpanProps {
 export default function TimeSpan(props: TimeSpanProps) {
   const fallback = <Text variant="largeText" class="text-center text-gray-500">No courses</Text>
 
-  console.log("🚀 ~ file: TimeSpan.tsx:26 ~ TimeSpan ~ props.store.courses:", props.store.courses)
+  console.log("🚀 ~ file: TimeSpan.tsx:26 ~ TimeSpan ~ props.store.courses:", props.store._courses)
   return (
     <div class="w-full max-w-4xl space-y-6">
-      <For each={props.store.courses} fallback={fallback}>
+      <For each={props.store._courses} fallback={fallback}>
         {(course) => TimeSpanCourse(course)}
       </For>
     </div>
@@ -52,6 +52,7 @@ function TimeSpanCourse(course: Course) {
   //   else if (key === LECTURE_TYPE.EXAM) delete lectureWeeks[key as keyof typeof lectureWeeks]
   // })
 
+  const selected = course.selected
   return (
     <div class="border border-gray-200 rounded-lg hover:border-gray-300 bg-white overflow-hidden">
       <div class="flex flex-col">
@@ -74,17 +75,17 @@ function TimeSpanCourse(course: Course) {
             <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Weekly Hours</h3>
             <div class="space-y-2">
               <div class="grid grid-cols-[repeat(3,_minmax(0,_auto)),1fr] gap-x-4 items-center justify-start">
-                <For each={ObjectTyped.entries(course.detail.courseMetrics)}>
-                  {([type, { weeks, weeklyLectures, selected }]) => (
+                <For each={ObjectTyped.entries(course.courseMetrics)}>
+                  {([type, { weeks, weeklyLectures }]) => (
                     <>
                       <div class="flex items-center gap-2">
-                        <div class={`w-2 h-2 rounded-full shrink-0 ${selected === weeklyLectures ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                        <div class={`w-2 h-2 rounded-full shrink-0 ${selected[type] === weeklyLectures ? 'bg-emerald-500' : 'bg-red-500'}`} />
                         <span class="text-sm text-gray-600 capitalize">{type}</span>
                       </div>
                       <span class="text-sm font-medium">{weeklyLectures} hrs/week</span>
                       <span class="text-sm font-medium">
-                        <Show when={selected !== weeklyLectures}>
-                          selected {selected}
+                        <Show when={selected[type] !== weeklyLectures}>
+                          selected {selected[type]}
                         </Show>
                       </span>
                       <span class="text-sm font-medium w-full flex justify-end">{weeks} weeks</span>

@@ -4,10 +4,11 @@ import { useSubmission } from "@solidjs/router";
 import { mapValues } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
 import { createMutable, produce, unwrap } from "solid-js/store";
+import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
-import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
+import { Course, createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
@@ -33,6 +34,7 @@ export default function Home() {
       const untrackedStore = untrack(persistedStore);
       Object.assign(draft, untrackedStore);
       draft.settings.columns = recreateColumns(untrackedStore.settings.columns);
+      draft._courses = draft._courses.map(c => Object.assign(new Course({} as any, undefined as any), c))
     })(schedulerStore)
   );
 
@@ -89,7 +91,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
-        {/* <TimeSpan store={filteredStore} /> */}
+        <TimeSpan store={filteredStore} />
       </TabsContent>
     </Tabs>
   )
