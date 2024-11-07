@@ -221,7 +221,6 @@ export class Course {
       if (value.weeklyLectures === 0 || value.weeks === 0) return acc
       return { ...acc, [key]: value }
     }, {} as Record<LECTURE_TYPE, LectureMetrics>)
-    console.log("🚀 ~ file: store.ts:226 ~ Course ~ getcourseMetrics ~ filterLectureData(this._courseMetrics):", filterLectureData(this._courseMetrics))
     return filterLectureData(this._courseMetrics)
   }
 
