@@ -1,14 +1,15 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
-import { mapValues } from "lodash-es";
+import { mapValues, merge } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
 import { createMutable, unwrap } from "solid-js/store";
-import TimeSpan from "~/components/homepage/TimeSpan";
+import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
 import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
+import { TimeSpan } from "~/components/scheduler/time";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
@@ -30,17 +31,14 @@ export default function Home() {
   const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore', })
 
   const untrackedStore = untrack(persistedStore);
-  const settings = { ...untrackedStore.settings, columns: recreateColumns(untrackedStore.settings.columns) }
-  console.log("🚀 ~ file: index.tsx:35 ~ Home ~ untrackedStore._courses:", untrackedStore.newCourses)
-  const store = createMutable(
-    schedulerStore
-    // merge(schedulerStore, { settings })
-  );
+  untrackedStore.settings.columns = recreateColumns(untrackedStore.settings.columns)
+  untrackedStore.courses.map(course => Object.values(course.data).forEach(dayData => { dayData.events.forEach(event => event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan)) }))
+  console.log("🚀 ~ file: index.tsx:36 ~ Home ~ untrackedStore:", untrackedStore)
+  const store = createMutable(merge(schedulerStore, untrackedStore));
 
   const checkedDataMemo = createMemo(() => {
     const checkedData = mapValues(unwrap(store.checkedData), (dayData) => ({
-      // unlink dayData
-      ...dayData,
+      ...dayData, // unlink dayData
       // link events to the original store except for the row
       events: dayData.events.map(e => ({ ...e, row: unwrap(e.row) }))
     }))
@@ -72,7 +70,7 @@ export default function Home() {
     const updatedStore = trackStore(store)
     console.log("🚀 ~ file: index.tsx:75 ~ createEffect ~ updatedStore:", updatedStore)
     // console.log("🚀 ~ file: index.tsx:96 ~ createEffect ~ updatedStore:", unwrap(updatedStore))
-    setPersistedStore(unwrap(updatedStore))
+    // setPersistedStore(unwrap(updatedStore))
   })
 
 
@@ -92,7 +90,7 @@ export default function Home() {
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
-        <TimeSpan store={filteredStore} />
+        <TimeSpanPage store={filteredStore} />
       </TabsContent>
     </Tabs>
   )

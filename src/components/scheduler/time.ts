@@ -14,6 +14,9 @@ export class TimeSpan {
   get hours() {
     return Math.ceil(this.minutes / 60);
   }
+  static fromPlain(timeSpan: TimeSpan) {
+    return new TimeSpan(new Time(timeSpan.start), new Time(timeSpan.end));
+  }
 }
 
 export class Time {

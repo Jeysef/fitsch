@@ -43,7 +43,7 @@ export class SchedulerStore {
     columns: [],
     rows: [],
   }
-  public readonly settings: ISchedulerSettings;
+  public settings: ISchedulerSettings;
   public courses: CourseData[]
   constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: MCourseLecture) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
@@ -86,12 +86,12 @@ export class SchedulerStore {
     const { events } = data
     events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
 
-    /** using dayRows to mutate the data.dayRows only once */
+    // /** using dayRows to mutate the data.dayRows only once */
     let dayRows = 1
     // Assign rows based on the new order
     events.reduce<DayEvent[]>((acc, event) => {
       const row = this.findAvailableRow(event.event, acc)
-      dayRows = Math.max(dayRows, row)
+      dayRows = Math.max(data.dayRows, row)
       event.row = row
       acc.push(event)
       return acc
@@ -114,7 +114,6 @@ export class SchedulerStore {
     })
     this.courses = coursesData
   }
-
 
   get data(): Data {
     const combineData = (data: Data[]): Data => {
