@@ -121,7 +121,11 @@ export class SchedulerStore {
         data,
         (acc, item) => {
           ObjectTyped.entries(item).forEach(([day, dayData]) => {
-            acc[day] = dayData;
+            acc[day] = {
+              dayRow: dayData.dayRow,
+              dayRows: 1, // will be filled later
+              events: [...(acc[day]?.events || []), ...dayData.events],
+            };
           });
           return acc;
         },
