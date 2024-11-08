@@ -3,7 +3,7 @@ import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { merge } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
-import { createMutable } from "solid-js/store";
+import { createMutable, unwrap } from "solid-js/store";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
@@ -36,7 +36,7 @@ export default function Home() {
   const store = createMutable(merge(schedulerStore, untrackedStore));
 
   const checkedDataMemo = createMemo(() => {
-    return store.sortData(store.checkedData)
+    return store.sortData(unwrap(store.checkedData))
   })
 
   const filteredStore = new Proxy(store, {

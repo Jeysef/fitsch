@@ -45,9 +45,11 @@ export class SchedulerStore {
   }
   public settings: ISchedulerSettings;
   public courses: CourseData[]
+  data: Data;
   constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: MCourseLecture) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this.courses = [];
+    this.data = this.getEmptyData()
   }
 
   private getEventTypePriority(type: LECTURE_TYPE): number {
@@ -113,9 +115,7 @@ export class SchedulerStore {
       return data
     })
     this.courses = coursesData
-  }
-
-  get data(): Data {
+    if (!this.courses.length) return;
     const combineData = (data: Data[]): Data => {
       return reduce(
         data,
@@ -132,8 +132,7 @@ export class SchedulerStore {
         {} as Data
       );
     };
-    const data = this.courses.length ? combineData(this.courses.map(c => c.data)) : this.getEmptyData()
-    return this.sortData(data)
+    this.data = this.sortData(combineData(this.courses.map(c => c.data)))
   }
 
   /** returns filtered copy of data */
