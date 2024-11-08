@@ -87,17 +87,17 @@ export class SchedulerStore {
     events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type))
 
     // /** using dayRows to mutate the data.dayRows only once */
-    let dayRows = 1
+    // let dayRows = 1
     // Assign rows based on the new order
     events.reduce<DayEvent[]>((acc, event) => {
       const row = this.findAvailableRow(event.event, acc)
-      dayRows = Math.max(data.dayRows, row)
+      data.dayRows = Math.max(data.dayRows, row)
       event.row = row
       acc.push(event)
       return acc
     }, [])
 
-    data.dayRows = dayRows
+    // data.dayRows = dayRows
     return data
   }
 
@@ -132,11 +132,15 @@ export class SchedulerStore {
     return this.sortData(data)
   }
 
-  /** returns fitered data, !not copy */
+  /** returns filtered copy of data */
   get checkedData(): Data {
-    return mapValues(this.data, (dayData) => ({
+    return mapValues({ ...this.data }, (dayData) => ({
       ...dayData,
-      events: dayData.events.filter(event => event.event.checked)
+      dayRows: 1,
+      events: dayData.events.filter(event => event.event.checked).map(event => {
+        const { row } = event
+        return { ...event, row }
+      })
     }));
   }
 

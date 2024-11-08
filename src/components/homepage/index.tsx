@@ -1,9 +1,9 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
-import { mapValues, merge } from "lodash-es";
+import { merge } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
-import { createMutable, unwrap } from "solid-js/store";
+import { createMutable } from "solid-js/store";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
@@ -33,16 +33,10 @@ export default function Home() {
   const untrackedStore = untrack(persistedStore);
   untrackedStore.settings.columns = recreateColumns(untrackedStore.settings.columns)
   untrackedStore.courses.map(course => Object.values(course.data).forEach(dayData => { dayData.events.forEach(event => event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan)) }))
-  console.log("🚀 ~ file: index.tsx:36 ~ Home ~ untrackedStore:", untrackedStore)
   const store = createMutable(merge(schedulerStore, untrackedStore));
 
   const checkedDataMemo = createMemo(() => {
-    const checkedData = mapValues(unwrap(store.checkedData), (dayData) => ({
-      ...dayData, // unlink dayData
-      // link events to the original store except for the row
-      events: dayData.events.map(e => ({ ...e, row: unwrap(e.row) }))
-    }))
-    return store.sortData(checkedData)
+    return store.sortData(store.checkedData)
   })
 
   const filteredStore = new Proxy(store, {
