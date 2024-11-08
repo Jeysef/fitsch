@@ -1,10 +1,12 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import { ObjectTyped } from "object-typed";
 import { For, Show } from "solid-js";
-import { type Course, type SchedulerStore } from "~/components/scheduler/store";
+import { type SchedulerStore } from "~/components/scheduler/store";
+import type { CourseData } from "~/components/scheduler/types";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import type { LECTURE_TYPE } from "~/server/scraper/enums";
 
 export interface TimeSpanProps {
   store: SchedulerStore
@@ -13,17 +15,17 @@ export interface TimeSpanProps {
 export default function TimeSpan(props: TimeSpanProps) {
   const fallback = <Text variant="largeText" class="text-center text-gray-500">No courses</Text>
 
-  console.log("🚀 ~ file: TimeSpan.tsx:26 ~ TimeSpan ~ props.store.courses:", props.store._courses)
+  console.log("🚀 ~ file: TimeSpan.tsx:26 ~ TimeSpan ~ props.store.courses:", props.store.courses)
   return (
     <div class="w-full max-w-4xl space-y-6">
-      <For each={props.store._courses} fallback={fallback}>
-        {(course) => TimeSpanCourse(course)}
+      <For each={props.store.courses} fallback={fallback}>
+        {(course, index) => TimeSpanCourse(course, props.store.selected[index()])}
       </For>
     </div>
   )
 }
 
-function TimeSpanCourse(course: Course) {
+function TimeSpanCourse(course: CourseData, selected: Record<LECTURE_TYPE, number>) {
   // const trackedLectureType = [LECTURE_TYPE.LECTURE, LECTURE_TYPE.SEMINAR, LECTURE_TYPE.EXERCISE, LECTURE_TYPE.LABORATORY]
 
   // const selected: Record<LECTURE_TYPE, number> = Object.values(events).reduce((acc, curr) => {
@@ -51,10 +53,9 @@ function TimeSpanCourse(course: Course) {
   //   if (value.weeks === 0 && value.weeklyLectures === 0) delete lectureWeeks[key as keyof typeof lectureWeeks]
   //   else if (key === LECTURE_TYPE.EXAM) delete lectureWeeks[key as keyof typeof lectureWeeks]
   // })
-
-  const selected = course.selected
+  // const selected = course.
   return (
-    <div class="border border-gray-200 rounded-lg hover:border-gray-300 bg-white overflow-hidden">
+    <div class="border border-gray-200 rounded-lg hover:border-gray-300 bg-white overflow-hidden whitespace-nowrap">
       <div class="flex flex-col">
         {/* Left Column - Course ID & Total Hours */}
         <div class="p-4 bg-gray-50">
@@ -74,8 +75,8 @@ function TimeSpanCourse(course: Course) {
           <div class="flex flex-col">
             <h3 class="text-sm uppercase tracking-wider text-gray-500 mb-3">Weekly Hours</h3>
             <div class="space-y-2">
-              <div class="grid grid-cols-[repeat(3,_minmax(0,_auto)),1fr] gap-x-4 items-center justify-start">
-                <For each={ObjectTyped.entries(course.courseMetrics)}>
+              <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
+                <For each={ObjectTyped.entries(course.metrics)}>
                   {([type, { weeks, weeklyLectures }]) => (
                     <>
                       <div class="flex items-center gap-2">
@@ -85,7 +86,7 @@ function TimeSpanCourse(course: Course) {
                       <span class="text-sm font-medium">{weeklyLectures} hrs/week</span>
                       <span class="text-sm font-medium">
                         <Show when={selected[type] !== weeklyLectures}>
-                          selected {selected[type]}
+                          selected {selected[type] || 0}
                         </Show>
                       </span>
                       <span class="text-sm font-medium w-full flex justify-end">{weeks} weeks</span>

@@ -3,12 +3,12 @@ import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { mapValues } from "lodash-es";
 import { createEffect, createMemo, createSignal, untrack } from "solid-js";
-import { createMutable, produce, unwrap } from "solid-js/store";
+import { createMutable, unwrap } from "solid-js/store";
 import TimeSpan from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
-import { Course, createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
+import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
@@ -29,13 +29,12 @@ export default function Home() {
   const data = useSubmission(getStudyCoursesDetailsAction)
   const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore', })
 
+  const untrackedStore = untrack(persistedStore);
+  const settings = { ...untrackedStore.settings, columns: recreateColumns(untrackedStore.settings.columns) }
+  console.log("🚀 ~ file: index.tsx:35 ~ Home ~ untrackedStore._courses:", untrackedStore.newCourses)
   const store = createMutable(
-    produce<SchedulerStore>((draft) => {
-      const untrackedStore = untrack(persistedStore);
-      Object.assign(draft, untrackedStore);
-      draft.settings.columns = recreateColumns(untrackedStore.settings.columns);
-      draft._courses = draft._courses.map(c => Object.assign(new Course({} as any, undefined as any), c))
-    })(schedulerStore)
+    schedulerStore
+    // merge(schedulerStore, { settings })
   );
 
   const checkedDataMemo = createMemo(() => {
@@ -66,11 +65,13 @@ export default function Home() {
 
   createEffect(() => {
     if (!data.result) return;
-    store.courses = data.result
+    store.newCourses = data.result
   })
 
   createEffect(() => {
     const updatedStore = trackStore(store)
+    console.log("🚀 ~ file: index.tsx:75 ~ createEffect ~ updatedStore:", updatedStore)
+    // console.log("🚀 ~ file: index.tsx:96 ~ createEffect ~ updatedStore:", unwrap(updatedStore))
     setPersistedStore(unwrap(updatedStore))
   })
 

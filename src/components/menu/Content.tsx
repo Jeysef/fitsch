@@ -43,7 +43,7 @@ export default function Wrapper() {
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary fallback={(error, reset) => <ErrorFallback error={error} reset={reset} />} >
+      <ErrorBoundary fallback={(error, reset) => <ErrorFallback error={error} reset={reset} data={resource[0]} />} >
         <Suspense fallback={<LoaderFallback />}>
           <Content resource={resource} />
         </Suspense>

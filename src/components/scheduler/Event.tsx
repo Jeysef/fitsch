@@ -1,4 +1,4 @@
-import { createMemo } from "solid-js";
+import { batch, createMemo } from "solid-js";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
@@ -27,14 +27,16 @@ export default function ScheduleEvent(props: EventProps) {
   }
 
   const handleCheck = (e: boolean) => {
-    props.event.checked = e;
-    // check linked events
-    if (event.linked) {
-      for (const linked of event.strongLinked) {
-        const event = getLinkedEvent(linked);
-        event && (event.event.checked = e);
+    batch(() => {
+      props.event.checked = e;
+      // check linked events
+      if (event.linked) {
+        for (const linked of event.strongLinked) {
+          const event = getLinkedEvent(linked);
+          event && (event.event.checked = e);
+        }
       }
-    }
+    })
   }
   const isOdd = createMemo(() => event.weeks.parity === WEEK_PARITY.ODD)
   const isEven = createMemo(() => event.weeks.parity === WEEK_PARITY.EVEN)

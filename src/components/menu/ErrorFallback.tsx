@@ -10,6 +10,7 @@ interface NetworkError {
 interface ErrorBoundaryFallbackProps {
   error: any;
   reset: () => void;
+  data?: any
 }
 
 const getErrorMessage = (error: any): string => {
@@ -60,6 +61,11 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
             <pre class="text-xs mt-2 p-2 bg-gray-100 rounded overflow-x-auto">
               {JSON.stringify(props.error, null, 2)}
             </pre>
+            {props.data && (
+              <pre class="text-xs mt-2 p-2 bg-gray-100 rounded overflow-x-auto">
+                {JSON.stringify(props.data, null, 2)}
+              </pre>
+            )}
           </details>
         )}
 

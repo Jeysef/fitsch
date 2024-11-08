@@ -1,5 +1,5 @@
-import type { Time, TimeSpan } from "~/components/scheduler/time";
-import type { DAY } from "~/server/scraper/enums";
+import type { TimeSpan } from "~/components/scheduler/time";
+import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { CourseDetail } from "~/server/scraper/types";
 
@@ -65,3 +65,13 @@ export interface ICreateColumns {
   getTimeHeader: (start: ISchedulerTime, end: ISchedulerTime) => string;
 }
 
+
+export interface LectureMetrics {
+  weeks: number;
+  weeklyLectures: number;
+}
+export interface CourseData {
+  detail: CourseDetail;
+  data: Data;
+  metrics: Record<LECTURE_TYPE, LectureMetrics>;
+}

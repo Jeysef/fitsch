@@ -101,8 +101,24 @@ function Week() {
   const linkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => event.event.linked && createLinkedCss(event.event.id, event.event.linked, "#94a3b8"))).join('\n')}`);
   const strongLinkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.strongLinked, "#f97316"))).join('\n')}`);
   return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass(), strongLinkedHighlightClass())}>
-    {/* <LaunchHighlight /> */}
-    <WeekSchedule />
+    <LaunchHighlight />
+    <For each={storeData()}>{(data) => (
+      <div
+        class="schedule-row grid grid-cols-subgrid col-span-full py-2 gap-y-2 border-t"
+        style={{
+          "grid-row": `${data.dayRow} / span 1`,
+          "grid-template-rows": `repeat(${data.dayRows}, minmax(0, auto))`,
+        }}
+      >
+        <For each={data.events}>{(event) => (
+          <div style={{ "grid-row": `${event.row} / span 1`, "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`, "padding-inline-start": `${event.paddingStart}%`, "padding-inline-end": `${event.paddingEnd}%` }}>
+            <ScheduleEvent event={event.event} store={store} />
+          </div>
+        )}
+        </For>
+      </div>
+    )}
+    </For>
   </div>;
 }
 
@@ -139,31 +155,4 @@ function LaunchHighlight() {
 
 function Corner() {
   return <div class="row-span-1 col-span-1 left-0  sticky top-px z-30 bg-background font-mono outline-border outline outline-1 mr-px" />;
-}
-
-function WeekSchedule() {
-  const store = useStore();
-  const days = createMemo(() => Object.values(store.data));
-  // for info, I need to use fragmeents to wrap the days in solid jsx observer
-  return (
-    <>
-      <For each={days()}>{(data) => (
-        <div
-          class="schedule-row grid grid-cols-subgrid col-span-full py-2 gap-y-2 border-t"
-          style={{
-            "grid-row": `${data.dayRow} / span 1`,
-            "grid-template-rows": `repeat(${data.dayRows}, minmax(0, auto))`,
-          }}
-        >
-          <For each={data.events}>{(event) => (
-            <div style={{ "grid-row": `${event.row} / span 1`, "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`, "padding-inline-start": `${event.paddingStart}%`, "padding-inline-end": `${event.paddingEnd}%` }}>
-              <ScheduleEvent event={event.event} store={store} />
-            </div>
-          )}
-          </For>
-        </div>
-      )}
-      </For>
-    </>
-  )
 }

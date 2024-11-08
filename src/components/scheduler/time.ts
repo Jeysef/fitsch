@@ -1,4 +1,3 @@
-import type { I } from "vitest/dist/reporters-yx5ZTtEV.js";
 import type { ISchedulerTime } from "~/components/scheduler/types";
 
 
@@ -11,6 +10,9 @@ export class TimeSpan {
   }
   get minutes() {
     return this.end.minutes - this.start.minutes;
+  }
+  get hours() {
+    return Math.ceil(this.minutes / 60);
   }
 }
 

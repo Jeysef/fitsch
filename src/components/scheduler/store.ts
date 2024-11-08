@@ -1,7 +1,7 @@
 import { mapValues, reduce } from 'lodash-es';
 import { ObjectTyped } from "object-typed";
 import { Time, TimeSpan } from '~/components/scheduler/time';
-import type { Data, DayData, DayEvent, Event, ICreateColumns, IScheduleColumn, ISchedulerSettings } from "~/components/scheduler/types";
+import type { CourseData, Data, DayData, DayEvent, Event, ICreateColumns, IScheduleColumn, ISchedulerSettings, LectureMetrics } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture, MgetStudyCourseDetailsReturn } from '~/server/scraper/lectureMutator';
 import { DataProviderTypes } from "~/server/scraper/types";
@@ -44,11 +44,10 @@ export class SchedulerStore {
     rows: [],
   }
   public readonly settings: ISchedulerSettings;
-  public _courses: Course[];
-  // private _courses: DataProviderTypes.getStudyCoursesDetailsReturn;
+  public courses: CourseData[]
   constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: MCourseLecture) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
-    this._courses = [];
+    this.courses = [];
   }
 
   private getEventTypePriority(type: LECTURE_TYPE): number {
@@ -107,37 +106,30 @@ export class SchedulerStore {
     return data
   }
 
-  arrayToRecord = (data: Record<DAY, DayData>[]): Record<DAY, DayData> => {
-    return reduce(
-      data,
-      (acc, item) => {
-        Object.entries(item).forEach(([day, dayData]) => {
-          acc[day as DAY] = dayData;
-        });
-        return acc;
-      },
-      {} as Record<DAY, DayData>
-    );
-  };
-
-
-  set courses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
-    /**
-     * Filling the data in setter to be able to persist filled, if the data is not filled, after reload the Course won't have functions
-     */
-    const coursesObj = courses.map(course => new Course(course, this.settings))
-    this._courses = coursesObj
-    this._courses.forEach(course => course.fillData(this.settings, this.eventFilter))
+  set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
+    const coursesData = courses.map(course => {
+      const emptyData = this.getEmptyData()
+      const data = Course.fillData(emptyData, course, this.settings, this.eventFilter)
+      return data
+    })
+    this.courses = coursesData
   }
-
-  // get courses(): Course[] {
-  //   return this._courses
-  // }
 
 
   get data(): Data {
-    const coursesData = this._courses.map(course => course.data)
-    const data = coursesData.length ? this.arrayToRecord(coursesData) : this.getEmptyData()
+    const combineData = (data: Data[]): Data => {
+      return reduce(
+        data,
+        (acc, item) => {
+          ObjectTyped.entries(item).forEach(([day, dayData]) => {
+            acc[day] = dayData;
+          });
+          return acc;
+        },
+        {} as Data
+      );
+    };
+    const data = this.courses.length ? combineData(this.courses.map(c => c.data)) : this.getEmptyData()
     return this.sortData(data)
   }
 
@@ -147,6 +139,16 @@ export class SchedulerStore {
       ...dayData,
       events: dayData.events.filter(event => event.event.checked)
     }));
+  }
+
+  get selected(): Record<LECTURE_TYPE, number>[] {
+    return this.courses.map(course => {
+      const selectedHours: Record<LECTURE_TYPE, number> = {} as Record<LECTURE_TYPE, number>
+      mapValues(course.data, (dayData) => {
+        dayData.events.filter(event => event.event.checked).forEach(({ event: { type, timeSpan } }) => { selectedHours[type] = (selectedHours[type] || 0) + timeSpan.hours })
+      })
+      return selectedHours
+    })
   }
 }
 
@@ -165,26 +167,13 @@ export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan):
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 }
 }
 
-interface LectureMetrics {
-  weeks: number;
-  weeklyLectures: number;
-}
-export class Course {
-  private _courseMetrics: Record<LECTURE_TYPE, LectureMetrics>;
-  public data: Data;
-  /** settings are not saved to save space, rather they are passed */
-  constructor(private courseData: MgetStudyCourseDetailsReturn, settings: ISchedulerSettings) {
-    this._courseMetrics = mapValues(LECTURE_TYPE, () => ({ weeks: 0, weeklyLectures: 0 }))
-    this.data = this.getEmptyData(settings)
-  }
+class Course {
+  static fillData(toFillData: Data, courseData: MgetStudyCourseDetailsReturn, settings: ISchedulerSettings, filter?: (event: MCourseLecture) => boolean) {
+    const { data, detail: courseDetail } = courseData
+    const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>
+    const getMetrics = (type: LECTURE_TYPE) => metrics[type] || (metrics[type] = { weeks: 0, weeklyLectures: 0 })
 
-  private getEmptyData(settings: ISchedulerSettings): Data {
-    const getDayRow = (day: DAY): number => settings.rows.findIndex(row => row.day === day) + 1;
-    return ObjectTyped.fromEntries(Object.values(DAY).map(day => [`${day}`, { dayRow: getDayRow(day), dayRows: 1, events: [] }]))
-  }
 
-  public fillData(settings: ISchedulerSettings, filter?: (event: MCourseLecture) => boolean) {
-    const { data, detail: courseDetail } = this.courseData
     data.forEach(event => {
       if (filter && !filter(event)) return;
       const timeSpan = new TimeSpan(new Time(event.start), new Time(event.end))
@@ -202,38 +191,18 @@ export class Course {
         const timeSpan = new TimeSpan(new Time(linkedLecture.start), new Time(linkedLecture.end))
         return acc + timeSpan.minutes
       }, timeSpan.minutes)
-      this._courseMetrics[event.type].weeklyLectures = Math.max(this._courseMetrics[event.type].weeklyLectures, Time.fromMinutes(linkedDuration).hours)
-      this._courseMetrics[event.type].weeks = Math.max(this._courseMetrics[event.type].weeks, event.weeks.weeks.length)
-
+      const metric = getMetrics(event.type)
+      metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours)
+      metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length)
       // ------------------------------
 
-      this.data[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent })
+      toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent })
     })
-    return this.data
-  }
-
-  get detail() {
-    return this.courseData.detail
-  }
-
-  get courseMetrics() {
-    const filterLectureData = <T>(data: Record<LECTURE_TYPE, LectureMetrics>) => ObjectTyped.entries(data).reduce((acc, [key, value]) => {
-      if (value.weeklyLectures === 0 || value.weeks === 0) return acc
-      return { ...acc, [key]: value }
-    }, {} as Record<LECTURE_TYPE, LectureMetrics>)
-    return filterLectureData(this._courseMetrics)
-  }
-
-  get selected() {
-    const selected: Record<LECTURE_TYPE, number> = Object.values(this.data).reduce((acc, dayData) => {
-      dayData.events.forEach(event => {
-        if (event.event.checked) {
-          acc[event.event.type] += Math.ceil(event.event.timeSpan.minutes / 60)
-        }
-      })
-      return acc
-    }, ObjectTyped.fromEntries(Object.values(LECTURE_TYPE).map(t => [t, 0])))
-    return selected
+    return {
+      detail: courseDetail,
+      data: toFillData,
+      metrics,
+    }
   }
 }
 
