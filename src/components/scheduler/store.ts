@@ -111,45 +111,48 @@ export class SchedulerStore {
     return this.courses.find(course => course.detail.id === courseId);
   }
 
+  /**
+   * Combines data from multiple courses into one and sorts it
+   * @param data array of UnfilledData
+   * @returns Data
+   */
+  private combineData(data: Data[]): Data {
+    return this.sortData(reduce(
+      data,
+      (acc, item) => {
+        ObjectTyped.entries(item).forEach(([day, dayData]) => {
+          acc[day] = {
+            dayRow: dayData.dayRow,
+            dayRows: 1,
+            events: [...(acc[day]?.events || []), ...dayData.events],
+          };
+        });
+        return acc;
+      },
+      {} as Data
+    ))
+  }
+
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     const coursesData = courses.map(course => {
       const existingCourse = this.findExistingCourse(course.detail.id)
       if (existingCourse) return existingCourse
-      const emptyData = this.getEmptyData()
-      const data = Course.fillData(emptyData, course, this.settings, this.eventFilter)
-      return data
+      return Course.fillData(this.getEmptyData(), course, this.settings, this.eventFilter)
     })
     this.courses = coursesData
     if (!coursesData.length) return;
-    const combineData = (data: Data[]): Data => {
-      return reduce(
-        data,
-        (acc, item) => {
-          ObjectTyped.entries(item).forEach(([day, dayData]) => {
-            acc[day] = {
-              dayRow: dayData.dayRow,
-              dayRows: 1, // will be filled later
-              events: [...(acc[day]?.events || []), ...dayData.events],
-            };
-          });
-          return acc;
-        },
-        {} as Data
-      );
-    };
-    this.data = this.sortData(combineData(this.courses.map(c => c.data)))
+    this.data = this.combineData(coursesData.map(c => c.data))
   }
 
-  /** returns filtered copy of data */
+  /** returns filtered (not so copy of) copy of data */
   get checkedData(): Data {
-    return mapValues({ ...this.data }, (dayData) => ({
+    return this.sortData(mapValues(this.data, (dayData) => ({
       ...dayData,
       dayRows: 1,
       events: dayData.events.filter(event => event.event.checked).map(event => {
-        const { row } = event
-        return { ...event, row }
+        return { ...event, row: 1 }
       })
-    }));
+    })))
   }
 
   get selected(): Record<LECTURE_TYPE, number>[] {
