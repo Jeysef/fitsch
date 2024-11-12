@@ -107,15 +107,20 @@ export class SchedulerStore {
     ObjectTyped.entries(data).forEach(([day, dayData]) => data[day] = this.sortDayData(dayData))
     return data
   }
+  private findExistingCourse(courseId: string) {
+    return this.courses.find(course => course.detail.id === courseId);
+  }
 
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     const coursesData = courses.map(course => {
+      const existingCourse = this.findExistingCourse(course.detail.id)
+      if (existingCourse) return existingCourse
       const emptyData = this.getEmptyData()
       const data = Course.fillData(emptyData, course, this.settings, this.eventFilter)
       return data
     })
     this.courses = coursesData
-    if (!this.courses.length) return;
+    if (!coursesData.length) return;
     const combineData = (data: Data[]): Data => {
       return reduce(
         data,

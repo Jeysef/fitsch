@@ -2,7 +2,7 @@ import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { merge } from "lodash-es";
-import { createEffect, createMemo, createSignal, untrack } from "solid-js";
+import { createComputed, createEffect, createMemo, createSignal, on, untrack } from "solid-js";
 import { createMutable, unwrap } from "solid-js/store";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/Menu";
@@ -54,19 +54,16 @@ export default function Home() {
     }
   })
 
+  createComputed(on(() => data.result, (result) => {
+    if (!result) return;
+    store.newCourses = result
+  }), undefined, { name: "addCoursesToStore" })
 
-  createEffect(() => {
-    if (!data.result) return;
-    store.newCourses = data.result
-  })
-
-  createEffect(() => {
-    const updatedStore = trackStore(store)
-    console.log("🚀 ~ file: index.tsx:75 ~ createEffect ~ updatedStore:", updatedStore)
-    // console.log("🚀 ~ file: index.tsx:96 ~ createEffect ~ updatedStore:", unwrap(updatedStore))
-    // setPersistedStore(unwrap(updatedStore))
-  })
-
+  createEffect(on(() => trackStore(store), (store, _, firstEffect) => {
+    if (firstEffect) return false;
+    setPersistedStore(store)
+    return false;
+  }), true, { name: "persistStore" })
 
   return (
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">
