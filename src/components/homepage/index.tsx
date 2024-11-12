@@ -36,7 +36,7 @@ export default function Home() {
   const store = createMutable(merge(schedulerStore, untrackedStore));
 
   const checkedDataMemo = createMemo(() => {
-    return store.sortData(unwrap(store.checkedData))
+    return store.checkedData;
   })
 
   const filteredStore = new Proxy(store, {
