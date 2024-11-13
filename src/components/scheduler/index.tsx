@@ -81,22 +81,16 @@ function Days() {
   </div>;
 }
 
-const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string, itself: boolean): string => {
-  return `
-      &:has([data-id="${eventId}"]:hover) {
-        ${itself ? `
-          & .event[data-id="${eventId}"] {
-          outline-style: solid;
-          outline-color: ${color};
-        }`: ''}
-        ${linked.map(linked => `
-          & .event[data-id="${linked.id}"] {
-            outline-style: solid;
-            outline-color: ${color};
-          }
-        `)}
-      }
-      `
+const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string, itself: boolean): string | null => {
+  if (!(linked.length || itself)) return null;
+  const wrapperCss = `&:has([data-id="${eventId}"]:hover)`
+  const linkedCss = linked.map(linked => `${wrapperCss} .event[data-id="${linked.id}"] { outline-style: solid; outline-color: ${color}; }`).join('\n')
+  if (!itself) {
+    return linkedCss;
+  };
+  const selfHover = `${wrapperCss} .event[data-id="${eventId}"] { outline-style: solid; outline-color: ${color}; }`;
+  const linkedHover = linked.map(linked => `${wrapperCss} .event[data-id="${linked.id}"] { outline-style: solid; outline-color: ${color}; }`).join('\n');
+  return `${selfHover}\n${linkedHover}`;
 }
 
 function Week() {
