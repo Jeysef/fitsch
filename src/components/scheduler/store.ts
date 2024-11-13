@@ -91,6 +91,7 @@ export class SchedulerStore {
     // /** using dayRows to mutate the data.dayRows only once */
     // let dayRows = 1
     // Assign rows based on the new order
+    data.dayRows = 1;
     events.reduce<DayEvent[]>((acc, event) => {
       const row = this.findAvailableRow(event.event, acc)
       data.dayRows = Math.max(data.dayRows, row)
@@ -142,9 +143,9 @@ export class SchedulerStore {
 
   private cloneData(data: Data, filterEvents?: (event: DayEvent) => unknown): Data {
     return mapValues(data, (dayData) => {
-      const { dayRow, dayRows, events } = dayData
+      const { dayRow, events } = dayData
       const filteredEvents = filterEvents ? events.filter(filterEvents) : events
-      return { dayRow, dayRows, events: filteredEvents.map(event => ({ ...event, row: 1 })) }
+      return { dayRow, dayRows: 1, events: filteredEvents.map(event => ({ ...event, row: 1 })) }
     })
   }
 
