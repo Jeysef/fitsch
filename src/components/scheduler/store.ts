@@ -172,17 +172,22 @@ export class SchedulerStore {
   }
 
   // this will allow us to set and get data, but not persist it
-  set data(data: Data) {
-    undefined
-  }
+  set data(_: Data) { }
 
   get selected(): Record<LECTURE_TYPE, number>[] {
     return this.courses.map(course => {
-      const selectedHours: Record<LECTURE_TYPE, number> = {} as Record<LECTURE_TYPE, number>
-      mapValues(course.data, (dayData) => {
-        dayData.events.filter(event => event.event.checked).forEach(({ event: { type, timeSpan } }) => { selectedHours[type] = (selectedHours[type] || 0) + timeSpan.hours })
-      })
-      return selectedHours
+      return reduce(
+        course.data,
+        (selectedHours, dayData) => {
+          dayData.events
+            .filter(event => event.event.checked)
+            .forEach(({ event: { type, timeSpan } }) => {
+              selectedHours[type] = (selectedHours[type] || 0) + timeSpan.hours;
+            });
+          return selectedHours;
+        },
+        {} as Record<LECTURE_TYPE, number>
+      )
     })
   }
 }
