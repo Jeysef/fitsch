@@ -45,7 +45,7 @@ export class SchedulerStore {
   }
   public settings: ISchedulerSettings;
   public courses: CourseData[]
-  data: Data;
+  // data: Data;
   constructor(settings: ISchedulerSettings, private readonly eventFilter?: (event: MCourseLecture) => boolean) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this.courses = [];
@@ -106,7 +106,7 @@ export class SchedulerStore {
     return data
   }
 
-  public sortData = (data: Data) => {
+  private sortData = (data: Data) => {
     console.log("Sort data")
     ObjectTyped.entries(data).forEach(([day, dayData]) => data[day] = this.sortDayData(dayData))
     return data
@@ -123,7 +123,7 @@ export class SchedulerStore {
    * @param data array of UnfilledData
    * @returns Data
    */
-  private combineData(data: Data[]): Data {
+  public combineData(data: Data[]): Data {
     return this.sortData(reduce(
       data,
       (acc, item) => {
@@ -136,7 +136,7 @@ export class SchedulerStore {
         });
         return acc;
       },
-      {} as Data
+      this.getEmptyData()
     ))
   }
 
@@ -168,6 +168,11 @@ export class SchedulerStore {
   /** returns filtered copy of data */
   get checkedData(): Data {
     return this.sortData(this.cloneData(this.data, event => event.event.checked))
+  }
+
+  // this will allow us to set and get data, but not persist it
+  set data(data: Data) {
+    undefined
   }
 
   get selected(): Record<LECTURE_TYPE, number>[] {

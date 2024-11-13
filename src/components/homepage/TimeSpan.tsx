@@ -14,11 +14,10 @@ export interface TimeSpanProps {
 
 export default function TimeSpan(props: TimeSpanProps) {
   const fallback = <Text variant="largeText" class="text-center text-gray-500">No courses</Text>
-  const selected = props.store.selected
   return (
     <div class="w-full max-w-4xl space-y-6">
       <For each={props.store.courses} fallback={fallback}>
-        {(course, index) => TimeSpanCourse(course, selected[index()])}
+        {(course, index) => TimeSpanCourse(course, props.store.selected[index()])}
       </For>
     </div>
   )
