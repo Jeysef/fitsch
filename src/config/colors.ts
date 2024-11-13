@@ -1,4 +1,4 @@
-import { LECTURE_TYPE } from "~/server/scraper/enums";
+import { LECTURE_TYPE } from "../server/scraper/enums";
 
 /**
  * These colors are taken from the official VUT mobile app
@@ -11,3 +11,10 @@ export const subjectTypeColors = {
   [LECTURE_TYPE.EXAM]: "#ff9999", // this one is guessed, on web it's: #ffe6cc
 
 }
+
+export const hoverColors = {
+  /** lectures with same lecture group */
+  linked: "#94a3b8",
+  /** lecture with same lecture group and type */
+  strongLinked: "#f97316"
+} as const

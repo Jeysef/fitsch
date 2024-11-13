@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const {hoverColors} = require('./src/config/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -55,6 +56,8 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        linked: hoverColors.linked,
+        strongLinked: hoverColors.strongLinked,
       },
       borderRadius: {
         lg: "var(--radius)",

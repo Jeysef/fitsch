@@ -7,6 +7,7 @@ import ScheduleEvent from "~/components/scheduler/Event";
 import { getDayEventData, type SchedulerStore } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import type { Event } from "~/components/scheduler/types";
+import { hoverColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
@@ -81,16 +82,11 @@ function Days() {
   </div>;
 }
 
-const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string, itself: boolean): string | null => {
-  if (!(linked.length || itself)) return null;
+const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string): string | null => {
+  if (!(linked.length)) return null;
   const wrapperCss = `&:has([data-id="${eventId}"]:hover)`
   const linkedCss = linked.map(linked => `${wrapperCss} .event[data-id="${linked.id}"] { outline-style: solid; outline-color: ${color}; }`).join('\n')
-  if (!itself) {
-    return linkedCss;
-  };
-  const selfHover = `${wrapperCss} .event[data-id="${eventId}"] { outline-style: solid; outline-color: ${color}; }`;
-  const linkedHover = linked.map(linked => `${wrapperCss} .event[data-id="${linked.id}"] { outline-style: solid; outline-color: ${color}; }`).join('\n');
-  return `${selfHover}\n${linkedHover}`;
+  return linkedCss;
 }
 
 function Week() {
@@ -103,7 +99,7 @@ function Week() {
     createMemo(() =>
       flow([
         data => flatMap(data, 'events'),
-        events => flatMap(events, event => createLinkedCss(event.event.id, event.event[property], color, property === 'strongLinked')),
+        events => flatMap(events, event => createLinkedCss(event.event.id, event.event[property], color)),
         compact,
         links => links.join('\n'),
         css
@@ -111,8 +107,8 @@ function Week() {
     );
 
   // Usage:
-  const linkedHighlightClass = createLinkedHighlightClass('linked', '#94a3b8');
-  const strongLinkedHighlightClass = createLinkedHighlightClass('strongLinked', '#f97316');
+  const linkedHighlightClass = createLinkedHighlightClass('linked', hoverColors.linked);
+  const strongLinkedHighlightClass = createLinkedHighlightClass('strongLinked', hoverColors.strongLinked);
   return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass(), strongLinkedHighlightClass())}>
     <LaunchHighlight />
     <Index each={storeData()}>{(data) => (

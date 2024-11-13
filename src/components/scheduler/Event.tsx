@@ -44,7 +44,7 @@ export default function ScheduleEvent(props: EventProps) {
   return (
     <div
       class={cn(
-        "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2 has-[hovered]:outline-orange-500",
+        "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         {
           "border-red-500 border-dashed border-2": isEven(),
           "border-blue-500 border-dashed border-2": isOdd(),
