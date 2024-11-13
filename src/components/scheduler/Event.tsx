@@ -62,7 +62,6 @@ export default function ScheduleEvent(props: EventProps) {
         <CheckboxControl />
       </Checkbox>
       <Text variant="largeText" class="w-full">{event.courseDetail.abbreviation}</Text>
-      {/* <Text variant="smallText">{event.id}</Text> */}
       {/* <Text variant="smallText">{event.linked?.join(",")}</Text> */}
       <Text variant="smallText">{event.room}</Text>
       <div class="flex flex-1" />

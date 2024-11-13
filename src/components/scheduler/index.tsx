@@ -1,9 +1,12 @@
 import { css } from "@emotion/css";
+import { compact, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { createContext, createMemo, For, useContext } from "solid-js";
+import { createContext, createEffect, createMemo, For, Index, useContext } from "solid-js";
+import { StrictExtract } from 'ts-essentials';
 import ScheduleEvent from "~/components/scheduler/Event";
 import { getDayEventData, type SchedulerStore } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
+import type { Event } from "~/components/scheduler/types";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
@@ -78,13 +81,14 @@ function Days() {
   </div>;
 }
 
-const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string): string => {
+const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string, itself: boolean): string => {
   return `
       &:has([data-id="${eventId}"]:hover) {
-        & .event[data-id="${eventId}"] {
+        ${itself ? `
+          & .event[data-id="${eventId}"] {
           outline-style: solid;
           outline-color: ${color};
-        }
+        }`: ''}
         ${linked.map(linked => `
           & .event[data-id="${linked.id}"] {
             outline-style: solid;
@@ -97,20 +101,35 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 
 function Week() {
   const store = useStore();
-  const storeData = createMemo(() => Object.values(store.data));
-  const linkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => event.event.linked && createLinkedCss(event.event.id, event.event.linked, "#94a3b8"))).join('\n')}`);
-  const strongLinkedHighlightClass = createMemo(() => css`${storeData()?.flatMap(data => data.events.flatMap(event => createLinkedCss(event.event.id, event.event.strongLinked, "#f97316"))).join('\n')}`);
+  const storeData = createMemo(() => values(store.data));
+  createEffect(() => {
+    console.log("storeData", storeData());
+  });
+  const createLinkedHighlightClass = (property: StrictExtract<keyof Event, "linked" | "strongLinked">, color: string) =>
+    createMemo(() =>
+      flow([
+        data => flatMap(data, 'events'),
+        events => flatMap(events, event => createLinkedCss(event.event.id, event.event[property], color, property === 'strongLinked')),
+        compact,
+        links => links.join('\n'),
+        css
+      ])(storeData())
+    );
+
+  // Usage:
+  const linkedHighlightClass = createLinkedHighlightClass('linked', '#94a3b8');
+  const strongLinkedHighlightClass = createLinkedHighlightClass('strongLinked', '#f97316');
   return <div class={cn("week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]", linkedHighlightClass(), strongLinkedHighlightClass())}>
     <LaunchHighlight />
-    <For each={storeData()}>{(data) => (
+    <Index each={storeData()}>{(data) => (
       <div
         class="schedule-row grid grid-cols-subgrid col-span-full py-2 gap-y-2 border-t"
         style={{
-          "grid-row": `${data.dayRow} / span 1`,
-          "grid-template-rows": `repeat(${data.dayRows}, minmax(0, auto))`,
+          "grid-row": `${data().dayRow} / span 1`,
+          "grid-template-rows": `repeat(${data().dayRows}, minmax(0, auto))`,
         }}
       >
-        <For each={data.events}>{(event) => (
+        <For each={data().events}>{(event) => (
           <div style={{ "grid-row": `${event.row} / span 1`, "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`, "padding-inline-start": `${event.paddingStart}%`, "padding-inline-end": `${event.paddingEnd}%` }}>
             <ScheduleEvent event={event.event} store={store} />
           </div>
@@ -118,7 +137,7 @@ function Week() {
         </For>
       </div>
     )}
-    </For>
+    </Index>
   </div>;
 }
 

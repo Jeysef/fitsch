@@ -1,4 +1,4 @@
-import { mapValues, reduce } from 'lodash-es';
+import { forEach, mapValues, reduce } from 'lodash-es';
 import { ObjectTyped } from "object-typed";
 import { Time, TimeSpan } from '~/components/scheduler/time';
 import type { CourseData, Data, DayData, DayEvent, Event, ICreateColumns, IScheduleColumn, ISchedulerSettings, LectureMetrics } from "~/components/scheduler/types";
@@ -95,6 +95,9 @@ export class SchedulerStore {
       const row = this.findAvailableRow(event.event, acc)
       data.dayRows = Math.max(data.dayRows, row)
       event.row = row
+      if (event.event.courseDetail.id === "281068" && data.dayRow === 1 && event.event.timeSpan.start.hour === 9) {
+        console.log(event.row, row,)
+      }
       acc.push(event)
       return acc
     }, [])
@@ -104,14 +107,18 @@ export class SchedulerStore {
   }
 
   public sortData = (data: Data) => {
+    console.log("Sort data")
     ObjectTyped.entries(data).forEach(([day, dayData]) => data[day] = this.sortDayData(dayData))
     return data
   }
   private findExistingCourse(courseId: string) {
-    return this.courses.find(course => course.detail.id === courseId);
+    const found = this.courses.find(course => course.detail.id === courseId)
+    forEach(found?.data, (dayData) => dayData.events.forEach(event => event.row = 1))
+    return found
   }
 
   /**
+   * 
    * Combines data from multiple courses into one and sorts it
    * @param data array of UnfilledData
    * @returns Data
@@ -133,26 +140,34 @@ export class SchedulerStore {
     ))
   }
 
+  private cloneData(data: Data, filterEvents?: (event: DayEvent) => unknown): Data {
+    return mapValues(data, (dayData) => {
+      const { dayRow, dayRows, events } = dayData
+      const filteredEvents = filterEvents ? events.filter(filterEvents) : events
+      return { dayRow, dayRows, events: filteredEvents.map(event => ({ ...event, row: 1 })) }
+    })
+  }
+
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     const coursesData = courses.map(course => {
       const existingCourse = this.findExistingCourse(course.detail.id)
-      if (existingCourse) return existingCourse
-      return Course.fillData(this.getEmptyData(), course, this.settings, this.eventFilter)
+      if (existingCourse) {
+        const { data, detail, metrics } = existingCourse
+        // data is inherently proxied, so we need to copy it
+        const dataCopy = this.cloneData(data)
+        return { data: dataCopy, detail, metrics }
+      }
+      const newCourse = Course.fillData(this.getEmptyData(), course, this.settings, this.eventFilter)
+      return newCourse
     })
     this.courses = coursesData
     if (!coursesData.length) return;
     this.data = this.combineData(coursesData.map(c => c.data))
   }
 
-  /** returns filtered (not so copy of) copy of data */
+  /** returns filtered copy of data */
   get checkedData(): Data {
-    return this.sortData(mapValues(this.data, (dayData) => ({
-      ...dayData,
-      dayRows: 1,
-      events: dayData.events.filter(event => event.event.checked).map(event => {
-        return { ...event, row: 1 }
-      })
-    })))
+    return this.sortData(this.cloneData(this.data, event => event.event.checked))
   }
 
   get selected(): Record<LECTURE_TYPE, number>[] {

@@ -32,8 +32,9 @@ export default function Home() {
 
   const untrackedStore = untrack(persistedStore);
   untrackedStore.settings.columns = recreateColumns(untrackedStore.settings.columns)
-  untrackedStore.courses.map(course => Object.values(course.data).forEach(dayData => { dayData.events.forEach(event => event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan)) }))
+  // untrackedStore.courses.map(course => Object.values(course.data).forEach(dayData => { dayData.events.forEach(event => event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan)) }))
   const store = createMutable(merge(schedulerStore, untrackedStore));
+  store.courses.map(course => Object.values(course.data).forEach(dayData => { dayData.events.forEach(event => event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan)) }))
 
   const checkedDataMemo = createMemo(() => {
     return store.checkedData;
