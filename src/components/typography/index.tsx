@@ -3,7 +3,7 @@ import {
   type PolymorphicProps
 } from "@kobalte/core/polymorphic";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { JSX, ValidComponent } from "solid-js";
+import { splitProps, type JSX, type ValidComponent } from "solid-js";
 import { cn } from "~/lib/utils";
 
 const typographyVariants = cva("text-foreground transition-[border-color]", {
@@ -59,14 +59,16 @@ export interface TypographyProps<T extends ValidComponent = "p"> extends JSX.HTM
 }
 
 
-const Typography = <T extends ValidComponent = "p">({ class: className, variant, as, ref, ...props }: PolymorphicProps<T, TypographyProps<T>>) => {
-  const comp = as ?? (variant ? variantElementMap[variant] : undefined) ?? "p";
+const Typography = <T extends ValidComponent = "p">(props: PolymorphicProps<T, TypographyProps<T>>) => {
+  const [local, others] = splitProps(props, ["variant", "as", "class"])
+  const variant = local.variant;
+  const comp = local.as || (variant && variantElementMap[variant]) || "p";
+
   return (
     <Polymorphic
       as={comp}
-      class={cn(typographyVariants({ variant, class: className }))}
-      ref={ref}
-      {...props}
+      class={cn(typographyVariants({ variant }), local.class)}
+      {...others}
     />
   );
 }
