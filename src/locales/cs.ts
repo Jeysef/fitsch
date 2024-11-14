@@ -84,6 +84,20 @@ export default {
       workSchedule: "Pracovní rozvrh",
       resultSchedule: "Výsledný rozvrh",
       timeSpan: "Rozsahy"
+    },
+    timeSpan: {
+      empty: "Není zvolen žádný předmět",
+      hoursAWeek: "Počet hodin lekce týdně:",
+      type: {
+        [LECTURE_TYPE.LECTURE]: "přednášky",
+        [LECTURE_TYPE.LABORATORY]: "laboratoře",
+        [LECTURE_TYPE.EXERCISE]: "cvičení",
+        [LECTURE_TYPE.SEMINAR]: "semináře",
+        [LECTURE_TYPE.EXAM]: "zkoušky"
+      },
+      weekly: "{{ hours }} hod. týdně",
+      weeks: "{{ weeks }} týdnů",
+      selected: "vybráno {{ selected }}",
     }
   }
 };

@@ -85,6 +85,20 @@ export default {
       workSchedule: "Work schedule",
       resultSchedule: "Result schedule",
       timeSpan: "Time spans"
+    },
+    timeSpan: {
+      empty: "No course selected",
+      hoursAWeek: "Number of lecture hours per week:",
+      type: {
+        [LECTURE_TYPE.LECTURE]: "lecture",
+        [LECTURE_TYPE.LABORATORY]: "laboratory",
+        [LECTURE_TYPE.EXERCISE]: "exercise",
+        [LECTURE_TYPE.SEMINAR]: "seminar",
+        [LECTURE_TYPE.EXAM]: "exam"
+      },
+      weekly: "{{ hours }} hours/week",
+      weeks: "{{ weeks }} weeks",
+      selected: "selected {{ selected }}"
     }
   }
 } satisfies typeof Schema;
