@@ -4,65 +4,65 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* hsl( 0 0% 100% ) */
-    --foreground: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
+    --background: from theme("colors.white") h s l;
+    --foreground: from theme("colors.black") h s l;
 
-    --card: 0 0% 100%; /* hsl( 0 0% 100% ) */
-    --card-foreground: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
+    --card: from theme("colors.white") h s l;
+    --card-foreground: from theme("colors.zinc.950") h s l;
 
-    --popover: 0 0% 100%; /* hsl( 0 0% 100% ) */
-    --popover-foreground: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
+    --popover: from theme("colors.white") h s l;
+    --popover-foreground: from theme("colors.zinc.950") h s l;
 
-    --primary: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --primary-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --primary: from theme("colors.zinc.800") h s l;
+    --primary-foreground: from theme("colors.zinc.50") h s l;
 
-    --secondary: 240 4.8% 95.9%; /* hsl( 240 4.8% 95.9% ) */
-    --secondary-foreground: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
+    --secondary: from theme("colors.zinc.100") h s l;
+    --secondary-foreground: from theme("colors.zinc.800") h s l;
 
-    --muted: 240 4.8% 95.9%; /* hsl( 240 4.8% 95.9% ) */
-    --muted-foreground: 240 3.8% 46.1%; /* hsl( 240 3.8% 46.1% ) */
+    --muted: from theme("colors.zinc.100") h s l;
+    --muted-foreground: from theme("colors.zinc.600") h s l;
 
-    --accent: 240 4.8% 95.9%; /* hsl( 240 4.8% 95.9% ) */
-    --accent-foreground: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
+    --accent: from theme("colors.zinc.100") h s l;
+    --accent-foreground: from theme("colors.zinc.800") h s l;
 
-    --destructive: 0 84.2% 60.2%; /* hsl( 0 84.2% 60.2% ) */
-    --destructive-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --destructive: from theme("colors.red.500") h s l;
+    --destructive-foreground: from theme("colors.zinc.50") h s l;
 
-    --border: 240 5.9% 90%; /* hsl( 240 5.9% 90% ) */
-    --input: 240 5.9% 90%; /* hsl( 240 5.9% 90% ) */
-    --ring: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
+    --border: from theme("colors.zinc.200") h s l;
+    --input: from theme("colors.zinc.200") h s l;
+    --ring: from theme("colors.zinc.950") h s l;
 
-    --radius: 0.5rem; /* hsl( 0.5rem ) */
+    --radius: 0.5rem;
   }
 
   [data-kb-theme="dark"] {
-    --background: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
-    --foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --background: from theme("colors.zinc.950") h s l;
+    --foreground: from theme("colors.zinc.50") h s l;
 
-    --card: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
-    --card-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --card: from theme("colors.zinc.950") h s l;
+    --card-foreground: from theme("colors.zinc.50") h s l;
 
-    --popover: 240 10% 3.9%; /* hsl( 240 10% 3.9% ) */
-    --popover-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --popover: from theme("colors.zinc.950") h s l;
+    --popover-foreground: from theme("colors.zinc.50") h s l;
 
-    --primary: 0 0% 98%; /* hsl( 0 0% 98% ) */
-    --primary-foreground: 240 5.9% 10%; /* hsl( 240 5.9% 10% ) */
+    --primary: from theme("colors.zinc.50") h s l;
+    --primary-foreground: from theme("colors.zinc.900") h s l;
 
-    --secondary: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --secondary-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --secondary: from theme("colors.zinc.800") h s l;
+    --secondary-foreground: from theme("colors.zinc.50") h s l;
 
-    --muted: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --muted-foreground: 240 5% 64.9%; /* hsl( 240 5% 64.9% ) */
+    --muted: from theme("colors.zinc.800") h s l;
+    --muted-foreground: from theme("colors.zinc.400") h s l;
 
-    --accent: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --accent-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --accent: from theme("colors.zinc.800") h s l;
+    --accent-foreground: from theme("colors.zinc.50") h s l;
 
-    --destructive: 0 62.8% 30.6%; /* hsl( 0 62.8% 30.6% ) */
-    --destructive-foreground: 0 0% 98%; /* hsl( 0 0% 98% ) */
+    --destructive: from theme("colors.red.900") h s l;
+    --destructive-foreground: from theme("colors.zinc.50") h s l;
 
-    --border: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --input: 240 3.7% 15.9%; /* hsl( 240 3.7% 15.9% ) */
-    --ring: 240 4.9% 83.9%; /* hsl( 240 4.9% 83.9% ) */
+    --border: from theme("colors.zinc.800") h s l;
+    --input: from theme("colors.zinc.800") h s l;
+    --ring: from theme("colors.zinc.300") h s l;
   }
 }
 
