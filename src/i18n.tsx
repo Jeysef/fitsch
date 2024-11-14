@@ -32,7 +32,7 @@ export function I18nProvider(props: FlowProps) {
   const [locale, setLocale] = makePersisted(createSignal<Locale>("cs"), { storage: cookieStorage, name: "locale" });
 
   const dict = createMemo(() => i18n.flatten(dictionaries[locale()]));
-  const t = i18n.translator(dict);
+  const t = i18n.translator(dict, i18n.resolveTemplate);
 
   return (
     <I18nContext.Provider value={{
