@@ -85,7 +85,7 @@ export default function Home() {
       <TabsContent value="finalResult" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
         <Scheduler store={filteredStore} />
       </TabsContent>
-      <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
+      <TabsContent value="rules" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4 pb-4">
         <TimeSpanPage store={filteredStore} />
       </TabsContent>
     </Tabs>
