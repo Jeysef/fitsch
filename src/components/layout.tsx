@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js";
-import Header from "~/components/Header";
+import Header from "~/components/header/Header";
 import Menu from "~/components/menu/Menu";
 import { cn } from "~/lib/utils";
 

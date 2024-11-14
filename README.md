@@ -90,3 +90,4 @@ their course timespan makes no sense,
 todo:
 streaming courses via server action
 when getting new courses, fetch only necessary, return others empty, my be filled in store
+courses optional to voluntary

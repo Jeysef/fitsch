@@ -1,0 +1,43 @@
+{
+  "course": {
+    "obligation": {
+      "compulsory": "P",
+      "compulsoryElective": "PV",
+      "elective": "V"
+    },
+    "detail": {
+      "timeSpan": {
+        "title": "Rozsah",
+        "data": {
+          "LECTURE": "přednášk",
+          "LABORATORY": "lab",
+          "EXERCISE": "cvičení",
+          "SEMINAR": "seminář"
+        }
+      },
+      "day": {
+        "MON": "Po",
+        "TUE": "Út",
+        "WED": "St",
+        "THU": "Čt",
+        "FRI": "Pá"
+      },
+      "type": {
+        "exercise": "cvičení",
+        "lecture": "přednáška",
+        "comp.lab": "poč. lab",
+        "exam": "zkouška",
+        "seminar": "seminář",
+        "laboratory": "laboratoř"
+      },
+      "weeks": {
+        "ODD": "lichý",
+        "EVEN": "sudý"
+      }
+    }
+  },
+  "studyPlan": {
+    "Lessons in the winter semester": "Výuka v zimním semestru",
+    "Lessons in the summer semester": "Výuka v letním semestru"
+  }
+}

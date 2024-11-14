@@ -7,6 +7,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import Layout from "~/components/layout";
+import { I18nProvider } from '~/i18n';
 import "./app.css";
 
 export default function App() {
@@ -16,11 +17,13 @@ export default function App() {
         <MetaProvider>
           <Title>SolidStart</Title>
           <Suspense>
-            <Layout>
-              <Suspense>{props.children}</Suspense>
-            </Layout>
+            <I18nProvider>
+              <Layout>
+                <Suspense>{props.children}</Suspense>
+              </Layout>
+            </I18nProvider>
           </Suspense>
-        </MetaProvider>
+        </ MetaProvider>
       )}
     >
       <FileRoutes />

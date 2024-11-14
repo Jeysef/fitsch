@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { useI18n } from "~/i18n";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
@@ -179,7 +180,7 @@ export default function Wrapper() {
 function YearSelect() {
   const group = getGroup()
   const data = getData()
-
+  const { t } = useI18n()
 
   return (
     <Select
@@ -199,7 +200,7 @@ function YearSelect() {
         <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>
       )}
     >
-      <Select.Label as="h3" class={typographyVariants({ variant: "h5" })}>Year</Select.Label>
+      <Select.Label as="h3" class={typographyVariants({ variant: "h5" })}>{t("menu.year.title")}</Select.Label>
       <SelectTrigger>
         <SelectValue<StudyOverviewYear>>{(state) => state.selectedOption()?.label}</SelectValue>
       </SelectTrigger>
@@ -211,7 +212,7 @@ function YearSelect() {
 function DegreeSelect() {
   const group = getGroup()
   const data = getData()
-
+  const { t } = useI18n()
 
   return (
     <RadioGroup
@@ -223,13 +224,13 @@ function DegreeSelect() {
       required={group.controls.degree.isRequired}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Degree</RadioGroup.Label>
+      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.degree.title")}</RadioGroup.Label>
       <For each={data()?.data.degrees}>
         {(degree) => (
           <RadioGroupItem value={degree} class="flex items-center gap-2">
             <RadioGroupItemInput />
             <RadioGroupItemControl as="button" type="button" />
-            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{degree}</RadioGroupItemLabel>
+            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{t(`menu.degree.data.${degree}`)}</RadioGroupItemLabel>
           </RadioGroupItem>
         )}
       </For>
@@ -240,6 +241,7 @@ function DegreeSelect() {
 function ProgramSelect() {
   const group = getGroup()
   const data = getData()
+  const { t } = useI18n()
 
   return (
     <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree.value].length}>
@@ -253,7 +255,7 @@ function ProgramSelect() {
         validationState={group.controls.program.errors ? "invalid" : "valid"}
         class="grid gap-x-2"
       >
-        <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>Program</RadioGroup.Label>
+        <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>{t("menu.program.title")}</RadioGroup.Label>
         <For each={data()!.data.programs[group.controls.degree!.value]}>
           {(program) => (
             <section class="ml-2">
@@ -286,10 +288,11 @@ function ProgramSelect() {
 function GradeSelect() {
   const group = getGroup()
   const data = getData()
+  const { t } = useI18n()
 
   const Fallback = () => (
     <Text class={typographyVariants({ class: "!mt-0 text-sm ml-2" })}>
-      select degree program to show
+      {t("menu.grade.selectToShow")}
     </Text>
   )
 
@@ -304,7 +307,7 @@ function GradeSelect() {
       validationState={group.controls.grade.errors ? "invalid" : "valid"}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Grade</RadioGroup.Label>
+      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.degree.title")}</RadioGroup.Label>
       <Suspense fallback={<LoaderFallback />}>
         <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
           <For each={data()!.data.grades}>
@@ -344,6 +347,7 @@ function GradeSelect() {
 function SemesterSelect() {
   const group = getGroup()
   const data = getData()
+  const { t } = useI18n()
 
   return (
     <RadioGroup
@@ -355,13 +359,13 @@ function SemesterSelect() {
       required={group.controls.semester.isRequired}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >Semestr</RadioGroup.Label>
+      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.semester.title")}</RadioGroup.Label>
       <For each={data()?.data.semesters}>
         {(semester) => (
           <RadioGroupItem value={semester} class="flex items-center gap-2">
             <RadioGroupItemInput />
             <RadioGroupItemControl as="button" type="button" />
-            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{semester}</RadioGroupItemLabel>
+            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{t(`menu.semester.data.${semester}`)}</RadioGroupItemLabel>
           </RadioGroupItem>
         )}
       </For>
@@ -372,6 +376,7 @@ function SemesterSelect() {
 function CoursesSelect() {
   const group = getGroup()
   const data = getData()
+  const { t } = useI18n()
 
   const Fallback = () => (
     <Text variant="smallText">
@@ -390,9 +395,10 @@ function CoursesSelect() {
   }
 
   return (
-    <section class="space-y-2 ml-2">
-      <Show when={group.controls.degree.value === data()?.values.degree}>
-        <Typography as="p" variant={"h5"}>Compulsory</Typography>
+    <Show when={group.controls.degree.value === data()?.values.degree}>
+      <Typography as="h3" variant={"h5"}>{t("menu.courses.title")}</Typography>
+      <section class="space-y-2 ml-2">
+        <Typography as="p" variant={"h6"}>{t("menu.courses.compulsaory")}</Typography>
         <Show when={compulsoryCourses()} fallback={<Fallback />} keyed>
           {(compulsoryCourses) => (
             <>
@@ -403,7 +409,7 @@ function CoursesSelect() {
                 onChange={(checked) => checked && group.controls.coursesCompulsory.setValue(compulsoryCourses.map(e => e.id))}>
                 <CheckboxControl />
                 <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
-                  Všechny
+                  {t("menu.courses.all")}
                 </CheckboxLabel>
               </Checkbox>
               <For each={compulsoryCourses} >
@@ -419,7 +425,7 @@ function CoursesSelect() {
             </>
           )}
         </Show>
-        <Typography as="p" variant={"h5"}>Voluntary</Typography>
+        <Typography as="p" variant={"h6"}>{t("menu.courses.optional")}</Typography>
         <Show when={optionalCourses()} fallback={<Fallback />} keyed>
           {(optionalCourses) => (
             <For each={optionalCourses}>
@@ -434,8 +440,8 @@ function CoursesSelect() {
             </For>
           )}
         </Show>
-      </Show>
-    </section>
+      </section>
+    </Show>
   )
 }
 

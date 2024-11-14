@@ -11,7 +11,7 @@ import { type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, t
 
 export class DataProvider {
   readonly studyApi: StudyApi;
-  constructor(private readonly languageProvider: LanguageProvider, private readonly fetcher: typeof fromURL) {
+  constructor(private readonly languageProvider: LanguageProvider, fetcher: typeof fromURL) {
     this.studyApi = new StudyApi(languageProvider, fetcher)
   }
 

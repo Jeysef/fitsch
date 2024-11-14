@@ -17,6 +17,7 @@
     "@fontsource/geist-sans": "^5.1.0",
     "@kobalte/core": "^0.13.6",
     "@solid-primitives/deep": "^0.2.9",
+    "@solid-primitives/i18n": "^2.1.1",
     "@solid-primitives/resource": "^0.3.1",
     "@solid-primitives/storage": "^4.2.1",
     "@solidjs/meta": "^0.29.4",
