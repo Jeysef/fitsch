@@ -78,6 +78,13 @@ export default {
   language: {
     cs: "Čeština",
     en: "Angličtina"
+  },
+  scheduler: {
+    tabs: {
+      workSchedule: "Pracovní rozvrh",
+      resultSchedule: "Výsledný rozvrh",
+      timeSpan: "Rozsahy"
+    }
   }
 };
 

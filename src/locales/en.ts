@@ -79,5 +79,12 @@ export default {
   language: {
     cs: "Czech",
     en: "English"
+  },
+  scheduler: {
+    tabs: {
+      workSchedule: "Work schedule",
+      resultSchedule: "Result schedule",
+      timeSpan: "Time spans"
+    }
   }
 } satisfies typeof Schema;

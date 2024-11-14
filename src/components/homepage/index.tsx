@@ -11,6 +11,7 @@ import { days } from "~/components/scheduler/constants";
 import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
@@ -27,6 +28,7 @@ const schedulerStore = new SchedulerStore({
 }, filter)
 
 export default function Home() {
+  const { t, locale } = useI18n()
   const data = useSubmission(getStudyCoursesDetailsAction)
   const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: 'schedulerStore', })
 
@@ -71,10 +73,11 @@ export default function Home() {
     <Tabs as="main" defaultValue="account" class="items-center h-full w-full overflow-auto flex flex-col">
       {/* not the best solution, coz it shrinks it from the right side too */}
       <TabsList class={cn("gap-x-4 h-14 w-auto  bg-background flex-shrink-0 overflow-auto justify-start", { "left-32 max-w-[calc(100%-8rem)] -translate-x-32": !openend() })}>
-        <TabsTrigger class="w-auto whitespace-break-spaces" value="workSchedule">Pracovní rozvrh</TabsTrigger>
-        <TabsTrigger class="w-auto whitespace-break-spaces" value="finalResult">Výsledný rozvrh</TabsTrigger>
-        <TabsTrigger class="w-auto whitespace-break-spaces" value="rules">Rozsahy</TabsTrigger>
-        <TabsIndicator variant="underline" />
+        <TabsTrigger class="w-auto whitespace-break-spaces" value="workSchedule">{t("scheduler.tabs.workSchedule")}</TabsTrigger>
+        <TabsTrigger class="w-auto whitespace-break-spaces" value="finalResult">{t("scheduler.tabs.resultSchedule")}</TabsTrigger>
+        <TabsTrigger class="w-auto whitespace-break-spaces" value="rules">{t("scheduler.tabs.timeSpan")}</TabsTrigger>
+        {/* data-lang for rerendering */}
+        <TabsIndicator variant="underline" data-lang={locale()} />
       </TabsList>
       <TabsContent value="workSchedule" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4">
         <Scheduler store={store} />
