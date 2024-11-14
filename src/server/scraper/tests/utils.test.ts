@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { conjunctConjunctableRooms, conjunctRooms, constructGradeLabel, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { LANGUAGE, WEEK_PARITY } from "../enums";
+import { LANGUAGE } from "../../../enums";
+import { WEEK_PARITY } from "../enums";
 
 describe('utils', () => {
   test("should get conjuncted rooms", async () => {

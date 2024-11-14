@@ -4,7 +4,8 @@ import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { LectureMutator } from '~/server/scraper/lectureMutator';
 import { constructGradeLabel, getWeekFromSemesterStart } from '~/server/scraper/utils';
-import { DEGREE, LANGUAGE, SEMESTER } from "./enums";
+import { LANGUAGE } from "../../enums";
+import { DEGREE, SEMESTER } from "./enums";
 import { type DataProviderTypes, type StudyOverview, type StudyOverviewCourse, type StudyOverviewGrade, type StudyProgram, type StudyPrograms } from './types';
 
 

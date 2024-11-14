@@ -1,4 +1,4 @@
-import { LANGUAGE } from "./enums";
+import { LANGUAGE } from "../../enums";
 
 export class LanguageProvider {
   readonly languageSet;

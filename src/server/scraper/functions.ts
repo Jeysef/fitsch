@@ -3,10 +3,11 @@
 import { fromURL } from "cheerio";
 import type { ResourceFetcher } from "solid-js";
 import { DataProvider } from "~/server/scraper/dataProvider";
-import { LANGUAGE, type DEGREE } from "~/server/scraper/enums";
+import { type DEGREE } from "~/server/scraper/enums";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
 import { getStudyCoursesDetailsMock } from "~/server/scraper/mock";
 import { type DataProviderTypes, type StudyOverview } from "~/server/scraper/types";
+import { LANGUAGE } from "../../enums";
 
 export const getStudyOverview: ResourceFetcher<{
   year: string | undefined;

@@ -5,7 +5,8 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { StudyApi } from '~/server/scraper/api';
 import { LanguageProvider } from '~/server/scraper/languageProvider';
 import { type StudyApiTypes } from '~/server/scraper/types';
-import { DEGREE, LANGUAGE, SEMESTER } from "../enums";
+import { LANGUAGE } from "../../../enums";
+import { DEGREE, SEMESTER } from "../enums";
 
 const loadWebsite = (url: string) => {
   const getUrl = () => {

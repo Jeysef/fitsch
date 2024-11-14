@@ -2,10 +2,11 @@ import * as i18n from "@solid-primitives/i18n";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { createContext, createMemo, createSignal, useContext, type Accessor, type FlowProps, type Setter } from "solid-js";
 import en from "~/locales/en";
+import { LANGUAGE } from "./enums";
 import cs from "./locales/cs";
 
 /** sort matters for lang. switcher */
-export const locales = ["cs", "en"] as const;
+export const locales = [LANGUAGE.CZECH, LANGUAGE.ENGLISH] as const;
 export type Locale = typeof locales[number];
 export type RawDictionary = typeof cs;
 export type Dictionary = i18n.Flatten<RawDictionary>;
@@ -29,7 +30,7 @@ export const useI18n = () => {
 };
 
 export function I18nProvider(props: FlowProps) {
-  const [locale, setLocale] = makePersisted(createSignal<Locale>("cs"), { storage: cookieStorage, name: "locale" });
+  const [locale, setLocale] = makePersisted(createSignal<Locale>(LANGUAGE.CZECH), { storage: cookieStorage, name: "locale" });
 
   const dict = createMemo(() => i18n.flatten(dictionaries[locale()]));
   const t = i18n.translator(dict, i18n.resolveTemplate);
