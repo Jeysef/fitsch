@@ -157,13 +157,18 @@ export default function Wrapper() {
               <CoursesSelect />
             </Suspense>
           </DataContext.Provider>
-          <Button class="w-full !mt-8 sticky bottom-0" type="submit">Generate</Button>
+          <SubmitButton />
         </GroupContext.Provider>
       </form>
     )
   }
 }
 
+
+function SubmitButton() {
+  const { t } = useI18n()
+  return <Button class="w-full !mt-8 sticky bottom-0" type="submit">{t("menu.generate")}</Button>;
+}
 
 // function ErrorMessage({ control }: { control: IFormControl<string> }) {
 //   const { isTouched, errors } = control;
