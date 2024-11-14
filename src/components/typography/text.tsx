@@ -15,9 +15,9 @@ interface TextProps<T extends ValidComponent = "p"> extends TypographyProps<T> {
   variant?: AllowedVariants;
 }
 
-const Text = <T extends ValidComponent = "p">({ variant = "p", ...props }: PolymorphicProps<T, TextProps<T>>) => {
-  const [_, others] = splitProps(props as TextProps<any>, ["variant"])
-  return <Typography variant={variant} {...others} />;
+const Text = <T extends ValidComponent = "p">(props: PolymorphicProps<T, TextProps<T>>) => {
+  const [local, others] = splitProps(props as TextProps<any>, ["variant"])
+  return <Typography variant={local.variant ?? "p"} {...others} />;
 }
 Text.displayName = "Text";
 
