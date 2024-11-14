@@ -1,3 +1,4 @@
+import { Tooltip } from "@kobalte/core/tooltip";
 import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
@@ -13,11 +14,12 @@ import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type StudyOverview, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
+import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type StudyOverview, type StudyOverviewCourse, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type IFormGroup, type ValidatorFn } from "~/solid-forms/";
 
 
@@ -399,6 +401,20 @@ function CoursesSelect() {
     group.controls[type].setValue(checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter(id => id !== courseId))
   }
 
+  const CourseCheckboxLabel = (props: { course: StudyOverviewCourse }) => {
+    const course = props.course;
+    return (
+      <Tooltip placement="right" flip="top" gutter={12} >
+        <TooltipTrigger as={CheckboxLabel} class={"ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"}>
+          {course.abbreviation}
+        </TooltipTrigger>
+        <TooltipContent class="bg-secondary text-secondary-foreground">
+          {course.name}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <Show when={group.controls.degree.value === data()?.values.degree}>
       <Typography as="h3" variant={"h5"}>{t("menu.courses.title")}</Typography>
@@ -408,22 +424,24 @@ function CoursesSelect() {
           {(compulsoryCourses) => (
             <>
               <Checkbox
-                class="flex items-start"
+                class="flex items-start cursor-pointer"
                 value="all"
                 checked={group.controls.coursesCompulsory.value!.length === compulsoryCourses.length}
-                onChange={(checked) => checked && group.controls.coursesCompulsory.setValue(compulsoryCourses.map(e => e.id))}>
+                onChange={(checked) => checked ? group.controls.coursesCompulsory.setValue(compulsoryCourses.map(e => e.id)) : group.controls.coursesCompulsory.setValue([])}>
                 <CheckboxControl />
-                <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
+                <CheckboxLabel class={"ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
                   {t("menu.courses.all")}
                 </CheckboxLabel>
               </Checkbox>
               <For each={compulsoryCourses} >
                 {(course) => (
-                  <Checkbox checked={group.controls.coursesCompulsory.value.includes(course.id)} class="flex items-start" value={course.id} onChange={checked => handleChange(checked, "coursesCompulsory", course.id)}>
+                  <Checkbox
+                    class="flex items-start cursor-pointer"
+                    value={course.id}
+                    checked={group.controls.coursesCompulsory.value.includes(course.id)}
+                    onChange={checked => handleChange(checked, "coursesCompulsory", course.id)}>
                     <CheckboxControl />
-                    <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
-                      {course.abbreviation}
-                    </CheckboxLabel>
+                    <CourseCheckboxLabel course={course} />
                   </Checkbox>
                 )}
               </For>
@@ -437,9 +455,7 @@ function CoursesSelect() {
               {(course) => (
                 <Checkbox checked={group.controls.coursesOptional.value.includes(course.id)} class="flex items-start" value={course.id} onChange={(checked) => handleChange(checked, "coursesOptional", course.id)}>
                   <CheckboxControl />
-                  <CheckboxLabel class={("ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
-                    {course.abbreviation}
-                  </CheckboxLabel>
+                  <CourseCheckboxLabel course={course} />
                 </Checkbox>
               )}
             </For>
