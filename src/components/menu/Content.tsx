@@ -20,7 +20,7 @@ import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type StudyOverview, type StudyOverviewCourse, type StudyOverviewYear, type StudyProgram } from "~/server/scraper/types";
+import { type DataProviderTypes, type GradeKey, type StudyCourseObligation, type StudyOverview, type StudyOverviewCourse, type StudyOverviewYear, type StudyProgram, type StudyProgramBase } from "~/server/scraper/types";
 import { createFormControl, createFormGroup, type IFormControl, type IFormGroup, type ValidatorFn } from "~/solid-forms/";
 
 
@@ -49,7 +49,7 @@ export default function Wrapper() {
   return (
     <div class="w-44 space-y-2">
       {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary fallback={(error, reset) => <ErrorFallback error={error} reset={reset} data={resource[0]} />} >
+      <ErrorBoundary fallback={(error, reset) => <ErrorFallback error={error} reset={() => { resource[1].refetch(); reset() }} data={resource[0]} />} >
         <Suspense fallback={<LoaderFallback />}>
           <Content resource={resource} />
         </Suspense>
@@ -121,6 +121,7 @@ export default function Wrapper() {
       coursesCompulsory: (isSubmittedCompulsory && submittedCourses().compulsory) || persistentGroupData()?.coursesCompulsory || defaultValues.coursesCompulsory,
       coursesVoluntary: (isSubmittedOptional && submittedCourses().voluntary) || persistentGroupData()?.coursesVoluntary || defaultValues.coursesVoluntary,
     }
+    console.log("🚀 ~ file: Content.tsx:124 ~ Content ~ data()?.values.program?.id:", data()?.values.program?.id)
 
     const group = createFormGroup({
       year: createFormControl<StudyOverviewYear | undefined>(values.year, { required: true, validators: validator.bind(null, "year") }),
@@ -280,6 +281,20 @@ function ProgramSelect() {
     console.log("🚀 ~ file: Content.tsx:285 ~ ProgramSelect ~ data()!.data.programs[group.controls.degree!.value]:", data()?.data.programs[group.controls.degree!.value])
   })
 
+  const ProgramRadioLabel = (props: { program: StudyProgramBase }) => {
+    const program = props.program;
+    return (
+      <Tooltip placement="right" flip="top" gutter={12} >
+        <TooltipTrigger as={RadioGroupItemLabel} class={typographyVariants({ class: "!mt-0 text-sm cursor-pointer" })}>
+          {program.abbreviation}
+        </TooltipTrigger>
+        <TooltipContent class="bg-secondary text-secondary-foreground">
+          {program.name}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree.value].length}>
       <RadioGroup
@@ -300,7 +315,7 @@ function ProgramSelect() {
                 <RadioGroupItem value={program.id} class="flex items-center gap-2">
                   <RadioGroupItemInput />
                   <RadioGroupItemControl as="button" type="button" />
-                  <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{program.abbreviation}</RadioGroupItemLabel>
+                  <ProgramRadioLabel program={program} />
                 </RadioGroupItem>
               }>
                 <Heading as="h4" variant="h6">{program.abbreviation}</Heading>
@@ -309,7 +324,7 @@ function ProgramSelect() {
                     <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
                       <RadioGroupItemInput />
                       <RadioGroupItemControl as="button" type="button" />
-                      <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{specialization.abbreviation}</RadioGroupItemLabel>
+                      <ProgramRadioLabel program={specialization} />
                     </RadioGroupItem>
                   )}
                 </For>
