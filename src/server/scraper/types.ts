@@ -66,12 +66,12 @@ interface StudyOverview {
   }
 }
 
-type StudyCourseObligation = "compulsory" | "optional";
+type StudyCourseObligation = "compulsory" | "voluntary";
 interface StudyOverviewCourse extends StudyProgramBase { }
 interface StudyCourse extends StudyOverviewCourse {
   credits: string;
   /**
-   * 1: compulsory, 0: optional
+   * 1: compulsory, 0: voluntary
    */
   obligation: boolean;
   /**

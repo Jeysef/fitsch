@@ -71,7 +71,7 @@ export default {
     courses: {
       title: "Courses",
       compulsaory: "Compulsory",
-      optional: "Optional",
+      voluntary: "Voluntary",
       all: "All"
     },
     generate: "Generate"

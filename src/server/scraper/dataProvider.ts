@@ -50,12 +50,12 @@ export class DataProvider {
           const { name, abbreviation, id, url } = course;
           return {
             ...acc,
-            [course.obligation ? 'compulsory' : 'optional']: [...acc[course.obligation ? 'compulsory' : 'optional'], { name, abbreviation, id, url } satisfies StudyOverviewCourse]
+            [course.obligation ? 'compulsory' : 'voluntary']: [...acc[course.obligation ? 'compulsory' : 'voluntary'], { name, abbreviation, id, url } satisfies StudyOverviewCourse]
           }
-        }, { compulsory: [], optional: [] } satisfies Record<"compulsory" | "optional", StudyOverviewCourse[]>)
+        }, { compulsory: [], voluntary: [] } satisfies Record<"compulsory" | "voluntary", StudyOverviewCourse[]>)
       ] as const
       )))
-    ] satisfies [string, Record<SEMESTER, Record<"compulsory" | "optional", StudyOverviewCourse[]>>]
+    ] satisfies [string, Record<SEMESTER, Record<"compulsory" | "voluntary", StudyOverviewCourse[]>>]
     )))
 
 

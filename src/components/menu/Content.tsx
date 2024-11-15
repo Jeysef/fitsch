@@ -36,7 +36,7 @@ const monthCookie = cookieStorage.withOptions({ expires: new Date(Date.now() + 1
 export default function Wrapper() {
   // defer, so that the loading is not shown on client
   const [persistentGroupData, setPersistentGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: monthCookie })
-  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], optional: [] }), { name: "submittedCourses", storage: monthCookie })
+  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], voluntary: [] }), { name: "submittedCourses", storage: monthCookie })
   const locale = useI18n().locale
   const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
     language: locale(),
@@ -78,7 +78,7 @@ export default function Wrapper() {
         language: locale(),
         year: c.year.value!.value,
         semester: c.semester.value,
-        courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id })),
+        courses: [...c.coursesCompulsory.value, ...c.coursesVoluntary.value].map(id => ({ courseId: id })),
       } satisfies DataProviderTypes.getStudyCoursesDetailsConfig
     }
 
@@ -107,10 +107,10 @@ export default function Wrapper() {
       degree: DEGREE.BACHELOR,
       grade: undefined,
       coursesCompulsory: [],
-      coursesOptional: []
+      coursesVoluntary: []
     }
     const isSubmittedCompulsory = submittedCourses().compulsory.length > 0
-    const isSubmittedOptional = submittedCourses().optional.length > 0
+    const isSubmittedOptional = submittedCourses().voluntary.length > 0
 
     const values: { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] } = {
       year: data()?.values.year ?? persistentGroupData()?.year,
@@ -119,7 +119,7 @@ export default function Wrapper() {
       grade: persistentGroupData()?.grade ?? defaultValues.grade,
       semester: persistentGroupData()?.semester ?? defaultValues.semester,
       coursesCompulsory: (isSubmittedCompulsory && submittedCourses().compulsory) || persistentGroupData()?.coursesCompulsory || defaultValues.coursesCompulsory,
-      coursesOptional: (isSubmittedOptional && submittedCourses().optional) || persistentGroupData()?.coursesOptional || defaultValues.coursesOptional,
+      coursesVoluntary: (isSubmittedOptional && submittedCourses().voluntary) || persistentGroupData()?.coursesVoluntary || defaultValues.coursesVoluntary,
     }
 
     const group = createFormGroup({
@@ -129,7 +129,7 @@ export default function Wrapper() {
       grade: createFormControl<GradeKey>(values.grade, { required: true, validators: validator.bind(null, "grade") }),
       semester: createFormControl<typeof SEMESTER[SEMESTER]>(values.semester, { required: true, validators: validator.bind(null, "semester") }),
       coursesCompulsory: createFormControl<string[]>(values.coursesCompulsory, { required: true, validators: validator.bind(null, "coursesCompulsory") }),
-      coursesOptional: createFormControl<string[]>(values.coursesOptional, { required: true, validators: validator.bind(null, "coursesOptional") }),
+      coursesVoluntary: createFormControl<string[]>(values.coursesVoluntary, { required: true, validators: validator.bind(null, "coursesVoluntary") }),
     } satisfies {
       [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
     })
@@ -165,7 +165,7 @@ export default function Wrapper() {
       group.markSubmitted(true);
       submit(getDataToSubmit())
       const c = group.controls
-      setSubmittedCourses({ compulsory: c.coursesCompulsory.value, optional: c.coursesOptional.value })
+      setSubmittedCourses({ compulsory: c.coursesCompulsory.value, voluntary: c.coursesVoluntary.value })
 
     };
 
@@ -352,7 +352,7 @@ function GradeSelect() {
               const count = createMemo(() => {
                 const courses = data()!.data.courses[grade.key][group.controls.semester.value]
                 const compulsorySelected = courses.compulsory.filter(course => group.controls.coursesCompulsory.value.includes(course.id)).length
-                const optionalSelected = courses.optional.filter(course => group.controls.coursesOptional.value.includes(course.id)).length
+                const optionalSelected = courses.voluntary.filter(course => group.controls.coursesVoluntary.value.includes(course.id)).length
                 return compulsorySelected + optionalSelected || null
               })
               return (
@@ -425,9 +425,9 @@ function CoursesSelect() {
   )
 
   const compulsoryCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory)
-  const optionalCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].optional)
+  const optionalCourses = createMemo(() => !!group.controls.grade.value && data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].voluntary)
 
-  const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesOptional", courseId: string) => {
+  const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesVoluntary", courseId: string) => {
     group.controls[type].setValue(checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter(id => id !== courseId))
   }
 
@@ -478,12 +478,12 @@ function CoursesSelect() {
             </>
           )}
         </Show>
-        <Typography as="p" variant={"h6"}>{t("menu.courses.optional")}</Typography>
+        <Typography as="p" variant={"h6"}>{t("menu.courses.voluntary")}</Typography>
         <Show when={optionalCourses()} fallback={<Fallback />} keyed>
           {(optionalCourses) => (
             <For each={optionalCourses}>
               {(course) => (
-                <Checkbox checked={group.controls.coursesOptional.value.includes(course.id)} class="flex items-start" value={course.id} onChange={(checked) => handleChange(checked, "coursesOptional", course.id)}>
+                <Checkbox checked={group.controls.coursesVoluntary.value.includes(course.id)} class="flex items-start" value={course.id} onChange={(checked) => handleChange(checked, "coursesVoluntary", course.id)}>
                   <CheckboxControl />
                   <CourseCheckboxLabel course={course} />
                 </Checkbox>

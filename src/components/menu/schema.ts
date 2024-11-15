@@ -10,7 +10,7 @@ export const navigationSchema = z.object({
   degree: z.nativeEnum(DEGREE),
   program: z.string().optional(),
   coursesCompulsory: z.array(z.string()),
-  coursesOptional: z.array(z.string()),
-}) satisfies ZodObject<Record<keyof StudyOverview["values"], ZodTypeAny>>;
+  coursesVoluntary: z.array(z.string()),
+}) satisfies ZodObject<Record<Exclude<keyof StudyOverview["values"], "language">, ZodTypeAny>>;
 
 export type NavigationSchema = z.infer<typeof navigationSchema>;

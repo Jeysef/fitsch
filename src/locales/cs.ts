@@ -70,7 +70,7 @@ export default {
     courses: {
       title: "Předměty",
       compulsaory: "Povinné",
-      optional: "Volitelné",
+      voluntary: "Volitelné",
       all: "Všechny"
     },
     generate: "Generovat"
