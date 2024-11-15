@@ -4,7 +4,7 @@ import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, ErrorBoundary, For, on, Show, Suspense, untrack, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, createUniqueId, ErrorBoundary, For, on, Show, startTransition, Suspense, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
 import ErrorFallback from "~/components/menu/ErrorFallback";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem, RadioGroupItemControl, RadioGroupItemInput,
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
+import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
@@ -36,7 +37,9 @@ export default function Wrapper() {
   // defer, so that the loading is not shown on client
   const [persistentGroupData, setPersistentGroupData] = makePersisted(createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(), { name: "groupData", storage: monthCookie })
   const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], optional: [] }), { name: "submittedCourses", storage: monthCookie })
-  const initialConfig = {
+  const locale = useI18n().locale
+  const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
+    language: locale(),
     year: persistentGroupData()?.year?.value,
     degree: persistentGroupData()?.degree,
     program: persistentGroupData()?.program,
@@ -58,7 +61,41 @@ export default function Wrapper() {
     const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
     const { refetch, mutate } = resource[1]
     const submit = useAction(getStudyCoursesDetailsAction);
+    const { t } = useI18n()
 
+    const getDataToRefetch = () => {
+      const c = group.controls
+      return {
+        year: c.year.value?.value,
+        language: locale(),
+        degree: c.degree.value,
+        program: c.program.value,
+      } satisfies DataProviderTypes.getStudyOverviewConfig
+    }
+    const getDataToSubmit = () => {
+      const c = group.controls
+      return {
+        language: locale(),
+        year: c.year.value!.value,
+        semester: c.semester.value,
+        courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id })),
+      } satisfies DataProviderTypes.getStudyCoursesDetailsConfig
+    }
+
+    createEffect(on(locale, (language, _, firstEffect) => {
+      if (firstEffect) return false
+      const dataLanguage = cData()?.values.language
+      if (!dataLanguage || dataLanguage === language) return false
+      startTransition(() => refetch(getDataToRefetch()))
+      const toastId = createUniqueId()
+      const onRegenerate = () => {
+        const submitted = submit(getDataToSubmit());
+        toast.dismiss(toastId)
+        toast.promise(submitted, { loading: "Generating courses", success: "Courses generated successfully", error: "Failed to generate courses" })
+      }
+      toast.info(`Language changed from ${t(`language.${dataLanguage}`)} to ${t(`language.${language}`)}. Scheduler courses will remain in the previous language until you click generate.`, { action: { label: "Regenerate", onClick: onRegenerate }, id: toastId })
+      return false
+    }), true)
 
     const validator: <K extends keyof NavigationSchema>(name: K, value: NavigationSchema[K]) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
       const returnType = navigationSchema.pick({ [name]: true } as { [K in keyof NavigationSchema]: true }).safeParse({ [name]: value });
@@ -76,15 +113,14 @@ export default function Wrapper() {
     const isSubmittedOptional = submittedCourses().optional.length > 0
 
     const values: { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] } = {
-      year: persistentGroupData()?.year ?? data()?.values.year,
-      degree: persistentGroupData()?.degree ?? data()?.values.degree ?? defaultValues.degree,
-      program: persistentGroupData()?.program ?? data()?.values.program?.id,
+      year: data()?.values.year ?? persistentGroupData()?.year,
+      degree: data()?.values.degree ?? persistentGroupData()?.degree ?? defaultValues.degree,
+      program: data()?.values.program?.id ?? persistentGroupData()?.program,
       grade: persistentGroupData()?.grade ?? defaultValues.grade,
       semester: persistentGroupData()?.semester ?? defaultValues.semester,
       coursesCompulsory: (isSubmittedCompulsory && submittedCourses().compulsory) || persistentGroupData()?.coursesCompulsory || defaultValues.coursesCompulsory,
       coursesOptional: (isSubmittedOptional && submittedCourses().optional) || persistentGroupData()?.coursesOptional || defaultValues.coursesOptional,
     }
-
 
     const group = createFormGroup({
       year: createFormControl<StudyOverviewYear | undefined>(values.year, { required: true, validators: validator.bind(null, "year") }),
@@ -98,11 +134,10 @@ export default function Wrapper() {
       [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
     })
 
+    // TODO: find something better
     createEffect(() => {
       setPersistentGroupData(mapValues(trackStore(group).controls, (value) => (value.rawValue)) as { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] })
     })
-
-
 
     const getFetchableData = () => ({
       year: group.controls.year.value?.value,
@@ -112,33 +147,24 @@ export default function Wrapper() {
     /** refetch data */
     createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
       if (firstEffect) return false
-      const degree = group.controls.degree.value
-      const fullData: DataProviderTypes.getStudyOverviewConfig = { ...data, degree }
-      void refetch(fullData)
+      void refetch(getDataToRefetch())
       return false
     }), true)
 
     /** Check changed degree grade */
     createRenderEffect(on(() => group.controls.degree.value, (degree, prevDegree) => {
-      if (degree === prevDegree) return false
-      const dataProgram = untrack(data)?.data.programs[degree]
-      if (!dataProgram) return;
-      const programsLength = dataProgram.flatMap(e => [e, ...e.specializations]).length
-      if (programsLength === 1) {
-        group.controls.program.setValue(dataProgram[0].id)
-      }
+      if (degree && degree === prevDegree) return false
+      const dataProgram = cData()?.data.programs[degree]
+      if (!dataProgram || dataProgram.flatMap(e => [e, ...e.specializations]).length !== 1) return;
+      const programId = dataProgram[0].id
+      if (programId !== group.controls.program.value) group.controls.program.setValue(programId)
     }))
 
     const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
       e.preventDefault();
       group.markSubmitted(true);
+      submit(getDataToSubmit())
       const c = group.controls
-      const submitData = {
-        year: c.year.value!.value,
-        semester: c.semester.value,
-        courses: [...c.coursesCompulsory.value, ...c.coursesOptional.value].map(id => ({ courseId: id }))
-      }
-      submit(submitData)
       setSubmittedCourses({ compulsory: c.coursesCompulsory.value, optional: c.coursesOptional.value })
 
     };
@@ -249,6 +275,10 @@ function ProgramSelect() {
   const group = getGroup()
   const data = getData()
   const { t } = useI18n()
+  createEffect(() => {
+    console.log("🚀 ~ file: Content.tsx:274 ~ ProgramSelect ~ group.controls.program.value:", group.controls.program.value)
+    console.log("🚀 ~ file: Content.tsx:285 ~ ProgramSelect ~ data()!.data.programs[group.controls.degree!.value]:", data()?.data.programs[group.controls.degree!.value])
+  })
 
   return (
     <Show when={group.controls.program && group.controls.degree.value && data()?.data.programs[group.controls.degree.value].length}>
@@ -256,7 +286,7 @@ function ProgramSelect() {
         value={group.controls.program.value}
         onChange={(program) => program && group.controls.program.setValue(program)}
         name="program"
-        onBlur={() => group.controls.program!.markTouched(true)}
+        // onBlur={() => group.controls.program!.markTouched(true)}
         disabled={group.controls.program.isDisabled}
         required={group.controls.program.isRequired}
         validationState={group.controls.program.errors ? "invalid" : "valid"}

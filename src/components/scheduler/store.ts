@@ -153,7 +153,9 @@ export class SchedulerStore {
     const coursesData = courses.map(course => {
       const existingCourse = this.findExistingCourse(course.detail.id)
       if (existingCourse) {
-        const { data, detail, metrics } = existingCourse
+        let { data, detail, metrics } = existingCourse
+        // is same language. link ends .cs or .en
+        if (detail.link !== course.detail.link) detail = course.detail
         // data is inherently proxied, so we need to copy it
         const dataCopy = this.cloneData(data)
         return { data: dataCopy, detail, metrics }

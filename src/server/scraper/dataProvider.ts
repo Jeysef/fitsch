@@ -20,6 +20,7 @@ export class DataProvider {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config)
     const isEnglish = this.languageProvider.language === LANGUAGE.ENGLISH
     const values: StudyOverview["values"] = {
+      language: this.languageProvider.language,
       year: config ? years.find(year => year.value === config.year) ?? currentYear : currentYear,
       degree: (config?.degree) ?? DEGREE.BACHELOR,
     }
@@ -29,8 +30,9 @@ export class DataProvider {
     const filterLanguage = (program: StudyPrograms[DEGREE]) => ObjectTyped.fromEntries(Object.entries(program).filter(([pid, studyProgram]) => studyProgram.isEnglish === isEnglish).map(([id, program]) => ([id, program] as const)))
 
     degreePrograms = filterLanguage(degreePrograms)
+    const programAndSpecializations = Object.values(degreePrograms).flatMap(program => [program, ...program.specializations])
     // selected program
-    values["program"] = config?.program ? Object.values(degreePrograms).flatMap(program => [program, ...program.specializations]).find(programOrSpecialization => programOrSpecialization.id === config.program) : Object.values(degreePrograms).length === 1 ? Object.values(degreePrograms)[0] : undefined
+    values["program"] = (config?.program && programAndSpecializations.find(programOrSpecialization => programOrSpecialization.id === config.program)) ?? programAndSpecializations.length === 1 ? programAndSpecializations[0] : undefined
     // all programs foe each degree
     const programs: Record<DEGREE, StudyProgram[]> = ObjectTyped.fromEntries(ObjectTyped.entries(studyPrograms).map(([degree, programs]) => ([degree, Object.values(filterLanguage(programs))] as const)))
 

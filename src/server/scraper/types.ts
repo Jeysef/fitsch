@@ -1,3 +1,4 @@
+import type { LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 import type { MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
@@ -34,6 +35,7 @@ interface StudyOverview {
    * only values that when changed should cause refetch
   */
   values: {
+    language: LANGUAGE,
     year: StudyOverviewYear,
     degree: DEGREE,
     program?: StudyProgramBase,
@@ -158,6 +160,7 @@ export namespace StudyApiTypes {
 
 export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
+    language: LANGUAGE;
     program?: StudyProgramBase["id"];
   }
   export interface getStudyOverviewReturn extends StudyOverview { }
@@ -169,6 +172,7 @@ export namespace DataProviderTypes {
   }
 
   export interface getStudyCoursesDetailsConfig {
+    language: LANGUAGE;
     courses: Omit<StudyApiTypes.getStudyCourseDetailsConfig, "year" | "semester">[]
     year: StudyOverviewYear["value"];
     semester: SEMESTER;
