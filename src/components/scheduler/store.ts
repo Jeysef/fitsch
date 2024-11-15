@@ -96,9 +96,6 @@ export class SchedulerStore {
       const row = this.findAvailableRow(event.event, acc)
       data.dayRows = Math.max(data.dayRows, row)
       event.row = row
-      if (event.event.courseDetail.id === "281068" && data.dayRow === 1 && event.event.timeSpan.start.hour === 9) {
-        console.log(event.row, row,)
-      }
       acc.push(event)
       return acc
     }, [])
@@ -108,7 +105,6 @@ export class SchedulerStore {
   }
 
   private sortData = (data: Data) => {
-    console.log("Sort data")
     ObjectTyped.entries(data).forEach(([day, dayData]) => data[day] = this.sortDayData(dayData))
     return data
   }

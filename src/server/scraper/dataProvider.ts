@@ -36,11 +36,6 @@ export class DataProvider {
     // all programs foe each degree
     const programs: Record<DEGREE, StudyProgram[]> = ObjectTyped.fromEntries(ObjectTyped.entries(studyPrograms).map(([degree, programs]) => ([degree, Object.values(filterLanguage(programs))] as const)))
 
-    // let degreeProgram: StudyProgram | undefined = undefined
-    // degreeProgram = degreePrograms[values.degree]
-    // if (!degreeProgram) degreeProgram = Object.values(degreePrograms)[0]
-    // console.log("🚀 ~ file: index.ts:35 ~ DataProvider ~ getStudyOverview ~ degreeProgram:", degreeProgram)
-
     const programData = values.program ? await this.studyApi.getStudyProgramCourses({ programUrl: values.program.url }) : {}
 
     const grades = Object.entries(programData).map(([grade, data]) => ({ key: grade, label: constructGradeLabel(grade, data.abbreviation) } as StudyOverviewGrade))
