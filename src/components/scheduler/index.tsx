@@ -8,6 +8,7 @@ import { getDayEventData, type SchedulerStore } from "~/components/scheduler/sto
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import type { Event } from "~/components/scheduler/types";
 import { hoverColors } from "~/config/colors";
+import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
@@ -72,11 +73,12 @@ function Heading() {
 }
 
 function Days() {
+  const t = useI18n().t
   const store = useStore();
   return <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
     <For each={store.settings.rows}>
       {(day) => (
-        <div class="items-center justify-center p-4 flex">{day.title}</div>
+        <div class="items-center justify-center p-4 flex">{t(`scheduler.days.${day.day}`)}</div>
       )}
     </For>
   </div>;

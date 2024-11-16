@@ -32,7 +32,6 @@ export interface ISchedulerTime {
   minute: number;
 }
 interface IScheduleRow {
-  title: string;
   day: DAY;
 }
 export interface IScheduleColumn {

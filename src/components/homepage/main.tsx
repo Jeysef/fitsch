@@ -21,7 +21,7 @@ import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 
 const formatTime = (start: { hour: number, minute: number }, end: { hour: number, minute: number }) =>
   `${start.hour.toString().padStart(2, '0')}:${start.minute.toString().padStart(2, '0')} - ${end.hour.toString().padStart(2, '0')}:${end.minute.toString().padStart(2, '0')}`
-const formatDay = (day: DAY) => ({ title: day, day })
+const formatDay = (day: DAY) => ({ day })
 const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM)
 const schedulerStore = new SchedulerStore({
   columns: createColumns({ start: { hour: 7, minute: 0 }, step: { hour: 1, minute: 0 }, end: { hour: 20, minute: 0 }, getTimeHeader: formatTime }),

@@ -111,6 +111,13 @@ export default {
       weekly: "{{ hours }} hod. týdně",
       weeks: "{{ weeks }} týdnů",
       selected: "vybráno {{ selected }}",
+    },
+    days: {
+      [DAY.MON]: "Po",
+      [DAY.TUE]: "Út",
+      [DAY.WED]: "St",
+      [DAY.THU]: "Čt",
+      [DAY.FRI]: "Pá"
     }
   }
 };

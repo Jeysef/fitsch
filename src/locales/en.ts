@@ -112,6 +112,13 @@ export default {
       weekly: "{{ hours }} hours/week",
       weeks: "{{ weeks }} weeks",
       selected: "selected {{ selected }}"
+    },
+    days: {
+      [DAY.MON]: "Mon",
+      [DAY.TUE]: "Tue",
+      [DAY.WED]: "Wed",
+      [DAY.THU]: "Thu",
+      [DAY.FRI]: "Fri"
     }
   }
 } satisfies typeof Schema;
