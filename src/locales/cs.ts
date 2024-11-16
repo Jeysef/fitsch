@@ -73,7 +73,20 @@ export default {
       voluntary: "Volitelné",
       all: "Všechny"
     },
-    generate: "Generovat"
+    generate: "Generovat",
+    toast: {
+      languageChanged: {
+        loading: "Načítám data v novém jazyce",
+        success: "Data byla úspěšně načtena",
+        error: "Nastala chyba při načítání dat",
+        description: "Jazyk byl změněn na {{ language }}, data vyučování zůstnou stejná dokud nebudou znova generována."
+      },
+      generate: {
+        loading: "Načítám rozvrh",
+        success: "Rozvrh byl úspěšně načten",
+        error: "Nastala chyba při načítání rozvrhu"
+      }
+    }
   },
   language: {
     cs: "Čeština",

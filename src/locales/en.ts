@@ -74,7 +74,20 @@ export default {
       voluntary: "Voluntary",
       all: "All"
     },
-    generate: "Generate"
+    generate: "Generate",
+    toast: {
+      languageChanged: {
+        loading: "Loading data in new language",
+        success: "Data was successfully loaded",
+        error: "An error occurred while loading data",
+        description: "The language has been changed to {{ language }}, the lecture data will remain the same until they are regenerated."
+      },
+      generate: {
+        loading: "Loading schedule",
+        success: "Schedule was successfully loaded",
+        error: "An error occurred while loading schedule"
+      }
+    }
   },
   language: {
     cs: "Czech",

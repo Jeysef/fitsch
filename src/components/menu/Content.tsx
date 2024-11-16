@@ -60,8 +60,14 @@ export default function Wrapper() {
     const data = resource[0]
     const cData = createMemo(() => data.state === "refreshing" ? data.latest : data())
     const { refetch, mutate } = resource[1]
-    const submit = useAction(getStudyCoursesDetailsAction);
+    const _submit = useAction(getStudyCoursesDetailsAction);
     const { t } = useI18n()
+
+    const submit: typeof _submit = (data) => {
+      const submission = _submit(data)
+      toast.promise(submission, { loading: t("menu.toast.generate.loading"), success: t("menu.toast.generate.success"), error: t("menu.toast.generate.error") })
+      return submission
+    }
 
     const getDataToRefetch = () => {
       const c = group.controls
@@ -86,14 +92,13 @@ export default function Wrapper() {
       if (firstEffect) return false
       const dataLanguage = cData()?.values.language
       if (!dataLanguage || dataLanguage === language) return false
-      startTransition(() => refetch(getDataToRefetch()))
+      const newData = startTransition(() => refetch(getDataToRefetch()))
       const toastId = createUniqueId()
       const onRegenerate = () => {
-        const submitted = submit(getDataToSubmit());
         toast.dismiss(toastId)
-        toast.promise(submitted, { loading: "Generating courses", success: "Courses generated successfully", error: "Failed to generate courses" })
+        submit(getDataToSubmit());
       }
-      toast.info(`Language changed from ${t(`language.${dataLanguage}`)} to ${t(`language.${language}`)}. Scheduler courses will remain in the previous language until you click generate.`, { action: { label: "Regenerate", onClick: onRegenerate }, id: toastId })
+      toast.promise(newData, { loading: t("menu.toast.languageChanged.loading"), success: t("menu.toast.languageChanged.success"), error: t("menu.toast.languageChanged.error"), description: t("menu.toast.languageChanged.description", { language: t(`language.${language}`) }), action: { label: t("menu.generate"), onClick: onRegenerate }, id: toastId, duration: 5000 })
       return false
     }), true)
 
