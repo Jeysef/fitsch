@@ -1,5 +1,7 @@
+import Info from "lucide-solid/icons/info";
 import { batch, createMemo } from "solid-js";
 import Text from "~/components/typography/text";
+import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
@@ -26,14 +28,14 @@ export default function ScheduleEvent(props: EventProps) {
     return store.data[linked.day].events.find((e) => e.event.id === linked.id)
   }
 
-  const handleCheck = (e: boolean) => {
+  const handleCheck = (checked?: boolean) => {
     batch(() => {
-      props.event.checked = e;
+      props.event.checked = checked ?? !props.event.checked;
       // check linked events
       if (event.linked) {
         for (const linked of event.strongLinked) {
           const event = getLinkedEvent(linked);
-          event && (event.event.checked = e);
+          event && (event.event.checked = props.event.checked);
         }
       }
     })
@@ -44,7 +46,8 @@ export default function ScheduleEvent(props: EventProps) {
   return (
     <div
       class={cn(
-        "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 *:text-center overflow-hidden outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
+        "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 pt-1 *:text-center overflow-hidden",
+        "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         {
           "border-red-500 border-dashed border-2": isEven(),
           "border-blue-500 border-dashed border-2": isOdd(),
@@ -52,21 +55,24 @@ export default function ScheduleEvent(props: EventProps) {
       )}
       data-id={event.id}
       style={{ "background-color": color }}
-      ondblclick={() => handleCheck(!props.event.checked)}
+      ondblclick={() => handleCheck()}
     >
-      <Checkbox
-        checked={props.event.checked}
-        class="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none "
-        onChange={handleCheck}
-      >
-        <CheckboxControl />
-      </Checkbox>
-      <Text variant="largeText" class="w-full">{event.courseDetail.abbreviation}</Text>
-      {/* <Text variant="smallText">{event.linked?.join(",")}</Text> */}
-      <Text variant="smallText">{event.room}</Text>
-      <div class="flex flex-1" />
-      <Text variant="smallText" class={cn(ellipsis2line, "text-xxs")}>{formatWeeks(event.weeks.weeks)}</Text>
-      <Text variant="smallText" class={"text-ellipsis overflow-hidden whitespace-nowrap w-full"}>{event.info}</Text>
+      <div class="flex items-center w-full ">
+        <Button size={null} variant={null}><Info size={16} /></Button>
+        <Text variant="largeText" class="w-full truncate">{event.courseDetail.abbreviation}</Text>
+        <Checkbox
+          checked={props.event.checked}
+          onChange={handleCheck}
+        >
+          <CheckboxControl />
+        </Checkbox>
+      </div>
+      <div class="w-full *:w-full">
+        <Text variant="smallText" class="block">{event.room}</Text>
+        <Text variant="smallText" class="text-xxs block">​</Text>
+        <Text variant="smallText" class={cn(ellipsis2line, "text-xxs block")}>{formatWeeks(event.weeks.weeks)}</Text>
+        <Text variant="smallText" class="truncate block w-full">{event.info}</Text>
+      </div>
     </div>
   )
 }
