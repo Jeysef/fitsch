@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 import { compact, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { createContext, createEffect, createMemo, For, Index, useContext } from "solid-js";
+import { createContext, createMemo, For, Index, useContext } from "solid-js";
 import { StrictExtract } from 'ts-essentials';
 import ScheduleEvent from "~/components/scheduler/Event";
 import { getDayEventData, type SchedulerStore } from "~/components/scheduler/store";
@@ -94,9 +94,6 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 function Week() {
   const store = useStore();
   const storeData = createMemo(() => values(store.data));
-  createEffect(() => {
-    console.log("storeData", storeData());
-  });
   const createLinkedHighlightClass = (property: StrictExtract<keyof Event, "linked" | "strongLinked">, color: string) =>
     createMemo(() =>
       flow([

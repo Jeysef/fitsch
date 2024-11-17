@@ -126,7 +126,6 @@ export default function Wrapper() {
       coursesCompulsory: (isSubmittedCompulsory && submittedCourses().compulsory) || persistentGroupData()?.coursesCompulsory || defaultValues.coursesCompulsory,
       coursesVoluntary: (isSubmittedOptional && submittedCourses().voluntary) || persistentGroupData()?.coursesVoluntary || defaultValues.coursesVoluntary,
     }
-    console.log("🚀 ~ file: Content.tsx:124 ~ Content ~ data()?.values.program?.id:", data()?.values.program?.id)
 
     const group = createFormGroup({
       year: createFormControl<StudyOverviewYear | undefined>(values.year, { required: true, validators: validator.bind(null, "year") }),
@@ -281,10 +280,6 @@ function ProgramSelect() {
   const group = getGroup()
   const data = getData()
   const { t } = useI18n()
-  createEffect(() => {
-    console.log("🚀 ~ file: Content.tsx:274 ~ ProgramSelect ~ group.controls.program.value:", group.controls.program.value)
-    console.log("🚀 ~ file: Content.tsx:285 ~ ProgramSelect ~ data()!.data.programs[group.controls.degree!.value]:", data()?.data.programs[group.controls.degree!.value])
-  })
 
   const ProgramRadioLabel = (props: { program: StudyProgramBase }) => {
     const program = props.program;
