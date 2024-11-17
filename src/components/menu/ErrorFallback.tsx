@@ -41,6 +41,7 @@ const getErrorMessage = (error: any): string => {
 };
 
 const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
+  throw props.error
   const errorMessage = getErrorMessage(props.error);
   const isNetworkError = props.error.code === 'ENOTFOUND' ||
     props.error.code === 'ECONNREFUSED' ||
