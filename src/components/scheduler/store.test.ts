@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { days } from "~/components/scheduler/constants";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
+import { TimeSpan } from "~/components/scheduler/time";
 
 describe("scheduler store", () => {
   let store: SchedulerStore
@@ -25,6 +26,17 @@ describe("scheduler store", () => {
     }
     expect(store.hasOverlap(events1, events2)).toBe(true)
     expect(store.hasOverlap(events2, events1)).toBe(true)
+
+    const event3 = {
+      start: { hour: 10, minute: 0 },
+      end: { hour: 11, minute: 50 }
+    }
+
+    const event4 = {
+      start: { hour: 11, minute: 0 },
+      end: { hour: 12, minute: 50 }
+    }
+    expect(store.hasOverlap(TimeSpan.fromPlain(event3), TimeSpan.fromPlain(event4))).toBe(true)
   });
 
   test("should not have overlaps", () => {

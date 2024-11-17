@@ -73,15 +73,22 @@ export class SchedulerStore {
   }
 
   private findAvailableRow(pivotEvent: Event, precedingEvents: DayEvent[]): number {
-    let maxRow = 0;
+    const occupiedRows = new Set<number>();
 
+    // Find all rows that are occupied by overlapping events
     for (const event of precedingEvents) {
       if (this.hasOverlap(pivotEvent.timeSpan, event.event.timeSpan)) {
-        maxRow = Math.max(maxRow, event.row);
+        occupiedRows.add(event.row);
       }
     }
 
-    return maxRow + 1;
+    // Find the first available row starting from 1
+    let row = 1;
+    while (occupiedRows.has(row)) {
+      row++;
+    }
+
+    return row;
   }
 
   private sortDayData = (data: DayData) => {
