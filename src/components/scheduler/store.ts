@@ -145,7 +145,16 @@ export class SchedulerStore {
     })
   }
 
+  private resetCourses() {
+    this.courses = [];
+    this.data = this.getEmptyData();
+  }
+
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
+    if (courses.length === 0) {
+      this.resetCourses();
+      return;
+    }
     const coursesData = courses.map(course => {
       const existingCourse = this.findExistingCourse(course.detail.id)
       if (existingCourse) {
@@ -160,7 +169,6 @@ export class SchedulerStore {
       return newCourse
     })
     this.courses = coursesData
-    if (!coursesData.length) return;
     this.data = this.combineData(coursesData.map(c => c.data))
   }
 
