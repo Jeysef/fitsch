@@ -35,6 +35,16 @@ export default {
       weeks: {
         [WEEK_PARITY.ODD]: "odd",
         [WEEK_PARITY.EVEN]: "even"
+      },
+      popover: {
+        time: "Time",
+        room: "Room",
+        capacity: "Capacity",
+        groups: "Groups",
+        weeks: "Weeks",
+        computed: "Computed",
+        info: "Information",
+        detail: "Detail",
       }
     }
   },

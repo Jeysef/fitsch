@@ -37,4 +37,8 @@ export class Time {
   static fromMinutes(minutes: number) {
     return new Time({ hour: Math.floor(minutes / 60), minute: minutes % 60 });
   }
+
+  get formatted() {
+    return `${this.hour.toString().padStart(2, '0')}:${this.minute.toString().padStart(2, '0')}`;
+  }
 }

@@ -34,6 +34,16 @@ export default {
       weeks: {
         [WEEK_PARITY.ODD]: "lichý",
         [WEEK_PARITY.EVEN]: "sudý"
+      },
+      popover: {
+        time: "Čas",
+        room: "Místnost",
+        capacity: "Kapacita",
+        groups: "Skupiny",
+        weeks: "Týdny",
+        computed: "Vypočteno",
+        info: "Informace",
+        detail: "Detail",
       }
     }
   },

@@ -1,8 +1,9 @@
 import Info from "lucide-solid/icons/info";
 import { batch, createMemo } from "solid-js";
+import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
-import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { WEEK_PARITY, type DAY } from "~/server/scraper/enums";
@@ -58,7 +59,12 @@ export default function ScheduleEvent(props: EventProps) {
       ondblclick={() => handleCheck()}
     >
       <div class="flex items-center w-full ">
-        <Button size={null} variant={null}><Info size={16} /></Button>
+        {/* <Popover>
+          <PopoverTrigger><Info size={16} /></PopoverTrigger>
+          <PopoverContent></PopoverContent>
+          <Button size={null} variant={null}><Info size={16} /></Button>
+        </Popover> */}
+        <EventPopup event={event} ><Info size={16} /></EventPopup>
         <Text variant="largeText" class="w-full truncate">{event.courseDetail.abbreviation}</Text>
         <Checkbox
           checked={props.event.checked}
