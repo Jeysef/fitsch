@@ -29,7 +29,7 @@ jobs:
           node-version: lts/*
 
       - name: Install step
-        run: "npm install --frozen-lockfile"
+        run: "npm install"
 
       - name: Build step
         run: "npm run build"
@@ -37,8 +37,8 @@ jobs:
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "fitsch"
-          entrypoint: ".output/server/index.mjs"
-          root: ""
+          project: "fitscheduler"
+          entrypoint: "server/index.mjs"
+          root: ".output"
           
           
