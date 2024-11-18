@@ -4,7 +4,8 @@ import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
 import LoaderCircle from "lucide-solid/icons/loader-circle";
-import { createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, createUniqueId, ErrorBoundary, For, on, Show, startTransition, Suspense, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { batch, createContext, createEffect, createMemo, createRenderEffect, createResource, createSignal, createUniqueId, ErrorBoundary, For, on, Show, startTransition, Suspense, useContext, type Accessor, type JSX, type ResourceReturn } from "solid-js";
+import { isServer } from "solid-js/web";
 import ErrorFallback from "~/components/menu/ErrorFallback";
 import { navigationSchema, type NavigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
@@ -153,6 +154,20 @@ export default function Wrapper() {
     createRenderEffect(on(getFetchableData, (data, _, firstEffect) => {
       if (firstEffect) return false
       void refetch(getDataToRefetch())
+      return false
+    }), true)
+
+    const clearCoursesDeps = () => ({
+      year: group.controls.year.value,
+      degree: group.controls.degree.value,
+    })
+    createRenderEffect(on(clearCoursesDeps, (_, __, firstEffect) => {
+      if (isServer) return true
+      if (firstEffect) return false
+      batch(() => {
+        group.controls.coursesCompulsory.setValue([])
+        group.controls.coursesVoluntary.setValue([])
+      })
       return false
     }), true)
 
@@ -413,13 +428,33 @@ function SemesterSelect() {
     >
       <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.semester.title")}</RadioGroup.Label>
       <For each={data()?.data.semesters}>
-        {(semester) => (
-          <RadioGroupItem value={semester} class="flex items-center gap-2">
-            <RadioGroupItemInput />
-            <RadioGroupItemControl as="button" type="button" />
-            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{t(`menu.semester.data.${semester}`)}</RadioGroupItemLabel>
-          </RadioGroupItem>
-        )}
+        {(semester) => {
+          const count = createMemo(() => {
+            return data()!.data.grades.reduce((acc, grade) => {
+              const courses = data()!.data.courses[grade.key][semester]
+              const compulsorySelected = courses.compulsory.filter(course => group.controls.coursesCompulsory.value.includes(course.id)).length
+              const optionalSelected = courses.voluntary.filter(course => group.controls.coursesVoluntary.value.includes(course.id)).length
+              return acc + compulsorySelected + optionalSelected
+            }, 0)
+          })
+
+          return (
+            <RadioGroupItem value={semester} class="flex items-center gap-2">
+              <RadioGroupItemInput />
+              <RadioGroupItemControl as="button" type="button" />
+              <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>{t(`menu.semester.data.${semester}`)}</RadioGroupItemLabel>
+              <Show when={group.controls.semester.value !== semester && count()} keyed>
+                {(count) => (
+                  <span
+                    class="inline-block whitespace-nowrap rounded-full bg-orange-400 px-2 py-1 text-center align-baseline text-xxs font-bold leading-none text-white">
+                    {count}
+                  </span>
+
+                )}
+              </Show>
+            </RadioGroupItem>
+          )
+        }}
       </For>
     </RadioGroup>
   )
