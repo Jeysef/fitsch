@@ -359,7 +359,7 @@ function GradeSelect() {
       validationState={group.controls.grade.errors ? "invalid" : "valid"}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.degree.title")}</RadioGroup.Label>
+      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })} >{t("menu.grade.title")}</RadioGroup.Label>
       <Suspense fallback={<LoaderFallback />}>
         <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
           <For each={data()!.data.grades}>
