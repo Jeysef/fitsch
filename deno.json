@@ -1,5 +1,0 @@
-{
-  "tasks": {
-    "start": "deno run -A .output/server/index.mjs"
-  }
-}
