@@ -42,6 +42,13 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
+import {
+  type IFormControl,
+  type IFormGroup,
+  type ValidatorFn,
+  createFormControl,
+  createFormGroup,
+} from "~/packages/solid-forms/";
 import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, SEMESTER } from "~/server/scraper/enums";
@@ -56,7 +63,6 @@ import type {
   StudyProgram,
   StudyProgramBase,
 } from "~/server/scraper/types";
-import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "~/solid-forms/";
 
 const GroupContext =
   createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>();

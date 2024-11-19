@@ -13,7 +13,7 @@ const Blockquote = <T extends ValidComponent = "blockquote">({
   variant = "blockquote",
   ...props
 }: PolymorphicProps<T, BlockquoteProps<T>>) => {
-  const [_, others] = splitProps(props as BlockquoteProps<any>, ["variant"]);
+  const [_, others] = splitProps(props as BlockquoteProps<ValidComponent>, ["variant"]);
   return <Typography variant={variant} {...others} />;
 };
 

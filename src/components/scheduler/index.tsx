@@ -149,7 +149,7 @@ function ColumnLines() {
   const store = useStore();
   return (
     <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed">
-      <For each={store.settings.columns}>{() => <div role="separator" />}</For>
+      <For each={store.settings.columns}>{() => <div />}</For>
     </div>
   );
 }

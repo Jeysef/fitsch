@@ -10,7 +10,7 @@ interface HeadingProps<T extends ValidComponent> extends TypographyProps<T> {
 }
 
 const Heading = <T extends ValidComponent>(props: PolymorphicProps<T, HeadingProps<T>>) => {
-  const [local, others] = splitProps(props as HeadingProps<any>, ["variant"]);
+  const [local, others] = splitProps(props as HeadingProps<ValidComponent>, ["variant"]);
   return <Typography variant={local.variant} {...others} />;
 };
 

@@ -63,6 +63,7 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
         )}
 
         <button
+          type="button"
           class="px-4 py-2 mt-4 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           onClick={() => props.reset()}
         >

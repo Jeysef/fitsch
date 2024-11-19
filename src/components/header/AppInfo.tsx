@@ -53,7 +53,7 @@ export default function AppInfo() {
                   <br />V kartě "Rozsahy" je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu.
                 </Text>
               </div>
-              <div></div>
+              <div />
             </div>
             <Alert variant="destructive">
               <TriangleAlert />

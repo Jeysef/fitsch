@@ -10,7 +10,7 @@ interface ListProps<T extends ValidComponent = "ul"> extends TypographyProps<T> 
 }
 
 const List = <T extends ValidComponent = "ul">({ variant = "ul", ...props }: PolymorphicProps<T, ListProps<T>>) => {
-  const [_, others] = splitProps(props as ListProps<any>, ["variant"]);
+  const [_, others] = splitProps(props as ListProps<ValidComponent>, ["variant"]);
   return <Typography variant={variant} {...others} />;
 };
 

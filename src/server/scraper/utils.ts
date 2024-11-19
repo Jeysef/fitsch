@@ -57,10 +57,9 @@ export function createStudyId(url: string): StudyId {
     // Convert the type to lowercase and remove any potential file extensions
     const cleanType = type.toLowerCase().replace(/\.[^/.]+$/, "");
     return `${cleanType}-${id}`;
-  } else {
-    console.error(`No match found for ${url}`);
-    return url;
   }
+  console.error(`No match found for ${url}`);
+  return url;
 }
 
 export function getWeekParityFromName(week: string, languageSet: Locales) {

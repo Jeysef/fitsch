@@ -77,7 +77,7 @@ function TimeSpanCourse(course: CourseData, selected: Record<LECTURE_TYPE, numbe
                     </Text>
                   </div>
                   <Text variant="smallText" class="text-inherit text-sm">
-                    {t(`scheduler.timeSpan.weekly`, { hours: weeklyLectures })}
+                    {t("scheduler.timeSpan.weekly", { hours: weeklyLectures })}
                   </Text>
                   <span class="text-sm font-medium">
                     <Show when={selected[type] !== weeklyLectures}>

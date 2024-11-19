@@ -13,7 +13,7 @@ const Code = <T extends ValidComponent = "code">({
   variant = "inlineCode",
   ...props
 }: PolymorphicProps<T, CodeProps<T>>) => {
-  const [_, others] = splitProps(props as CodeProps<any>, ["variant"]);
+  const [_, others] = splitProps(props as CodeProps<ValidComponent>, ["variant"]);
   return <Typography variant={variant} {...others} />;
 };
 

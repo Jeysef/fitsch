@@ -3,7 +3,6 @@ import { batch, createMemo } from "solid-js";
 import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { type DAY, WEEK_PARITY } from "~/server/scraper/enums";
@@ -36,7 +35,9 @@ export default function ScheduleEvent(props: EventProps) {
       if (event.linked) {
         for (const linked of event.strongLinked) {
           const event = getLinkedEvent(linked);
-          event && (event.event.checked = props.event.checked);
+          if (event) {
+            event.event.checked = props.event.checked;
+          }
         }
       }
     });

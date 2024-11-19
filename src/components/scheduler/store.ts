@@ -135,12 +135,16 @@ export class SchedulerStore {
   };
 
   private sortData = (data: Data) => {
-    ObjectTyped.entries(data).forEach(([day, dayData]) => (data[day] = this.sortDayData(dayData)));
+    for (const [day, dayData] of ObjectTyped.entries(data)) {
+      data[day] = this.sortDayData(dayData);
+    }
     return data;
   };
   private findExistingCourse(courseId: string) {
     const found = this.courses.find((course) => course.detail.id === courseId);
-    forEach(found?.data, (dayData) => dayData.events.forEach((event) => (event.row = 1)));
+    forEach(found?.data, (dayData) => {
+      for (const event of dayData.events) event.row = 1;
+    });
     return found;
   }
 
@@ -155,11 +159,11 @@ export class SchedulerStore {
       reduce(
         data,
         (acc, item) => {
-          ObjectTyped.entries(item).forEach(([day, dayData]) => {
-            acc[day] = {
+          forEach(item, (dayData, day) => {
+            acc[day as DAY] = {
               dayRow: dayData.dayRow,
               dayRows: 1,
-              events: [...(acc[day]?.events || []), ...dayData.events],
+              events: [...(acc[day as DAY]?.events || []), ...dayData.events],
             };
           });
           return acc;
@@ -217,11 +221,11 @@ export class SchedulerStore {
       return reduce(
         course.data,
         (selectedHours, dayData) => {
-          dayData.events
-            .filter((event) => event.event.checked)
-            .forEach(({ event: { type, timeSpan } }) => {
-              selectedHours[type] = (selectedHours[type] || 0) + timeSpan.hours;
-            });
+          for (const event of dayData.events) {
+            if (event.event.checked) {
+              selectedHours[event.event.type] = (selectedHours[event.event.type] || 0) + event.event.timeSpan.hours;
+            }
+          }
           return selectedHours;
         },
         {} as Record<LECTURE_TYPE, number>
