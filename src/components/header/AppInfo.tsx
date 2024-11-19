@@ -14,28 +14,35 @@ import { cn } from "~/lib/utils";
 export default function AppInfo() {
   return (
     <Dialog>
-      <DialogTrigger><Info size={32} color='white' /></DialogTrigger>
+      <DialogTrigger>
+        <Info size={32} color="white" />
+      </DialogTrigger>
       <DialogContent class="max-w-screen-lg w-11/12">
         <DialogHeader>
           <DialogTitle class={typographyVariants({ variant: "h2" })}>Info k aplikaci</DialogTitle>
-          <DialogDescription >
+          <DialogDescription>
             <div class="grid grid-cols-2">
               <div class="max-w-prose w-full">
                 <Heading variant="h3">Přehled</Heading>
                 <Text>
-                  Vlevo je menu, kde se vybírají předměty, ročníky, atd.
-                  Data s rozvrhem se načítají ze stránek FITu z karet předmětů, tyto termíny nemusí vždy sedět s realitou nebo studisem.
-                  Některé data jsou dopočítávány pro lepší přehlednost, např. týdny lekcí nebo parita.
+                  Vlevo je menu, kde se vybírají předměty, ročníky, atd. Data s rozvrhem se načítají ze stránek FITu z karet
+                  předmětů, tyto termíny nemusí vždy sedět s realitou nebo studisem. Některé data jsou dopočítávány pro
+                  lepší přehlednost, např. týdny lekcí nebo parita.
                 </Text>
                 <Heading variant="h3">Lekce</Heading>
                 <Text variant="largeText">Barevná konvence (podle mobilní aplikace)</Text>
                 <section>
-                  <Typography variant={"ul"} class='list-["\25AC"] mt-0'
-                  >
-                    <For each={ObjectTyped.entries(subjectTypeColors)} >
+                  <Typography variant={"ul"} class='list-["\25AC"] mt-0'>
+                    <For each={ObjectTyped.entries(subjectTypeColors)}>
                       {([type, color]) => {
-                        const colorClass = css`&::marker { color: ${color}; }`
-                        return <li class={cn("marker:font-medium marker:text-2xl marker:border marker:border-solid", colorClass)}>{type}</li>
+                        const colorClass = css`&::marker { color: ${color}; }`;
+                        return (
+                          <li
+                            class={cn("marker:font-medium marker:text-2xl marker:border marker:border-solid", colorClass)}
+                          >
+                            {type}
+                          </li>
+                        );
                       }}
                     </For>
                   </Typography>
@@ -43,13 +50,10 @@ export default function AppInfo() {
                 <Heading variant="h3">Funkčnost</Heading>
                 <Text>
                   Kliknutím na zaškrtávací políčko si předmět přidáte do výsedného rozvrhu.
-                  <br />
-                  V kartě "Rozsahy" je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu.
+                  <br />V kartě "Rozsahy" je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu.
                 </Text>
               </div>
-              <div>
-
-              </div>
+              <div></div>
             </div>
             <Alert variant="destructive">
               <TriangleAlert />
@@ -62,5 +66,5 @@ export default function AppInfo() {
         </DialogHeader>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

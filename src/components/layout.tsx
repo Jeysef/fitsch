@@ -5,12 +5,12 @@ import { cn } from "~/lib/utils";
 
 export default function Layout({ children }: { children: JSX.Element }) {
   return (
-    <div class={cn('h-dvh w-full flex flex-col')}>
+    <div class={cn("h-dvh w-full flex flex-col")}>
       <Header />
-      <div class='relative flex w-full h-[calc(100%-3rem)]'>
+      <div class="relative flex w-full h-[calc(100%-3rem)]">
         <Menu />
         {children}
       </div>
     </div>
-  )
+  );
 }

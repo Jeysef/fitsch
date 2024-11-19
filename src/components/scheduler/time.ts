@@ -1,6 +1,5 @@
 import type { ISchedulerTime } from "~/components/scheduler/types";
 
-
 export class TimeSpan {
   public start: Time;
   public end: Time;
@@ -39,6 +38,6 @@ export class Time {
   }
 
   get formatted() {
-    return `${this.hour.toString().padStart(2, '0')}:${this.minute.toString().padStart(2, '0')}`;
+    return `${this.hour.toString().padStart(2, "0")}:${this.minute.toString().padStart(2, "0")}`;
   }
 }

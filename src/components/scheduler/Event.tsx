@@ -6,7 +6,7 @@ import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
-import { WEEK_PARITY, type DAY } from "~/server/scraper/enums";
+import { type DAY, WEEK_PARITY } from "~/server/scraper/enums";
 import { ellipsis2line } from "./event.module.css";
 import type { Data, Event, ISchedulerSettings } from "./types";
 
@@ -15,19 +15,19 @@ interface EventProps {
   store: {
     settings: ISchedulerSettings;
     data: Data;
-  }
+  };
 }
 
 export default function ScheduleEvent(props: EventProps) {
-  const store = props.store
+  const store = props.store;
   const event = props.event;
   const color = subjectTypeColors[event.type];
   const getLinkedEvent = (linked: {
     id: string;
     day: DAY;
   }) => {
-    return store.data[linked.day].events.find((e) => e.event.id === linked.id)
-  }
+    return store.data[linked.day].events.find((e) => e.event.id === linked.id);
+  };
 
   const handleCheck = (checked?: boolean) => {
     batch(() => {
@@ -39,10 +39,10 @@ export default function ScheduleEvent(props: EventProps) {
           event && (event.event.checked = props.event.checked);
         }
       }
-    })
-  }
-  const isOdd = createMemo(() => event.weeks.parity === WEEK_PARITY.ODD)
-  const isEven = createMemo(() => event.weeks.parity === WEEK_PARITY.EVEN)
+    });
+  };
+  const isOdd = createMemo(() => event.weeks.parity === WEEK_PARITY.ODD);
+  const isEven = createMemo(() => event.weeks.parity === WEEK_PARITY.EVEN);
 
   return (
     <div
@@ -64,23 +64,32 @@ export default function ScheduleEvent(props: EventProps) {
           <PopoverContent></PopoverContent>
           <Button size={null} variant={null}><Info size={16} /></Button>
         </Popover> */}
-        <EventPopup event={event} ><Info size={16} /></EventPopup>
-        <Text variant="largeText" class="w-full truncate">{event.courseDetail.abbreviation}</Text>
-        <Checkbox
-          checked={props.event.checked}
-          onChange={handleCheck}
-        >
+        <EventPopup event={event}>
+          <Info size={16} />
+        </EventPopup>
+        <Text variant="largeText" class="w-full truncate">
+          {event.courseDetail.abbreviation}
+        </Text>
+        <Checkbox checked={props.event.checked} onChange={handleCheck}>
           <CheckboxControl />
         </Checkbox>
       </div>
       <div class="w-full *:w-full">
-        <Text variant="smallText" class="block">{event.room}</Text>
-        <Text variant="smallText" class="text-xxs block">​</Text>
-        <Text variant="smallText" class={cn(ellipsis2line, "text-xxs block")}>{formatWeeks(event.weeks.weeks)}</Text>
-        <Text variant="smallText" class="truncate block w-full">{event.info}</Text>
+        <Text variant="smallText" class="block">
+          {event.room}
+        </Text>
+        <Text variant="smallText" class="text-xxs block">
+          ​
+        </Text>
+        <Text variant="smallText" class={cn(ellipsis2line, "text-xxs block")}>
+          {formatWeeks(event.weeks.weeks)}
+        </Text>
+        <Text variant="smallText" class="truncate block w-full">
+          {event.info}
+        </Text>
       </div>
     </div>
-  )
+  );
 }
 
 function formatWeeks(weeks: string | number[]) {

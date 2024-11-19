@@ -6,32 +6,19 @@ import Info from "lucide-solid/icons/info";
 import Link from "lucide-solid/icons/link";
 import MapPin from "lucide-solid/icons/map-pin";
 import Users from "lucide-solid/icons/users";
-import { type JSX } from "solid-js";
+import type { JSX } from "solid-js";
 import type { Event } from "~/components/scheduler/types";
 import { Badge } from "~/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useI18n } from "~/i18n";
 
-const EventPopup = (props: { event: Event, children: JSX.Element }) => {
+const EventPopup = (props: { event: Event; children: JSX.Element }) => {
   const { t } = useI18n();
-  const {
-    courseDetail,
-    timeSpan,
-    room,
-    type,
-    capacity,
-    lectureGroup,
-    groups,
-    info,
-    note,
-    weeks,
-  } = props.event;
+  const { courseDetail, timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.event;
 
   return (
     <Popover>
-      <PopoverTrigger>
-        {props.children}
-      </PopoverTrigger>
+      <PopoverTrigger>{props.children}</PopoverTrigger>
       <PopoverContent class="w-80">
         {/* Header */}
         <div class="space-y-1 mb-4 mr-8">
@@ -39,9 +26,7 @@ const EventPopup = (props: { event: Event, children: JSX.Element }) => {
             <h3 class="text-xl font-semibold">{courseDetail.abbreviation}</h3>
             <Badge variant="outline">{t(`course.detail.type.${type}`)}</Badge>
           </div>
-          <p class="text-sm text-muted-foreground line-clamp-2">
-            {courseDetail.name}
-          </p>
+          <p class="text-sm text-muted-foreground line-clamp-2">{courseDetail.name}</p>
         </div>
 
         {/* Content */}
@@ -103,7 +88,7 @@ const EventPopup = (props: { event: Event, children: JSX.Element }) => {
             <div class="flex-1">
               <p class="text-sm font-medium">{t("course.detail.popover.weeks")}</p>
               <p class="text-sm text-muted-foreground">
-                {typeof weeks.weeks === 'string' ? weeks.weeks : weeks.weeks.join(', ')}
+                {typeof weeks.weeks === "string" ? weeks.weeks : weeks.weeks.join(", ")}
                 {weeks.parity && ` (${t(`course.detail.weeks.${weeks.parity}`)})`}
                 {weeks.calculated && ` (${t("course.detail.popover.computed")})`}
               </p>

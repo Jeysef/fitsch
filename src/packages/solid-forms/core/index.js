@@ -1,6 +1,6 @@
-import _isEqual from 'deep-equal';
-import { batch, createComputed, createMemo, createSignal, getOwner, on, runWithOwner } from 'solid-js';
-import { createStore, produce } from 'solid-js/store';
+import _isEqual from "deep-equal";
+import { batch, createComputed, createMemo, createSignal, getOwner, on, runWithOwner } from "solid-js";
+import { createStore, produce } from "solid-js/store";
 
 // *****************************
 // Misc Types
@@ -8,14 +8,14 @@ import { createStore, produce } from 'solid-js/store';
 // *****************************
 // AbstractControl interface
 // *****************************
-const AbstractControlInterface = '@@AbstractControlInterface_solidjs';
+const AbstractControlInterface = "@@AbstractControlInterface_solidjs";
 /** Returns true if the provided object implements `IAbstractControl` */
 
 function isAbstractControl(object) {
-  return typeof object === 'object' && object?.[AbstractControlInterface] === true;
+  return typeof object === "object" && object?.[AbstractControlInterface] === true;
 }
 
-const AbstractControlContainerInterface = '@@AbstractControlContainerInterface_solidjs';
+const AbstractControlContainerInterface = "@@AbstractControlContainerInterface_solidjs";
 /**
  * Returns true if the provided object implements
  * `IAbstractControlContainer`
@@ -55,29 +55,28 @@ function bindOwner(fn) {
   const owner = getOwner();
 
   if (!owner) {
-    throw new Error('No solidjs owner in current context');
+    throw new Error("No solidjs owner in current context");
   }
 
   return () => runWithOwner(owner, fn);
 }
 
-const DEFAULT_SOURCE = 'CONTROL_DEFAULT_SOURCE';
+const DEFAULT_SOURCE = "CONTROL_DEFAULT_SOURCE";
 function propInitializer() {
   const [initializationSignal, setInitializationSignal] = createSignal(null);
-  return [value => initializationSignal() || value, () => setInitializationSignal(false)];
+  return [(value) => initializationSignal() || value, () => setInitializationSignal(false)];
 }
 function composeValidators(validators) {
-  if (!validators || Array.isArray(validators) && validators.length === 0) {
+  if (!validators || (Array.isArray(validators) && validators.length === 0)) {
     return null;
   }
 
   if (Array.isArray(validators)) {
-    return control => validators.reduce((prev, curr) => {
-      const errors = curr(control);
-      return errors ? { ...prev,
-        ...errors
-      } : prev;
-    }, null);
+    return (control) =>
+      validators.reduce((prev, curr) => {
+        const errors = curr(control);
+        return errors ? { ...prev, ...errors } : prev;
+      }, null);
   }
 
   return validators;
@@ -92,8 +91,7 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
   let validatorMemo;
   const base = {
     id: initOptions.id || Symbol(`AbstractControl-${controlId++}`),
-    data: { ...initOptions.data
-    },
+    data: { ...initOptions.data },
     self: {
       get isValid() {
         // here "this" is self
@@ -117,7 +115,7 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
 
       errorsStore: new Map(),
       pendingStore: new Set(),
-      validatorStore: new Map()
+      validatorStore: new Map(),
     },
 
     get isDisabled() {
@@ -157,7 +155,7 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
     },
 
     get status() {
-      return statusMemo?.() ?? untilInit('VALID');
+      return statusMemo?.() ?? untilInit("VALID");
     },
 
     get validator() {
@@ -166,38 +164,38 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
 
     markDisabled(input) {
       if (isEqual(this.self.isDisabled, input)) return;
-      setControl('self', 'isDisabled', input);
+      setControl("self", "isDisabled", input);
     },
 
     markReadonly(input) {
       if (isEqual(this.self.isReadonly, input)) return;
-      setControl('self', 'isReadonly', input);
+      setControl("self", "isReadonly", input);
     },
 
     markRequired(input) {
       if (isEqual(this.self.isRequired, input)) return;
-      setControl('self', 'isRequired', input);
+      setControl("self", "isRequired", input);
     },
 
     markDirty(input) {
       if (isEqual(this.self.isDirty, input)) return;
-      setControl('self', 'isDirty', input);
+      setControl("self", "isDirty", input);
     },
 
     markTouched(input) {
       if (isEqual(this.self.isTouched, input)) return;
-      setControl('self', 'isTouched', input);
+      setControl("self", "isTouched", input);
     },
 
     markSubmitted(input) {
       if (isEqual(this.self.isSubmitted, input)) return;
-      setControl('self', 'isSubmitted', input);
+      setControl("self", "isSubmitted", input);
     },
 
     markPending(input, options) {
       let newPendingStore;
 
-      if (typeof input === 'boolean') {
+      if (typeof input === "boolean") {
         const source = options?.source || DEFAULT_SOURCE;
         if (this.self.pendingStore.has(source) === input) return;
         newPendingStore = new Set(this.self.pendingStore);
@@ -218,9 +216,11 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.self.pendingStore = newPendingStore;
-      }));
+      setControl(
+        produce((state) => {
+          state.self.pendingStore = newPendingStore;
+        })
+      );
     },
 
     setErrors(input, options) {
@@ -243,9 +243,11 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.self.errorsStore = newErrorsStore;
-      }));
+      setControl(
+        produce((state) => {
+          state.self.errorsStore = newErrorsStore;
+        })
+      );
     },
 
     patchErrors(input, options) {
@@ -257,9 +259,11 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
         // `setControl('self', 'pendingStore', newPendingStore)`). I think the
         // bugs are isolated to object values, so, at the moment, I'm only using
         // produce where the value is an object.
-        setControl(produce(state => {
-          state.self.errorsStore = new Map([...existingStore, ...input]);
-        }));
+        setControl(
+          produce((state) => {
+            state.self.errorsStore = new Map([...existingStore, ...input]);
+          })
+        );
       } else {
         if (Object.keys(input).length === 0) return;
         const source = options?.source || DEFAULT_SOURCE;
@@ -267,8 +271,7 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
         let existingValue = existingStore.get(source);
 
         if (existingValue) {
-          existingValue = { ...existingValue
-          };
+          existingValue = { ...existingValue };
 
           for (const [k, err] of Object.entries(newErrors)) {
             if (err === null) {
@@ -299,9 +302,11 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
         // bugs are isolated to object values, so, at the moment, I'm only using
         // produce where the value is an object.
 
-        setControl(produce(state => {
-          state.self.errorsStore = newErrorsStore;
-        }));
+        setControl(
+          produce((state) => {
+            state.self.errorsStore = newErrorsStore;
+          })
+        );
       }
     },
 
@@ -328,9 +333,11 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.self.validatorStore = newValidatorsStore;
-      }));
+      setControl(
+        produce((state) => {
+          state.self.validatorStore = newValidatorsStore;
+        })
+      );
     },
 
     setData(key, input) {
@@ -340,32 +347,31 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.data[key] = input;
-      }));
-    }
-
+      setControl(
+        produce((state) => {
+          state.data[key] = input;
+        })
+      );
+    },
   };
 
   const initializer = () => {
     [control, setControl] = store();
     selfIsPendingMemo = createMemo(() => control.self.pendingStore.size > 0);
     selfErrorsMemo = createMemo(() => {
-      return control.self.errorsStore.size === 0 ? null : Array.from(control.self.errorsStore.values()).reduce((p, errors) => ({ ...p,
-        ...errors
-      }), {});
+      return control.self.errorsStore.size === 0
+        ? null
+        : Array.from(control.self.errorsStore.values()).reduce((p, errors) => ({ ...p, ...errors }), {});
     });
     statusMemo = createMemo(() => {
-      return control.isDisabled ? 'DISABLED' : control.isPending ? 'PENDING' : control.isValid ? 'VALID' : 'INVALID';
+      return control.isDisabled ? "DISABLED" : control.isPending ? "PENDING" : control.isValid ? "VALID" : "INVALID";
     });
     validatorMemo = createMemo(() => {
       if (control.self.validatorStore.size === 0) return null;
       const validators = Array.from(control.self.validatorStore.values());
-      return c => {
+      return (c) => {
         const e = validators.reduce((err, v) => {
-          return { ...err,
-            ...v(c)
-          };
+          return { ...err, ...v(c) };
         }, {});
         return Object.keys(e).length === 0 ? null : e;
       };
@@ -373,32 +379,39 @@ function createAbstractControlBase(store, untilInit, initOptions = {}) {
     // mess with initializing a control with errors (i.e. it clears the errors
     // after the control is initialized)
 
-    createComputed(on(() => control.validator?.(control.rawValue) ?? null, errors => {
-      if (control.self.errorsStore.get(DEFAULT_SOURCE) === errors) return;
-      const newErrorsStore = new Map(control.self.errorsStore);
+    createComputed(
+      on(
+        () => control.validator?.(control.rawValue) ?? null,
+        (errors) => {
+          if (control.self.errorsStore.get(DEFAULT_SOURCE) === errors) return;
+          const newErrorsStore = new Map(control.self.errorsStore);
 
-      if (errors) {
-        newErrorsStore.set(DEFAULT_SOURCE, errors);
-      } else {
-        newErrorsStore.delete(DEFAULT_SOURCE);
-      }
+          if (errors) {
+            newErrorsStore.set(DEFAULT_SOURCE, errors);
+          } else {
+            newErrorsStore.delete(DEFAULT_SOURCE);
+          }
 
-      if (isEqual(control.self.errorsStore, newErrorsStore)) return; // We're using `produce()` here because using the standard solid Store
-      // nested setter has some bugs (i.e.
-      // `setControl('self', 'pendingStore', newPendingStore)`). I think the
-      // bugs are isolated to object values, so, at the moment, I'm only using
-      // produce where the value is an object.
+          if (isEqual(control.self.errorsStore, newErrorsStore)) return; // We're using `produce()` here because using the standard solid Store
+          // nested setter has some bugs (i.e.
+          // `setControl('self', 'pendingStore', newPendingStore)`). I think the
+          // bugs are isolated to object values, so, at the moment, I'm only using
+          // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.self.errorsStore = newErrorsStore;
-      }));
-    }));
+          setControl(
+            produce((state) => {
+              state.self.errorsStore = newErrorsStore;
+            })
+          );
+        }
+      )
+    );
   };
 
   return [base, initializer];
 }
 
-const FormControlInterface = '@@FormControlInterface_solidjs';
+const FormControlInterface = "@@FormControlInterface_solidjs";
 
 /**
  * Returns true if the provided object implements
@@ -428,11 +441,12 @@ function createFormControl(initValue, initOptions = {}) {
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value could be an object.
 
-      setControl(produce(state => {
-        state.rawValue = value;
-      }));
-    }
-
+      setControl(
+        produce((state) => {
+          state.rawValue = value;
+        })
+      );
+    },
   });
   [control, setControl] = createStore(storeConfig);
   initializeBase();
@@ -556,8 +570,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
       /** Will return true if *any* `enabled` direct child control is `submitted` */
       get isSubmitted() {
         return childIsSubmittedMemo?.() ?? untilInit(false);
-      }
-
+      },
     },
     children: {
       /** Will return true if *all* `enabled` direct child control's are `valid` */
@@ -607,7 +620,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markDirty(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markDirty(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -621,7 +634,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markDisabled(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markDisabled(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -635,7 +648,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markPending(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markPending(value, options);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -649,7 +662,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markReadonly(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markReadonly(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -663,7 +676,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markRequired(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markRequired(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -677,7 +690,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markSubmitted(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markSubmitted(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -691,7 +704,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
 
       markTouched(value, options) {
         batch(() => {
-          Object.values(control.controls).forEach(c => {
+          Object.values(control.controls).forEach((c) => {
             c.markTouched(value);
 
             if (!options?.deep || !isAbstractControlContainer(c)) {
@@ -701,8 +714,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
             c.children.markTouched(value, options);
           });
         });
-      }
-
+      },
     },
 
     setControls(controls) {
@@ -712,9 +724,11 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
       // bugs are isolated to object values, so, at the moment, I'm only using
       // produce where the value is an object.
 
-      setControl(produce(state => {
-        state.controls = controls;
-      }));
+      setControl(
+        produce((state) => {
+          state.controls = controls;
+        })
+      );
     },
 
     /**
@@ -773,72 +787,67 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
           }
         }
       });
-    }
-
+    },
   });
 
   const initializer = () => {
     [control, setControl] = store();
     initializeAbstractControl();
     const allControlsMemo = createMemo(() => Object.values(control.controls));
-    const nonDisabledControlsMemo = createMemo(() => allControlsMemo().filter(c => !c.isDisabled));
+    const nonDisabledControlsMemo = createMemo(() => allControlsMemo().filter((c) => !c.isDisabled));
     sizeMemo = createMemo(() => allControlsMemo().length);
-    childIsValidMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isValid));
-    childIsDisabledMemo = createMemo(() => allControlsMemo().some(c => c.isDisabled));
-    childIsReadonlyMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isReadonly));
-    childIsRequiredMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isRequired));
-    childIsPendingMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isPending));
-    childIsTouchedMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isTouched));
-    childIsDirtyMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isDirty));
-    childIsSubmittedMemo = createMemo(() => nonDisabledControlsMemo().some(c => c.isSubmitted));
-    childrenAreValidMemo = createMemo(() => nonDisabledControlsMemo().every(c => c.isValid));
+    childIsValidMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isValid));
+    childIsDisabledMemo = createMemo(() => allControlsMemo().some((c) => c.isDisabled));
+    childIsReadonlyMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isReadonly));
+    childIsRequiredMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isRequired));
+    childIsPendingMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isPending));
+    childIsTouchedMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isTouched));
+    childIsDirtyMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isDirty));
+    childIsSubmittedMemo = createMemo(() => nonDisabledControlsMemo().some((c) => c.isSubmitted));
+    childrenAreValidMemo = createMemo(() => nonDisabledControlsMemo().every((c) => c.isValid));
     childrenAreDisabledMemo = createMemo(() => {
       const controls = allControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isDisabled);
+      return controls.every((c) => c.isDisabled);
     });
     childrenAreReadonlyMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isReadonly);
+      return controls.every((c) => c.isReadonly);
     });
     childrenAreRequiredMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isRequired);
+      return controls.every((c) => c.isRequired);
     });
     childrenArePendingMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isPending);
+      return controls.every((c) => c.isPending);
     });
     childrenAreTouchedMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isTouched);
+      return controls.every((c) => c.isTouched);
     });
     childrenAreDirtyMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isDirty);
+      return controls.every((c) => c.isDirty);
     });
     childrenAreSubmittedMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       if (controls.length === 0) return false;
-      return controls.every(c => c.isSubmitted);
+      return controls.every((c) => c.isSubmitted);
     });
     errorsMemo = createMemo(() => {
       if (!control.self.errors && !control.children.errors) return null;
-      return { ...control.children.errors,
-        ...control.self.errors
-      };
+      return { ...control.children.errors, ...control.self.errors };
     });
     childrenErrorsMemo = createMemo(() => {
       const controls = nonDisabledControlsMemo();
       return controls.reduce((prev, curr) => {
-        return prev === null && curr.errors === null ? null : { ...prev,
-          ...curr.errors
-        };
+        return prev === null && curr.errors === null ? null : { ...prev, ...curr.errors };
       }, null);
     });
   };
@@ -846,7 +855,7 @@ function createAbstractControlContainerBase(store, untilInit, initOptions = {}) 
   return [containerBase, initializer];
 }
 
-const FormGroupInterface = '@@FormGroupInterface_solidjs';
+const FormGroupInterface = "@@FormGroupInterface_solidjs";
 
 /**
  * Returns true if the provided object implements
@@ -881,15 +890,16 @@ function createFormGroup(initControls = {}, initOptions = {}) {
         return;
       }
 
-      setControl(produce(state => {
-        if (newControl === null) {
-          delete state.controls[key];
-        } else {
-          state.controls[key] = newControl;
-        }
-      }));
-    }
-
+      setControl(
+        produce((state) => {
+          if (newControl === null) {
+            delete state.controls[key];
+          } else {
+            state.controls[key] = newControl;
+          }
+        })
+      );
+    },
   });
   [control, setControl] = createStore(storeConfig);
   initializeBase();
@@ -914,7 +924,7 @@ function createFormGroup(initControls = {}, initOptions = {}) {
   return control;
 }
 
-const FormArrayInterface = '@@FormArrayInterface_solidjs';
+const FormArrayInterface = "@@FormArrayInterface_solidjs";
 
 /**
  * Returns true if the provided object implements
@@ -949,25 +959,26 @@ function createFormArray(initControls = [], initOptions = {}) {
         return;
       }
 
-      setControl(produce(state => {
-        if (newControl === null) {
-          state.controls.splice(key, 1);
-        } else {
-          state.controls[key] = newControl;
-        }
-      }));
+      setControl(
+        produce((state) => {
+          if (newControl === null) {
+            state.controls.splice(key, 1);
+          } else {
+            state.controls[key] = newControl;
+          }
+        })
+      );
     },
 
     push(control) {
       this.setControl(this.controls.length, control);
-    }
-
+    },
   });
   [control, setControl] = createStore(storeConfig);
   initializeBase();
-  const enabledControlsMemo = createMemo(() => control.controls.filter(c => !c.isDisabled));
-  rawValueMemo = createMemo(() => control.controls.map(c => c.rawValue));
-  valueMemo = createMemo(() => enabledControlsMemo().map(c => c.value));
+  const enabledControlsMemo = createMemo(() => control.controls.filter((c) => !c.isDisabled));
+  rawValueMemo = createMemo(() => control.controls.map((c) => c.rawValue));
+  valueMemo = createMemo(() => enabledControlsMemo().map((c) => c.value));
   initComplete(); // Intentionally not using `batch()` since it appears to mess with
   // initializing a control with errors
 
@@ -985,5 +996,23 @@ function createFormArray(initControls = [], initOptions = {}) {
   return control;
 }
 
-export { AbstractControlContainerInterface, AbstractControlInterface, bindOwner, composeValidators, createAbstractControlBase, createAbstractControlContainerBase, createFormArray, createFormControl, createFormGroup, DEFAULT_SOURCE, FormArrayInterface, FormControlInterface, FormGroupInterface, isAbstractControl, isAbstractControlContainer, isFormArray, isFormControl, isFormGroup };
-
+export {
+  AbstractControlContainerInterface,
+  AbstractControlInterface,
+  bindOwner,
+  composeValidators,
+  createAbstractControlBase,
+  createAbstractControlContainerBase,
+  createFormArray,
+  createFormControl,
+  createFormGroup,
+  DEFAULT_SOURCE,
+  FormArrayInterface,
+  FormControlInterface,
+  FormGroupInterface,
+  isAbstractControl,
+  isAbstractControlContainer,
+  isFormArray,
+  isFormControl,
+  isFormGroup,
+};

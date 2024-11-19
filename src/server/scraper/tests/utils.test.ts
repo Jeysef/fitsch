@@ -1,10 +1,17 @@
-import { describe, expect, test } from 'vitest';
-import { LanguageProvider } from '~/server/scraper/languageProvider';
-import { conjunctConjunctableRooms, conjunctRooms, constructGradeLabel, createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { describe, expect, test } from "vitest";
+import { LanguageProvider } from "~/server/scraper/languageProvider";
+import {
+  conjunctConjunctableRooms,
+  conjunctRooms,
+  constructGradeLabel,
+  createStudyId,
+  parseWeek,
+  removeSpaces,
+} from "~/server/scraper/utils";
 import { LANGUAGE } from "../../../enums";
 import { WEEK_PARITY } from "../enums";
 
-describe('utils', () => {
+describe("utils", () => {
   test("should get conjuncted rooms", async () => {
     let roomsInput = ["E104", "E112", "D0206"];
     const courses = conjunctRooms(roomsInput);
@@ -21,26 +28,26 @@ describe('utils', () => {
     roomsInput = ["D0206", "D105"];
     const courses4 = conjunctRooms(roomsInput);
     expect(courses4).toBe("D105+6");
-  })
+  });
 
   test("should remove spaces", async () => {
     const text = "sdsd\n\n           ds";
     const result = removeSpaces(text);
     expect(result).toBe("sdsd ds");
-  })
+  });
 
   test("should construct grade label", async () => {
     const grade = "1";
     const programAbbreviation = "BIT";
     const result = constructGradeLabel(grade, programAbbreviation);
     expect(result).toBe("1BIT");
-  })
+  });
   test("should construct ALL grade label", async () => {
     const grade = "ALL";
     const programAbbreviation = "BIT";
     const result = constructGradeLabel(grade, programAbbreviation);
     expect(result).toBe("ALL-BIT");
-  })
+  });
   test.each([
     ["https://www.fit.vut.cz/study/program/9229/.cs", "program-9229"],
     ["https://www.fit.vut.cz/study/field/17280/.cs", "field-17280"],
@@ -48,7 +55,7 @@ describe('utils', () => {
   ])("should create study id", async (url, expected) => {
     const result = createStudyId(url);
     expect(result).toEqual(expected);
-  })
+  });
 
   // test.each([
   //   ["1., 2., 3., 4., 5., 6. výuky", [1, 2, 3, 4, 5, 6]],
@@ -73,36 +80,31 @@ describe('utils', () => {
   // })
   test("should get weeks", async () => {
     const weeksText = "1., 2., 3., 4., 5., 6. výuky";
-    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const startDate = new Date("2024-09-16T00:00:00.000Z");
     const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
     const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
     expect(result).toEqual({ weeks: [1, 2, 3, 4, 5, 6], parity: null });
-
-  })
+  });
 
   test("should get weeks with parity", async () => {
     const weeksText = "3., 5., 7., 9., 11., 13. of lectures";
-    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const startDate = new Date("2024-09-16T00:00:00.000Z");
     const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
     const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
     expect(result).toEqual({ weeks: [3, 5, 7, 9, 11, 13], parity: WEEK_PARITY.EVEN });
-
-  })
+  });
 
   test("should get weeks with name", async () => {
     const weeksText = "odd week";
-    const startDate = new Date('2024-09-16T00:00:00.000Z')
+    const startDate = new Date("2024-09-16T00:00:00.000Z");
     const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
     const result = parseWeek(weeksText, startDate, await languageProvider.languageSet);
     expect(result).toEqual({ weeks: "odd week", parity: WEEK_PARITY.ODD });
-  })
+  });
 
   test("should conjunct lectures", async () => {
-    let rooms = ["N103", "N104", "N105"];
-    let result = conjunctConjunctableRooms(rooms);
-    console.log("🚀 ~ file: utils.test.ts:102 ~ test ~ result:", result)
-
-
-  })
-
-})
+    const rooms = ["N103", "N104", "N105"];
+    const result = conjunctConjunctableRooms(rooms);
+    console.log("🚀 ~ file: utils.test.ts:102 ~ test ~ result:", result);
+  });
+});

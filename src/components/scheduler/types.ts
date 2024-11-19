@@ -3,7 +3,6 @@ import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { CourseDetail } from "~/server/scraper/types";
 
-
 export type Event = Omit<MCourseLecture, "start" | "end"> & {
   courseDetail: CourseDetail;
   timeSpan: TimeSpan;
@@ -39,14 +38,18 @@ export interface IScheduleColumn {
   duration: TimeSpan;
 }
 interface IScheduleDimensions {
-  width: {
-    min: string | "auto";
-    max: string | "auto";
-  } | string;
-  height: {
-    min: string | "auto";
-    max: string | "auto";
-  } | string;
+  width:
+    | {
+        min: string | "auto";
+        max: string | "auto";
+      }
+    | string;
+  height:
+    | {
+        min: string | "auto";
+        max: string | "auto";
+      }
+    | string;
 }
 
 export interface ISchedulerSettings {
@@ -63,7 +66,6 @@ export interface ICreateColumns {
   end: ISchedulerTime;
   getTimeHeader: (start: ISchedulerTime, end: ISchedulerTime) => string;
 }
-
 
 export interface LectureMetrics {
   weeks: number;

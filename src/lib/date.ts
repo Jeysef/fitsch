@@ -1,4 +1,3 @@
-
 /* For a given date, get the ISO week number
  *
  * Based on information at:
@@ -15,7 +14,7 @@
  *
  * e.g. 2014/12/29 is Monday in week  1 of 2015
  *      2012/1/1   is Sunday in week 52 of 2011
- * 
+ *
  * link: https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php/6117889#6117889
  */
 export function getWeekNumber(d: Date): number {
@@ -26,9 +25,9 @@ export function getWeekNumber(d: Date): number {
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
   // Get first day of year
   var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  // Calculate full weeks to nearest Thursday 
+  // Calculate full weeks to nearest Thursday
   // @ts-expect-error - this is a valid operation
-  var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
   // Return array of year and week number
   return weekNo;
 }

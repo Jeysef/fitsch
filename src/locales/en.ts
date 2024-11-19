@@ -6,7 +6,7 @@ export default {
     obligation: {
       compulsory: "C",
       compulsoryElective: "CE",
-      elective: "E"
+      elective: "E",
     },
     detail: {
       timeSpan: {
@@ -15,26 +15,26 @@ export default {
           [LECTURE_TYPE.LECTURE]: "lectur",
           [LECTURE_TYPE.LABORATORY]: "lab",
           [LECTURE_TYPE.EXERCISE]: "exercise",
-          [LECTURE_TYPE.SEMINAR]: "seminar"
-        }
+          [LECTURE_TYPE.SEMINAR]: "seminar",
+        },
       },
       day: {
         [DAY.MON]: "Mon",
         [DAY.TUE]: "Tue",
         [DAY.WED]: "Wed",
         [DAY.THU]: "Thu",
-        [DAY.FRI]: "Fri"
+        [DAY.FRI]: "Fri",
       },
       type: {
         [LECTURE_TYPE.LECTURE]: "lecture",
         [LECTURE_TYPE.LABORATORY]: "laboratory",
         [LECTURE_TYPE.EXERCISE]: "exercise",
         [LECTURE_TYPE.SEMINAR]: "seminar",
-        [LECTURE_TYPE.EXAM]: "exam"
+        [LECTURE_TYPE.EXAM]: "exam",
       },
       weeks: {
         [WEEK_PARITY.ODD]: "odd",
-        [WEEK_PARITY.EVEN]: "even"
+        [WEEK_PARITY.EVEN]: "even",
       },
       popover: {
         time: "Time",
@@ -45,44 +45,44 @@ export default {
         computed: "Computed",
         info: "Information",
         detail: "Detail",
-      }
-    }
+      },
+    },
   },
   studyPlan: {
     "Lessons in the winter semester": "Lessons in the winter semester",
-    "Lessons in the summer semester": "Lessons in the summer semester"
+    "Lessons in the summer semester": "Lessons in the summer semester",
   },
   menu: {
     year: {
-      title: "Year"
+      title: "Year",
     },
     semester: {
       title: "Semester",
       data: {
         [SEMESTER.WINTER]: "Winter",
-        [SEMESTER.SUMMER]: "Summer"
-      }
+        [SEMESTER.SUMMER]: "Summer",
+      },
     },
     degree: {
       title: "Degree",
       data: {
         [DEGREE.BACHELOR]: "Bachelor",
         [DEGREE.MASTER]: "Master",
-        [DEGREE.DOCTORAL]: "Doctoral"
-      }
+        [DEGREE.DOCTORAL]: "Doctoral",
+      },
     },
     program: {
       title: "Program",
     },
     grade: {
       title: "Grade",
-      selectToShow: "Select degree program to show"
+      selectToShow: "Select degree program to show",
     },
     courses: {
       title: "Courses",
       compulsaory: "Compulsory",
       voluntary: "Voluntary",
-      all: "All"
+      all: "All",
     },
     generate: "Generate",
     toast: {
@@ -90,24 +90,25 @@ export default {
         loading: "Loading data in new language",
         success: "Data was successfully loaded",
         error: "An error occurred while loading data",
-        description: "The language has been changed to {{ language }}, the lecture data will remain the same until they are regenerated."
+        description:
+          "The language has been changed to {{ language }}, the lecture data will remain the same until they are regenerated.",
       },
       generate: {
         loading: "Loading schedule",
         success: "Schedule was successfully loaded",
-        error: "An error occurred while loading schedule"
-      }
-    }
+        error: "An error occurred while loading schedule",
+      },
+    },
   },
   language: {
     cs: "Czech",
-    en: "English"
+    en: "English",
   },
   scheduler: {
     tabs: {
       workSchedule: "Work schedule",
       resultSchedule: "Result schedule",
-      timeSpan: "Time spans"
+      timeSpan: "Time spans",
     },
     timeSpan: {
       empty: "No course selected",
@@ -117,18 +118,18 @@ export default {
         [LECTURE_TYPE.LABORATORY]: "laboratory",
         [LECTURE_TYPE.EXERCISE]: "exercise",
         [LECTURE_TYPE.SEMINAR]: "seminar",
-        [LECTURE_TYPE.EXAM]: "exam"
+        [LECTURE_TYPE.EXAM]: "exam",
       },
       weekly: "{{ hours }} hours/week",
       weeks: "{{ weeks }} weeks",
-      selected: "selected {{ selected }}"
+      selected: "selected {{ selected }}",
     },
     days: {
       [DAY.MON]: "Mon",
       [DAY.TUE]: "Tue",
       [DAY.WED]: "Wed",
       [DAY.THU]: "Thu",
-      [DAY.FRI]: "Fri"
-    }
-  }
+      [DAY.FRI]: "Fri",
+    },
+  },
 } satisfies typeof Schema;

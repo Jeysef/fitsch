@@ -4,9 +4,8 @@ import type { APIEvent } from "@solidjs/start/server";
 
 export const GET = (event: APIEvent) => {
   if (event.request.headers.get("accept") !== "application/json") return;
-  return { notFound: "API" }
+  return { notFound: "API" };
 };
-
 
 export default function NotFound() {
   return (
@@ -16,7 +15,7 @@ export default function NotFound() {
       <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Not Found</h1>
       <p class="mt-8">
         Visit{" "}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
+        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline" rel="noreferrer">
           solidjs.com
         </a>{" "}
         to learn how to build Solid apps.

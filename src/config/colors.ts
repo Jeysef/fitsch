@@ -9,12 +9,11 @@ export const subjectTypeColors = {
   [LECTURE_TYPE.SEMINAR]: "#ccffff",
   [LECTURE_TYPE.LABORATORY]: "#ffe4b5",
   [LECTURE_TYPE.EXAM]: "#ff9999", // this one is guessed, on web it's: #ffe6cc
-
-}
+};
 
 export const hoverColors = {
   /** lectures with same lecture group */
   linked: "#94a3b8",
   /** lecture with same lecture group and type */
-  strongLinked: "#f97316"
-} as const
+  strongLinked: "#f97316",
+} as const;

@@ -1,9 +1,9 @@
 import type { Signal } from "solid-js";
-import { createStore, unwrap, reconcile } from "solid-js/store";
+import { createStore, reconcile, unwrap } from "solid-js/store";
 
 export function createDeepSignal<T>(value: T): Signal<T> {
   const [store, setStore] = createStore({
-    value
+    value,
   });
   return [
     () => store.value,
@@ -12,6 +12,6 @@ export function createDeepSignal<T>(value: T): Signal<T> {
       typeof v === "function" && (v = v(unwrapped));
       setStore("value", reconcile(v));
       return store.value;
-    }
+    },
   ] as Signal<T>;
 }

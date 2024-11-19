@@ -1,3 +1,3 @@
-import type jsonType from "./en"
+import type jsonType from "./en";
 
-export type Locales = typeof jsonType
+export type Locales = typeof jsonType;

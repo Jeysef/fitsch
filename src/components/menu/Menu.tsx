@@ -9,33 +9,41 @@ export const [openend, setOpened] = createSignal(true, { name: "menuOpened" });
 const [menuHidden, setMenuHidden] = createSignal(false, { name: "menuHidden" });
 
 /**
-   * This is a workaround for the transition to work properly.
-   * Not the best solution probably, but for low timeout, it works pretty reliably.
-   */
+ * This is a workaround for the transition to work properly.
+ * Not the best solution probably, but for low timeout, it works pretty reliably.
+ */
 export const toggleNavigation = (openend: boolean) => {
-  openend ?
-    setMenuHidden(false)
+  openend
+    ? setMenuHidden(false)
     : setTimeout(() => {
-      setMenuHidden(true);
-    }, 150);
+        setMenuHidden(true);
+      }, 150);
   setTimeout(() => {
-    setOpened(openend)
+    setOpened(openend);
   }, 5);
-
-
-}
+};
 
 export default function Menu() {
   return (
     <>
-      <Button variant="default" size="icon" aria-label="navigation opener" class={cn("absolute top-4 left-4 z-10", { "hidden": openend() })} onClick={() => toggleNavigation(true)}>
+      <Button
+        variant="default"
+        size="icon"
+        aria-label="navigation opener"
+        class={cn("absolute top-4 left-4 z-10", { hidden: openend() })}
+        onClick={() => toggleNavigation(true)}
+      >
         <MenuIcon />
       </Button>
 
-      <aside class={cn("flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 z-10", {
-        "-ml-64": !openend(),
-        "hidden": menuHidden(),
-      })}
+      <aside
+        class={cn(
+          "flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 z-10",
+          {
+            "-ml-64": !openend(),
+            hidden: menuHidden(),
+          }
+        )}
       >
         <Button
           variant="ghost"
@@ -46,7 +54,7 @@ export default function Menu() {
           <X />
         </Button>
         <Content />
-      </aside >
+      </aside>
     </>
-  )
+  );
 }

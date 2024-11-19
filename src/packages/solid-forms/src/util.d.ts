@@ -1,4 +1,4 @@
-import type { Merge } from 'type-fest';
+import type { Merge } from "type-fest";
 export declare function isEqual<T>(a: T, b: any): b is T;
 export declare function mergeObj<A, B>(a: A, b: Merge<Partial<A>, B>): Merge<A, B>;
 /**

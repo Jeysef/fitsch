@@ -11,11 +11,13 @@ export function LanguageSwitcher() {
     cs: "🇨🇿",
   };
 
-  const options = createMemo(() => locales.map((lang) => ({
-    value: lang,
-    label: t(`language.${lang}`),
-    flag: flags[lang],
-  })))
+  const options = createMemo(() =>
+    locales.map((lang) => ({
+      value: lang,
+      label: t(`language.${lang}`),
+      flag: flags[lang],
+    }))
+  );
 
   const value = createMemo(() => ({ value: locale(), label: t(`language.${locale()}`), flag: flags[locale()] }));
 
@@ -37,20 +39,18 @@ export function LanguageSwitcher() {
       )}
     >
       <SelectTrigger class="text-primary-foreground border-muted-foreground">
-        <SelectValue<Options>>
-          {({ selectedOption }) => (<SelectItemContent {...selectedOption()} />)}
-        </SelectValue>
+        <SelectValue<Options>>{({ selectedOption }) => <SelectItemContent {...selectedOption()} />}</SelectValue>
       </SelectTrigger>
       <SelectContent />
     </Select>
   );
 }
 
-function SelectItemContent(props: { label: string; flag: string; }) {
+function SelectItemContent(props: { label: string; flag: string }) {
   return (
     <div class="flex items-center gap-2">
       <span>{props.flag}</span>
       <span>{props.label}</span>
     </div>
-  )
+  );
 }

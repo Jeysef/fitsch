@@ -20,54 +20,60 @@ interface StudyProgram extends StudyProgramBase {
   specializations: StudySpecialization[];
   attendanceType: string;
 }
-interface StudySpecialization extends StudyProgramBase { }
+interface StudySpecialization extends StudyProgramBase {}
 
 type GradeKey = string | typeof gradeAll;
-interface StudyOverviewYear { value: string, label: string }
-interface StudyOverviewGrade { key: GradeKey, label: string }
+interface StudyOverviewYear {
+  value: string;
+  label: string;
+}
+interface StudyOverviewGrade {
+  key: GradeKey;
+  label: string;
+}
 /**
  * For documentation refer to readme
  */
 interface StudyOverview {
   /**
    * current data
-   * 
+   *
    * only values that when changed should cause refetch
-  */
+   */
   values: {
-    language: LANGUAGE,
-    year: StudyOverviewYear,
-    degree: DEGREE,
-    program?: StudyProgramBase,
+    language: LANGUAGE;
+    year: StudyOverviewYear;
+    degree: DEGREE;
+    program?: StudyProgramBase;
     // grade: is loaded
     // semester is loaded
     // coureses are loaded
     // lectures are not needed
-  },
+  };
   /**
    * Data coresponding to the chosen values
-  */
+   */
   data: {
-    years: StudyOverviewYear[],
-    degrees: DEGREE[],
-    programs: Record<DEGREE, StudyProgram[]>,
-    grades: StudyOverviewGrade[],
-    semesters: SEMESTER[],
+    years: StudyOverviewYear[];
+    degrees: DEGREE[];
+    programs: Record<DEGREE, StudyProgram[]>;
+    grades: StudyOverviewGrade[];
+    semesters: SEMESTER[];
     /**
      * All the couses for the whole degree and both semesters. "coz why not",
      * may be optimized out in the future
      * For now it's eazy to return them all for they are all at the same page.
      * makes it easy to switch between grades and semesters
-     * 
+     *
      * grade > semester > type > courses
      * because pages are structured like this
-    */
-    courses: Record<GradeKey, Record<SEMESTER, Record<StudyCourseObligation, StudyOverviewCourse[]>>>
-  }
+     */
+    courses: Record<GradeKey, Record<SEMESTER, Record<StudyCourseObligation, StudyOverviewCourse[]>>>;
+  };
 }
 
 type StudyCourseObligation = "compulsory" | "voluntary";
-interface StudyOverviewCourse extends StudyProgramBase { }
+interface StudyOverviewCourse extends StudyProgramBase {}
 interface StudyCourse extends StudyOverviewCourse {
   credits: string;
   /**
@@ -82,8 +88,8 @@ interface StudyCourse extends StudyOverviewCourse {
   faculty: string;
   note: boolean;
 }
-type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>
-type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>
+type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>;
+type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>;
 interface Time {
   hour: number;
   minute: number;
@@ -105,18 +111,20 @@ interface CourseLecture extends Omit<APICourseLecture, "room"> {
   room: string;
 }
 
-type LectureWeeks = ({
-  weeks: number[];
-  parity: WEEK_PARITY | null;
-} | {
-  weeks: string;
-  parity: WEEK_PARITY | null;
-}
+type LectureWeeks = (
+  | {
+      weeks: number[];
+      parity: WEEK_PARITY | null;
+    }
+  | {
+      weeks: string;
+      parity: WEEK_PARITY | null;
+    }
 ) & {
-  calculated?: boolean
-}
+  calculated?: boolean;
+};
 
-type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>
+type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>;
 
 interface CourseDetail {
   abbreviation: string;
@@ -131,14 +139,14 @@ export namespace StudyApiTypes {
   export interface getStudyTimeScheduleConfig {
     year: string | null;
   }
-  export type getStudyTimeScheduleReturn = Record<SEMESTER, { start: Date, end: Date }>
+  export type getStudyTimeScheduleReturn = Record<SEMESTER, { start: Date; end: Date }>;
 
   export interface getStudyProgramCoursesConfig {
     programUrl: string;
   }
   export interface getStudyProgramsConfig {
-    year?: StudyOverviewYear["value"]
-    degree?: DEGREE,
+    year?: StudyOverviewYear["value"];
+    degree?: DEGREE;
   }
   export interface getStudyProgramsReturn {
     programs: StudyPrograms;
@@ -163,9 +171,9 @@ export namespace DataProviderTypes {
     language: LANGUAGE;
     program?: StudyProgramBase["id"];
   }
-  export interface getStudyOverviewReturn extends StudyOverview { }
+  export interface getStudyOverviewReturn extends StudyOverview {}
 
-  export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig { }
+  export interface getStudyCourseDetailsConfig extends StudyApiTypes.getStudyCourseDetailsConfig {}
   export interface getStudyCourseDetailsReturn {
     detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"];
     data: APICourseLecture[];
@@ -173,13 +181,29 @@ export namespace DataProviderTypes {
 
   export interface getStudyCoursesDetailsConfig {
     language: LANGUAGE;
-    courses: Omit<StudyApiTypes.getStudyCourseDetailsConfig, "year" | "semester">[]
+    courses: Omit<StudyApiTypes.getStudyCourseDetailsConfig, "year" | "semester">[];
     year: StudyOverviewYear["value"];
     semester: SEMESTER;
   }
-  export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[]
+  export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[];
 }
 
-
-export type { APICourseLecture, CourseDetail, CourseLecture, GradeKey, ProgramStudyCourses, StudyCourse, StudyCourseObligation, StudyId, StudyOverview, StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgram, StudyProgramBase, StudyPrograms, StudySpecialization, Time };
-
+export type {
+  APICourseLecture,
+  CourseDetail,
+  CourseLecture,
+  GradeKey,
+  ProgramStudyCourses,
+  StudyCourse,
+  StudyCourseObligation,
+  StudyId,
+  StudyOverview,
+  StudyOverviewCourse,
+  StudyOverviewGrade,
+  StudyOverviewYear,
+  StudyProgram,
+  StudyProgramBase,
+  StudyPrograms,
+  StudySpecialization,
+  Time,
+};

@@ -1,18 +1,18 @@
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { createSignal, onCleanup, onMount } from "solid-js";
 
 export function useIsDocumentHidden() {
-  const [isDocumentHidden, setIsDocumentHidden] = createSignal(false)
+  const [isDocumentHidden, setIsDocumentHidden] = createSignal(false);
 
   onMount(() => {
     const callback = () => {
-      setIsDocumentHidden(document.hidden)
-    }
-    document.addEventListener('visibilitychange', callback)
+      setIsDocumentHidden(document.hidden);
+    };
+    document.addEventListener("visibilitychange", callback);
 
     onCleanup(() => {
-      window.removeEventListener('visibilitychange', callback)
-    })
-  })
+      window.removeEventListener("visibilitychange", callback);
+    });
+  });
 
-  return isDocumentHidden
+  return isDocumentHidden;
 }

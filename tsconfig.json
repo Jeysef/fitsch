@@ -10,17 +10,11 @@
     "allowJs": true,
     "noEmit": true,
     "strict": true,
-    "types": [
-      "vinxi/types/client",
-      "vitest/globals",
-      "@testing-library/jest-dom"
-    ],
+    "types": ["vinxi/types/client", "vitest/globals", "@testing-library/jest-dom"],
     "isolatedModules": true,
     "baseUrl": "./",
     "paths": {
-      "~/*": [
-        "./src/*"
-      ]
+      "~/*": ["./src/*"]
     }
   }
 }

@@ -5,7 +5,7 @@ export default {
     obligation: {
       compulsory: "P",
       compulsoryElective: "PV",
-      elective: "V"
+      elective: "V",
     },
     detail: {
       timeSpan: {
@@ -14,26 +14,26 @@ export default {
           [LECTURE_TYPE.LECTURE]: "přednášk",
           [LECTURE_TYPE.LABORATORY]: "lab",
           [LECTURE_TYPE.EXERCISE]: "cvičení",
-          [LECTURE_TYPE.SEMINAR]: "seminář"
-        }
+          [LECTURE_TYPE.SEMINAR]: "seminář",
+        },
       },
       day: {
         [DAY.MON]: "Po",
         [DAY.TUE]: "Út",
         [DAY.WED]: "St",
         [DAY.THU]: "Čt",
-        [DAY.FRI]: "Pá"
+        [DAY.FRI]: "Pá",
       },
       type: {
         [LECTURE_TYPE.LECTURE]: "přednáška",
         [LECTURE_TYPE.LABORATORY]: "laboratoř",
         [LECTURE_TYPE.EXERCISE]: "cvičení",
         [LECTURE_TYPE.SEMINAR]: "seminář",
-        [LECTURE_TYPE.EXAM]: "zkouška"
+        [LECTURE_TYPE.EXAM]: "zkouška",
       },
       weeks: {
         [WEEK_PARITY.ODD]: "lichý",
-        [WEEK_PARITY.EVEN]: "sudý"
+        [WEEK_PARITY.EVEN]: "sudý",
       },
       popover: {
         time: "Čas",
@@ -44,44 +44,44 @@ export default {
         computed: "Vypočteno",
         info: "Informace",
         detail: "Detail",
-      }
-    }
+      },
+    },
   },
   studyPlan: {
     "Lessons in the winter semester": "Výuka v zimním semestru",
-    "Lessons in the summer semester": "Výuka v letním semestru"
+    "Lessons in the summer semester": "Výuka v letním semestru",
   },
   menu: {
     year: {
-      title: "Rok"
+      title: "Rok",
     },
     semester: {
       title: "Semestr",
       data: {
         [SEMESTER.WINTER]: "Zimní",
-        [SEMESTER.SUMMER]: "Letní"
-      }
+        [SEMESTER.SUMMER]: "Letní",
+      },
     },
     degree: {
       title: "Titul",
       data: {
         [DEGREE.BACHELOR]: "Bakalář",
         [DEGREE.MASTER]: "Magistr",
-        [DEGREE.DOCTORAL]: "Doktor"
-      }
+        [DEGREE.DOCTORAL]: "Doktor",
+      },
     },
     program: {
       title: "Studijní program",
     },
     grade: {
       title: "Ročník studia",
-      selectToShow: "vyberte studijní program pro zobrazení"
+      selectToShow: "vyberte studijní program pro zobrazení",
     },
     courses: {
       title: "Předměty",
       compulsaory: "Povinné",
       voluntary: "Volitelné",
-      all: "Všechny"
+      all: "Všechny",
     },
     generate: "Generovat",
     toast: {
@@ -89,24 +89,24 @@ export default {
         loading: "Načítám data v novém jazyce",
         success: "Data byla úspěšně načtena",
         error: "Nastala chyba při načítání dat",
-        description: "Jazyk byl změněn na {{ language }}, data vyučování zůstnou stejná dokud nebudou znova generována."
+        description: "Jazyk byl změněn na {{ language }}, data vyučování zůstnou stejná dokud nebudou znova generována.",
       },
       generate: {
         loading: "Načítám rozvrh",
         success: "Rozvrh byl úspěšně načten",
-        error: "Nastala chyba při načítání rozvrhu"
-      }
-    }
+        error: "Nastala chyba při načítání rozvrhu",
+      },
+    },
   },
   language: {
     cs: "Čeština",
-    en: "Angličtina"
+    en: "Angličtina",
   },
   scheduler: {
     tabs: {
       workSchedule: "Pracovní rozvrh",
       resultSchedule: "Výsledný rozvrh",
-      timeSpan: "Rozsahy"
+      timeSpan: "Rozsahy",
     },
     timeSpan: {
       empty: "Není zvolen žádný předmět",
@@ -116,7 +116,7 @@ export default {
         [LECTURE_TYPE.LABORATORY]: "laboratoře",
         [LECTURE_TYPE.EXERCISE]: "cvičení",
         [LECTURE_TYPE.SEMINAR]: "semináře",
-        [LECTURE_TYPE.EXAM]: "zkoušky"
+        [LECTURE_TYPE.EXAM]: "zkoušky",
       },
       weekly: "{{ hours }} hod. týdně",
       weeks: "{{ weeks }} týdnů",
@@ -127,11 +127,10 @@ export default {
       [DAY.TUE]: "Út",
       [DAY.WED]: "St",
       [DAY.THU]: "Čt",
-      [DAY.FRI]: "Pá"
-    }
-  }
+      [DAY.FRI]: "Pá",
+    },
+  },
 };
-
 
 /*
 studyPlan

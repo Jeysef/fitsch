@@ -1,5 +1,5 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const {hoverColors} = require('./src/config/colors');
+const defaultTheme = require("tailwindcss/defaultTheme");
+const { hoverColors } = require("./src/config/colors");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -16,8 +16,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['Geist Sans', ...defaultTheme.fontFamily.sans],
-        mono: ['Courier Prime', ...defaultTheme.fontFamily.mono],
+        sans: ["Geist Sans", ...defaultTheme.fontFamily.sans],
+        mono: ["Courier Prime", ...defaultTheme.fontFamily.mono],
       },
       fontSize: {
         xxs: "0.625rem",
@@ -83,7 +83,7 @@ module.exports = {
         },
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" }
+          "20%,50%": { opacity: "0" },
         },
         "progress-indeterminate": {
           from: { translate: "-90%" },
