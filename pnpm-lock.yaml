@@ -39,14 +39,14 @@ importers:
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.3)
       '@solidjs/router':
-        specifier: ^0.14.10
-        version: 0.14.10(solid-js@1.9.3)
+        specifier: ^0.15.1
+        version: 0.15.1(solid-js@1.9.3)
       '@solidjs/start':
         specifier: ^1.0.10
         version: 1.0.10(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vinxi@0.4.3(@types/node@22.9.1)(ioredis@5.4.1)(terser@5.36.0)(typescript@5.6.3))(vite@5.4.11(@types/node@22.9.1)(terser@5.36.0))
       '@solidjs/testing-library':
         specifier: ^0.8.10
-        version: 0.8.10(@solidjs/router@0.14.10(solid-js@1.9.3))(solid-js@1.9.3)
+        version: 0.8.10(@solidjs/router@0.15.1(solid-js@1.9.3))(solid-js@1.9.3)
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.6.3
@@ -1233,8 +1233,8 @@ packages:
     peerDependencies:
       solid-js: '>=1.8.4'
 
-  '@solidjs/router@0.14.10':
-    resolution: {integrity: sha512-5B8LVgvvXijfXyXWPVLUm7RQ05BhjIpAyRkYVDZtrR3OaSvftXobWc6qSEwk4ICLoGi/IE9CUp2LUdCBIs9AXg==}
+  '@solidjs/router@0.15.1':
+    resolution: {integrity: sha512-lb5BRBqQqii/1dQCglx2K68xLkgu7QcrcajWKuuEx6FHTsK/hp5IgVhjy6RzPMLj+SFyrrRi/ldirCFNxtzh0Q==}
     peerDependencies:
       solid-js: ^1.8.6
 
@@ -4734,7 +4734,7 @@ snapshots:
     dependencies:
       solid-js: 1.9.3
 
-  '@solidjs/router@0.14.10(solid-js@1.9.3)':
+  '@solidjs/router@0.15.1(solid-js@1.9.3)':
     dependencies:
       solid-js: 1.9.3
 
@@ -4761,12 +4761,12 @@ snapshots:
       - vinxi
       - vite
 
-  '@solidjs/testing-library@0.8.10(@solidjs/router@0.14.10(solid-js@1.9.3))(solid-js@1.9.3)':
+  '@solidjs/testing-library@0.8.10(@solidjs/router@0.15.1(solid-js@1.9.3))(solid-js@1.9.3)':
     dependencies:
       '@testing-library/dom': 10.4.0
       solid-js: 1.9.3
     optionalDependencies:
-      '@solidjs/router': 0.14.10(solid-js@1.9.3)
+      '@solidjs/router': 0.15.1(solid-js@1.9.3)
 
   '@swc/helpers@0.5.15':
     dependencies:
