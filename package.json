@@ -7,6 +7,7 @@
     "start": "vinxi start",
     "lint": "biome lint",
     "format": "biome format",
+    "lint&format": "biome check",
     "test": "vitest run",
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
