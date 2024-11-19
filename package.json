@@ -53,6 +53,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/deep-equal": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
     "ts-essentials": "^10.0.3",
