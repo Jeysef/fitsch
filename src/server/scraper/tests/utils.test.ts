@@ -105,6 +105,6 @@ describe("utils", () => {
   test("should conjunct lectures", async () => {
     const rooms = ["N103", "N104", "N105"];
     const result = conjunctConjunctableRooms(rooms);
-    console.log("🚀 ~ file: utils.test.ts:102 ~ test ~ result:", result);
+    expect(result).toBe("N103+4,5");
   });
 });

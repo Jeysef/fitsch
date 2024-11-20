@@ -102,33 +102,6 @@ export function getWeekFromSemesterStart(date: Date, startDate: Date) {
   return getWeekDiff(date, startDate) + 1;
 }
 
-// /**
-//  *
-//  * @param date
-//  * @param startDate
-//  * @returns number of weeks from the start date of the semester or null if the date is before the start date
-//  */
-// function getSemesterWeekFromDate(date: Date, startDate: Record<SEMESTER, Date>) {
-//   const getSemesterDate = () => {
-//     const winterStartDate = startDate[SEMESTER.WINTER];
-//     const summerStartDate = startDate[SEMESTER.SUMMER];
-//     if (date < winterStartDate) {
-//       return null; // Event is before both semesters
-//     } else if (date < summerStartDate) {
-//       return winterStartDate;
-//     } else {
-//       return summerStartDate;
-//     }
-
-//   }
-//   const semesterDate = getSemesterDate();
-//   if (!semesterDate) return null;
-//   return getWeekFromSemesterStart(date, semesterDate);
-// }
-
-function getSchoolWeekAsSemesterWeek(week: number, startDate: Record<SEMESTER, Date>) {}
-// ex: semester starts on 2024-09-16, school week 1 is 4 week of month
-
 export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
   // [1,3,5,7] > check if the week is odd or even > check against the start of the semester > return odd or even or weeks
   const odd = weeks.every((week) => week % 2 === 1);
@@ -155,19 +128,3 @@ export const conjunctConjunctableRooms = (roomsInput: string[]): string => {
     : mainRoom.main;
   return conjunctedRoomsData;
 };
-
-// https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
-export function uniq_fast<T extends string | number = string | number>(a: T[]): T[] {
-  const seen: Record<string | number, boolean> = {};
-  const out: T[] = [];
-  const len = a.length;
-  let j = 0;
-  for (let i = 0; i < len; i++) {
-    const key = a[i];
-    if (!seen[key]) {
-      seen[key] = true;
-      out[j++] = key;
-    }
-  }
-  return out;
-}

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 // import { fromURL } from 'cheerio';
 import { load } from "cheerio";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -24,7 +24,6 @@ const loadWebsite = (url: string) => {
     }
     if (url.includes("course")) {
       const id = url.split("course/")[1].split("/")[0];
-      console.log("🚀 ~ file: api.test.ts:24 ~ getUrl ~ id:", id);
       return `/htmls/course-${id}.html`;
     }
     return;
@@ -46,16 +45,19 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
   });
 
   test(`should be correct language for ${lang} lang`, async () => {
-    const language = await studyApi["languageProvider"].language;
+    // @ts-expect-error private property
+    const language = studyApi.languageProvider.language;
     expect(language).toBe(lang);
   });
   test(`should fetch the ${lang} language set`, async () => {
-    const languageSet = await studyApi["getLanguageSet"]();
+    // @ts-expect-error private property
+    const languageSet = await studyApi.getLanguageSet();
     expect(languageSet).toEqual(await languageProvider.languageSet);
   });
 
   test("should fetch the document", async () => {
-    const document = await studyApi["fetchDocument"]("programs");
+    // @ts-expect-error private property
+    const document = await studyApi.fetchDocument("programs");
     expect(document).toBeDefined();
     expect(document.html()).toContain(
       '<select id="year" name="year" class="select js-select" onchange="this.form.submit()">'
@@ -349,8 +351,14 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
   test.each(["2024", "2023", "2022"])(`should get calendar ${lang}`, async (year) => {
     const schedule = await studyApi.getTimeSchedule({ year });
     const expected = {
-      [SEMESTER.WINTER]: new Date("2024-09-16"),
-      [SEMESTER.SUMMER]: new Date("2025-02-10"),
+      [SEMESTER.WINTER]: {
+        start: new Date("2024-09-16T00:00:00.000Z"),
+        end: new Date("2024-12-13T00:00:00.000Z"),
+      },
+      [SEMESTER.SUMMER]: {
+        start: new Date("2025-02-10T00:00:00.000Z"),
+        end: new Date("2025-05-09T00:00:00.000Z"),
+      },
     };
     expect(fetcher).toBeCalledWith(`https://www.fit.vut.cz/study/calendar/${year}/.${lang}`);
     expect(schedule).toEqual(expected);
@@ -372,19 +380,17 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
     // real url is https://www.fit.vut.cz/study/field/16809/.en but for mocking purposes we use the program url
     const courses = await studyApi.getStudyProgramCourses({ programUrl: "https://www.fit.vut.cz/study/program/16809/.cs" });
     expect(Object.keys(courses).length).toBe(3);
-    expect(courses["ALL"]).toBeDefined();
-    expect(courses["ALL"]?.WINTER.length).toBe(51);
+    expect(courses.ALL).toBeDefined();
+    expect(courses.ALL.WINTER.length).toBe(51);
   });
 
   test("should get course details", async () => {
     const courses = await studyApi.getStudyCourseDetails({ courseId: "281030", semester: SEMESTER.WINTER, year: "2024" });
-    console.log("🚀 ~ file: api.test.ts:402 ~ test ~ courses:", courses);
     // TODO: add test when the interface is defined
   });
 
   test("should get time schedule", async () => {
     const schedule = await studyApi.getTimeSchedule();
     expect(schedule).toBeDefined();
-    console.log("🚀 ~ file: api.test.ts:358 ~ test ~ schedule:", schedule);
   });
 });

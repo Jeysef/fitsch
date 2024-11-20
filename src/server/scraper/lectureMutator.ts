@@ -1,4 +1,5 @@
 import deepEqual from "deep-equal";
+import { uniq } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from "uuid";
 import { getWeekOfMonth } from "~/lib/date";
@@ -12,7 +13,7 @@ import type {
   StudyOverviewYear,
   Time,
 } from "~/server/scraper/types";
-import { conjunctConjunctableRooms, getWeekFromSemesterStart, uniq_fast } from "~/server/scraper/utils";
+import { conjunctConjunctableRooms, getWeekFromSemesterStart } from "~/server/scraper/utils";
 
 export interface LinkedLectureData {
   id: string;
@@ -223,13 +224,13 @@ export class LectureMutator {
           // add weeks
           // add capacity
           const lect = lecture as unknown as MCourseLecture;
-          lect.room = conjunctConjunctableRooms(uniq_fast(preConjunctedLecturesValues.flatMap((lect) => lect.room)));
+          lect.room = conjunctConjunctableRooms(uniq(preConjunctedLecturesValues.flatMap((lect) => lect.room)));
           lect.info = preConjunctedLecturesValues.map((lect) => lect.info).join(", ");
           lect.note = preConjunctedLecturesValues
             .map((lect) => lect.note)
             .filter(Boolean)
             .join(", ");
-          const conjunctedWeeks = uniq_fast(
+          const conjunctedWeeks = uniq(
             preConjunctedLecturesValues.flatMap((lect) => lect.weeks.weeks as number[]).sort((a, b) => a - b)
           );
           lect.weeks = {
