@@ -60,15 +60,10 @@ export default function ScheduleEvent(props: EventProps) {
       ondblclick={() => handleCheck()}
     >
       <div class="flex items-center w-full ">
-        {/* <Popover>
-          <PopoverTrigger><Info size={16} /></PopoverTrigger>
-          <PopoverContent></PopoverContent>
-          <Button size={null} variant={null}><Info size={16} /></Button>
-        </Popover> */}
         <EventPopup event={event}>
           <Info size={16} />
         </EventPopup>
-        <Text variant="largeText" class="w-full truncate">
+        <Text variant="largeText" class="w-full truncate text-base md:text-lg">
           {event.courseDetail.abbreviation}
         </Text>
         <Checkbox checked={props.event.checked} onChange={handleCheck}>
@@ -79,7 +74,7 @@ export default function ScheduleEvent(props: EventProps) {
         <Text variant="smallText" class="block">
           {event.room}
         </Text>
-        <Text variant="smallText" class="text-xxs block">
+        <Text variant="smallText" class="text-xxs hidden md:block">
           ​
         </Text>
         <Text variant="smallText" class={cn(ellipsis2line, "text-xxs block")}>
