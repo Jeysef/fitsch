@@ -1,2 +1,5 @@
-export const __esModule: true;
-export const ellipsis2Line: string;
+declare const styles: {
+  readonly "ellipsis2Line": string;
+};
+export = styles;
+

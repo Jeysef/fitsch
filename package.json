@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
-    "typed-css-modules": "tcm --namedExports --pattern \"src/!(packages)/**/*.css\n "
+    "typed-css-modules": "tcm --camelCase --pattern \"src/!(packages)/**/*.css\n "
   },
   "dependencies": {
     "@emotion/css": "^11.13.4",
