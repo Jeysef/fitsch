@@ -132,4 +132,7 @@ export default {
       [DAY.FRI]: "Fri",
     },
   },
+  error: {
+    tryAgain: "Try again",
+  },
 } satisfies typeof Schema;

@@ -130,6 +130,9 @@ export default {
       [DAY.FRI]: "Pá",
     },
   },
+  error: {
+    tryAgain: "Zkusit znova",
+  },
 };
 
 /*

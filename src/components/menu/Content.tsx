@@ -3,7 +3,6 @@ import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
-import LoaderCircle from "lucide-solid/icons/loader-circle";
 import {
   type Accessor,
   ErrorBoundary,
@@ -32,6 +31,7 @@ import Heading from "~/components/typography/heading";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
+import Loader from "~/components/ui/loader";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -103,15 +103,15 @@ export default function Wrapper() {
         fallback={(error, reset) => (
           <ErrorFallback
             error={error}
-            reset={() => {
-              resource[1].refetch();
+            reset={async () => {
+              await resource[1].refetch();
               reset();
             }}
             data={resource[0]}
           />
         )}
       >
-        <Suspense fallback={<LoaderFallback />}>
+        <Suspense fallback={<Loader />}>
           <Content resource={resource} />
         </Suspense>
       </ErrorBoundary>
@@ -506,7 +506,7 @@ function GradeSelect() {
       <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>
         {t("menu.grade.title")}
       </RadioGroup.Label>
-      <Suspense fallback={<LoaderFallback />}>
+      <Suspense fallback={<Loader />}>
         <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
           <For each={data()!.data.grades}>
             {(grade) => {
@@ -711,13 +711,5 @@ function CoursesSelect() {
         </Show>
       </section>
     </Show>
-  );
-}
-
-function LoaderFallback() {
-  return (
-    <div class="grid place-items-center h-full">
-      <LoaderCircle class="animate-spin" />
-    </div>
   );
 }

@@ -1,15 +1,20 @@
-import type { Component } from "solid-js";
+import { createSignal, Show, type Component } from "solid-js";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
+import Loader from "~/components/ui/loader";
+import { useI18n } from "~/i18n";
+import { cn } from "~/lib/utils";
 
 interface NetworkError {
+  errno: number;
   code: string;
   syscall: string;
   hostname: string;
 }
 
 interface ErrorBoundaryFallbackProps {
-  error: any;
-  reset: () => void;
+  error: NetworkError | any;
+  reset: () => Promise<void>;
   data?: any;
 }
 
@@ -41,10 +46,12 @@ const getErrorMessage = (error: any): string => {
 };
 
 const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
+  const { t } = useI18n();
   const errorMessage = getErrorMessage(props.error);
   const isNetworkError =
     props.error.code === "ENOTFOUND" || props.error.code === "ECONNREFUSED" || props.error.code === "ETIMEDOUT";
 
+  const [loading, setLoading] = createSignal(false);
   return (
     <Alert variant="destructive" class="w-full">
       <AlertTitle class="text-lg font-semibold mb-2">{isNetworkError ? "Connection Error" : "Error"}</AlertTitle>
@@ -61,14 +68,27 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
             )}
           </details>
         )}
-
-        <button
-          type="button"
-          class="px-4 py-2 mt-4 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          onClick={() => props.reset()}
+        <Button
+          variant="destructive"
+          disabled={loading()}
+          onClick={async () => {
+            setLoading(true);
+            await props.reset();
+            setLoading(false);
+          }}
         >
-          Try Again
-        </button>
+          <Show
+            when={!loading()}
+            fallback={
+              <Loader
+                class={cn("w-full", "before:content-[var(--tryAgainContent)] before:opacity-0 before:invisible before:h-0")}
+                style={{ "--tryAgainContent": `"${t("error.tryAgain")}"` }}
+              />
+            }
+          >
+            {t("error.tryAgain")}
+          </Show>
+        </Button>
       </AlertDescription>
     </Alert>
   );
