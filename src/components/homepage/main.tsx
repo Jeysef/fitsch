@@ -129,17 +129,20 @@ export default function Home() {
     >
       {/* not the best solution, coz it shrinks it from the right side too */}
       <TabsList
-        class={cn("gap-x-4 h-14 w-auto  bg-background flex-shrink-0 overflow-auto justify-start", {
-          "left-32 max-w-[calc(100%-8rem)] -translate-x-32": !openend(),
+        class={cn("h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto justify-start z-0", {
+          "-ml-16 max-w-[calc(100%+64px)]": openend(),
         })}
       >
-        <For each={ObjectTyped.entries(tabs)}>
-          {([key, value]) => (
-            <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
-              {t(`scheduler.tabs.${key}`)}
-            </TabsTrigger>
-          )}
-        </For>
+        <div class="w-14 -left-2 h-full box-content bg-background shrink-0 z-20 sticky" />
+        <div class="flex gap-x-4 h-full items-center">
+          <For each={ObjectTyped.entries(tabs)}>
+            {([key, value]) => (
+              <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
+                {t(`scheduler.tabs.${key}`)}
+              </TabsTrigger>
+            )}
+          </For>
+        </div>
         <TabsIndicator variant="underline" data-lang={locale()} />
         {/* data-lang for rerendering */}
       </TabsList>
