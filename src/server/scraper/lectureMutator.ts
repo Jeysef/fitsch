@@ -81,7 +81,7 @@ export class LectureMutator {
       if (!lecture.lecturesCount || !otherLecture.lecturesCount) return false;
       const combinedLecturesCount =
         (lecture.lecturesCount * otherLecture.lecturesCount) / (lecture.lecturesCount + otherLecture.lecturesCount);
-      return Math.round(combinedLecturesCount) == semesterWeeks;
+      return Math.round(combinedLecturesCount) === semesterWeeks;
     };
     const getLinkedData = (lectures: MCourseLecture[]) => {
       return lectures.map((lecture) => ({ id: lecture.id, day: lecture.day }));
@@ -89,29 +89,29 @@ export class LectureMutator {
     const linkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
       const linkedIds = getLinkedData(linked);
       lecture.linked = lecture.linked ?? [];
-      linkedIds.forEach((linkedId) => {
+      for (const linkedId of linkedIds) {
         if (!lecture.linked.some((linked) => linked.id === linkedId.id)) {
           lecture.linked.push(linkedId);
         }
-      });
-      linked.forEach((linkedLecture) => {
+      }
+      for (const linkedLecture of linked) {
         linkedLecture.linked = [{ id: lecture.id, day: lecture.day }];
         linkedLecture.linked.push(...getLinkedData(linked.filter((linkedId) => linkedId.id !== linkedLecture.id)));
-      });
+      }
     };
     const strongLinkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
       const linkedIds = getLinkedData(linked);
       lecture.strongLinked = lecture.strongLinked ?? [];
       lecture.strongLinked = lecture.strongLinked ?? [];
-      linkedIds.forEach((linkedId) => {
-        if (!lecture.strongLinked.some((strongLinked) => strongLinked.id === linkedId.id)) {
+      for (const linkedId of linkedIds) {
+        if (!lecture.strongLinked.some((linked) => linked.id === linkedId.id)) {
           lecture.strongLinked.push(linkedId);
         }
-      });
-      linked.forEach((linkedLecture) => {
+      }
+      for (const linkedLecture of linked) {
         linkedLecture.strongLinked = [{ id: lecture.id, day: lecture.day }];
         linkedLecture.strongLinked.push(...getLinkedData(linked.filter((linkedId) => linkedId.id !== linkedLecture.id)));
-      });
+      }
     };
     const convertToMCourseLecture = (lecture: APICourseLecture): MCourseLecture => {
       // @ts-expect-error the rooms will be changed elsewhere
@@ -123,14 +123,14 @@ export class LectureMutator {
     };
     type FilledLecture = APICourseLecture & { id: string; lecturesCount: number | false };
 
-    this.courses.forEach((course) => {
+    for (const course of this.courses) {
       // ID LECTURE
-      course.data.forEach((lecture) =>
+      for (const lecture of course.data) {
         Object.assign(lecture, {
           id: this.idLecture(lecture),
           lecturesCount: this.getLectureLectures(lecture, course.detail),
-        })
-      );
+        });
+      }
       // FILTER
       course.data = (course.data as FilledLecture[]).filter(this.filterPredicate);
       // FILL WEEKS
@@ -244,10 +244,9 @@ export class LectureMutator {
             : preConjunctedLecturesValues.map((lect) => lect.capacity).join(", ");
 
           // remove next lectures
-          ObjectTyped.keys(preConjunctedLectures)
-            .slice(1)
-            .reverse()
-            .forEach((i) => course.data.splice(i, 1));
+          for (const i of ObjectTyped.keys(preConjunctedLectures).slice(1).reverse()) {
+            course.data.splice(i, 1);
+          }
         }
       });
       // LINK
@@ -269,7 +268,7 @@ export class LectureMutator {
         linkThrough(lect, linkedLectures);
         strongLinkThrough(lect, strongLinkedLectures);
       });
-    });
+    }
     return this.courses as unknown as MgetStudyCourseDetailsReturn[];
   }
 

@@ -1,5 +1,4 @@
 declare const styles: {
-  readonly "ellipsis2Line": string;
+  readonly ellipsis2Line: string;
 };
 export = styles;
-

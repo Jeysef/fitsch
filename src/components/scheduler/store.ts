@@ -201,7 +201,7 @@ export class SchedulerStore {
         const dataCopy = this.cloneData(data);
         return { data: dataCopy, detail, metrics };
       }
-      const newCourse = Course.fillData(this.getEmptyData(), course, this.settings, this.eventFilter);
+      const newCourse = fillData(this.getEmptyData(), course, this.settings, this.eventFilter);
       return newCourse;
     });
     this.courses = coursesData;
@@ -261,45 +261,46 @@ export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan):
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
 
-class Course {
-  static fillData(
-    toFillData: Data,
-    courseData: MgetStudyCourseDetailsReturn,
-    settings: ISchedulerSettings,
-    filter?: (event: MCourseLecture) => boolean
-  ) {
-    const { data, detail: courseDetail } = courseData;
-    const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
-    const getMetrics = (type: LECTURE_TYPE) => metrics[type] || (metrics[type] = { weeks: 0, weeklyLectures: 0 });
+function fillData(
+  toFillData: Data,
+  courseData: MgetStudyCourseDetailsReturn,
+  settings: ISchedulerSettings,
+  filter?: (event: MCourseLecture) => boolean
+) {
+  const { data, detail: courseDetail } = courseData;
+  const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
+  const getMetrics = (type: LECTURE_TYPE) => {
+    if (!metrics[type]) metrics[type] = { weeks: 0, weeklyLectures: 0 };
+    return metrics[type];
+  };
 
-    data.forEach((event) => {
-      if (filter && !filter(event)) return;
-      const timeSpan = new TimeSpan(new Time(event.start), new Time(event.end));
-      // TODO: strip unnecessary data
-      const filledEvent: Event = {
-        ...event,
-        courseDetail,
-        timeSpan,
-        checked: false,
-      };
-      // timespan data ----------------
-      const linkedDuration = event.strongLinked.reduce((acc, linked) => {
-        const linkedLecture = data.find((l) => l.id === linked.id);
-        if (!linkedLecture) return acc;
-        const timeSpan = new TimeSpan(new Time(linkedLecture.start), new Time(linkedLecture.end));
-        return acc + timeSpan.minutes;
-      }, timeSpan.minutes);
-      const metric = getMetrics(event.type);
-      metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
-      metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
-      // ------------------------------
-
-      toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent });
-    });
-    return {
-      detail: courseDetail,
-      data: toFillData,
-      metrics,
+  for (const event of data) {
+    if (filter && !filter(event)) continue;
+    const timeSpan = new TimeSpan(new Time(event.start), new Time(event.end));
+    const filledEvent: Event = {
+      ...event,
+      courseDetail,
+      timeSpan,
+      checked: false,
     };
+
+    const linkedDuration = event.strongLinked.reduce((acc, linked) => {
+      const linkedLecture = data.find((l) => l.id === linked.id);
+      if (!linkedLecture) return acc;
+      const timeSpan = new TimeSpan(new Time(linkedLecture.start), new Time(linkedLecture.end));
+      return acc + timeSpan.minutes;
+    }, timeSpan.minutes);
+
+    const metric = getMetrics(event.type);
+    metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
+    metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
+
+    toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent });
   }
+
+  return {
+    detail: courseDetail,
+    data: toFillData,
+    metrics,
+  };
 }

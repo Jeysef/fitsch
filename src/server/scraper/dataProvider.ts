@@ -50,7 +50,7 @@ export class DataProvider {
       ...program.specializations,
     ]);
     // selected program
-    values["program"] =
+    values.program =
       ((config?.program &&
         programAndSpecializations.find((programOrSpecialization) => programOrSpecialization.id === config.program)) ??
       programAndSpecializations.length === 1)
@@ -83,18 +83,14 @@ export class DataProvider {
                 (semester) =>
                   [
                     semester,
-                    gradeData![semester].reduce(
+                    gradeData[semester].reduce(
                       (acc, course) => {
                         const { name, abbreviation, id, url } = course;
-                        return {
-                          ...acc,
-                          [course.obligation ? "compulsory" : "voluntary"]: [
-                            ...acc[course.obligation ? "compulsory" : "voluntary"],
-                            { name, abbreviation, id, url } satisfies StudyOverviewCourse,
-                          ],
-                        };
+                        const key = course.obligation ? "compulsory" : "voluntary";
+                        acc[key].push({ name, abbreviation, id, url } satisfies StudyOverviewCourse);
+                        return acc;
                       },
-                      { compulsory: [], voluntary: [] } satisfies Record<"compulsory" | "voluntary", StudyOverviewCourse[]>
+                      { compulsory: [], voluntary: [] } as Record<"compulsory" | "voluntary", StudyOverviewCourse[]>
                     ),
                   ] as const
               )
