@@ -130,8 +130,8 @@ export class StudyApi {
               const titleEl = $(element).find(".b-branch .b-branch__title");
               const abbreviation = titleEl.children(".tag.tag--fit").first().text().trim();
               const name = titleEl.children("a").text().trim();
-              const url = titleEl.children("a").attr("href");
-              const id = createStudyId(url!);
+              const url = titleEl.children("a").attr("href")!;
+              const id = createStudyId(url);
 
               if (abbreviation && name && url) {
                 specialization.push({ abbreviation, name, url, id });
