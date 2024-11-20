@@ -22,7 +22,7 @@ export default function TimeSpan(props: TimeSpanProps) {
     </Text>
   );
   return (
-    <div class="w-full max-w-4xl space-y-6">
+    <div class="w-full max-w-4xl space-y-6 px-4">
       <For each={props.store.courses} fallback={fallback}>
         {(course, index) => TimeSpanCourse(course, props.store.selected[index()])}
       </For>
