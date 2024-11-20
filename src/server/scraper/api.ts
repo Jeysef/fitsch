@@ -140,8 +140,8 @@ export class StudyApi {
 
           const nameElement = $(element).find(".b-programme a.b-programme__link");
           const name = nameElement.text().trim();
-          const url = nameElement.attr("href");
-          const id = createStudyId(url!);
+          const url = nameElement.attr("href")!;
+          const id = createStudyId(url);
           const isEnglish = $(element).find("span").is('[class="tag tag--xs"]');
           const abbreviation = $(element).find(".b-programme__link").next(".tag").first().text().trim();
           const attendanceType = $(element).find(".b-programme .b-branch__meta .b-branch__meta-item").last().text().trim();
