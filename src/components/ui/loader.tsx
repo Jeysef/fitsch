@@ -1,6 +1,6 @@
 import LoaderCircle from "lucide-solid/icons/loader-circle";
 
-import { splitProps, type ComponentProps } from "solid-js";
+import { type ComponentProps, splitProps } from "solid-js";
 
 export default function Loader(props: ComponentProps<"div">) {
   const [local, rest] = splitProps(props, ["class"]);
