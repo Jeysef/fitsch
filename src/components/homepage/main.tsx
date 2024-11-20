@@ -146,21 +146,21 @@ export default function Home() {
       <TabsContent
         value={tabs.workSchedule}
         as="main"
-        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4"
+        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background"
       >
         <Scheduler store={store} />
       </TabsContent>
       <TabsContent
         value={tabs.resultSchedule}
         as="main"
-        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4"
+        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background"
       >
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent
         value={tabs.timeSpan}
         as="main"
-        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background px-4 pb-4"
+        class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
         <TimeSpanPage store={filteredStore} />
       </TabsContent>
