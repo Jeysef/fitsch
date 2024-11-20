@@ -6,7 +6,7 @@ import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { type DAY, WEEK_PARITY } from "~/server/scraper/enums";
-import { ellipsis2line } from "./event.module.css";
+import { ellipsis2Line } from "./event.module.css";
 import type { Data, Event, ISchedulerSettings } from "./types";
 
 interface EventProps {
@@ -82,7 +82,7 @@ export default function ScheduleEvent(props: EventProps) {
         <Text variant="smallText" class="text-xxs block">
           ​
         </Text>
-        <Text variant="smallText" class={cn(ellipsis2line, "text-xxs block")}>
+        <Text variant="smallText" class={cn(ellipsis2Line, "text-xxs block")}>
           {formatWeeks(event.weeks.weeks)}
         </Text>
         <Text variant="smallText" class="truncate block w-full">
