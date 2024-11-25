@@ -32,6 +32,8 @@
     --input: from theme("colors.zinc.200") h s l;
     --ring: from theme("colors.zinc.950") h s l;
 
+    --link: 210 100% 40%;
+
     --radius: 0.5rem;
   }
 

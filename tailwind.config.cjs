@@ -58,6 +58,7 @@ module.exports = {
         },
         linked: hoverColors.linked,
         strongLinked: hoverColors.strongLinked,
+        link: "hsl(var(--link))",
       },
       borderRadius: {
         lg: "var(--radius)",
