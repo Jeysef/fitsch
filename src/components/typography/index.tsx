@@ -64,6 +64,6 @@ Typography.displayName = "Typography";
 
 type TypographyVariantsType = VariantProps<typeof typographyVariants>;
 
-export type ExtractTypographyVariantType<Union extends Partial<TypographyVariantsType["variant"]>> = Union;
+export type ExtractTypographyVariantType<Union extends Partial<TypographyVariantsType["variant"]>> = Union | null;
 
 export { Typography, typographyVariants };
