@@ -49,13 +49,14 @@ export class DataProvider {
       program,
       ...program.specializations,
     ]);
-    // selected program
-    values.program =
-      ((config?.program &&
-        programAndSpecializations.find((programOrSpecialization) => programOrSpecialization.id === config.program)) ??
-      programAndSpecializations.length === 1)
-        ? programAndSpecializations[0]
-        : undefined;
+    if (config?.program) {
+      values.program = programAndSpecializations.find(
+        (programOrSpecialization) => programOrSpecialization.id === config.program
+      );
+    }
+    if (!values.program && programAndSpecializations.length === 1) {
+      values.program = programAndSpecializations[0];
+    }
     // all programs foe each degree
     const programs: Record<DEGREE, StudyProgram[]> = ObjectTyped.fromEntries(
       ObjectTyped.entries(studyPrograms).map(
