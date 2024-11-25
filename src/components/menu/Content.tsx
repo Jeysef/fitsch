@@ -3,6 +3,7 @@ import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
+import Link from "lucide-solid/icons/link";
 import {
   type Accessor,
   ErrorBoundary,
@@ -425,7 +426,14 @@ function ProgramSelect() {
         <TooltipTrigger as={RadioGroupItemLabel} class={typographyVariants({ class: "!mt-0 text-sm cursor-pointer" })}>
           {program.abbreviation}
         </TooltipTrigger>
-        <TooltipContent class="bg-secondary text-secondary-foreground">{program.name}</TooltipContent>
+        <TooltipContent class="bg-secondary text-secondary-foreground space-x-1 flex items-center">
+          <Text variant={null} class="text-secondary-foreground">
+            {program.name}
+          </Text>
+          <a href={program.url} target="_blank" rel="noopener noreferrer" class="text-link">
+            <Link class="w-4 h-4" />
+          </a>
+        </TooltipContent>
       </Tooltip>
     );
   };
@@ -639,7 +647,14 @@ function CoursesSelect() {
         >
           {course.abbreviation}
         </TooltipTrigger>
-        <TooltipContent class="bg-secondary text-secondary-foreground">{course.name}</TooltipContent>
+        <TooltipContent class="bg-secondary space-x-1 flex items-center">
+          <Text variant={null} class="text-secondary-foreground">
+            {course.name}
+          </Text>
+          <a href={course.url} target="_blank" rel="noopener noreferrer" class="text-link">
+            <Link class="w-4 h-4" />
+          </a>
+        </TooltipContent>
       </Tooltip>
     );
   };
