@@ -48,7 +48,7 @@ export default function Menu() {
         <Button
           variant="ghost"
           size={null}
-          class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+          class="sticky right-0 top-0 -mt-6 w-max self-end rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
           onClick={() => toggleNavigation(false)}
         >
           <X />
