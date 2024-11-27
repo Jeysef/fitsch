@@ -133,6 +133,56 @@ export default {
   error: {
     tryAgain: "Zkusit znova",
   },
+  info: {
+    appInfo: {
+      title: "Info k aplikaci",
+      overview: {
+        title: "Přehled",
+        description:
+          "Vlevo je menu, kde se vybírají předměty, ročníky, atd. Data s rozvrahem se načítají ze stránek FITu z karet předmětů, tyto termíny nemusí vždy sedět s realitou nebo studisem. Některé data jsou doplňovány pro lepší přehlednost, např. týdny lekci nebo parita. (to lze najít v infu k lekci)",
+      },
+      schedule: {
+        title: "Lekce",
+        colors: "",
+        lectures: "",
+      },
+    },
+    fitInfo: {
+      title: "FIT info",
+      description: "Pro prváky.",
+      content: {
+        schedule: {
+          title: "Rozvrh",
+          description:
+            "Jak už jste si asi všimli, tak na vejšce fungujou rozvrhy trochu jinak než na střední. Není žádnej jednotnej rozvrh pro každej ročník. Ale každý student si rozvrh sestavuje sám podle předmětů, které má zapsané a jak má čas.",
+        },
+        tuition: {
+          title: "Výuka",
+          description:
+            "Výuka se skládá v základu z přednášek, democvičení a cvičení. Přednášky se konají v přednáškovnách, to jsou ty velké místnosti. Většinou v jedné velké hlavní (D105, E112), kam se ale šici nevejdou, proto jsou tu pro každou hlavní další dvě menší, kde se přednáška streamuje (D0207 a D0206, E104 a E105). Proto je např. v rozvrhu napsáno, že je přednáška v D105, D0206 a D0207. Jedna nebo obě z těch měnších se nemusí vždy oteřít, otevírá se podle počtu lidí co příjde. Přednáška trvá 2 nebo 3 hodiny.",
+        },
+        groups: {
+          title: "Skupiny",
+          description:
+            "Jelikož se celý ročník nevejde na jednu přednášku (ani s přídavnejma menšíma přednáškovnama), tak je ročník rozdělen na 2 skupiny (1BIA a 1BIB) a každá má svou přednášku v týdnu. Proto je v týdnu přednáška od jednoho předmětu například 2x. A na vás je jakou si vyberete a jak to nakombinujete s ostatníma přednáškama, cvičeníma, pauzou na oběd a aby nevznikly kolize. To jaká je kdo skupina neřešte.",
+        },
+        timeSpan: {
+          title: "Rozsahy",
+          description:
+            "Každý předmět má svůj rozsah přednášek. Semestr má 13 týdnů takže pokud má předmět rozsah přednášek 39 hodin, tak 39 / 13 = 3 hodiny přednášky za týden. Buď jsou přednášky tříhodinové bloky nebo 2 hodiny někdy a hodina jindy.",
+        },
+        demoLectures: {
+          title: "Democvičení",
+          description:
+            "Democvičení je vylepšená přednáška kde přednášející ukazuje IRL vyučovanou látku např. počítá příklady (k tabuli se tady nechodí).",
+        },
+        exercises: {
+          title: "Cvičení",
+          description: `Cvičení se odehrávají v učebnách po cca 20 - 50 lidech. Na PC nebo v laboratořích atd. podle předmětu. Kolik jich má být za týden lze zjistit opět z rozsahu tak že se sečte "všechno ostatní" (většinou aby to bylo prostě dělitelný 13, je to tak různě nafixlovaný aby to sedělo papírově) a vydělí 13. Termíny cvičení jsou vypsané na stránkách předmětu ale je nutné si ho pak ve wisu zaregistrovat. Když vám to nevyjde musíte si rozvrh překopat. Cvičení většinou bývaj 2 hodiny týdně. Někdy to co je na stránkách předmětu vůbec nesouhlasí s wisem, ale... wis má vždycky pravdu.`,
+        },
+      },
+    },
+  },
 };
 
 /*

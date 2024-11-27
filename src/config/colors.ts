@@ -19,6 +19,6 @@ export const hoverColors = {
 } as const;
 
 export const parityColors = {
-  [WEEK_PARITY.EVEN]: "##ef4444",
-  [WEEK_PARITY.ODD]: "##3b82f6",
+  [WEEK_PARITY.EVEN]: "#ef4444",
+  [WEEK_PARITY.ODD]: "#3b82f6",
 } as const;
