@@ -50,8 +50,8 @@ export default function ScheduleEvent(props: EventProps) {
         "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         {
-          "border-red-500 border-dashed border-2": isEven(),
-          "border-blue-500 border-dashed border-2": isOdd(),
+          "border-parityEven border-dashed border-2": isEven(),
+          "border-parityOdd border-dashed border-2": isOdd(),
         }
       )}
       data-id={event.id}

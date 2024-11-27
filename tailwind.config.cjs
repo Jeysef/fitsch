@@ -1,5 +1,5 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
-const { hoverColors } = require("./src/config/colors");
+const { hoverColors, parityColors } = require("./src/config/colors");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -59,6 +59,8 @@ module.exports = {
         linked: hoverColors.linked,
         strongLinked: hoverColors.strongLinked,
         link: "hsl(var(--link))",
+        parityEven: parityColors.EVEN,
+        parityOdd: parityColors.ODD,
       },
       borderRadius: {
         lg: "var(--radius)",

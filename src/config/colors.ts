@@ -1,4 +1,4 @@
-import { LECTURE_TYPE } from "../server/scraper/enums";
+import { LECTURE_TYPE, WEEK_PARITY } from "../server/scraper/enums";
 
 /**
  * These colors are taken from the official VUT mobile app
@@ -16,4 +16,9 @@ export const hoverColors = {
   linked: "#94a3b8",
   /** lecture with same lecture group and type */
   strongLinked: "#f97316",
+} as const;
+
+export const parityColors = {
+  [WEEK_PARITY.EVEN]: "##ef4444",
+  [WEEK_PARITY.ODD]: "##3b82f6",
 } as const;
