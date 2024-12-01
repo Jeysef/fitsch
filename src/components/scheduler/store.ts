@@ -39,7 +39,7 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
 /** for recreating columns from localStorage */
 export function recreateColumns(columns: IScheduleColumn[]) {
   return columns.map((column) => ({
-    ...column,
+    title: column.title,
     duration: new TimeSpan(new Time(column.duration.start), new Time(column.duration.end)),
   }));
 }
@@ -235,12 +235,17 @@ export class SchedulerStore {
 }
 
 export function getEventColumn(event: TimeSpan, columns: TimeSpan[]) {
-  const colStart = columns.findIndex(
+  let colStart = columns.findIndex(
     (column) => column.start.minutes <= event.start.minutes && column.end.minutes > event.start.minutes
   );
-  const colEnd = columns.findIndex(
+  let colEnd = columns.findIndex(
     (column) => column.start.minutes < event.end.minutes && column.end.minutes >= event.end.minutes
   );
+  if (colStart === -1 || colEnd === -1) {
+    console.warn("Event is not in any column range", { colStart, colEnd }, event);
+    if (colStart === -1) colStart = 0;
+    if (colEnd === -1) colEnd = columns.length - 1;
+  }
   return { colStart, colEnd };
 }
 
@@ -252,12 +257,9 @@ export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan):
     timeSpan,
     columns.map((column) => column.duration)
   );
-  const paddingStart =
-    (new TimeSpan(columns[colStart].duration.start, timeSpan.start).minutes * 100) /
-    columnDuration(columns, colStart, colEnd).minutes;
-  const paddingEnd =
-    (new TimeSpan(timeSpan.end, columns[colEnd].duration.end).minutes * 100) /
-    columnDuration(columns, colStart, colEnd).minutes;
+  const colDuration = columnDuration(columns, colStart, colEnd);
+  const paddingStart = (new TimeSpan(columns[colStart].duration.start, timeSpan.start).minutes * 100) / colDuration.minutes;
+  const paddingEnd = (new TimeSpan(timeSpan.end, columns[colEnd].duration.end).minutes * 100) / colDuration.minutes;
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
 
