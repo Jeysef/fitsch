@@ -55,14 +55,25 @@ In this project I am using specific naming so I want to explain:
 - **program**: programme in british english {Bachelor, Magister, Doctorat}
 - **study overview** ordered by importance:
   - year: Rok {2024, ...}
-  - degree: Bakalář, magistr, doktor
+  - degree: titul {Bakalář, magistr, doktor}
   - program: Studijní program {BIT, MIT, DIT} i specializace(field) {NADE, NBIO, ...}
   - grade: Ročník studia {1, 2, ...}
   - semester: Semestr {Zimní, Letní}
   - course: Předmět {IDM, IZP, ...}
   - lecture: Použito v širším slova smyslu {přednáška, cvičení, laboratoř, ...}
 
+  **in Menu**, ordered as in the previous scheduler for better orientation:
+  - year
+  - semester
+  - degree
+  - program
+  - grade
+  - course
+
+
 ### Notes
+
+#### Timespans
 their course timespan makes no sense, 
 - IDM:\
     26 hrs lectures\
@@ -84,11 +95,3 @@ their course timespan makes no sense,
     weekly 1 2 hour & 1 1 hour lectures 13 weeks \
     = (3 * 50) * 13 /60 = 32.5 ✗\
     WTF
-
-
-
-todo:
-streaming courses via server action
-when getting new courses, fetch only necessary, return others empty, my be filled in store
-courses optional to voluntary
-select all deletes all courses from other grades
