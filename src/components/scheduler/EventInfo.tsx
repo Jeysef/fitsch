@@ -17,7 +17,7 @@ const EventPopup = (props: { event: Event; children: JSX.Element }) => {
   const { courseDetail, timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.event;
 
   return (
-    <Popover>
+    <Popover flip placement="left-start">
       <PopoverTrigger>{props.children}</PopoverTrigger>
       <PopoverContent class="w-80">
         {/* Header */}
