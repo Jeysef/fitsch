@@ -2,7 +2,7 @@ import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
 import type { Locales } from "~/server/scraper/locales/types";
 import type { StudyId } from "~/server/scraper/types";
-import { type SEMESTER, WEEK_PARITY } from "./enums";
+import { WEEK_PARITY } from "./enums";
 
 const conjunctedRooms = [
   { main: "E112", streamed: ["E104", "E105"] },

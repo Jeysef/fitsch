@@ -2,7 +2,6 @@ import deepEqual from "deep-equal";
 import { uniq } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from "uuid";
-import { getWeekOfMonth } from "~/lib/date";
 import type { StudyApi } from "~/server/scraper/api";
 import { type DAY, type SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 import type {
@@ -64,8 +63,8 @@ export class LectureMutator {
     const anyConjunctable: string[][] = conjunctableRooms.map((room) =>
       Array.isArray(room) ? room : [room.main, ...room.streamed]
     );
-    const isAnyConjunctable = (rooms: string[]) =>
-      rooms.some((room) => anyConjunctable.some((conjunctable) => conjunctable.includes(room)));
+    // const isAnyConjunctable = (rooms: string[]) =>
+    //   rooms.some((room) => anyConjunctable.some((conjunctable) => conjunctable.includes(room)));
     const isSameConjunctable = (rooms1: string[], rooms2: string[]) =>
       rooms1.some((room) =>
         anyConjunctable.some(
@@ -141,7 +140,7 @@ export class LectureMutator {
           const maxParityLectures = Math.floor(semesterWeeks / 2);
           if (lecture.lecturesCount < maxParityLectures)
             return console.warn("Cannot safely determine lecture weeks", lecture);
-          const semesterStartWeekOffset = getWeekOfMonth(semesterStart) % 2;
+          const semesterStartWeekOffset = 0;
           switch (lecture.weeks.parity) {
             case WEEK_PARITY.EVEN:
               lecture.weeks.weeks = Array.from(
