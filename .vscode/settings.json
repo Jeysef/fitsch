@@ -12,5 +12,15 @@
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
-  "svg.preview.background": "editor"
+  "svg.preview.background": "editor",
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "cva\\(([^)]*)\\)",
+      "[\"'`]([^\"'`]*).*?[\"'`]"
+    ],
+    [
+      "cx\\(([^)]*)\\)",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
+    ]
+  ]
 }
