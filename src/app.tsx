@@ -17,6 +17,7 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Title>FIT scheduler</Title>
+          <Meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
           <Meta name="author" content="Josef Michalík" />
           <Meta name="description" content="FIT scheduler" />
           <Meta name="keywords" content="FIT, VUT, scheduler, fitsch" />
