@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
-import { compact, flatMap, flow, values } from "lodash-es";
+import { compact, debounce, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { For, Index, createContext, createMemo, useContext } from "solid-js";
+import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import type { StrictExtract } from "ts-essentials";
 import ScheduleEvent from "~/components/scheduler/Event";
 import { type SchedulerStore, getDayEventData } from "~/components/scheduler/store";
@@ -38,16 +38,61 @@ export default function Scheduler(props: WorkScheduleProps) {
 
 function SchedulerGrid() {
   const store = useStore();
+  const [scale, setScale] = createSignal(100);
+  const evCache: PointerEvent[] = [];
+  let prevDiff = -1;
+
+  const removeEvent = (ev: PointerEvent) => {
+    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
+    evCache.splice(index, 1);
+  };
+
+  const handlePointerDown = (ev: PointerEvent) => {
+    evCache.push(ev);
+  };
+
+  const handlePointerMove = debounce((ev: PointerEvent) => {
+    ev.preventDefault();
+    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
+    evCache[index] = ev;
+
+    if (evCache.length === 2) {
+      // Calculate distance between two pointers using Pythagorean theorem
+      const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
+
+      if (prevDiff > 0) {
+        // Calculate zoom factor based on the difference in distance
+        const scaleFactor = (curDiff - prevDiff) * 0.6;
+        setScale((s) => Math.max(40, Math.min(150, s + scaleFactor)));
+      }
+      prevDiff = curDiff;
+    }
+  }, 1);
+
+  const handlePointerUp = (ev: PointerEvent) => {
+    removeEvent(ev);
+    if (evCache.length < 2) {
+      prevDiff = -1;
+    }
+  };
 
   return (
     <div
       class="relative grid overflow-auto max-h-full h-auto w-full justify-start"
       style={{
-        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.5rem, 10rem))`,
+        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.5em, 10rem))`,
         "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
+        "--scheduler-scale": `${scale()}%`,
+        "font-size": "var(--scheduler-scale, 100%)",
       }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      // onPointerCancel={handlePointerUp}
+      // onPointerOut={handlePointerUp}
+      onPointerLeave={handlePointerUp}
     >
-      <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate">
+      <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
         <Corner />
         <Heading />
         <Days />
@@ -65,10 +110,11 @@ function Heading() {
       <For each={store.settings.columns}>
         {(column) => (
           <Text
+            em
             class={cn(
-              "[text-align-last:right] p-1 font-mono",
-              "text-sm font-medium leading-none !mt-0",
-              "md:text-base md:font-normal",
+              "[text-align-last:right] em:p-1 font-mono",
+              "em:text-sm font-medium leading-none !mt-0",
+              "md:em:text-base md:font-normal",
               "border-x first:border-l-transparent border-r-transparent"
             )}
           >
@@ -86,7 +132,7 @@ function Days() {
   return (
     <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
       <For each={store.settings.rows}>
-        {(day) => <span class="items-center justify-center p-2 md:p-4 flex">{t(`scheduler.days.${day.day}`)}</span>}
+        {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day.day}`)}</span>}
       </For>
     </div>
   );
@@ -121,7 +167,7 @@ function Week() {
   return (
     <div
       class={cn(
-        "week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1]",
+        "week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] [font-size:inherit]",
         linkedHighlightClass(),
         strongLinkedHighlightClass()
       )}
@@ -130,7 +176,7 @@ function Week() {
       <Index each={storeData()}>
         {(data) => (
           <div
-            class="schedule-row grid grid-cols-subgrid col-span-full py-2 gap-y-2 border-t"
+            class="schedule-row grid grid-cols-subgrid col-span-full em:py-2 em:gap-y-4 md:em:gap-y-8 border-t [font-size:inherit]"
             style={{
               "grid-row": `${data().dayRow} / span 1`,
               "grid-template-rows": `repeat(${data().dayRows}, minmax(0, auto))`,

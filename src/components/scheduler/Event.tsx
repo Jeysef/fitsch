@@ -47,7 +47,7 @@ export default function ScheduleEvent(props: EventProps) {
   return (
     <div
       class={cn(
-        "event relative w-full h-full min-h-min rounded flex flex-col items-center p-2 pt-1 *:text-center overflow-hidden",
+        "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         {
           "border-parityEven border-dashed border-2": isEven(),
@@ -60,26 +60,26 @@ export default function ScheduleEvent(props: EventProps) {
     >
       <div class="flex items-center w-full ">
         <EventPopup event={event}>
-          <Info size={16} />
+          <Info size={"1em"} />
         </EventPopup>
-        <Text variant="largeText" class="w-full truncate text-base md:text-lg">
+        <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">
           {event.courseDetail.abbreviation}
         </Text>
         <Checkbox checked={props.event.checked} onChange={handleCheck}>
-          <CheckboxControl />
+          <CheckboxControl class="em:size-4" />
         </Checkbox>
       </div>
       <div class="w-full *:w-full">
-        <Text variant="smallText" class="block">
+        <Text em variant="smallText" class="block">
           {event.room}
         </Text>
-        <Text variant="smallText" class="text-xxs hidden md:block">
+        <Text em variant="smallText" class="wm:text-xxs hidden md:block">
           ​
         </Text>
-        <Text variant="smallText" class="text-xxs block text-ellipsis line-clamp-2">
+        <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2">
           {formatWeeks(event.weeks.weeks)}
         </Text>
-        <Text variant="smallText" class="truncate block w-full">
+        <Text em variant="smallText" class="truncate block w-full">
           {event.info}
         </Text>
       </div>

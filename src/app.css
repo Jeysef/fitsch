@@ -35,6 +35,9 @@
     --link: 210 100% 40%;
 
     --radius: 0.5rem;
+
+    touch-action: pan-x pan-y;
+    height: 100% 
   }
 
   [data-kb-theme="dark"] {
