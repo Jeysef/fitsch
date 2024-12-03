@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import Info from "lucide-solid/icons/info";
+import Lightbulb from "lucide-solid/icons/lightbulb";
 import TriangleAlert from "lucide-solid/icons/triangle-alert";
 import { ObjectTyped } from "object-typed";
 import { For } from "solid-js";
@@ -19,7 +19,7 @@ export default function AppInfo() {
   return (
     <Dialog>
       <DialogTrigger>
-        <Info size={32} color="white" />
+        <Lightbulb size={32} color="white" />
       </DialogTrigger>
       <DialogContent class="max-w-screen-lg">
         <DialogHeader>
