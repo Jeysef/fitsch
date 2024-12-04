@@ -10,8 +10,7 @@
     "lint&format": "biome check",
     "test": "vitest run",
     "test-watch": "vitest",
-    "test-ui": "vitest --ui",
-    "typed-css-modules": "tcm --pattern \"src/!(packages)/**/*.css\""
+    "test-ui": "vitest --ui"
   },
   "dependencies": {
     "@emotion/css": "^11.13.4",
@@ -59,7 +58,6 @@
     "@biomejs/biome": "1.9.4",
     "@types/deep-equal": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
-    "ts-essentials": "^10.0.3",
-    "typed-css-modules": "^0.9.1"
+    "ts-essentials": "^10.0.3"
   }
 }
