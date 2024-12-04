@@ -85,12 +85,16 @@ function SchedulerGrid() {
         "--scheduler-scale": `${scale()}%`,
         "font-size": "var(--scheduler-scale, 100%)",
       }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      // onPointerCancel={handlePointerUp}
-      // onPointerOut={handlePointerUp}
-      onPointerLeave={handlePointerUp}
+      // onPointerDown={handlePointerDown}
+      // onPointerMove={handlePointerMove}
+      // onPointerUp={handlePointerUp}
+      // // onPointerCancel={handlePointerUp}
+      // // onPointerOut={handlePointerUp}
+      // onPointerLeave={handlePointerUp}
+      on:pointerdown={handlePointerDown}
+      on:pointermove={handlePointerMove}
+      on:pointerup={handlePointerUp}
+      on:pointerleave={handlePointerUp}
     >
       <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
         <Corner />
