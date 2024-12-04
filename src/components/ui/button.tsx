@@ -33,7 +33,7 @@ export const buttonVariants = cva(
   }
 );
 
-type buttonProps<T extends ValidComponent = "button"> = ButtonRootProps<T> &
+export type buttonProps<T extends ValidComponent = "button"> = ButtonRootProps<T> &
   VariantProps<typeof buttonVariants> & {
     class?: string;
   };

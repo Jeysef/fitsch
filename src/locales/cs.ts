@@ -98,6 +98,9 @@ export default {
       },
     },
   },
+  header: {
+    install: "Nainstalovat aplikaci",
+  },
   language: {
     cs: "Čeština",
     en: "Angličtina",

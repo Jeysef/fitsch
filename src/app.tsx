@@ -9,6 +9,7 @@ import { Suspense } from "solid-js";
 import Layout from "~/components/layout";
 import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
+import { InstallationProvider } from "~/providers/InstallationProvider";
 import "./app.css";
 
 export default function App() {
@@ -18,9 +19,11 @@ export default function App() {
         <MetaProvider>
           <Suspense>
             <I18nProvider>
-              <Layout>
-                <Suspense>{props.children}</Suspense>
-              </Layout>
+              <InstallationProvider>
+                <Layout>
+                  <Suspense>{props.children}</Suspense>
+                </Layout>
+              </InstallationProvider>
             </I18nProvider>
           </Suspense>
           <Toaster />

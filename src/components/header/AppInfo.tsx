@@ -3,6 +3,7 @@ import Lightbulb from "lucide-solid/icons/lightbulb";
 import TriangleAlert from "lucide-solid/icons/triangle-alert";
 import { ObjectTyped } from "object-typed";
 import { For } from "solid-js";
+import InstallButton from "~/components/header/InstallButton";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
 import Text from "~/components/typography/text";
@@ -22,44 +23,11 @@ export default function AppInfo() {
         <Lightbulb size={32} color="white" />
       </DialogTrigger>
       <DialogContent class="max-w-screen-lg">
-        <DialogHeader>
+        <DialogHeader class="relative space-y-0">
           <DialogTitle class={typographyVariants({ variant: "h2" })}>Info k aplikaci</DialogTitle>
-          {/* <DialogDescription class="overflow-auto"> */}
-
-          {/* <div class="bg-white text-gray-800 font-sans">
-              <div class="max-w-4xl mx-auto py-12 px-6">
-                <h1 class="text-3xl font-bold mb-6">Info k aplikaci</h1>
-                <div class="space-y-8">
-                  <div>
-                    <h2 class="text-lg font-semibold mb-2">Přehled</h2>
-                    <p class="text-gray-600">
-                      Viego je menu, kde se vybírají předměty, ročníky, atd. Data s rozvrahem se načítají ze stránek FITu z
-                      karet předmětů, tyto termíny nemusí vždy sedět s realitou nebo studisem. Některé data jsou doplňovány
-                      pro lepší přehlednost, např. týdny lekci nebo parita.
-                    </p>
-                  </div>
-                  <div>
-                    <h2 class="text-lg font-semibold mb-2">Lekce</h2>
-                    <div class="grid grid-cols-5 gap-4">
-                      <div class="bg-green-100 text-green-800 px-4 py-2 rounded">LECTURE</div>
-                      <div class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded">EXERCISE</div>
-                      <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded">SEMINAR</div>
-                      <div class="bg-orange-100 text-orange-800 px-4 py-2 rounded">LABORATORY</div>
-                      <div class="bg-red-100 text-red-800 px-4 py-2 rounded">EXAM</div>
-                    </div>
-                  </div>
-                  <div>
-                    <h2 class="text-lg font-semibold mb-2">Funkčnost</h2>
-                    <p class="text-gray-600">Kliknutím na zaškrtávací políčko si předmět přidáte do veškerého rozvrhu.</p>
-                    <p class="text-gray-600">
-                      V kartě "Rozsahy" je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-          {/* </DialogDescription> */}
+          <InstallButton class="absolute top-0 right-10 hidden md:block lg:hidden" />
         </DialogHeader>
+        <InstallButton class="sm:hidden" />
         <div class="max-h-[calc(100vh-10rem)] overflow-auto space-y-2">
           <div class="flex flex-col md:grid md:grid-cols-2 ">
             <div class="max-w-prose w-full flex flex-col">

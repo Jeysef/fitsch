@@ -1,11 +1,12 @@
 import AppInfo from "~/components/header/AppInfo";
+import InstallButton from "~/components/header/InstallButton";
 import { LanguageSwitcher } from "~/components/header/LanguageSwitcher";
 
 export default function Header() {
   return (
     <header class="w-full flex h-12 p-1 items-center bg-zinc-800 pr-6 justify-between">
       <div class="flex relative h-full items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" id="icon-logo-fit" viewBox="0 0 196 80" height={40}>
+        <svg xmlns="http://www.w3.org/2000/svg" id="icon-logo-fit" viewBox="0 0 196 80" height={40} $ServerOnly>
           <title>VUT FIT Logo</title>
           {/* numbers changed for overlaping on small size */}
           <rect fill="#fff" width="77" height="100%" /> {/* 80 - 3 */}
@@ -20,6 +21,9 @@ export default function Header() {
         <h1 class="text-primary-foreground text-2xl font-bold ml-2">Scheduler</h1>
       </div>
       <div class="flex gap-x-4">
+        <div class="hidden md:block">
+          <InstallButton />
+        </div>
         <LanguageSwitcher />
         <AppInfo />
       </div>

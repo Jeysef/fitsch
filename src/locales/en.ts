@@ -100,6 +100,9 @@ export default {
       },
     },
   },
+  header: {
+    install: "Install application",
+  },
   language: {
     cs: "Czech",
     en: "English",
