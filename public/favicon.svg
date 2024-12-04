@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="196" height="80"><svg xmlns="http://www.w3.org/2000/svg" id="SvgjsSvg1057" viewBox="0 0 196 80">
-  <path fill="#00a9e0" fill-rule="evenodd" d="M83 80h113V0H83v80zm68.807-59.903h29.12v5.824h-11.2v33.376h-6.721V25.921h-11.199v-5.824zm-15.68 39.2h6.72v-39.2h-6.72v39.2zm-32.759-39.2h22.96v5.824h-16.24v10.752h15.12v5.824h-15.12v16.8h-6.72v-39.2z"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="196" height="80" viewBox="0 0 196 80">
+  <path fill="#00a9e0" fill-rule="evenodd"
+    d="M83 80h113V0H83v80zm68.807-59.903h29.12v5.824h-11.2v33.376h-6.721V25.921h-11.199v-5.824zm-15.68 39.2h6.72v-39.2h-6.72v39.2zm-32.759-39.2h22.96v5.824h-16.24v10.752h15.12v5.824h-15.12v16.8h-6.72v-39.2z">
+  </path>
   <path fill="#e4002b" d="M67 32H53a5.9 5.9 0 0 0-6 5.7V69h-9V24H13v-9h25v9h29v8zM0 80h80V0H0v80z"></path>
-</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
-@media (prefers-color-scheme: dark) { :root { filter: none; } }
-</style></svg>
+</svg>
