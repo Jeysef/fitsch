@@ -25,7 +25,7 @@ import {
   useContext,
 } from "solid-js";
 import { isServer } from "solid-js/web";
-import ErrorFallback from "~/components/menu/ErrorFallback";
+import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { type NavigationSchema, navigationSchema } from "~/components/menu/schema";
 import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";

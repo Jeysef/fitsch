@@ -6,7 +6,7 @@ import { ObjectTyped } from "object-typed";
 import { For, createComputed, createEffect, createMemo, createSignal, on, untrack } from "solid-js";
 import { createMutable } from "solid-js/store";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
-import { openend } from "~/components/menu/Menu";
+import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
 import { days } from "~/components/scheduler/constants";
 import { SchedulerStore, createColumns, recreateColumns } from "~/components/scheduler/store";

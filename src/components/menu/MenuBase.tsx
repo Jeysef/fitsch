@@ -1,7 +1,7 @@
 import MenuIcon from "lucide-solid/icons/menu";
 import X from "lucide-solid/icons/x";
 import { createSignal } from "solid-js";
-import Content from "~/components/menu/Content";
+import Content from "~/components/menu/MenuContent";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 

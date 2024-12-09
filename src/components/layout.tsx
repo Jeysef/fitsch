@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js";
 import Header from "~/components/header/Header";
-import Menu from "~/components/menu/Menu";
+import Menu from "~/components/menu/MenuBase";
 import { cn } from "~/lib/utils";
 
 export default function Layout({ children }: { children: JSX.Element }) {

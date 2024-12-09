@@ -1,6 +1,6 @@
-import AppInfo from "~/components/header/AppInfo";
-import InstallButton from "~/components/header/InstallButton";
+import AppInfo from "~/components/header/InfoDialog";
 import { LanguageSwitcher } from "~/components/header/LanguageSwitcher";
+import InstallButton from "~/components/ui/InstallButton";
 
 export default function Header() {
   return (
