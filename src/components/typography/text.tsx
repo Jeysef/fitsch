@@ -5,7 +5,7 @@ import { type ExtractTypographyVariantType, Typography, type TypographyProps } f
 // Specify the variants you want to allow (linting error will be thrown when using exported component with a variant (1) not specified here or (2) not within TypographyVariant)
 type AllowedVariants = ExtractTypographyVariantType<"p" | "lead" | "largeText" | "mutedText" | "smallText">;
 
-interface TextProps<T extends ValidComponent = "p"> extends TypographyProps<T> {
+export interface TextProps<T extends ValidComponent = "p"> extends TypographyProps<T> {
   variant?: AllowedVariants;
 }
 
