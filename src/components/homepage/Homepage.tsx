@@ -1,44 +1,24 @@
 import { trackStore } from "@solid-primitives/deep";
-import { makePersisted } from "@solid-primitives/storage";
 import { useLocation, useNavigate, useSubmission } from "@solidjs/router";
 import { merge } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { For, createComputed, createEffect, createMemo, createSignal, on, untrack } from "solid-js";
+import { For, createComputed, createEffect, createMemo, on, untrack } from "solid-js";
 import { createMutable } from "solid-js/store";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
-import { days } from "~/components/scheduler/constants";
-import { SchedulerStore, createColumns, recreateColumns } from "~/components/scheduler/store";
+import { recreateColumns } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
+import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
-import { type DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import type { MCourseLecture } from "~/server/scraper/lectureMutator";
-
-const formatTime = (start: { hour: number; minute: number }, end: { hour: number; minute: number }) =>
-  `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
-const formatDay = (day: DAY) => ({ day });
-const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
-const schedulerStore = new SchedulerStore(
-  {
-    columns: createColumns({
-      start: { hour: 7, minute: 0 },
-      step: { hour: 1, minute: 0 },
-      end: { hour: 20, minute: 0 },
-      getTimeHeader: formatTime,
-    }),
-    rows: days.map(formatDay),
-  },
-  filter
-);
 
 export default function Home() {
   const { t, locale } = useI18n();
   const data = useSubmission(getStudyCoursesDetailsAction);
-  const [persistedStore, setPersistedStore] = makePersisted(createSignal(schedulerStore), { name: "schedulerStore" });
+  const { persistedStore, setPersistedShedulerStore, newSchedulerStore } = useScheduler();
   const navigate = useNavigate();
 
   const untrackedStore = untrack(persistedStore);
@@ -50,7 +30,7 @@ export default function Home() {
       }
     }
   }
-  const store = createMutable(merge(schedulerStore, untrackedStore));
+  const store = createMutable(merge(newSchedulerStore(), untrackedStore));
   // link data to courses
   store.data = store.combineData(store.courses.map((c) => c.data));
 
@@ -90,7 +70,7 @@ export default function Home() {
       () => trackStore(store),
       (store, _, firstEffect) => {
         if (firstEffect) return false;
-        setPersistedStore(store);
+        setPersistedShedulerStore(store);
         return false;
       }
     ),

@@ -10,6 +10,7 @@ import Layout from "~/components/layout";
 import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
 import { InstallationProvider } from "~/providers/InstallationProvider";
+import { SchedulerProvider } from "~/providers/SchedulerProvider";
 import "./app.css";
 
 export default function App() {
@@ -20,9 +21,11 @@ export default function App() {
           <Suspense>
             <I18nProvider>
               <InstallationProvider>
-                <Layout>
-                  <Suspense>{props.children}</Suspense>
-                </Layout>
+                <SchedulerProvider>
+                  <Layout>
+                    <Suspense>{props.children}</Suspense>
+                  </Layout>
+                </SchedulerProvider>
               </InstallationProvider>
             </I18nProvider>
           </Suspense>
