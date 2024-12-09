@@ -47,7 +47,7 @@
     "uuid": "^11.0.3",
     "vinxi": "^0.4.3",
     "vite": "^5.4.11",
-    "vite-plugin-solid": "^2.10.2",
+    "vite-plugin-solid": "^2.11.0",
     "vitest": "^2.1.5",
     "zod": "^3.23.8"
   },
