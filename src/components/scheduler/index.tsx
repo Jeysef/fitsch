@@ -180,7 +180,7 @@ function Week() {
       <Index each={storeData()}>
         {(data) => (
           <div
-            class="schedule-row grid grid-cols-subgrid col-span-full em:py-2 em:gap-y-4 md:em:gap-y-8 border-t [font-size:inherit]"
+            class="schedule-row grid grid-cols-subgrid col-span-full em:py-2 em:gap-y-4 border-t [font-size:inherit]"
             style={{
               "grid-row": `${data().dayRow} / span 1`,
               "grid-template-rows": `repeat(${data().dayRows}, minmax(0, auto))`,
