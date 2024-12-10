@@ -97,6 +97,11 @@ export default {
         error: "Nastala chyba při načítání rozvrhu",
       },
     },
+    actions: {
+      title: "Akce",
+      exportJson: "Exportovat JSON",
+      importJson: "Importovat JSON",
+    },
   },
   header: {
     install: "Nainstalovat aplikaci",

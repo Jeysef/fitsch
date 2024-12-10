@@ -99,6 +99,11 @@ export default {
         error: "An error occurred while loading schedule",
       },
     },
+    actions: {
+      title: "Actions",
+      exportJson: "Export JSON",
+      importJson: "Import JSON",
+    },
   },
   header: {
     install: "Install application",

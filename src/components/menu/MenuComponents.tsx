@@ -411,6 +411,7 @@ export function CoursesSelect() {
 export function Actions() {
   const { persistedStore, recreateStore } = useScheduler();
   const store = persistedStore();
+  const { t } = useI18n();
 
   const exportJSON = () => {
     const a = document.createElement("a");
@@ -447,15 +448,15 @@ export function Actions() {
   return (
     <Collapsible>
       <CollapsibleTrigger class="flex w-full overflow-hidden items-center">
-        <SectionHeading>Actions</SectionHeading>
+        <SectionHeading>{t("menu.actions.title")}</SectionHeading>
         <ChevronDown />
       </CollapsibleTrigger>
       <CollapsibleContent>
         <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={exportJSON}>
-          Export (JSON)
+          {t("menu.actions.exportJson")}
         </ItemText>
         <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={importJSON}>
-          Import (JSON)
+          {t("menu.actions.importJson")}
         </ItemText>
       </CollapsibleContent>
     </Collapsible>
