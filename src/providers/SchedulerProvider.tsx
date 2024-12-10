@@ -1,10 +1,14 @@
+import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
+import { useSubmission } from "@solidjs/router";
 import { merge } from "lodash-es";
 import {
   batch,
+  createComputed,
   createContext,
+  createEffect,
   createSignal,
-  onMount,
+  on,
   useContext,
   type Accessor,
   type ParentProps,
@@ -14,6 +18,7 @@ import { createMutable, modifyMutable, reconcile } from "solid-js/store";
 import { days } from "~/components/scheduler/constants";
 import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
+import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator2";
 
@@ -28,6 +33,7 @@ interface SchedulerContextType {
 const SchedulerContext = createContext<SchedulerContextType>();
 
 export function SchedulerProvider(props: ParentProps) {
+  const data = useSubmission(getStudyCoursesDetailsAction);
   const formatTime = (start: { hour: number; minute: number }, end: { hour: number; minute: number }) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
   const formatDay = (day: DAY) => ({ day });
@@ -68,9 +74,34 @@ export function SchedulerProvider(props: ParentProps) {
       setPersistedShedulerStore(store);
     });
   };
-  onMount(() => {
-    recreateStore(persistedStore());
-  });
+  recreateStore(persistedStore());
+
+  createComputed(
+    on(
+      () => data.result,
+      (result) => {
+        if (!result) return;
+        batch(() => {
+          store.newCourses = result;
+        });
+      }
+    ),
+    undefined,
+    { name: "addCoursesToStore" }
+  );
+
+  createEffect(
+    on(
+      () => trackStore(store),
+      (store, _, firstEffect) => {
+        if (firstEffect) return false;
+        setPersistedShedulerStore(store);
+        return false;
+      }
+    ),
+    true,
+    { name: "persistStore" }
+  );
 
   return (
     <SchedulerContext.Provider
