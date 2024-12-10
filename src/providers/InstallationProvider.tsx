@@ -1,4 +1,4 @@
-import { type Accessor, createContext, createSignal, type JSX, onMount, useContext } from "solid-js";
+import { type Accessor, createContext, createSignal, onMount, type ParentProps, useContext } from "solid-js";
 
 interface InstallationContextType {
   canInstall: Accessor<boolean>;
@@ -7,7 +7,7 @@ interface InstallationContextType {
 
 const InstallationContext = createContext<InstallationContextType>();
 
-export function InstallationProvider(props: { children: JSX.Element }) {
+export function InstallationProvider(props: ParentProps) {
   const [installEvent, setInstallEvent] = createSignal<any | null>(null);
 
   onMount(() => {
