@@ -466,7 +466,7 @@ export function SubmitButton() {
   const { t } = useI18n();
   return (
     <Button class="w-full !mt-8 sticky bottom-0" type="submit">
-      {t("menu.generate")}
+      {t("menu.load")}
     </Button>
   );
 }
