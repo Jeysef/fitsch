@@ -160,7 +160,7 @@ export default function Wrapper() {
           success: t("menu.toast.languageChanged.success"),
           error: t("menu.toast.languageChanged.error"),
           description: t("menu.toast.languageChanged.description", { language: t(`language.${language}`) }),
-          action: { label: t("menu.generate"), onClick: onRegenerate },
+          action: { label: t("menu.load"), onClick: onRegenerate },
           id: toastId,
           duration: 5000,
         });
