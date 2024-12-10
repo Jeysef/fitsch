@@ -1,14 +1,10 @@
 import { trackStore } from "@solid-primitives/deep";
 import { useLocation, useNavigate, useSubmission } from "@solidjs/router";
-import { merge } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { For, createComputed, createEffect, createMemo, on, untrack } from "solid-js";
-import { createMutable } from "solid-js/store";
+import { For, createComputed, createEffect, createMemo, on } from "solid-js";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
-import { recreateColumns } from "~/components/scheduler/store";
-import { TimeSpan } from "~/components/scheduler/time";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
@@ -18,21 +14,8 @@ import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 export default function Home() {
   const { t, locale } = useI18n();
   const data = useSubmission(getStudyCoursesDetailsAction);
-  const { persistedStore, setPersistedShedulerStore, newSchedulerStore } = useScheduler();
+  const { store, setPersistedShedulerStore } = useScheduler();
   const navigate = useNavigate();
-
-  const untrackedStore = untrack(persistedStore);
-  untrackedStore.settings.columns = recreateColumns(untrackedStore.settings.columns);
-  for (const course of untrackedStore.courses) {
-    for (const dayData of Object.values(course.data)) {
-      for (const event of dayData.events) {
-        event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan);
-      }
-    }
-  }
-  const store = createMutable(merge(newSchedulerStore(), untrackedStore));
-  // link data to courses
-  store.data = store.combineData(store.courses.map((c) => c.data));
 
   const checkedDataMemo = createMemo(() => {
     return store.checkedData;

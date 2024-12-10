@@ -1,14 +1,28 @@
 import { makePersisted } from "@solid-primitives/storage";
-import { createContext, createSignal, useContext, type Accessor, type ParentProps, type Setter } from "solid-js";
+import { merge } from "lodash-es";
+import {
+  batch,
+  createContext,
+  createSignal,
+  onMount,
+  useContext,
+  type Accessor,
+  type ParentProps,
+  type Setter,
+} from "solid-js";
+import { createMutable, modifyMutable, reconcile } from "solid-js/store";
 import { days } from "~/components/scheduler/constants";
-import { createColumns, SchedulerStore } from "~/components/scheduler/store";
+import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
+import { TimeSpan } from "~/components/scheduler/time";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator2";
 
 interface SchedulerContextType {
+  store: SchedulerStore;
   newSchedulerStore: () => SchedulerStore;
   persistedStore: Accessor<SchedulerStore>;
   setPersistedShedulerStore: Setter<SchedulerStore>;
+  recreateStore: (plainStore: SchedulerStore) => void;
 }
 
 const SchedulerContext = createContext<SchedulerContextType>();
@@ -36,8 +50,38 @@ export function SchedulerProvider(props: ParentProps) {
     name: "schedulerStore",
   });
 
+  const store = createMutable(newSchedulerStore());
+  const recreateStore = (plainStore: SchedulerStore) => {
+    plainStore.settings.columns = recreateColumns(plainStore.settings.columns);
+    for (const course of plainStore.courses) {
+      for (const dayData of Object.values(course.data)) {
+        for (const event of dayData.events) {
+          event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan);
+        }
+      }
+    }
+
+    batch(() => {
+      modifyMutable(store, reconcile(merge(store, plainStore)));
+      // link data to courses, must be done after createMutable to link not duplicate
+      store.data = store.combineData(store.courses.map((c) => c.data));
+      setPersistedShedulerStore(store);
+    });
+  };
+  onMount(() => {
+    recreateStore(persistedStore());
+  });
+
   return (
-    <SchedulerContext.Provider value={{ persistedStore, setPersistedShedulerStore, newSchedulerStore }}>
+    <SchedulerContext.Provider
+      value={{
+        store: store,
+        persistedStore,
+        setPersistedShedulerStore,
+        newSchedulerStore,
+        recreateStore,
+      }}
+    >
       {props.children}
     </SchedulerContext.Provider>
   );
