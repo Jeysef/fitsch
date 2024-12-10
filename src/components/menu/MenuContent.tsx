@@ -22,16 +22,17 @@ import {
 } from "solid-js";
 import { isServer } from "solid-js/web";
 import {
+  Actions,
   CoursesSelect,
   DegreeSelect,
   GradeSelect,
   ProgramSelect,
   SemesterSelect,
+  SubmitButton,
   YearSelect,
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { type NavigationSchema, navigationSchema } from "~/components/menu/schema";
-import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
 import {
@@ -310,20 +311,12 @@ export default function Wrapper() {
               <CoursesSelect />
             </Suspense>
           </DataContext.Provider>
+          <Actions />
           <SubmitButton />
         </GroupContext.Provider>
       </form>
     );
   }
-}
-
-function SubmitButton() {
-  const { t } = useI18n();
-  return (
-    <Button class="w-full !mt-8 sticky bottom-0" type="submit">
-      {t("menu.generate")}
-    </Button>
-  );
 }
 
 // function ErrorMessage({ control }: { control: IFormControl<string> }) {

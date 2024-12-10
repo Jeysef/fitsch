@@ -1,11 +1,15 @@
 import { Tooltip } from "@kobalte/core/tooltip";
+import ChevronDown from "lucide-solid/icons/chevron-down";
 import Link from "lucide-solid/icons/link";
-import { For, Show, Suspense, createMemo } from "solid-js";
+import { For, Show, Suspense, createMemo, splitProps, type FlowComponent } from "solid-js";
+import type { StrictOmit } from "ts-essentials";
 import { getData, getGroup } from "~/components/menu/MenuContent";
-import { Typography, typographyVariants } from "~/components/typography";
-import Heading from "~/components/typography/heading";
-import Text from "~/components/typography/text";
+import { typographyVariants } from "~/components/typography";
+import Heading, { type HeadingProps } from "~/components/typography/heading";
+import Text, { type TextProps } from "~/components/typography/text";
+import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import Loader from "~/components/ui/loader";
 import {
   RadioGroup,
@@ -17,7 +21,46 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import type { StudyOverviewCourse, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
+import { cn } from "~/lib/utils";
+import { useScheduler } from "~/providers/SchedulerProvider";
+import type { SEMESTER } from "~/server/scraper/enums";
+import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
+import { asMerge } from "~/utils/asMerge";
+
+const SectionHeading: FlowComponent<StrictOmit<HeadingProps<"h3">, "variant">> = (props) => {
+  const [local, others] = splitProps(props, ["children", "class"]);
+  return (
+    <Heading as="h3" variant="h5" class={cn("mb-1", local.class)} {...others}>
+      {local.children}
+    </Heading>
+  );
+};
+
+const SubSectionHeading: FlowComponent<StrictOmit<HeadingProps<"p">, "variant">> = (props) => {
+  const [local, others] = splitProps(props, ["children", "class"]);
+  return (
+    <Heading as="p" variant="h6" class={cn("mb-1", local.class)} {...others}>
+      {local.children}
+    </Heading>
+  );
+};
+
+const ItemText: FlowComponent<StrictOmit<TextProps<"p">, "variant">> = (props) => {
+  const [local, others] = splitProps(props, ["children", "class"]);
+  return (
+    <Text variant={null} class={cn("text-sm leading-6", local.class)} {...others}>
+      {local.children}
+    </Text>
+  );
+};
+
+const SelectedCountIndicator = (count: number) => {
+  return (
+    <span class="inline-block whitespace-nowrap rounded-full bg-orange-400 px-2 py-1 text-center align-baseline text-xxs font-bold leading-none text-white">
+      {count}
+    </span>
+  );
+};
 
 export function YearSelect() {
   const group = getGroup();
@@ -40,11 +83,11 @@ export function YearSelect() {
       validationState={group.controls.year.errors ? "invalid" : "valid"}
       itemComponent={(props) => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
     >
-      <Select.Label as="h3" class={typographyVariants({ variant: "h5" })}>
-        {t("menu.year.title")}
-      </Select.Label>
+      <Select.Label as={SectionHeading}>{t("menu.year.title")}</Select.Label>
       <SelectTrigger>
-        <SelectValue<StudyOverviewYear>>{(state) => state.selectedOption()?.label}</SelectValue>
+        <SelectValue<StudyOverviewYear, typeof ItemText> as={ItemText}>
+          {(state) => state.selectedOption()?.label}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent />
     </Select>
@@ -66,17 +109,13 @@ export function DegreeSelect() {
       required={group.controls.degree.isRequired}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>
-        {t("menu.degree.title")}
-      </RadioGroup.Label>
+      <RadioGroup.Label as={SectionHeading}>{t("menu.degree.title")}</RadioGroup.Label>
       <For each={data()?.data.degrees}>
         {(degree) => (
           <RadioGroupItem value={degree} class="flex items-center gap-2">
             <RadioGroupItemInput />
             <RadioGroupItemControl as="button" type="button" />
-            <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>
-              {t(`menu.degree.data.${degree}`)}
-            </RadioGroupItemLabel>
+            <RadioGroupItemLabel as={ItemText}>{t(`menu.degree.data.${degree}`)}</RadioGroupItemLabel>
           </RadioGroupItem>
         )}
       </For>
@@ -93,13 +132,11 @@ export function ProgramSelect() {
     const program = props.program;
     return (
       <Tooltip placement="right" flip="top" gutter={12}>
-        <TooltipTrigger as={RadioGroupItemLabel} class={typographyVariants({ class: "!mt-0 text-sm cursor-pointer" })}>
+        <TooltipTrigger as={asMerge([RadioGroupItemLabel, ItemText])} class="cursor-pointer">
           {program.abbreviation}
         </TooltipTrigger>
         <TooltipContent class="bg-secondary text-secondary-foreground space-x-1 flex items-center">
-          <Text variant={null} class="text-secondary-foreground">
-            {program.name}
-          </Text>
+          <ItemText class="text-secondary-foreground">{program.name}</ItemText>
           <a href={program.url} target="_blank" rel="noopener noreferrer" class="text-link">
             <Link class="w-4 h-4" />
           </a>
@@ -107,6 +144,14 @@ export function ProgramSelect() {
       </Tooltip>
     );
   };
+
+  const RadioItem = (program: StudyProgramBase) => (
+    <RadioGroupItem value={program.id} class="flex items-center gap-2">
+      <RadioGroupItemInput />
+      <RadioGroupItemControl as="button" type="button" />
+      <ProgramRadioLabel program={program} />
+    </RadioGroupItem>
+  );
 
   return (
     <Show
@@ -124,34 +169,13 @@ export function ProgramSelect() {
         validationState={group.controls.program.errors ? "invalid" : "valid"}
         class="grid gap-x-2"
       >
-        <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>
-          {t("menu.program.title")}
-        </RadioGroup.Label>
+        <RadioGroup.Label as={SectionHeading}>{t("menu.program.title")}</RadioGroup.Label>
         <For each={data()!.data.programs[group.controls.degree!.value]}>
           {(program) => (
             <section class="ml-2">
-              <Show
-                when={program.specializations.length > 0}
-                fallback={
-                  <RadioGroupItem value={program.id} class="flex items-center gap-2">
-                    <RadioGroupItemInput />
-                    <RadioGroupItemControl as="button" type="button" />
-                    <ProgramRadioLabel program={program} />
-                  </RadioGroupItem>
-                }
-              >
-                <Heading as="h4" variant="h6">
-                  {program.abbreviation}
-                </Heading>
-                <For each={program.specializations}>
-                  {(specialization) => (
-                    <RadioGroupItem value={specialization.id} class="flex items-center gap-2">
-                      <RadioGroupItemInput />
-                      <RadioGroupItemControl as="button" type="button" />
-                      <ProgramRadioLabel program={specialization} />
-                    </RadioGroupItem>
-                  )}
-                </For>
+              <Show when={program.specializations.length > 0} fallback={RadioItem(program)}>
+                <SubSectionHeading>{program.abbreviation}</SubSectionHeading>
+                <For each={program.specializations}>{RadioItem}</For>
               </Show>
             </section>
           )}
@@ -170,6 +194,25 @@ export function GradeSelect() {
     <Text class={typographyVariants({ class: "!mt-0 text-sm ml-2" })}>{t("menu.grade.selectToShow")}</Text>
   );
 
+  const SelectedHiddenCourses = ({ grade }: { grade: StudyOverviewGrade }) => {
+    const count = createMemo(() => {
+      const courses = data()!.data.courses[grade.key][group.controls.semester.value];
+      const compulsorySelected = courses.compulsory.filter((course) =>
+        group.controls.coursesCompulsory.value.includes(course.id)
+      ).length;
+      const optionalSelected = courses.voluntary.filter((course) =>
+        group.controls.coursesVoluntary.value.includes(course.id)
+      ).length;
+      return compulsorySelected + optionalSelected || null;
+    });
+
+    return (
+      <Show when={group.controls.grade.value !== grade.key && count()} keyed>
+        {SelectedCountIndicator}
+      </Show>
+    );
+  };
+
   return (
     <RadioGroup
       value={group.controls.grade.value}
@@ -181,39 +224,17 @@ export function GradeSelect() {
       validationState={group.controls.grade.errors ? "invalid" : "valid"}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>
-        {t("menu.grade.title")}
-      </RadioGroup.Label>
+      <RadioGroup.Label as={SectionHeading}>{t("menu.grade.title")}</RadioGroup.Label>
       <Suspense fallback={<Loader />}>
         <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
           <For each={data()!.data.grades}>
             {(grade) => {
-              const count = createMemo(() => {
-                const courses = data()!.data.courses[grade.key][group.controls.semester.value];
-                const compulsorySelected = courses.compulsory.filter((course) =>
-                  group.controls.coursesCompulsory.value.includes(course.id)
-                ).length;
-                const optionalSelected = courses.voluntary.filter((course) =>
-                  group.controls.coursesVoluntary.value.includes(course.id)
-                ).length;
-                return compulsorySelected + optionalSelected || null;
-              });
               return (
                 <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
-                  {/* <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20</div> */}
                   <RadioGroupItemInput class="bottom-0" />
                   <RadioGroupItemControl as="button" type="button" />
-                  <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>
-                    {grade.label}
-                  </RadioGroupItemLabel>
-                  {/* <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20</div> */}
-                  <Show when={group.controls.grade.value !== grade.key && count()} keyed>
-                    {(count) => (
-                      <span class="inline-block whitespace-nowrap rounded-full bg-orange-400 px-2 py-1 text-center align-baseline text-xxs font-bold leading-none text-white">
-                        {count}
-                      </span>
-                    )}
-                  </Show>
+                  <RadioGroupItemLabel as={ItemText}>{grade.label}</RadioGroupItemLabel>
+                  <SelectedHiddenCourses grade={grade} />
                 </RadioGroupItem>
               );
             }}
@@ -229,6 +250,27 @@ export function SemesterSelect() {
   const data = getData();
   const { t } = useI18n();
 
+  const SelectedHiddenCourses = ({ semester }: { semester: SEMESTER }) => {
+    const count = createMemo(() => {
+      return data()!.data.grades.reduce((acc, grade) => {
+        const courses = data()!.data.courses[grade.key][semester];
+        const compulsorySelected = courses.compulsory.filter((course) =>
+          group.controls.coursesCompulsory.value.includes(course.id)
+        ).length;
+        const optionalSelected = courses.voluntary.filter((course) =>
+          group.controls.coursesVoluntary.value.includes(course.id)
+        ).length;
+        return acc + compulsorySelected + optionalSelected;
+      }, 0);
+    });
+
+    return (
+      <Show when={group.controls.semester.value !== semester && count()} keyed>
+        {SelectedCountIndicator}
+      </Show>
+    );
+  };
+
   return (
     <RadioGroup
       value={group.controls.semester.value}
@@ -239,24 +281,9 @@ export function SemesterSelect() {
       required={group.controls.semester.isRequired}
       class="grid gap-x-2"
     >
-      <RadioGroup.Label as="h3" class={typographyVariants({ variant: "h5" })}>
-        {t("menu.semester.title")}
-      </RadioGroup.Label>
+      <RadioGroup.Label as={SectionHeading}>{t("menu.semester.title")}</RadioGroup.Label>
       <For each={data()?.data.semesters}>
         {(semester) => {
-          const count = createMemo(() => {
-            return data()!.data.grades.reduce((acc, grade) => {
-              const courses = data()!.data.courses[grade.key][semester];
-              const compulsorySelected = courses.compulsory.filter((course) =>
-                group.controls.coursesCompulsory.value.includes(course.id)
-              ).length;
-              const optionalSelected = courses.voluntary.filter((course) =>
-                group.controls.coursesVoluntary.value.includes(course.id)
-              ).length;
-              return acc + compulsorySelected + optionalSelected;
-            }, 0);
-          });
-
           return (
             <RadioGroupItem value={semester} class="flex items-center gap-2">
               <RadioGroupItemInput />
@@ -264,13 +291,7 @@ export function SemesterSelect() {
               <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>
                 {t(`menu.semester.data.${semester}`)}
               </RadioGroupItemLabel>
-              <Show when={group.controls.semester.value !== semester && count()} keyed>
-                {(count) => (
-                  <span class="inline-block whitespace-nowrap rounded-full bg-orange-400 px-2 py-1 text-center align-baseline text-xxs font-bold leading-none text-white">
-                    {count}
-                  </span>
-                )}
-              </Show>
+              <SelectedHiddenCourses semester={semester} />
             </RadioGroupItem>
           );
         }}
@@ -284,9 +305,7 @@ export function CoursesSelect() {
   const data = getData();
   const { t } = useI18n();
 
-  const Fallback = () => (
-    <Text variant="smallText">{group.controls.grade.value ? "no courses to show" : "select grade to show"}</Text>
-  );
+  const Fallback = () => <ItemText>{group.controls.grade.value ? "no courses to show" : "select grade to show"}</ItemText>;
 
   const compulsoryCourses = createMemo(
     () =>
@@ -310,10 +329,8 @@ export function CoursesSelect() {
     return (
       <Tooltip placement="right" flip="top" gutter={12}>
         <TooltipTrigger
-          as={CheckboxLabel}
-          class={
-            "ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-          }
+          as={asMerge([CheckboxLabel, ItemText])}
+          class={"ml-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"}
         >
           {course.abbreviation}
         </TooltipTrigger>
@@ -331,18 +348,14 @@ export function CoursesSelect() {
 
   return (
     <Show when={group.controls.degree.value === data()?.values.degree}>
-      <Typography as="h3" variant={"h5"}>
-        {t("menu.courses.title")}
-      </Typography>
-      <section class="space-y-2 ml-2">
-        <Typography as="p" variant={"h6"}>
-          {t("menu.courses.compulsaory")}
-        </Typography>
+      <SectionHeading>{t("menu.courses.title")}</SectionHeading>
+      <section class="ml-2">
+        <SubSectionHeading>{t("menu.courses.compulsaory")}</SubSectionHeading>
         <Show when={compulsoryCourses()} fallback={<Fallback />} keyed>
           {(compulsoryCourses) => (
             <>
               <Checkbox
-                class="flex items-start cursor-pointer"
+                class="flex items-center cursor-pointer"
                 value="all"
                 checked={group.controls.coursesCompulsory.value!.length === compulsoryCourses.length}
                 onChange={(checked) =>
@@ -352,16 +365,14 @@ export function CoursesSelect() {
                 }
               >
                 <CheckboxControl />
-                <CheckboxLabel
-                  class={"ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}
-                >
+                <CheckboxLabel as={ItemText} class={"ml-2  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
                   {t("menu.courses.all")}
                 </CheckboxLabel>
               </Checkbox>
               <For each={compulsoryCourses}>
                 {(course) => (
                   <Checkbox
-                    class="flex items-start cursor-pointer"
+                    class="flex items-center cursor-pointer"
                     value={course.id}
                     checked={group.controls.coursesCompulsory.value.includes(course.id)}
                     onChange={(checked) => handleChange(checked, "coursesCompulsory", course.id)}
@@ -374,16 +385,14 @@ export function CoursesSelect() {
             </>
           )}
         </Show>
-        <Typography as="p" variant={"h6"}>
-          {t("menu.courses.voluntary")}
-        </Typography>
+        <SubSectionHeading>{t("menu.courses.voluntary")}</SubSectionHeading>
         <Show when={optionalCourses()} fallback={<Fallback />} keyed>
           {(optionalCourses) => (
             <For each={optionalCourses}>
               {(course) => (
                 <Checkbox
                   checked={group.controls.coursesVoluntary.value.includes(course.id)}
-                  class="flex items-start"
+                  class="flex items-center cursor-pointer"
                   value={course.id}
                   onChange={(checked) => handleChange(checked, "coursesVoluntary", course.id)}
                 >
@@ -396,5 +405,68 @@ export function CoursesSelect() {
         </Show>
       </section>
     </Show>
+  );
+}
+
+export function Actions() {
+  const { persistedStore, recreateStore } = useScheduler();
+  const store = persistedStore();
+
+  const exportJSON = () => {
+    const a = document.createElement("a");
+    const file = new Blob([JSON.stringify(store)], { type: "application/json" });
+    a.href = URL.createObjectURL(file);
+    a.download = "schedule.json";
+    a.click();
+    a.remove();
+  };
+
+  const importJSON = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = false;
+    input.accept = ".json";
+    input.click();
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result as string);
+          recreateStore(data);
+        } catch (e) {
+          console.error(e);
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.remove();
+  };
+
+  return (
+    <Collapsible>
+      <CollapsibleTrigger class="flex w-full overflow-hidden items-center">
+        <SectionHeading>Actions</SectionHeading>
+        <ChevronDown />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={exportJSON}>
+          Export (JSON)
+        </ItemText>
+        <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={importJSON}>
+          Import (JSON)
+        </ItemText>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+export function SubmitButton() {
+  const { t } = useI18n();
+  return (
+    <Button class="w-full !mt-8 sticky bottom-0" type="submit">
+      {t("menu.generate")}
+    </Button>
   );
 }
