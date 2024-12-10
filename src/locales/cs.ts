@@ -83,7 +83,7 @@ export default {
       voluntary: "Volitelné",
       all: "Všechny",
     },
-    generate: "Generovat",
+    load: "Načíst",
     toast: {
       languageChanged: {
         loading: "Načítám data v novém jazyce",

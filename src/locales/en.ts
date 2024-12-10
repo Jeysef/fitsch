@@ -84,7 +84,7 @@ export default {
       voluntary: "Voluntary",
       all: "All",
     },
-    generate: "Generate",
+    load: "Load",
     toast: {
       languageChanged: {
         loading: "Loading data in new language",
