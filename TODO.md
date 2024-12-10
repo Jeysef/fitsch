@@ -10,6 +10,6 @@
   - Current: `select all` deletes all courses from other grades
   - Current pros:
     - standard student expected behaviour
-- [] **Saving and loading data**
+- [x] **Saving and loading data**
   - Save data to local storage
   - Load data from local storage
