@@ -6,9 +6,13 @@ import type { CourseData, DayEvent, Event } from "~/components/scheduler/types";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
 
-interface GeneratorState {
+interface ScheduleResult {
   selectedEvents: Map<string, Event>;
   completedHours: Record<string, Partial<Record<LECTURE_TYPE, number>>>;
+}
+
+interface SchedulerPosition {
+  attempt: number;
 }
 
 const RATING_WEIGHTS = {
@@ -71,10 +75,9 @@ function getTimePreferenceScore(timespan: TimeSpan): number {
 
 export default function SchedulerGenerator() {
   const { store } = useScheduler();
-  let scheduleGenerator: Generator<GeneratorState> | null = null;
-  let currentPosition: GeneratorPosition | null = null;
+  let currentPosition: SchedulerPosition = { attempt: -1 };
 
-  function hasTimeOverlap(event: Event, state: GeneratorState): boolean {
+  function hasTimeOverlap(event: Event, state: ScheduleResult): boolean {
     const eventSpan = event.timeSpan;
     for (const selected of state.selectedEvents.values()) {
       if (selected.id !== event.id && selected.day === event.day && store.hasOverlap(selected.timeSpan, eventSpan)) {
@@ -84,7 +87,7 @@ export default function SchedulerGenerator() {
     return false;
   }
 
-  function rateEvent(event: Event, state?: GeneratorState): number {
+  function rateEvent(event: Event, state?: ScheduleResult): number {
     function getPriorityScore(event: Event): number {
       // check store.data for count of events with event.type type
       const eventTypesCount = Object.values(store.data)
@@ -149,179 +152,140 @@ export default function SchedulerGenerator() {
     return (rating + linkedScore) / (linkedEvents.length + 1);
   }
 
-  function* generateSchedule(
-    courses: CourseData[],
-    attempts = 100,
-    startPosition?: GeneratorPosition
-  ): Generator<GeneratorState> {
-    const position = startPosition ?? { attempt: 0, direction: "forward" as const };
-    currentPosition = position;
+  function generateSchedule(courses: CourseData[], attempt: number): ScheduleResult | null {
+    console.log(`Generating schedule for attempt ${attempt}`);
 
-    console.log(
-      "Starting schedule generation with courses:",
-      courses.map((c) => c.detail.abbreviation)
-    );
-
-    // create ordered list of events based on priority
     const events = Object.values(store.data).flatMap((day) => day.events);
     const orderedEvents = chain(events)
       .map((e) => ({ event: e.event, score: rateEvent(e.event) }))
-      // @ts-ignore
-      .map(({ event, score }, _, collection) => ({ event, score: rerateEvent(score, event, collection) }))
+      .map(({ event, score }, _, collection) => ({
+        event,
+        score: rerateEvent(score, event, collection),
+      }))
       .sortBy("score")
       .value();
 
-    while (position.attempt < attempts && position.attempt >= 0) {
-      console.log(`\n${position.direction} attempt ${position.attempt + 1}/${attempts}`);
+    // Use Feistel network for deterministic shuffling
+    const shuffledEvents = orderedEvents
+      .map((e, idx) => ({
+        event: e.event,
+        position: feistelNetwork((attempt * orderedEvents.length + idx) >>> 0),
+      }))
+      .sort((a, b) => a.position - b.position)
+      .map((e) => e.event);
 
-      // Use Feistel network for bijective shuffling
-      const shuffledEvents = orderedEvents
-        .map((e, idx) => ({
-          event: e.event,
-          position: feistelNetwork(
-            (position.attempt * orderedEvents.length + idx) >>> 0,
-            position.direction === "backward"
-          ),
-        }))
-        .sort((a, b) => a.position - b.position)
-        .map((e) => e.event);
+    const state: ScheduleResult = {
+      selectedEvents: new Map<string, Event>(),
+      completedHours: ObjectTyped.fromEntries(courses.map((c) => [c.detail.id, {}])),
+    };
 
-      for (let attempt = 0; attempt < attempts; attempt++) {
-        console.log(`\nAttempt ${attempt + 1}/${attempts}`);
-        const state: GeneratorState = {
-          selectedEvents: new Map<string, Event>(),
-          completedHours: ObjectTyped.fromEntries(courses.map((c) => [c.detail.id, {}])),
-        };
+    for (const event of shuffledEvents) {
+      if (hasTimeOverlap(event, state)) continue;
 
-        // Shuffle events differently for each attempt using Fisher-Yates algorithm
-        for (let i = shuffledEvents.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledEvents[i], shuffledEvents[j]] = [shuffledEvents[j], shuffledEvents[i]];
-        }
-        for (const event of shuffledEvents) {
-          if (hasTimeOverlap(event, state)) continue;
+      // check if event can be added to schedule
+      const type = event.type;
+      const requiredHours = event.metrics.weeklyLectures;
+      const completedHours = state.completedHours[event.courseDetail.id][type] || 0;
 
-          // check if event can be added to schedule
-          const type = event.type;
-          const requiredHours = event.metrics.weeklyLectures;
-          const completedHours = state.completedHours[event.courseDetail.id][type] || 0;
+      console.log(`\nEvent: ${event.id} ${event.courseDetail.abbreviation} ${type}`);
+      console.log(`- Required: ${requiredHours} hours`);
+      console.log(`- Completed: ${completedHours} hours`);
 
-          console.log(`\nEvent: ${event.id} ${event.courseDetail.abbreviation} ${type}`);
-          console.log(`- Required: ${requiredHours} hours`);
-          console.log(`- Completed: ${completedHours} hours`);
+      if (completedHours === requiredHours) {
+        console.log(`✓ Required hours met for ${type}`);
+        continue;
+      }
+      if (completedHours > requiredHours) {
+        console.error(`✗ Completed hours exceed required for ${type}`);
+        continue;
+      }
+      if (completedHours + event.timeSpan.hours > requiredHours) {
+        console.log(`✗ Adding event exceeds required hours for ${type}`);
+        continue;
+      }
 
-          if (completedHours === requiredHours) {
-            console.log(`✓ Required hours met for ${type}`);
-            continue;
-          }
-          if (completedHours > requiredHours) {
-            console.error(`✗ Completed hours exceed required for ${type}`);
-            continue;
-          }
-          if (completedHours + event.timeSpan.hours > requiredHours) {
-            console.log(`✗ Adding event exceeds required hours for ${type}`);
-            continue;
-          }
+      const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id)
+        .map((link) => store.data[link.day].events.find((e) => e.event.id === link.id))
+        .filter((e) => e && !state.selectedEvents.has(e.event.id)) as DayEvent[];
 
-          const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id)
-            .map((link) => store.data[link.day].events.find((e) => e.event.id === link.id))
-            .filter((e) => e && !state.selectedEvents.has(e.event.id)) as DayEvent[];
+      const hoursCopy = cloneDeep(state.completedHours);
+      // expect candidate to be added
+      hoursCopy[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
 
-          const hoursCopy = cloneDeep(state.completedHours);
-          // expect candidate to be added
-          hoursCopy[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
+      const canAddAllLinks = allLinkedEvents.every(({ event }) => {
+        if (hasTimeOverlap(event, state)) return false;
 
-          const canAddAllLinks = allLinkedEvents.every(({ event }) => {
-            if (hasTimeOverlap(event, state)) return false;
+        const eventType = event.type;
+        const eventCourseId = event.courseDetail.id;
+        const currentHours = hoursCopy[eventCourseId][eventType] || 0;
+        const additionalHours = event.timeSpan.hours;
+        const courseRequiredHours = event.metrics.weeklyLectures;
 
-            const eventType = event.type;
-            const eventCourseId = event.courseDetail.id;
-            const currentHours = hoursCopy[eventCourseId][eventType] || 0;
-            const additionalHours = event.timeSpan.hours;
-            const courseRequiredHours = event.metrics.weeklyLectures;
+        hoursCopy[eventCourseId][eventType] = currentHours + additionalHours;
+        return hoursCopy[eventCourseId][eventType] <= courseRequiredHours;
+      });
 
-            hoursCopy[eventCourseId][eventType] = currentHours + additionalHours;
-            return hoursCopy[eventCourseId][eventType] <= courseRequiredHours;
-          });
+      if (canAddAllLinks) {
+        state.selectedEvents.set(event.id, event);
+        state.completedHours[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
+        console.log(`✓ Added ${event.id}`);
 
-          if (canAddAllLinks) {
-            state.selectedEvents.set(event.id, event);
-            state.completedHours[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
-            console.log(`✓ Added ${event.id}`);
-
-            for (const { event } of allLinkedEvents) {
-              state.selectedEvents.set(event.id, event);
-              const linkedType = event.type;
-              const linkedCourseId = event.courseDetail.id;
-              state.completedHours[linkedCourseId][linkedType] =
-                (state.completedHours[linkedCourseId][linkedType] || 0) + event.timeSpan.hours;
-              console.log(`✓ Added linked ${linkedType}: ${event.id}`);
-            }
-          }
-        }
-
-        // check if all courses have required hours
-        const allCoursesComplete = courses.every((course) =>
-          ObjectTyped.entries(state.completedHours[course.detail.id]).every(([type, hours]) => {
-            const requiredHours = course.metrics[type as LECTURE_TYPE].weeklyLectures;
-            return hours === requiredHours;
-          })
-        );
-        if (allCoursesComplete) {
-          console.log("All courses have required hours");
-          // Clear and apply selections
-          for (const course of store.courses) {
-            for (const dayData of Object.values(course.data)) {
-              for (const event of dayData.events) {
-                event.event.checked = false;
-              }
-            }
-          }
-
-          for (const course of courses) {
-            for (const dayData of Object.values(course.data)) {
-              for (const event of dayData.events) {
-                event.event.checked = state.selectedEvents.has(event.event.id);
-              }
-            }
-          }
-
-          yield state;
-          position.attempt += position.direction === "forward" ? 1 : -1;
-        } else {
-          position.attempt += position.direction === "forward" ? 1 : -1;
+        for (const { event } of allLinkedEvents) {
+          state.selectedEvents.set(event.id, event);
+          const linkedType = event.type;
+          const linkedCourseId = event.courseDetail.id;
+          state.completedHours[linkedCourseId][linkedType] =
+            (state.completedHours[linkedCourseId][linkedType] || 0) + event.timeSpan.hours;
+          console.log(`✓ Added linked ${linkedType}: ${event.id}`);
         }
       }
     }
-    // if no valid schedule is found
+
+    // check if all courses have required hours
+    const allCoursesComplete = courses.every((course) =>
+      ObjectTyped.entries(state.completedHours[course.detail.id]).every(([type, hours]) => {
+        const requiredHours = course.metrics[type as LECTURE_TYPE].weeklyLectures;
+        return hours === requiredHours;
+      })
+    );
+    if (allCoursesComplete) {
+      console.log("All courses have required hours");
+      applyScheduleToStore(state, courses);
+      return state;
+    }
+
     return null;
   }
 
-  function generateNext() {
-    if (!scheduleGenerator || !currentPosition) {
-      currentPosition = { attempt: 0, direction: "forward" };
-      scheduleGenerator = generateSchedule(store.courses, 100, currentPosition);
+  function applyScheduleToStore(result: ScheduleResult, courses: CourseData[]) {
+    // Clear all selections
+    for (const course of store.courses) {
+      for (const dayData of Object.values(course.data)) {
+        for (const event of dayData.events) {
+          event.event.checked = false;
+        }
+      }
     }
-    const result = scheduleGenerator.next();
-    if (!result.value) {
-      console.error("Failed to generate valid schedule");
-      scheduleGenerator = null; // Reset generator for next round
+
+    // Apply new selections
+    for (const course of courses) {
+      for (const dayData of Object.values(course.data)) {
+        for (const event of dayData.events) {
+          event.event.checked = result.selectedEvents.has(event.event.id);
+        }
+      }
     }
-    return result;
   }
 
-  function generatePrevious() {
-    if (!currentPosition) {
-      currentPosition = { attempt: 99, direction: "backward" };
-    } else if (currentPosition.attempt <= 0) {
-      return { value: null, done: true };
-    }
+  function generateNext(): ScheduleResult | null {
+    currentPosition.attempt++;
+    return generateSchedule(store.courses, currentPosition.attempt);
+  }
 
-    scheduleGenerator = generateSchedule(store.courses, 100, {
-      attempt: currentPosition.attempt - 1,
-      direction: "backward",
-    });
-    return scheduleGenerator.next();
+  function generatePrevious(): ScheduleResult | null {
+    if (currentPosition.attempt <= 0) return null;
+    currentPosition.attempt--;
+    return generateSchedule(store.courses, currentPosition.attempt);
   }
 
   return {
