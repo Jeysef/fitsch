@@ -235,111 +235,87 @@ export default function SchedulerGenerator() {
   function generateSchedule(courses: CourseData[], attempt: number): ScheduleResult | null {
     console.log(`Generating schedule for attempt ${attempt}`);
 
-    const events = Object.values(store.data).flatMap((day) => day.events);
+    const events = Object.values(store.data).flatMap((day) => day.events.map((e) => e.event));
     const typeCounts = getTypeCounts();
 
-    const orderedEvents = chain(events.map((e) => e.event))
+    const orderedEvents = events
       .map((e) => ({
         event: e,
         score: rateEvent(e, typeCounts),
       }))
-      .map(({ event, score }, index, collection) => ({
-        event,
-        score: rerateEvent(score, event, index, collection as { event: Event; score: number }[], typeCounts),
-      }))
-      .sortBy("score")
-      .value();
-
-    console.log("🚀 ~ file: generator2.singlePass.ts:171 ~ generateSchedule ~ orderedEvents:", orderedEvents);
-    // Use Feistel network for deterministic shuffling
-    const shuffledEvents = orderedEvents
-      .map((e, idx) => ({
-        event: e.event,
-        // position: feistelNetwork((attempt * orderedEvents.length + idx) >>> 0),
-      }))
-      // .sort((a, b) => a.position - b.position)
-      .map((e) => e.event);
+      .sort((a, b) => a.score - b.score);
 
     const state: ScheduleResult = {
       selectedEvents: new Map<string, Event>(),
       completedHours: ObjectTyped.fromEntries(courses.map((c) => [c.detail.id, {}])),
     };
 
-    for (const event of shuffledEvents) {
+    const selectedEventIds = new Set<string>();
+
+    for (const { event } of orderedEvents) {
+      if (selectedEventIds.has(event.id)) continue;
       if (hasTimeOverlap(event, state.selectedEvents.values())) continue;
 
-      // check if event can be added to schedule
       const type = event.type;
+      const courseId = event.courseDetail.id;
       const requiredHours = event.metrics.weeklyLectures;
-      const completedHours = state.completedHours[event.courseDetail.id][type] || 0;
+      const completedHours = state.completedHours[courseId][type] || 0;
 
-      console.log(`\nEvent: ${event.id} ${event.courseDetail.abbreviation} ${type}`);
-      console.log(`- Required: ${requiredHours} hours`);
-      console.log(`- Completed: ${completedHours} hours`);
+      if (completedHours + event.timeSpan.hours > requiredHours) continue;
 
-      if (completedHours === requiredHours) {
-        console.log(`✓ Required hours met for ${type}`);
-        continue;
+      const linkedEvents = [...event.strongLinked, ...event.linked]
+        .map((link) => store.data[link.day]?.events.find((e) => e.event.id === link.id)?.event)
+        .filter((linkedEvent) => linkedEvent && !selectedEventIds.has(linkedEvent.id)) as Event[];
+
+      let canAddAllLinks = true;
+
+      for (const linkedEvent of linkedEvents) {
+        if (hasTimeOverlap(linkedEvent, state.selectedEvents.values())) {
+          canAddAllLinks = false;
+          break;
+        }
+
+        const linkedType = linkedEvent.type;
+        const linkedCourseId = linkedEvent.courseDetail.id;
+        const linkedRequiredHours = linkedEvent.metrics.weeklyLectures;
+        const linkedCompletedHours = state.completedHours[linkedCourseId][linkedType] || 0;
+
+        if (linkedCompletedHours + linkedEvent.timeSpan.hours > linkedRequiredHours) {
+          canAddAllLinks = false;
+          break;
+        }
       }
-      if (completedHours > requiredHours) {
-        console.error(`✗ Completed hours exceed required for ${type}`);
-        continue;
-      }
-      if (completedHours + event.timeSpan.hours > requiredHours) {
-        console.log(`✗ Adding event exceeds required hours for ${type}`);
-        continue;
-      }
-
-      const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id)
-        .map((link) => store.data[link.day].events.find((e) => e.event.id === link.id))
-        .filter((e) => e && !state.selectedEvents.has(e.event.id)) as DayEvent[];
-
-      const completedHoursCopy = cloneDeep(state.completedHours);
-      // const completedHoursCopy = { ...state.completedHours };
-      // expect candidate to be added
-      completedHoursCopy[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
-
-      const canAddAllLinks = allLinkedEvents.every(({ event }) => {
-        if (hasTimeOverlap(event, state.selectedEvents.values())) return false;
-
-        const eventType = event.type;
-        const eventCourseId = event.courseDetail.id;
-        const currentHours = completedHoursCopy[eventCourseId][eventType] || 0;
-        const additionalHours = event.timeSpan.hours;
-        const courseRequiredHours = event.metrics.weeklyLectures;
-
-        completedHoursCopy[eventCourseId][eventType] = currentHours + additionalHours;
-        return completedHoursCopy[eventCourseId][eventType] <= courseRequiredHours;
-      });
 
       if (canAddAllLinks) {
         state.selectedEvents.set(event.id, event);
-        state.completedHours[event.courseDetail.id][type] = completedHours + event.timeSpan.hours;
-        console.log(`✓ Added ${event.id}`);
+        selectedEventIds.add(event.id);
+        state.completedHours[courseId][type] = completedHours + event.timeSpan.hours;
 
-        for (const { event } of allLinkedEvents) {
-          state.selectedEvents.set(event.id, event);
-          const linkedType = event.type;
-          const linkedCourseId = event.courseDetail.id;
-          state.completedHours[linkedCourseId][linkedType] =
-            (state.completedHours[linkedCourseId][linkedType] || 0) + event.timeSpan.hours;
-          console.log(`✓ Added linked ${linkedType}: ${event.id}`);
+        for (const linkedEvent of linkedEvents) {
+          const linkedType = linkedEvent.type;
+          const linkedCourseId = linkedEvent.courseDetail.id;
+          const linkedCompletedHours = state.completedHours[linkedCourseId][linkedType] || 0;
+          state.selectedEvents.set(linkedEvent.id, linkedEvent);
+          selectedEventIds.add(linkedEvent.id);
+          state.completedHours[linkedCourseId][linkedType] = linkedCompletedHours + linkedEvent.timeSpan.hours;
         }
       }
     }
 
-    // check if all courses have required hours
+    // Check if all courses have required hours
     const allCoursesComplete = courses.every((course) => {
       const courseHours = state.completedHours[course.detail.id];
       return ObjectTyped.entries(course.metrics).every(([type, requiredHours]) => {
-        const completedHours = courseHours[type] || 0;
-        return completedHours === requiredHours.weeklyLectures;
+        const completed = courseHours[type] || 0;
+        return completed >= requiredHours.weeklyLectures;
       });
     });
+
     if (allCoursesComplete) {
       console.log("All courses have required hours");
       return state;
     }
+
     console.warn("Not all courses have required hours");
     return null;
   }
@@ -356,7 +332,10 @@ export default function SchedulerGenerator() {
 
   function generateNext(): void {
     currentPosition.attempt++;
+    const startTime = performance.now();
     const result = generateSchedule(store.courses, currentPosition.attempt);
+    const endTime = performance.now();
+    console.log(`Schedule generation took ${Math.round(endTime - startTime)}ms`);
     if (result) {
       applyScheduleToStore(result);
     }
