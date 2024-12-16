@@ -259,9 +259,9 @@ export default function SchedulerGenerator() {
     const shuffledEvents = orderedEvents
       .map((e, idx) => ({
         event: e.event,
-        // position: feistelNetwork((attempt * orderedEvents.length + idx) >>> 0),
+        position: feistelNetwork((attempt * orderedEvents.length + idx) >>> 0),
       }))
-      // .sort((a, b) => a.position - b.position)
+      .sort((a, b) => a.position - b.position)
       .map((e) => e.event);
 
     const state: ScheduleResult = {
