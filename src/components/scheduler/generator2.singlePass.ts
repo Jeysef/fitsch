@@ -74,6 +74,17 @@ export default function SchedulerGenerator() {
   const { store } = useScheduler();
   const currentPosition: SchedulerPosition = createMutable({ attempt: -1 });
 
+  function getTypeCounts(): Map<string, number> {
+    const counts = new Map<string, number>();
+    for (const day of Object.values(store.data)) {
+      for (const { event } of day.events) {
+        const key = `${event.courseDetail.id}-${event.type}`;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      }
+    }
+    return counts;
+  }
+
   function hasTimeOverlap(event: Event, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
     for (const selected of events) {
@@ -84,44 +95,13 @@ export default function SchedulerGenerator() {
     return false;
   }
 
-  function rateEvent(event: Event, collection: Event[], state?: ScheduleResult): number {
-    /**
-     * Value is a number between 0 and 1
-     * 0 is the best time, 1 is the worst
-     */
-    function getPriorityScore(event: Event): number {
-      // check store.data for count of events with event.type type
-      const eventTypesCount = Object.values(store.data)
-        .flatMap((day) => day.events)
-        .filter((e) => e.event.courseDetail.id === event.courseDetail.id && e.event.type === event.type).length;
-      console.log(`Event: ${event.courseDetail.abbreviation} ${event.type} count: ${eventTypesCount}`);
-      return 1 - 1 / (eventTypesCount + 1);
-    }
-    /**
-     * Value is a number between 0 and 1
-     * 0 is the best time, 1 is the worst
-     */
-    function getVicinityScore(event: Event): number {
-      // the more events are in a day except event time, the better
-      if (!state) return 0;
-      const dayEvents = state.selectedEvents.values().filter((e) => e.day === event.day);
-
-      const dayEventsHours = dayEvents.reduce((acc, e) => acc + e.timeSpan.hours, 0);
-      /**
-       * Value is a number between 0 and 1
-       * 0 is the best time, 1 is the worst
-       */
-      const selectedInDayScore =
-        dayEventsHours <= RATING_WEIGHTS.IDEAL_HOURS_A_DAY
-          ? 1 - dayEventsHours / RATING_WEIGHTS.IDEAL_HOURS_A_DAY
-          : 1 - 1 / (dayEventsHours - RATING_WEIGHTS.IDEAL_HOURS_A_DAY);
-      return selectedInDayScore;
-    }
-
-    const Pr = getPriorityScore(event);
+  function rateEvent(event: Event, typeCounts: Map<string, number>, state?: ScheduleResult): number {
+    const typeCount = typeCounts.get(`${event.courseDetail.id}-${event.type}`) || 0;
+    const Pr = 1 - 1 / (typeCount + 1);
     const Tr = getTimePreferenceScore(event.timeSpan);
-    const Vr = getVicinityScore(event);
-    // Logs ----------------
+    const Vr = state ? getVicinityScore(event, state) : 0;
+
+    // Logs
     batch(() => {
       // @ts-ignore
       event.Pr = Math.round(Pr * 100) / 100;
@@ -130,15 +110,26 @@ export default function SchedulerGenerator() {
       // @ts-ignore
       event.Vr = Math.round(Vr * 100) / 100;
     });
-    // Logs ----------------
 
-    const eventRating = Pr + Tr + (state ? Vr : 0);
-    // event.rating = Math.round(eventRating * 100) / 100;
-    return eventRating;
+    return Pr + Tr + Vr;
   }
 
-  // rerate considering linked events
-  function rerateEvent(rating: number, event: Event, index: number, collection: { event: Event; score: number }[]): number {
+  function getVicinityScore(event: Event, state: ScheduleResult): number {
+    const dayEvents = Array.from(state.selectedEvents.values()).filter((e) => e.day === event.day);
+    const dayEventsHours = dayEvents.reduce((acc, e) => acc + e.timeSpan.hours, 0);
+
+    return dayEventsHours <= RATING_WEIGHTS.IDEAL_HOURS_A_DAY
+      ? 1 - dayEventsHours / RATING_WEIGHTS.IDEAL_HOURS_A_DAY
+      : 1 - 1 / (dayEventsHours - RATING_WEIGHTS.IDEAL_HOURS_A_DAY);
+  }
+
+  function rerateEvent(
+    rating: number,
+    event: Event,
+    index: number,
+    collection: { event: Event; score: number }[],
+    typeCounts: Map<string, number>
+  ): number {
     const precedingEvents = collection.slice(0, index + 1).map((e) => e.event);
     function getLinkedScore(event: Event): number {
       const linkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id)
@@ -245,11 +236,16 @@ export default function SchedulerGenerator() {
     console.log(`Generating schedule for attempt ${attempt}`);
 
     const events = Object.values(store.data).flatMap((day) => day.events);
+    const typeCounts = getTypeCounts();
+
     const orderedEvents = chain(events.map((e) => e.event))
-      .map((e, index, collection) => ({ event: e, score: rateEvent(e, (collection as Event[]).slice(undefined, index)) }))
+      .map((e) => ({
+        event: e,
+        score: rateEvent(e, typeCounts),
+      }))
       .map(({ event, score }, index, collection) => ({
         event,
-        score: rerateEvent(score, event, index, collection as { event: Event; score: number }[]),
+        score: rerateEvent(score, event, index, collection as { event: Event; score: number }[], typeCounts),
       }))
       .sortBy("score")
       .value();
@@ -344,7 +340,7 @@ export default function SchedulerGenerator() {
       console.log("All courses have required hours");
       return state;
     }
-
+    console.warn("Not all courses have required hours");
     return null;
   }
 
