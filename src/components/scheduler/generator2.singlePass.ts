@@ -1,6 +1,6 @@
 import { uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { batch, createMemo } from "solid-js";
+import { batch, createMemo, on } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { CourseData, Event } from "~/components/scheduler/types";
@@ -49,18 +49,21 @@ export default function SchedulerGenerator() {
     return counts;
   });
 
-  const orderedEvents = createMemo(() => {
-    if (!Object.hasOwn(store, "data")) {
-      return [];
-    }
-    return Object.values(store.data)
-      .flatMap((day) => day.events.map((e) => e.event))
-      .map((e) => ({
-        event: e,
-        score: rateEvent(e, undefined, currentPosition.attempt),
-      }))
-      .sort((a, b) => a.score - b.score);
-  });
+  const orderedEvents = createMemo(
+    on(
+      () => store.data,
+      (data) => {
+        if (!data) return [];
+        return Object.values(data)
+          .flatMap((day) => day.events.map((e) => e.event))
+          .map((e) => ({
+            event: e,
+            score: rateEvent(e, undefined, currentPosition.attempt),
+          }))
+          .sort((a, b) => a.score - b.score);
+      }
+    )
+  );
 
   const getEmptyCompletedHours = () => {
     return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
@@ -82,13 +85,13 @@ export default function SchedulerGenerator() {
     const Tr = getTimePreferencePenalty(event.timeSpan);
     const perturbation = getPerturbation(event, attempt);
 
-    // Logs
-    batch(() => {
-      // @ts-ignore
-      event.Pr = Math.round(Pr * 100) / 100;
-      // @ts-ignore
-      event.Tr = Math.round(Tr * 100) / 100;
-    });
+    // // Logs
+    // batch(() => {
+    //   // @ts-ignore
+    //   event.Pr = Math.round(Pr * 100) / 100;
+    //   // @ts-ignore
+    //   event.Tr = Math.round(Tr * 100) / 100;
+    // });
 
     return Pr + Tr + perturbation;
   }
