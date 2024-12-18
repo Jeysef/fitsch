@@ -75,9 +75,9 @@ export default function SchedulerGenerator() {
       .sort((a, b) => a.score - b.score);
   });
 
-  const getEmptyCompletedHours = createMemo(() => {
+  const getEmptyCompletedHours = () => {
     return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
-  });
+  };
 
   function hasTimeOverlap(event: Event, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
@@ -234,7 +234,6 @@ export default function SchedulerGenerator() {
       completedHours: getEmptyCompletedHours(),
     };
 
-    console.log("🚀 ~ file: generator2.singlePass.ts:244 ~ generateSchedule ~ orderedEvents():", orderedEvents());
     for (const { event } of orderedEvents()) {
       if (hasTimeOverlap(event, state.selectedEvents.values())) continue;
 
