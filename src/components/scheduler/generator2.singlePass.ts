@@ -1,6 +1,6 @@
 import { chain, uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { batch, createMemo, on } from "solid-js";
+import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { CourseData, Event } from "~/components/scheduler/types";
@@ -49,27 +49,24 @@ export default function SchedulerGenerator() {
     return counts;
   });
 
-  const orderedEvents = createMemo(
-    on(
-      () => store.data,
-      (data) => {
-        if (!data) return [];
-        return chain(data)
-          .values()
-          .flatMap((d) => d.events)
-          .map(({ event }) => ({
-            event: event,
-            score: rateEvent(event, undefined, currentPosition.attempt),
-          }))
-          .orderBy(["score"], ["asc"])
-          .value();
-      }
-    )
-  );
-
-  const emptyCompletedHours = createMemo(() => {
-    return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
+  const orderedEvents = createMemo(() => {
+    const data = store.data;
+    console.log("orderedEvents", data);
+    if (!data) return [];
+    return chain(data)
+      .values()
+      .flatMap((d) => d.events)
+      .map(({ event }) => ({
+        event: event,
+        score: rateEvent(event, undefined, currentPosition.attempt),
+      }))
+      .orderBy(["score"], ["asc"])
+      .value();
   });
+
+  const getEmptyCompletedHours = () => {
+    return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
+  };
 
   function hasTimeOverlap(event: Event, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
@@ -119,7 +116,7 @@ export default function SchedulerGenerator() {
 
     const state: ScheduleResult = {
       selectedEvents: new Map<string, Event>(),
-      completedHours: emptyCompletedHours(),
+      completedHours: getEmptyCompletedHours(),
     };
 
     for (const { event } of orderedEvents()) {
