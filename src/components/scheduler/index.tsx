@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { compact, debounce, flatMap, flow, values } from "lodash-es";
+import { compact, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import type { StrictExtract } from "ts-essentials";
@@ -42,59 +42,75 @@ function SchedulerGrid() {
   const evCache: PointerEvent[] = [];
   let prevDiff = -1;
 
-  const removeEvent = (ev: PointerEvent) => {
-    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
-    evCache.splice(index, 1);
+  const handleZoom = (currentDiff: number) => {
+    if (prevDiff > 0) {
+      const scaleFactor = (currentDiff - prevDiff) * 0.6;
+      setScale((s) => Math.max(40, Math.min(150, s + scaleFactor)));
+    }
+    prevDiff = currentDiff;
   };
 
   const handlePointerDown = (ev: PointerEvent) => {
+    (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
     evCache.push(ev);
   };
 
-  const handlePointerMove = debounce((ev: PointerEvent) => {
+  const handlePointerMove = (ev: PointerEvent) => {
     ev.preventDefault();
     const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
     evCache[index] = ev;
 
     if (evCache.length === 2) {
-      // Calculate distance between two pointers using Pythagorean theorem
       const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
-
-      if (prevDiff > 0) {
-        // Calculate zoom factor based on the difference in distance
-        const scaleFactor = (curDiff - prevDiff) * 0.6;
-        setScale((s) => Math.max(40, Math.min(150, s + scaleFactor)));
-      }
-      prevDiff = curDiff;
+      handleZoom(curDiff);
     }
-  }, 1);
+  };
 
   const handlePointerUp = (ev: PointerEvent) => {
-    removeEvent(ev);
-    if (evCache.length < 2) {
-      prevDiff = -1;
+    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
+    evCache.splice(index, 1);
+    (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
+    if (evCache.length < 2) prevDiff = -1;
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentDiff = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+      handleZoom(currentDiff);
     }
+  };
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      prevDiff = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    prevDiff = -1;
   };
 
   return (
     <div
-      class="relative grid overflow-auto max-h-full h-auto w-full justify-start"
+      class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out"
       style={{
         "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.5em, 10rem))`,
         "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
         "--scheduler-scale": `${scale()}%`,
         "font-size": "var(--scheduler-scale, 100%)",
       }}
-      // onPointerDown={handlePointerDown}
-      // onPointerMove={handlePointerMove}
-      // onPointerUp={handlePointerUp}
-      // // onPointerCancel={handlePointerUp}
-      // // onPointerOut={handlePointerUp}
-      // onPointerLeave={handlePointerUp}
-      on:pointerdown={handlePointerDown}
-      on:pointermove={handlePointerMove}
-      on:pointerup={handlePointerUp}
-      on:pointerleave={handlePointerUp}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
         <Corner />
