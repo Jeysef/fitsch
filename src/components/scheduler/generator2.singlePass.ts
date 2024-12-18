@@ -33,7 +33,10 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
 
 export default function SchedulerGenerator() {
   const { store } = useScheduler();
-  const currentPosition = createMutable({ attempt: 0 });
+  const currentPosition = createMutable({
+    attempt: 0,
+    isGenerating: false,
+  });
 
   // precalculate type counts,... using solid primitives
   const courseTypeCounts = createMemo(() => {
@@ -111,7 +114,7 @@ export default function SchedulerGenerator() {
     return hash;
   }
 
-  function generateSchedule(courses: CourseData[], attempt: number): ScheduleResult | null {
+  async function generateSchedule(courses: CourseData[], attempt: number): Promise<ScheduleResult | null> {
     console.log(`Generating schedule for attempt ${attempt}`);
 
     const state: ScheduleResult = {
@@ -119,7 +122,13 @@ export default function SchedulerGenerator() {
       completedHours: getEmptyCompletedHours(),
     };
 
+    let processedCount = 0;
     for (const { event } of orderedEvents()) {
+      // Yield every 100 iterations to prevent blocking
+      if (++processedCount % 100 === 0) {
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+
       if (hasTimeOverlap(event, state.selectedEvents.values())) continue;
 
       const type = event.type;
@@ -210,31 +219,43 @@ export default function SchedulerGenerator() {
     });
   }
 
-  function tryGenerateSchedule(forward: boolean): void {
+  async function tryGenerateSchedule(forward: boolean): Promise<void> {
+    if (currentPosition.isGenerating) return;
+
+    currentPosition.isGenerating = true;
     const maxAttempts = 10000;
-    while (currentPosition.attempt >= 0 && currentPosition.attempt < maxAttempts) {
-      currentPosition.attempt += forward ? 1 : -1;
 
-      // Ensure attempt stays within valid bounds
-      if (currentPosition.attempt < 0 || currentPosition.attempt >= maxAttempts) {
-        console.warn("Attempt out of bounds");
-        break;
-      }
+    try {
+      while (currentPosition.attempt >= 0 && currentPosition.attempt < maxAttempts) {
+        currentPosition.attempt += forward ? 1 : -1;
 
-      const result = generateSchedule(store.courses, currentPosition.attempt);
-      if (result) {
-        applyScheduleToStore(result);
-        break;
+        if (currentPosition.attempt < 0 || currentPosition.attempt >= maxAttempts) {
+          console.warn("Attempt out of bounds");
+          break;
+        }
+
+        const result = await generateSchedule(store.courses, currentPosition.attempt);
+        if (result) {
+          applyScheduleToStore(result);
+          break;
+        }
+
+        // Yield every 10 attempts to prevent blocking
+        if (currentPosition.attempt % 10 === 0) {
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
       }
+    } finally {
+      currentPosition.isGenerating = false;
     }
   }
 
-  function generateNext(): void {
-    tryGenerateSchedule(true);
+  async function generateNext(): Promise<void> {
+    await tryGenerateSchedule(true);
   }
 
-  function generatePrevious(): void {
-    tryGenerateSchedule(false);
+  async function generatePrevious(): Promise<void> {
+    await tryGenerateSchedule(false);
   }
 
   const canGeneratePrevious = createMemo(() => currentPosition.attempt > 0);
@@ -243,5 +264,6 @@ export default function SchedulerGenerator() {
     generateNext,
     generatePrevious,
     canGeneratePrevious,
+    isGenerating: () => currentPosition.isGenerating,
   };
 }
