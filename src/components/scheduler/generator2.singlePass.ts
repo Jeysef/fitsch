@@ -45,7 +45,7 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
 
 export default function SchedulerGenerator() {
   const { store } = useScheduler();
-  const currentPosition: SchedulerPosition = createMutable({ attempt: -1 });
+  const currentPosition: SchedulerPosition = createMutable({ attempt: 0 });
 
   // precalculate type counts,... using solid primitives
   const courseTypeCounts = createMemo(() => {
@@ -70,7 +70,7 @@ export default function SchedulerGenerator() {
       .flatMap((day) => day.events.map((e) => e.event))
       .map((e) => ({
         event: e,
-        score: rateEvent(e),
+        score: rateEvent(e, undefined, currentPosition.attempt),
       }))
       .sort((a, b) => a.score - b.score);
   });
@@ -89,11 +89,12 @@ export default function SchedulerGenerator() {
     return false;
   }
 
-  function rateEvent(event: Event, state?: ScheduleResult): number {
+  function rateEvent(event: Event, state?: ScheduleResult, attempt = 0): number {
     const typeCount = courseTypeCounts().get(`${event.courseDetail.id}-${event.type}`) || 0;
     const Pr = 1 - 1 / (typeCount + 1);
     const Tr = getTimePreferencePenalty(event.timeSpan);
     const Vr = state ? getVicinityPenalty(event, state) : 0;
+    const perturbation = getPerturbation(event, attempt);
 
     // Logs
     batch(() => {
@@ -105,7 +106,23 @@ export default function SchedulerGenerator() {
       event.Vr = Math.round(Vr * 100) / 100;
     });
 
-    return Pr + Tr + Vr;
+    return Pr + Tr + Vr + perturbation;
+  }
+
+  function getPerturbation(event: Event, attempt: number): number {
+    const seed = hashCode(`${event.id}_${attempt}`);
+    const random = (Math.sin(seed) + 1) / 2; // Range [0, 1]
+    const magnitude = 1.0; // Increased magnitude for greater variation
+    return (random - 0.5) * magnitude; // Range [-0.5, 0.5]
+  }
+
+  function hashCode(str: string): number {
+    let hash = 0;
+    for (const char of str) {
+      hash = (hash << 5) - hash + char.charCodeAt(0);
+      hash |= 0; // Convert to 32-bit integer
+    }
+    return hash;
   }
 
   function getVicinityPenalty(event: Event, state: ScheduleResult): number {
@@ -293,6 +310,11 @@ export default function SchedulerGenerator() {
         const courseHours = state.completedHours[course.detail.id];
         return ObjectTyped.entries(course.metrics).every(([type, requiredHours]) => {
           const completed = courseHours[type] || 0;
+          console.log(
+            "🚀 ~ file: generator2.singlePass.ts:305 ~ returnObjectTyped.entries ~ completed:",
+            completed,
+            requiredHours.weeklyLectures
+          );
           return completed === requiredHours.weeklyLectures;
         });
       });
@@ -303,7 +325,18 @@ export default function SchedulerGenerator() {
       }
     }
 
-    console.log("🚀 ~ file: generator2.singlePass.ts:323 ~ generateSchedule ~ state.completedHours:", state.completedHours);
+    // log missing hours
+    console.warn("Missing hours:");
+    for (const course of store.courses) {
+      const courseHours = state.completedHours[course.detail.id];
+      for (const [type, metrics] of ObjectTyped.entries(course.metrics)) {
+        const completed = courseHours[type] || 0;
+        const required = metrics.weeklyLectures;
+        if (completed < required) {
+          console.warn(`${course.detail.abbreviation} ${type}: ${completed}/${required}`);
+        }
+      }
+    }
 
     console.warn("Not all courses have required hours");
     return null;
@@ -319,24 +352,31 @@ export default function SchedulerGenerator() {
     });
   }
 
-  function generateNext(): void {
-    currentPosition.attempt++;
-    const startTime = performance.now();
-    const result = generateSchedule(store.courses, currentPosition.attempt);
-    const endTime = performance.now();
-    console.log(`Schedule generation took ${Math.round(endTime - startTime)}ms`);
-    if (result) {
-      applyScheduleToStore(result);
+  function tryGenerateSchedule(forward: boolean): void {
+    const maxAttempts = 10000;
+    while (currentPosition.attempt >= 0 && currentPosition.attempt < maxAttempts) {
+      currentPosition.attempt += forward ? 1 : -1;
+
+      // Ensure attempt stays within valid bounds
+      if (currentPosition.attempt < 0 || currentPosition.attempt >= maxAttempts) {
+        console.warn("Attempt out of bounds");
+        break;
+      }
+
+      const result = generateSchedule(store.courses, currentPosition.attempt);
+      if (result) {
+        applyScheduleToStore(result);
+        break;
+      }
     }
   }
 
+  function generateNext(): void {
+    tryGenerateSchedule(true);
+  }
+
   function generatePrevious(): void {
-    if (currentPosition.attempt <= 0) return;
-    currentPosition.attempt--;
-    const result = generateSchedule(store.courses, currentPosition.attempt);
-    if (result) {
-      applyScheduleToStore(result);
-    }
+    tryGenerateSchedule(false);
   }
 
   const canGeneratePrevious = createMemo(() => currentPosition.attempt > 0);
