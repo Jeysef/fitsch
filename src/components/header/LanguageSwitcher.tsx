@@ -50,7 +50,7 @@ function SelectItemContent(props: { label: string; flag: string }) {
   return (
     <div class="flex items-center gap-2">
       <span>{props.flag}</span>
-      <span>{props.label}</span>
+      <span class="hidden sm:block">{props.label}</span>
     </div>
   );
 }
