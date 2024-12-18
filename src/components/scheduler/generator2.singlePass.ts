@@ -20,15 +20,7 @@ const RATING_WEIGHTS = {
   // Time preferences
   IDEAL_START_HOUR: 9,
   IDEAL_END_HOUR: 17,
-  TIME_PENALTY_EARLY: 20.0,
-  TIME_PENALTY_LATE: 1.5,
-
-  // Vicinity preferences
-  MAX_DESIRED_GAP: 2,
-  LONE_EVENT_PENALTY: 0.2,
-  GAP_PENALTY: 0.01,
-  MAX_HOURS_IN_ROW: 5,
-  IDEAL_HOURS_A_DAY: 4,
+  TIME_PENALTY_EARLY: 4,
 } as const;
 
 /**
@@ -37,7 +29,7 @@ const RATING_WEIGHTS = {
  */
 function getTimePreferencePenalty(timespan: TimeSpan): number {
   if (timespan.start.hour < RATING_WEIGHTS.IDEAL_START_HOUR) {
-    return ((RATING_WEIGHTS.IDEAL_START_HOUR - timespan.start.hour) * RATING_WEIGHTS.TIME_PENALTY_EARLY) / 24;
+    return ((RATING_WEIGHTS.IDEAL_START_HOUR - timespan.start.hour) * (24 - RATING_WEIGHTS.TIME_PENALTY_EARLY)) / 24;
   }
   // Gradually decrease score as the day progresses after IDEAL_START_HOUR
   return (timespan.end.hour - RATING_WEIGHTS.IDEAL_START_HOUR) / (24 - RATING_WEIGHTS.IDEAL_START_HOUR);
