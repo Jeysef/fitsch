@@ -103,6 +103,12 @@ export default {
       title: "Actions",
       exportJson: "Export JSON",
       importJson: "Import JSON",
+      generate: {
+        next: "Generate next",
+        previous: "Generate previous",
+        generating: "Generating...",
+        warning: "Generating will unselect the current selection",
+      },
     },
   },
   header: {

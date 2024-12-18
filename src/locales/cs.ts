@@ -101,6 +101,12 @@ export default {
       title: "Akce",
       exportJson: "Exportovat JSON",
       importJson: "Importovat JSON",
+      generate: {
+        next: "Generovat další",
+        previous: "Generovat předchozí",
+        generating: "Generuji...",
+        warning: "Generování zruší stávající výběr",
+      },
     },
   },
   header: {

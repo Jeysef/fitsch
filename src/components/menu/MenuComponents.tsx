@@ -1,9 +1,20 @@
 import { Tooltip } from "@kobalte/core/tooltip";
 import ChevronDown from "lucide-solid/icons/chevron-down";
+import CircleAlert from "lucide-solid/icons/circle-alert";
 import Link from "lucide-solid/icons/link";
-import { For, Show, Suspense, createMemo, splitProps, type FlowComponent } from "solid-js";
+import {
+  For,
+  Show,
+  Suspense,
+  createMemo,
+  createSignal,
+  splitProps,
+  type FlowComponent,
+  type ValidComponent,
+} from "solid-js";
 import type { StrictOmit } from "ts-essentials";
 import { getData, getGroup } from "~/components/menu/MenuContent";
+import SchedulerGenerator from "~/components/scheduler/generator2.singlePass";
 import { typographyVariants } from "~/components/typography";
 import Heading, { type HeadingProps } from "~/components/typography/heading";
 import Text, { type TextProps } from "~/components/typography/text";
@@ -45,7 +56,7 @@ const SubSectionHeading: FlowComponent<StrictOmit<HeadingProps<"p">, "variant">>
   );
 };
 
-const ItemText: FlowComponent<StrictOmit<TextProps<"p">, "variant">> = (props) => {
+const ItemText: FlowComponent<StrictOmit<TextProps<ValidComponent>, "variant">> = (props) => {
   const [local, others] = splitProps(props, ["children", "class"]);
   return (
     <Text variant={null} class={cn("text-sm leading-6", local.class)} {...others}>
@@ -445,18 +456,67 @@ export function Actions() {
     input.remove();
   };
 
+  const generator = SchedulerGenerator();
+  const [tooltipOpen, setTooltipOpen] = createSignal(false);
+
   return (
-    <Collapsible>
+    <Collapsible defaultOpen>
       <CollapsibleTrigger class="flex w-full overflow-hidden items-center">
         <SectionHeading>{t("menu.actions.title")}</SectionHeading>
         <ChevronDown />
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={exportJSON}>
-          {t("menu.actions.exportJson")}
+        <ItemText as="div">
+          <Button
+            type="button"
+            size={null}
+            variant={"ghost"}
+            class="px-2 py-1 text-link hover:text-link hover:saturate-150"
+            on:click={exportJSON}
+          >
+            {t("menu.actions.exportJson")}
+          </Button>
         </ItemText>
-        <ItemText class="text-sm leading-6 text-link cursor-pointer" on:click={importJSON}>
-          {t("menu.actions.importJson")}
+        <ItemText as="div">
+          <Button
+            type="button"
+            size={null}
+            variant={"ghost"}
+            class="px-2 py-1 text-link hover:text-link hover:saturate-150"
+            on:click={importJSON}
+          >
+            {t("menu.actions.importJson")}
+          </Button>
+        </ItemText>
+        <ItemText as="div" class="flex items-center gap-1">
+          <Button
+            type="button"
+            size={null}
+            variant={"ghost"}
+            class="px-2 py-1"
+            on:click={() => generator.generateNext()}
+            disabled={generator.isGenerating()}
+          >
+            {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.next")}
+          </Button>
+          <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
+            <TooltipTrigger type="button" on:click={() => setTooltipOpen((p) => !p)}>
+              <CircleAlert class="w-4 h-4 text-amber-400" />
+            </TooltipTrigger>
+            <TooltipContent>{t("menu.actions.generate.warning")}</TooltipContent>
+          </Tooltip>
+        </ItemText>
+        <ItemText as="div">
+          <Button
+            type="button"
+            size={null}
+            variant={"ghost"}
+            class="px-2 py-1"
+            on:click={() => generator.generatePrevious()}
+            disabled={!generator.canGeneratePrevious() || generator.isGenerating()}
+          >
+            {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.previous")}
+          </Button>
         </ItemText>
       </CollapsibleContent>
     </Collapsible>
