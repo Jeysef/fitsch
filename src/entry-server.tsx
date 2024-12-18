@@ -23,7 +23,12 @@ export default createHandler(() => (
           <meta name="theme-color" content="#ffffff" />
           {assets}
         </head>
-        <body>
+        <body
+          style={{
+            "max-height": "100dvh",
+            "overflow-y": "hidden",
+          }}
+        >
           <div id="app">{children}</div>
           {scripts}
         </body>
