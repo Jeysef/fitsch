@@ -126,7 +126,9 @@ export function DegreeSelect() {
           <RadioGroupItem value={degree} class="flex items-center gap-2">
             <RadioGroupItemInput />
             <RadioGroupItemControl as="button" type="button" />
-            <RadioGroupItemLabel as={ItemText}>{t(`menu.degree.data.${degree}`)}</RadioGroupItemLabel>
+            <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
+              {t(`menu.degree.data.${degree}`)}
+            </RadioGroupItemLabel>
           </RadioGroupItem>
         )}
       </For>
@@ -244,7 +246,7 @@ export function GradeSelect() {
                 <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
                   <RadioGroupItemInput class="bottom-0" />
                   <RadioGroupItemControl as="button" type="button" />
-                  <RadioGroupItemLabel as={ItemText}>{grade.label}</RadioGroupItemLabel>
+                  <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>{grade.label}</RadioGroupItemLabel>
                   <SelectedHiddenCourses grade={grade} />
                 </RadioGroupItem>
               );
@@ -340,7 +342,7 @@ export function CoursesSelect() {
     return (
       <Tooltip placement="right" flip="top" gutter={12}>
         <TooltipTrigger
-          as={asMerge([CheckboxLabel, ItemText])}
+          as={asMerge([ItemText, CheckboxLabel])}
           class={"ml-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"}
         >
           {course.abbreviation}
@@ -376,7 +378,10 @@ export function CoursesSelect() {
                 }
               >
                 <CheckboxControl />
-                <CheckboxLabel as={ItemText} class={"ml-2  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
+                <CheckboxLabel
+                  as={asMerge([ItemText, CheckboxLabel])}
+                  class={"ml-2  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}
+                >
                   {t("menu.courses.all")}
                 </CheckboxLabel>
               </Checkbox>
