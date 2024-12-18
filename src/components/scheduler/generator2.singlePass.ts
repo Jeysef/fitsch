@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash-es";
+import { chain, uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { batch, createMemo, on } from "solid-js";
 import { createMutable } from "solid-js/store";
@@ -54,13 +54,15 @@ export default function SchedulerGenerator() {
       () => store.data,
       (data) => {
         if (!data) return [];
-        return Object.values(data)
-          .flatMap((day) => day.events.map((e) => e.event))
-          .map((e) => ({
-            event: e,
-            score: rateEvent(e, undefined, currentPosition.attempt),
+        return chain(data)
+          .values()
+          .flatMap((d) => d.events)
+          .map(({ event }) => ({
+            event: event,
+            score: rateEvent(event, undefined, currentPosition.attempt),
           }))
-          .sort((a, b) => a.score - b.score);
+          .orderBy(["score"], ["asc"])
+          .value();
       }
     )
   );
