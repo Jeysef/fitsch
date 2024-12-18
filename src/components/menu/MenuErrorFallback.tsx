@@ -15,7 +15,6 @@ interface NetworkError {
 interface ErrorBoundaryFallbackProps {
   error: NetworkError | any;
   reset: () => Promise<void>;
-  data?: any;
 }
 
 const getErrorMessage = (error: any): string => {
@@ -63,9 +62,16 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
           <details class="mt-2">
             <summary class="text-xs cursor-pointer">Technical Details</summary>
             <pre class="text-xs mt-2 p-2 bg-gray-100 rounded overflow-x-auto">{JSON.stringify(props.error, null, 2)}</pre>
-            {props.data && (
-              <pre class="text-xs mt-2 p-2 bg-gray-100 rounded overflow-x-auto">{JSON.stringify(props.data, null, 2)}</pre>
-            )}
+            <Button
+              variant="destructive"
+              onClick={() => {
+                throw props.error;
+              }}
+              size="sm"
+              class="mt-2"
+            >
+              Throw Error
+            </Button>
           </details>
         )}
         <Button

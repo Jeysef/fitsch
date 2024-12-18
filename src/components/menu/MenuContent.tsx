@@ -98,7 +98,6 @@ export default function Wrapper() {
               await resource[1].refetch();
               reset();
             }}
-            data={resource[0]}
           />
         )}
       >
