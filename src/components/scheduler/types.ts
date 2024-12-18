@@ -5,6 +5,7 @@ import type { CourseDetail } from "~/server/scraper/types";
 
 export type Event = Omit<MCourseLecture, "start" | "end"> & {
   courseDetail: CourseDetail;
+  metrics: LectureMetrics;
   timeSpan: TimeSpan;
   /** @default false */
   checked: boolean;

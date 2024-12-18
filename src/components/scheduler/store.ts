@@ -1,6 +1,6 @@
 import { forEach, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { Time, TimeSpan } from "~/components/scheduler/time";
+import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
 import type {
   CourseData,
   Data,
@@ -91,16 +91,12 @@ export class SchedulerStore {
     );
   }
 
-  private hasOverlap(a: TimeSpan, b: TimeSpan): boolean {
-    return !(a.end.minutes <= b.start.minutes || a.start.minutes >= b.end.minutes);
-  }
-
   private findAvailableRow(pivotEvent: Event, precedingEvents: DayEvent[]): number {
     const occupiedRows = new Set<number>();
 
     // Find all rows that are occupied by overlapping events
     for (const event of precedingEvents) {
-      if (this.hasOverlap(pivotEvent.timeSpan, event.event.timeSpan)) {
+      if (hasOverlap(pivotEvent.timeSpan, event.event.timeSpan)) {
         occupiedRows.add(event.row);
       }
     }
@@ -279,10 +275,12 @@ function fillData(
   for (const event of data) {
     if (filter && !filter(event)) continue;
     const timeSpan = new TimeSpan(new Time(event.start), new Time(event.end));
+    const metric = getMetrics(event.type);
     const filledEvent: Event = {
       ...event,
       courseDetail,
       timeSpan,
+      metrics: metric,
       checked: false,
     };
 
@@ -293,7 +291,6 @@ function fillData(
       return acc + timeSpan.minutes;
     }, timeSpan.minutes);
 
-    const metric = getMetrics(event.type);
     metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
     metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
 
