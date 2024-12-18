@@ -247,8 +247,6 @@ export default function SchedulerGenerator() {
       if (completedHours + event.timeSpan.hours > requiredHours) continue;
 
       const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id);
-      // .map((link) => store.data[link.day]?.events.find((e) => e.event.id === link.id)?.event)
-      // .filter((linkedEvent) => linkedEvent && !selectedEventIds.has(linkedEvent.id)) as Event[];
 
       let canAddAllLinks = true;
       const linkedEventDataMap = new Map<string, Event>();
