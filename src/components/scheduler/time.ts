@@ -1,4 +1,10 @@
+import type { WritableKeys } from "ts-essentials";
 import type { ISchedulerTime } from "~/components/scheduler/types";
+
+// getters are readonly
+type ExcludeReadonly<T extends object> = {
+  [P in WritableKeys<T>]: T[P];
+};
 
 export class TimeSpan {
   public start: Time;
@@ -13,7 +19,7 @@ export class TimeSpan {
   get hours() {
     return Math.ceil(this.minutes / 60);
   }
-  static fromPlain(timeSpan: TimeSpan) {
+  static fromPlain(timeSpan: ExcludeReadonly<TimeSpan>) {
     return new TimeSpan(new Time(timeSpan.start), new Time(timeSpan.end));
   }
 }
@@ -40,4 +46,12 @@ export class Time {
   get formatted() {
     return `${this.hour.toString().padStart(2, "0")}:${this.minute.toString().padStart(2, "0")}`;
   }
+}
+
+export function hourDifference(start: number, end: number) {
+  return Math.abs(start - end);
+}
+
+export function hasOverlap(a: TimeSpan, b: TimeSpan): boolean {
+  return !(a.end.minutes <= b.start.minutes || a.start.minutes >= b.end.minutes);
 }
