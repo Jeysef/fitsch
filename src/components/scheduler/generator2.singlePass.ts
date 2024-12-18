@@ -12,10 +12,6 @@ interface ScheduleResult {
   completedHours: Record<string, Partial<Record<LECTURE_TYPE, number>>>;
 }
 
-interface SchedulerPosition {
-  attempt: number;
-}
-
 const RATING_WEIGHTS = {
   // Time preferences
   IDEAL_START_HOUR: 9,
@@ -37,7 +33,7 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
 
 export default function SchedulerGenerator() {
   const { store } = useScheduler();
-  const currentPosition: SchedulerPosition = createMutable({ attempt: 0 });
+  const currentPosition = createMutable({ attempt: 0 });
 
   // precalculate type counts,... using solid primitives
   const courseTypeCounts = createMemo(() => {
