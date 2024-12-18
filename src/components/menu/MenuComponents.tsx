@@ -10,6 +10,7 @@ import {
   createSignal,
   splitProps,
   type FlowComponent,
+  type Setter,
   type ValidComponent,
 } from "solid-js";
 import type { StrictOmit } from "ts-essentials";
@@ -428,6 +429,35 @@ export function Actions() {
   const { persistedStore, recreateStore } = useScheduler();
   const store = persistedStore();
   const { t } = useI18n();
+  const [tooltipOpen, setTooltipOpen] = createSignal(false);
+  const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
+
+  const openTooltip = () => {
+    setTooltipOpen(true);
+    startTooltipTimer();
+  };
+
+  const closeTooltip = () => {
+    setTooltipOpen(false);
+    const timer = tooltipTimer();
+    if (timer) clearTimeout(timer);
+  };
+
+  const startTooltipTimer = () => {
+    const existingTimer = tooltipTimer();
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+    const timer = setTimeout(() => setTooltipOpen(false), 3000);
+    setTooltipTimer(timer);
+  };
+
+  const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
+    let val = value;
+    if (typeof value === "function") val = value(tooltipOpen());
+    if (val) openTooltip();
+    else closeTooltip();
+  };
 
   const exportJSON = () => {
     const a = document.createElement("a");
@@ -462,7 +492,6 @@ export function Actions() {
   };
 
   const generator = SchedulerGenerator();
-  const [tooltipOpen, setTooltipOpen] = createSignal(false);
 
   return (
     <Collapsible defaultOpen>
@@ -505,7 +534,7 @@ export function Actions() {
             {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.next")}
           </Button>
           <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-            <TooltipTrigger type="button" on:click={() => setTooltipOpen((p) => !p)}>
+            <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)}>
               <CircleAlert class="w-4 h-4 text-amber-400" />
             </TooltipTrigger>
             <TooltipContent>{t("menu.actions.generate.warning")}</TooltipContent>
