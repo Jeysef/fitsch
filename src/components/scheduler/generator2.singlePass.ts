@@ -67,9 +67,9 @@ export default function SchedulerGenerator() {
     )
   );
 
-  const getEmptyCompletedHours = () => {
+  const emptyCompletedHours = createMemo(() => {
     return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
-  };
+  });
 
   function hasTimeOverlap(event: Event, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
@@ -119,7 +119,7 @@ export default function SchedulerGenerator() {
 
     const state: ScheduleResult = {
       selectedEvents: new Map<string, Event>(),
-      completedHours: getEmptyCompletedHours(),
+      completedHours: emptyCompletedHours(),
     };
 
     for (const { event } of orderedEvents()) {
