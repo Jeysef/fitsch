@@ -1,15 +1,17 @@
 import { createMemo } from "solid-js";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import type { Locale } from "~/i18n";
+import { LANGUAGE } from "~/enums";
 import { locales, useI18n } from "~/i18n";
+import CZ from "./CZ.svg";
+import US from "./US.svg";
+
+const flags: Record<LANGUAGE, string> = {
+  [LANGUAGE.ENGLISH]: US,
+  [LANGUAGE.CZECH]: CZ,
+};
 
 export function LanguageSwitcher() {
   const { locale, setLocale, t } = useI18n();
-
-  const flags: Record<Locale, string> = {
-    en: "🇺🇸",
-    cs: "🇨🇿",
-  };
 
   const options = createMemo(() =>
     locales.map((lang) => ({
@@ -46,10 +48,12 @@ export function LanguageSwitcher() {
   );
 }
 
-function SelectItemContent(props: { label: string; flag: string }) {
+function SelectItemContent(props: { label: string; flag: string; value: LANGUAGE }) {
   return (
     <div class="flex items-center gap-2">
-      <span>{props.flag}</span>
+      <span>
+        <img src={props.flag} alt={`${props.value} flag`} class="w-4" />
+      </span>
       <span class="hidden sm:block">{props.label}</span>
     </div>
   );
