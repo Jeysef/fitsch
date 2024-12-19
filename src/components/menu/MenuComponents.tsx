@@ -1,27 +1,12 @@
 import { Tooltip } from "@kobalte/core/tooltip";
-import ChevronDown from "lucide-solid/icons/chevron-down";
-import CircleAlert from "lucide-solid/icons/circle-alert";
 import Link from "lucide-solid/icons/link";
-import {
-  For,
-  Show,
-  Suspense,
-  createMemo,
-  createSignal,
-  splitProps,
-  type FlowComponent,
-  type Setter,
-  type ValidComponent,
-} from "solid-js";
-import type { StrictOmit } from "ts-essentials";
+import { For, Show, Suspense, createMemo } from "solid-js";
+import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
-import SchedulerGenerator from "~/components/scheduler/generator2.singlePass";
 import { typographyVariants } from "~/components/typography";
-import Heading, { type HeadingProps } from "~/components/typography/heading";
-import Text, { type TextProps } from "~/components/typography/text";
+import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "~/components/ui/checkbox";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import Loader from "~/components/ui/loader";
 import {
   RadioGroup,
@@ -33,38 +18,9 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import { cn } from "~/lib/utils";
-import { useScheduler } from "~/providers/SchedulerProvider";
 import type { SEMESTER } from "~/server/scraper/enums";
 import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
 import { asMerge } from "~/utils/asMerge";
-
-const SectionHeading: FlowComponent<StrictOmit<HeadingProps<"h3">, "variant">> = (props) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
-  return (
-    <Heading as="h3" variant="h5" class={cn("mb-1", local.class)} {...others}>
-      {local.children}
-    </Heading>
-  );
-};
-
-const SubSectionHeading: FlowComponent<StrictOmit<HeadingProps<"p">, "variant">> = (props) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
-  return (
-    <Heading as="p" variant="h6" class={cn("mb-1", local.class)} {...others}>
-      {local.children}
-    </Heading>
-  );
-};
-
-const ItemText: FlowComponent<StrictOmit<TextProps<ValidComponent>, "variant">> = (props) => {
-  const [local, others] = splitProps(props, ["children", "class"]);
-  return (
-    <Text variant={null} class={cn("text-sm leading-6", local.class)} {...others}>
-      {local.children}
-    </Text>
-  );
-};
 
 const SelectedCountIndicator = (count: number) => {
   return (
@@ -422,138 +378,6 @@ export function CoursesSelect() {
         </Show>
       </section>
     </Show>
-  );
-}
-
-export function Actions() {
-  const { persistedStore, recreateStore } = useScheduler();
-  const store = persistedStore();
-  const { t } = useI18n();
-  const [tooltipOpen, setTooltipOpen] = createSignal(false);
-  const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
-
-  const openTooltip = () => {
-    setTooltipOpen(true);
-    startTooltipTimer();
-  };
-
-  const closeTooltip = () => {
-    setTooltipOpen(false);
-    const timer = tooltipTimer();
-    if (timer) clearTimeout(timer);
-  };
-
-  const startTooltipTimer = () => {
-    const existingTimer = tooltipTimer();
-    if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
-    const timer = setTimeout(() => setTooltipOpen(false), 3000);
-    setTooltipTimer(timer);
-  };
-
-  const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
-    let val = value;
-    if (typeof value === "function") val = value(tooltipOpen());
-    if (val) openTooltip();
-    else closeTooltip();
-  };
-
-  const exportJSON = () => {
-    const a = document.createElement("a");
-    const file = new Blob([JSON.stringify(store)], { type: "application/json" });
-    a.href = URL.createObjectURL(file);
-    a.download = "schedule.json";
-    a.click();
-    a.remove();
-  };
-
-  const importJSON = async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = false;
-    input.accept = ".json";
-    input.click();
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result as string);
-          recreateStore(data);
-        } catch (e) {
-          console.error(e);
-        }
-      };
-      reader.readAsText(file);
-    };
-    input.remove();
-  };
-
-  const generator = SchedulerGenerator();
-
-  return (
-    <Collapsible defaultOpen>
-      <CollapsibleTrigger class="flex w-full overflow-hidden items-center">
-        <SectionHeading>{t("menu.actions.title")}</SectionHeading>
-        <ChevronDown />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <ItemText as="div">
-          <Button
-            type="button"
-            size={null}
-            variant={"ghost"}
-            class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-            on:click={exportJSON}
-          >
-            {t("menu.actions.exportJson")}
-          </Button>
-        </ItemText>
-        <ItemText as="div">
-          <Button
-            type="button"
-            size={null}
-            variant={"ghost"}
-            class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-            on:click={importJSON}
-          >
-            {t("menu.actions.importJson")}
-          </Button>
-        </ItemText>
-        <ItemText as="div" class="flex items-center gap-1">
-          <Button
-            type="button"
-            size={null}
-            variant={"ghost"}
-            class="px-2 py-1"
-            on:click={() => generator.generateNext()}
-            disabled={generator.isGenerating()}
-          >
-            {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.next")}
-          </Button>
-          <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-            <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)}>
-              <CircleAlert class="w-4 h-4 text-amber-400" />
-            </TooltipTrigger>
-            <TooltipContent>{t("menu.actions.generate.warning")}</TooltipContent>
-          </Tooltip>
-        </ItemText>
-        <ItemText as="div">
-          <Button
-            type="button"
-            size={null}
-            variant={"ghost"}
-            class="px-2 py-1"
-            on:click={() => generator.generatePrevious()}
-            disabled={!generator.canGeneratePrevious() || generator.isGenerating()}
-          >
-            {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.previous")}
-          </Button>
-        </ItemText>
-      </CollapsibleContent>
-    </Collapsible>
   );
 }
 

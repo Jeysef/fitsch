@@ -21,8 +21,8 @@ import {
   useContext,
 } from "solid-js";
 import { isServer } from "solid-js/web";
+import { Actions } from "~/components/menu/MenuActions";
 import {
-  Actions,
   CoursesSelect,
   DegreeSelect,
   GradeSelect,
