@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { compact, flatMap, flow, values } from "lodash-es";
+import { compact, difference, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import type { StrictExtract } from "ts-essentials";
@@ -174,7 +174,14 @@ function Week() {
     createMemo(() =>
       flow([
         (data) => flatMap(data, "events"),
-        (events) => flatMap(events, (event) => createLinkedCss(event.event.id, event.event[property], color)),
+        (events) =>
+          flatMap(events, (event) =>
+            createLinkedCss(
+              event.event.id,
+              property === "linked" ? difference(event.event.linked, event.event.strongLinked) : event.event.strongLinked,
+              color
+            )
+          ),
         compact,
         (links) => links.join("\n"),
         css,
@@ -184,6 +191,7 @@ function Week() {
   // Usage:
   const linkedHighlightClass = createLinkedHighlightClass("linked", hoverColors.linked);
   const strongLinkedHighlightClass = createLinkedHighlightClass("strongLinked", hoverColors.strongLinked);
+  console.log("🚀 ~ file: index.tsx:193 ~ Week ~ strongLinkedHighlightClass():", strongLinkedHighlightClass());
   return (
     <div
       class={cn(
