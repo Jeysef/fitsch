@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, createEffect, createMemo } from "solid-js";
+import { For, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
@@ -11,9 +11,11 @@ import { useScheduler } from "~/providers/SchedulerProvider";
 
 export default function Home() {
   const { t, locale } = useI18n();
-  const { store } = useScheduler();
+  const { store, newSchedulerStore } = useScheduler();
   const navigate = useNavigate();
   const location = useLocation();
+  // empty for ssr
+  const [initialTab, setInitialTab] = createSignal("empty");
 
   const checkedDataMemo = createMemo(() => {
     return store.checkedData;
@@ -34,17 +36,15 @@ export default function Home() {
     },
   });
 
-  // Function to handle tab change
-  const handleTabChange = (tab: string) => {
+  createEffect(() => {
+    const tab = initialTab();
     requestIdleCallback(
       () => {
         navigate(`#${tab}`, { replace: true });
       },
       { timeout: 1000 }
     );
-  };
-
-  // Get the initial tab from the URL anchor
+  });
 
   const tabs = {
     workSchedule: "workSchedule",
@@ -52,13 +52,15 @@ export default function Home() {
     timeSpan: "timeSpan",
   } as const;
 
-  const initialTab = location.hash.slice(1) || tabs.workSchedule;
+  onMount(() => {
+    setInitialTab(location.hash.slice(1));
+  });
 
   return (
     <Tabs
       as="nav"
-      defaultValue={initialTab}
-      onChange={handleTabChange}
+      value={initialTab()}
+      onChange={setInitialTab}
       class="items-center h-full w-full overflow-auto flex flex-col"
     >
       <TabsList
@@ -79,6 +81,9 @@ export default function Home() {
         <TabsIndicator variant="underline" data-lang={locale()} />
         {/* data-lang for rerendering */}
       </TabsList>
+      <TabsContent value={"empty"} as="main" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
+        <Scheduler store={newSchedulerStore()} />
+      </TabsContent>
       <TabsContent
         value={tabs.workSchedule}
         as="main"
