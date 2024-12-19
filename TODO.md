@@ -13,3 +13,5 @@
 - [x] **Saving and loading data**
   - Save data to local storage
   - Load data from local storage
+- [] **Optimize tab switching**
+  - check getters in store
