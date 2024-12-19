@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
 import {
   conjunctConjunctableRooms,
-  conjunctRooms,
   constructGradeLabel,
   createStudyId,
   parseWeek,
@@ -14,19 +13,19 @@ import { WEEK_PARITY } from "../enums";
 describe("utils", () => {
   test("should get conjuncted rooms", async () => {
     let roomsInput = ["E104", "E112", "D0206"];
-    const courses = conjunctRooms(roomsInput);
+    const courses = conjunctConjunctableRooms(roomsInput);
     expect(courses).toBe("E112+4 D0206");
 
     roomsInput = ["E104", "E112", "D0206", "D0207"];
-    const courses2 = conjunctRooms(roomsInput);
+    const courses2 = conjunctConjunctableRooms(roomsInput);
     expect(courses2).toBe("E112+4 D0206 D0207");
 
     roomsInput = ["E104", "E105", "E112"];
-    const courses3 = conjunctRooms(roomsInput);
+    const courses3 = conjunctConjunctableRooms(roomsInput);
     expect(courses3).toBe("E112+4,5");
 
     roomsInput = ["D0206", "D105"];
-    const courses4 = conjunctRooms(roomsInput);
+    const courses4 = conjunctConjunctableRooms(roomsInput);
     expect(courses4).toBe("D105+6");
   });
 

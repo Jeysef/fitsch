@@ -48,6 +48,7 @@ import { DEGREE, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
 import type {
   DataProviderTypes,
+  GetStudyCoursesDetailsFunctionConfig,
   GradeKey,
   StudyCourseObligation,
   StudyOverview,
@@ -115,7 +116,11 @@ export default function Wrapper() {
     const { t } = useI18n();
 
     const submit: typeof _submit = (data) => {
-      const submission = _submit(data);
+      const submission = _submit(data).then((res) => {
+        console.log("🚀 ~ file: MenuContent.tsx:120 ~ submission ~ res:", res);
+        if (Object.hasOwn(res, "statusCode")) throw new Error("Server error");
+        return res;
+      });
       toast.promise(submission, {
         loading: t("menu.toast.generate.loading"),
         success: t("menu.toast.generate.success"),
@@ -139,8 +144,8 @@ export default function Wrapper() {
         language: locale(),
         year: c.year.value!.value,
         semester: c.semester.value,
-        courses: [...c.coursesCompulsory.value, ...c.coursesVoluntary.value].map((id) => ({ courseId: id })),
-      } satisfies DataProviderTypes.getStudyCoursesDetailsConfig;
+        courses: [...c.coursesCompulsory.value, ...c.coursesVoluntary.value],
+      } satisfies GetStudyCoursesDetailsFunctionConfig;
     };
 
     createEffect(

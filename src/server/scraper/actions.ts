@@ -1,8 +1,16 @@
 import { action, json } from "@solidjs/router";
 import { getStudyCoursesDetails } from "~/server/scraper/functions";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
 
-export const getStudyCoursesDetailsAction = action(async (config: DataProviderTypes.getStudyCoursesDetailsConfig) => {
+export const getStudyCoursesDetailsAction = action(async (config: GetStudyCoursesDetailsFunctionConfig) => {
   "use server";
-  return json(await getStudyCoursesDetails(config));
-});
+  try {
+    const serializedData = JSON.parse(JSON.stringify(await getStudyCoursesDetails(config)));
+    console.log("🚀 ~ file: actions.ts:9 ~ getStudyCoursesDetailsAction ~ serializedData:", serializedData);
+    return json(serializedData);
+  } catch (error) {
+    // Return a serializable error object
+    console.error("Error in getStudyCoursesDetails:", error);
+    throw new Error(error instanceof Error ? error.message : "Unknown error occurred");
+  }
+}, "getStudyCoursesDetailsAction");

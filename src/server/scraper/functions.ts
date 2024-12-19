@@ -3,7 +3,7 @@ import { fromURL } from "cheerio";
 import type { ResourceFetcher } from "solid-js";
 import { DataProvider } from "~/server/scraper/dataProvider";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
-import type { DataProviderTypes, StudyOverview } from "~/server/scraper/types";
+import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
 
 export const getStudyOverview: ResourceFetcher<
   DataProviderTypes.getStudyOverviewConfig,
@@ -19,16 +19,25 @@ export const getStudyOverview: ResourceFetcher<
   const val = typeof refetching === "boolean" ? source : { ...source, ...refetching };
   const languageProvider = new LanguageProvider(val.language);
   const dataProvider = new DataProvider(languageProvider, fromURL);
-  const data = await dataProvider.getStudyOverview(val);
+  const data = await errorResolver(dataProvider.getStudyOverview(val));
   return data;
 };
 
-export const getStudyCoursesDetails = async (
-  config: DataProviderTypes.getStudyCoursesDetailsConfig
+export const getStudyCoursesDetails = (
+  config: GetStudyCoursesDetailsFunctionConfig
 ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> => {
   "use server";
-  const languageProvider = new LanguageProvider(config.language);
+  const { language, ...rest } = config;
+  const languageProvider = new LanguageProvider(language);
   const dataProvider = new DataProvider(languageProvider, fromURL);
-  const data = await dataProvider.getStudyCoursesDetails(config);
+  const data = errorResolver(dataProvider.getStudyCoursesDetails(rest));
+  console.log("🚀 ~ file: functions.ts:34 ~ data:", data);
   return data;
+};
+
+const errorResolver = <T>(promise: Promise<T>): Promise<T> => {
+  return promise.catch((error) => {
+    console.error("Error occurred:", error);
+    throw error;
+  });
 };

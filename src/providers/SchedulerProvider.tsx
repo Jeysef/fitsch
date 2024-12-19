@@ -20,7 +20,7 @@ import { createColumns, recreateColumns, SchedulerStore } from "~/components/sch
 import { TimeSpan } from "~/components/scheduler/time";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
-import type { MCourseLecture } from "~/server/scraper/lectureMutator2";
+import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 
 interface SchedulerContextType {
   store: SchedulerStore;

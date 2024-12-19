@@ -1,6 +1,8 @@
+import type { TimeSpan } from "~/components/scheduler/time";
 import type { LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
+import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 
 /**
@@ -90,17 +92,13 @@ interface StudyCourse extends StudyOverviewCourse {
 }
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>;
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>;
-interface Time {
-  hour: number;
-  minute: number;
-}
+
 interface APICourseLecture {
   day: DAY;
   weeks: LectureWeeks;
   room: string[];
   type: LECTURE_TYPE;
-  start: Time;
-  end: Time;
+  timeSpan: TimeSpan;
   capacity: string;
   lectureGroup: string[];
   groups: string;
@@ -135,11 +133,17 @@ interface CourseDetail {
   timeSpanText: string[];
 }
 
+interface GetStudyCoursesDetailsFunctionConfig extends DataProviderTypes.getStudyCoursesDetailsConfig {
+  language: LANGUAGE;
+}
+
+type SemesterTimeSchedule = { start: Date; end: Date };
+
 export namespace StudyApiTypes {
   export interface getStudyTimeScheduleConfig {
     year: string | null;
   }
-  export type getStudyTimeScheduleReturn = Record<SEMESTER, { start: Date; end: Date }>;
+  export type getStudyTimeScheduleReturn = Record<SEMESTER, SemesterTimeSchedule>;
 
   export interface getStudyProgramCoursesConfig {
     programUrl: string;
@@ -155,14 +159,25 @@ export namespace StudyApiTypes {
   }
 
   export interface getStudyCourseDetailsConfig {
-    year: StudyOverviewYear["value"];
-    semester: SEMESTER;
     courseId: string;
+    languageSet: LanguageSetDictionary;
+    semesterTimeSchedule: SemesterTimeSchedule;
   }
 
   export interface getStudyCourseDetailsReturn {
     detail: CourseDetail;
     data: APICourseLecture[];
+  }
+
+  export interface getStudyCoursesDetailsConfig {
+    /** course ids */
+    courses: string[];
+    year: StudyOverviewYear["value"];
+    semester: SEMESTER;
+  }
+  export interface getStudyCoursesDetailsReturn {
+    semesterTimeSchedule: SemesterTimeSchedule;
+    data: getStudyCourseDetailsReturn[];
   }
 }
 
@@ -179,12 +194,7 @@ export namespace DataProviderTypes {
     data: APICourseLecture[];
   }
 
-  export interface getStudyCoursesDetailsConfig {
-    language: LANGUAGE;
-    courses: Omit<StudyApiTypes.getStudyCourseDetailsConfig, "year" | "semester">[];
-    year: StudyOverviewYear["value"];
-    semester: SEMESTER;
-  }
+  export type getStudyCoursesDetailsConfig = StudyApiTypes.getStudyCoursesDetailsConfig;
   export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[];
 }
 
@@ -192,8 +202,10 @@ export type {
   APICourseLecture,
   CourseDetail,
   CourseLecture,
+  GetStudyCoursesDetailsFunctionConfig,
   GradeKey,
   ProgramStudyCourses,
+  SemesterTimeSchedule,
   StudyCourse,
   StudyCourseObligation,
   StudyId,
@@ -205,5 +217,4 @@ export type {
   StudyProgramBase,
   StudyPrograms,
   StudySpecialization,
-  Time,
 };

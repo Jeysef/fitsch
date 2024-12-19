@@ -43,6 +43,11 @@ export class Time {
     return new Time({ hour: Math.floor(minutes / 60), minute: minutes % 60 });
   }
 
+  static fromString(time: string, separator = ":") {
+    const [hour, minute] = time.split(separator).map(Number);
+    return new Time({ hour, minute });
+  }
+
   get formatted() {
     return `${this.hour.toString().padStart(2, "0")}:${this.minute.toString().padStart(2, "0")}`;
   }

@@ -183,6 +183,7 @@ export class SchedulerStore {
   }
 
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
+    console.log("🚀 ~ file: store.ts:186 ~ SchedulerStore ~ setnewCourses ~ courses:", courses);
     if (courses.length === 0) {
       this.resetCourses();
       return;
@@ -274,7 +275,7 @@ function fillData(
 
   for (const event of data) {
     if (filter && !filter(event)) continue;
-    const timeSpan = new TimeSpan(new Time(event.start), new Time(event.end));
+    const timeSpan = TimeSpan.fromPlain(event.timeSpan);
     const metric = getMetrics(event.type);
     const filledEvent: Event = {
       ...event,
@@ -287,7 +288,7 @@ function fillData(
     const linkedDuration = event.strongLinked.reduce((acc, linked) => {
       const linkedLecture = data.find((l) => l.id === linked.id);
       if (!linkedLecture) return acc;
-      const timeSpan = new TimeSpan(new Time(linkedLecture.start), new Time(linkedLecture.end));
+      const timeSpan = TimeSpan.fromPlain(linkedLecture.timeSpan);
       return acc + timeSpan.minutes;
     }, timeSpan.minutes);
 

@@ -2,8 +2,8 @@ import type { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { StudyApi } from "~/server/scraper/api";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { MutateLectureData } from "~/server/scraper/lectureMutator2";
-import { constructGradeLabel, getWeekFromSemesterStart } from "~/server/scraper/utils";
+import { MutateLectureData } from "~/server/scraper/lectureMutator";
+import { constructGradeLabel } from "~/server/scraper/utils";
 import { LANGUAGE } from "../../enums";
 import { DEGREE, SEMESTER } from "./enums";
 import type {
@@ -113,23 +113,11 @@ export class DataProvider {
     } satisfies StudyOverview;
   }
 
-  async getSemesterWeeks(semester: SEMESTER, year: string) {
-    const { start, end } = (await this.studyApi.getTimeSchedule({ year }))[semester];
-    return getWeekFromSemesterStart(end, start);
-  }
-
   public async getStudyCoursesDetails(
     config: DataProviderTypes.getStudyCoursesDetailsConfig
   ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
-    const { courses, semester, year } = config;
-    const d = Promise.all(courses.map((c) => this.getStudyCourseDetails({ courseId: c.courseId, semester, year })));
-    const data = MutateLectureData({ courses: await d, semester, year, studyApi: this.studyApi });
+    const coursesDetails = await this.studyApi.getStudyCoursesDetails(config);
+    const data = MutateLectureData(coursesDetails);
     return data;
-  }
-
-  private async getStudyCourseDetails(
-    config: DataProviderTypes.getStudyCourseDetailsConfig
-  ): Promise<DataProviderTypes.getStudyCourseDetailsReturn> {
-    return this.studyApi.getStudyCourseDetails(config);
   }
 }

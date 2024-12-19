@@ -1,5 +1,6 @@
 import type { fromURL } from "cheerio";
 import { ObjectTyped } from "object-typed";
+import { Time, TimeSpan } from "~/components/scheduler/time";
 import { valueToEnumValue } from "~/lib/utils";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import type {
@@ -8,7 +9,6 @@ import type {
   StudyApiTypes,
   StudyPrograms,
   StudySpecialization,
-  Time,
 } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 import { type DAY, DEGREE, LECTURE_TYPE, SEMESTER } from "./enums";
@@ -17,12 +17,14 @@ export class StudyApi {
   private readonly baseUrl = "https://www.fit.vut.cz/study/";
   private _languageSet: Awaited<typeof this.languageProvider.languageSet> | undefined;
   private _timeSchedule: Map<string, StudyApiTypes.getStudyTimeScheduleReturn>;
+  private readonly urlLanguage: string;
   constructor(
     private readonly languageProvider: LanguageProvider,
     private readonly fetcher: typeof fromURL
   ) {
     this._languageSet = undefined;
     this._timeSchedule = new Map();
+    this.urlLanguage = `.${this.languageProvider.language}`;
   }
 
   private getLanguageSet = async () => {
@@ -31,28 +33,18 @@ export class StudyApi {
     return this._languageSet;
   };
 
-  // private getTimeSchedule = async () => {
-  //   if (this._timeSchedule) return this._timeSchedule
-  //   this._timeSchedule = await this.getTimeSchedule()
-  //   return this._timeSchedule
-  // }
-
   private fetchDocument(url: string) {
     return this.fetcher(url);
   }
 
-  private get urlLanguage() {
-    return `.${this.languageProvider.language}`;
-  }
-
   /**
-   * I strongly recommend passing the year parameter, it helps caching the data
+   * I strongly recommend passing the year parameter, when passed data may be returned from cache
    */
-  getTimeSchedule = async (
+  private getTimeSchedule = async (
     config: StudyApiTypes.getStudyTimeScheduleConfig = { year: null }
   ): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
     const { year } = config;
-    if (year && this._timeSchedule?.has(year)) return this._timeSchedule.get(year)!;
+    if (year && this._timeSchedule.has(year)) return this._timeSchedule.get(year)!;
     const languageSet = await this.getLanguageSet();
     const calendarUrl = `${this.baseUrl}calendar/${year ? `${year}/` : ""}${this.urlLanguage}`;
     const $ = await this.fetchDocument(calendarUrl);
@@ -254,12 +246,23 @@ export class StudyApi {
     return courses;
   }
 
-  async getStudyCourseDetails(
-    config: StudyApiTypes.getStudyCourseDetailsConfig
-  ): Promise<StudyApiTypes.getStudyCourseDetailsReturn> {
-    const { courseId, semester, year } = config;
+  async getStudyCoursesDetails(
+    config: StudyApiTypes.getStudyCoursesDetailsConfig
+  ): Promise<StudyApiTypes.getStudyCoursesDetailsReturn> {
+    const { courses, semester, year } = config;
     const languageSet = await this.getLanguageSet();
     const timeSchedule = await this.getTimeSchedule({ year: year });
+    const semesterTimeSchedule = timeSchedule[semester];
+    const data = await Promise.all(
+      courses.map((courseId) => this.getStudyCourseDetails({ courseId, languageSet, semesterTimeSchedule }))
+    );
+    return { data, semesterTimeSchedule };
+  }
+
+  private async getStudyCourseDetails(
+    config: StudyApiTypes.getStudyCourseDetailsConfig
+  ): Promise<StudyApiTypes.getStudyCourseDetailsReturn> {
+    const { courseId, languageSet, semesterTimeSchedule } = config;
     const courseUrl = `${this.baseUrl}course/${courseId}/${this.urlLanguage}`;
     const $ = await this.fetchDocument(courseUrl);
     const courseTypeBasedOnColor = {
@@ -267,11 +270,6 @@ export class StudyApi {
       "#e0ffe0": LECTURE_TYPE.LECTURE,
       "#ffffdc": LECTURE_TYPE.LABORATORY,
       "#ffe6cc": LECTURE_TYPE.EXAM,
-    };
-
-    const convertTime = (time: string): Time => {
-      const [hour, minute] = time.split(":").map(Number);
-      return { hour, minute };
     };
 
     const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
@@ -330,16 +328,14 @@ export class StudyApi {
           ([_, value]) => value === day
         )?.[0] as DAY;
         // parseWeek may return null, but we expect an event not to
-        const weeks = parseWeek(weeksText, timeSchedule[semester].start, languageSet);
+        const weeks = parseWeek(weeksText, semesterTimeSchedule.start, languageSet);
 
         return {
           type,
           day: normalizedDay,
           weeks,
           room: rooms,
-          start: convertTime(start),
-          end: convertTime(end),
-          capacity,
+          timeSpan: new TimeSpan(Time.fromString(start), Time.fromString(end)),
           lectureGroup,
           groups,
           info,
