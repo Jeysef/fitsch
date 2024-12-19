@@ -17,9 +17,7 @@ export default function Home() {
   // empty for ssr
   const [initialTab, setInitialTab] = createSignal("empty");
 
-  const checkedDataMemo = createMemo(() => {
-    return store.checkedData;
-  });
+  const checkedDataMemo = createMemo(() => store.checkedData);
 
   const filteredStore = new Proxy(store, {
     get(store, prop) {
