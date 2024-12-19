@@ -79,7 +79,7 @@ export default function Home() {
         <TabsIndicator variant="underline" data-lang={locale()} />
         {/* data-lang for rerendering */}
       </TabsList>
-      <TabsContent value={"empty"} as="main" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
+      <TabsContent value={"empty"} as="main" class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
         <Scheduler store={newSchedulerStore()} />
       </TabsContent>
       <TabsContent
