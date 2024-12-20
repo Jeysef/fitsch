@@ -120,13 +120,13 @@ export default function Wrapper() {
   function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
     const data = resource[0];
     const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
-    const dataValues = data()?.values;
-    if (!dataValues) {
-      return null;
-    }
     const { refetch, mutate } = resource[1];
     const _submit = useAction(getStudyCoursesDetailsAction);
     const { t } = useI18n();
+    const dataValues = data()?.values;
+    if (!dataValues) {
+      throw new Error("The menu data is not loaded, refresh the page");
+    }
 
     const submit: typeof _submit = (data) => {
       const submission = _submit(data).then((res) => {
