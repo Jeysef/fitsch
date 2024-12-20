@@ -24,11 +24,11 @@ const RATING_WEIGHTS = {
  * 0 is the best time, 1 is the worst
  */
 function getTimePreferencePenalty(timespan: TimeSpan): number {
-  if (timespan.start.hour < RATING_WEIGHTS.IDEAL_START_HOUR) {
+  if (timespan.start.hours < RATING_WEIGHTS.IDEAL_START_HOUR) {
     return ((RATING_WEIGHTS.IDEAL_START_HOUR - timespan.start.hour) * (24 - RATING_WEIGHTS.TIME_PENALTY_EARLY)) / 24;
   }
   // Gradually decrease score as the day progresses after IDEAL_START_HOUR
-  return (timespan.end.hour - RATING_WEIGHTS.IDEAL_START_HOUR) / (24 - RATING_WEIGHTS.IDEAL_START_HOUR);
+  return (timespan.end.hours - RATING_WEIGHTS.IDEAL_START_HOUR) / (24 - RATING_WEIGHTS.IDEAL_START_HOUR);
 }
 
 export default function SchedulerGenerator() {
@@ -62,7 +62,7 @@ export default function SchedulerGenerator() {
         event: event,
         score: rateEvent(event, undefined, currentPosition.attempt),
       }))
-      .orderBy(["score"], ["asc"])
+      .orderBy(["score"], "asc")
       .value();
   });
 
@@ -92,6 +92,10 @@ export default function SchedulerGenerator() {
     //   event.Pr = Math.round(Pr * 100) / 100;
     //   // @ts-ignore
     //   event.Tr = Math.round(Tr * 100) / 100;
+    //   // @ts-ignore
+    //   event.Vr = Math.round(perturbation * 100) / 100;
+    //   // @ts-ignore
+    //   event.score = Math.round((Pr + Tr + perturbation) * 100) / 100;
     // });
 
     return Pr + Tr + perturbation;

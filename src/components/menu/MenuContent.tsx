@@ -125,7 +125,8 @@ export default function Wrapper() {
     const { t } = useI18n();
     const dataValues = data()?.values;
     if (!dataValues) {
-      throw new Error("The menu data is not loaded, refresh the page");
+      if (data.state === "refreshing") return <Loader />;
+      return null;
     }
 
     const submit: typeof _submit = (data) => {
