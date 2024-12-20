@@ -14,5 +14,4 @@ export const navigationSchema = z.object({
 }) satisfies ZodObject<Record<Exclude<keyof StudyOverview["values"], "language">, ZodTypeAny>>;
 
 export type NavigationSchema = z.infer<typeof navigationSchema>;
-// export type NavigationSchemaKeys = keyof typeof navigationSchema.keyof;
 export type NavigationSchemaKey = enumUtil.UnionToTupleString<keyof NavigationSchema>[number];
