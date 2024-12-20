@@ -3,7 +3,7 @@ import ChevronDown from "lucide-solid/icons/chevron-down";
 import CircleAlert from "lucide-solid/icons/circle-alert";
 import { createSignal, type Setter } from "solid-js";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
-import SchedulerGenerator from "~/components/scheduler/generator2.singlePass";
+import SchedulerGenerator from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
