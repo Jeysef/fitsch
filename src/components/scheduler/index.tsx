@@ -191,7 +191,6 @@ function Week() {
   // Usage:
   const linkedHighlightClass = createLinkedHighlightClass("linked", hoverColors.linked);
   const strongLinkedHighlightClass = createLinkedHighlightClass("strongLinked", hoverColors.strongLinked);
-  console.log("🚀 ~ file: index.tsx:193 ~ Week ~ strongLinkedHighlightClass():", strongLinkedHighlightClass());
   return (
     <div
       class={cn(
