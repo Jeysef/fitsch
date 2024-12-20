@@ -2,6 +2,7 @@ import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { mapValues } from "lodash-es";
+import { ObjectTyped } from "object-typed";
 import {
   type Accessor,
   ErrorBoundary,
@@ -32,7 +33,7 @@ import {
   YearSelect,
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
-import { type NavigationSchema, navigationSchema } from "~/components/menu/schema";
+import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
 import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
 import {
@@ -49,18 +50,26 @@ import { getStudyOverview } from "~/server/scraper/functions";
 import type {
   DataProviderTypes,
   GetStudyCoursesDetailsFunctionConfig,
-  GradeKey,
   StudyCourseObligation,
   StudyOverview,
-  StudyOverviewYear,
-  StudyProgram,
 } from "~/server/scraper/types";
 
-const GroupContext =
-  createContext<IFormGroup<{ [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]> }>>();
-export const getGroup = () => useContext(GroupContext)!;
+type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
+type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
+type FormGroup = IFormGroup<FormGroupControls, FormGroupValues>;
+
+const GroupContext = createContext<FormGroup>();
+export const getGroup = () => {
+  const group = useContext(GroupContext);
+  if (!group) throw new Error("GroupContext not found");
+  return group;
+};
 const DataContext = createContext<Accessor<StudyOverview | undefined>>();
-export const getData = () => useContext(DataContext)!;
+export const getData = () => {
+  const data = useContext(DataContext);
+  if (!data) throw new Error("DataContext not found");
+  return data;
+};
 /**
  * Will be prolonged every time updated
  */
@@ -82,7 +91,7 @@ export default function Wrapper() {
   const locale = useI18n().locale;
   const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
     language: locale(),
-    year: persistentGroupData()?.year?.value,
+    year: persistentGroupData()?.year.value,
     degree: persistentGroupData()?.degree,
     program: persistentGroupData()?.program,
   };
@@ -111,6 +120,12 @@ export default function Wrapper() {
   function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
     const data = resource[0];
     const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
+    console.log("🚀 ~ file: MenuContent.tsx:123 ~ Content ~ data:", data());
+    console.log("🚀 ~ file: MenuContent.tsx:125 ~ Content ~ cData:", cData());
+    const dataValues = data()?.values;
+    if (!dataValues) {
+      return null;
+    }
     const { refetch, mutate } = resource[1];
     const _submit = useAction(getStudyCoursesDetailsAction);
     const { t } = useI18n();
@@ -142,7 +157,7 @@ export default function Wrapper() {
       const c = group.controls;
       return {
         language: locale(),
-        year: c.year.value!.value,
+        year: c.year.value.value,
         semester: c.semester.value,
         courses: [...c.coursesCompulsory.value, ...c.coursesVoluntary.value],
       } satisfies GetStudyCoursesDetailsFunctionConfig;
@@ -173,12 +188,12 @@ export default function Wrapper() {
       true
     );
 
-    const validator: <K extends keyof NavigationSchema>(
+    const validator: <K extends NavigationSchemaKey>(
       name: K,
       value: NavigationSchema[K]
     ) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
       const returnType = navigationSchema
-        .pick({ [name]: true } as { [K in keyof NavigationSchema]: true })
+        .pick({ [name]: true } as { [K in NavigationSchemaKey]: true })
         .safeParse({ [name]: value });
       return returnType.error ? { error: returnType.error } : null;
     };
@@ -193,10 +208,10 @@ export default function Wrapper() {
     const isSubmittedCompulsory = submittedCourses().compulsory.length > 0;
     const isSubmittedOptional = submittedCourses().voluntary.length > 0;
 
-    const values: { [K in keyof Required<NavigationSchema>]: NavigationSchema[K] } = {
-      year: data()?.values.year ?? persistentGroupData()?.year,
-      degree: data()?.values.degree ?? persistentGroupData()?.degree ?? defaultValues.degree,
-      program: data()?.values.program?.id ?? persistentGroupData()?.program,
+    const values: FormGroupValues = {
+      year: dataValues.year,
+      degree: dataValues.degree,
+      program: dataValues.program?.id ?? persistentGroupData()?.program,
       grade: persistentGroupData()?.grade ?? defaultValues.grade,
       semester: persistentGroupData()?.semester ?? defaultValues.semester,
       coursesCompulsory:
@@ -209,40 +224,24 @@ export default function Wrapper() {
         defaultValues.coursesVoluntary,
     };
 
-    const group = createFormGroup({
-      year: createFormControl<StudyOverviewYear | undefined>(values.year, {
-        required: true,
-        validators: validator.bind(null, "year"),
-      }),
-      degree: createFormControl<DEGREE>(values.degree, { required: true, validators: validator.bind(null, "degree") }),
-      program: createFormControl<StudyProgram["id"] | undefined>(values.program, {
-        required: true,
-        validators: validator.bind(null, "program"),
-      }),
-      grade: createFormControl<GradeKey>(values.grade, { required: true, validators: validator.bind(null, "grade") }),
-      semester: createFormControl<(typeof SEMESTER)[SEMESTER]>(values.semester, {
-        required: true,
-        validators: validator.bind(null, "semester"),
-      }),
-      coursesCompulsory: createFormControl<string[]>(values.coursesCompulsory, {
-        required: true,
-        validators: validator.bind(null, "coursesCompulsory"),
-      }),
-      coursesVoluntary: createFormControl<string[]>(values.coursesVoluntary, {
-        required: true,
-        validators: validator.bind(null, "coursesVoluntary"),
-      }),
-    } satisfies {
-      [K in keyof Required<NavigationSchema>]: IFormControl<NavigationSchema[K]>;
-    });
+    const formGroupControls = ObjectTyped.fromEntries(
+      ObjectTyped.entries(values).map(
+        <K extends keyof FormGroupValues>([key, value]: [K, FormGroupValues[K]]) =>
+          [
+            key,
+            createFormControl(value, {
+              required: true,
+              validators: (value) => validator(key, value),
+            }) as FormGroupControls[K],
+          ] as [K, FormGroupControls[K]]
+      )
+    ) as FormGroupControls;
+
+    const group: FormGroup = createFormGroup(formGroupControls);
 
     // TODO: find something better
     createEffect(() => {
-      setPersistentGroupData(
-        mapValues(trackStore(group).controls, (value) => value.rawValue) as {
-          [K in keyof Required<NavigationSchema>]: NavigationSchema[K];
-        }
-      );
+      setPersistentGroupData(mapValues(trackStore(group).controls, (value) => value.rawValue) as FormGroupValues);
     });
 
     const getFetchableData = () => ({

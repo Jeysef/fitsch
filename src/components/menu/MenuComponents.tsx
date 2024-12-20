@@ -18,7 +18,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import type { SEMESTER } from "~/server/scraper/enums";
+import { SEMESTER } from "~/server/scraper/enums";
 import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
 import { asMerge } from "~/utils/asMerge";
 
@@ -140,7 +140,7 @@ export function ProgramSelect() {
         class="grid gap-x-2"
       >
         <RadioGroup.Label as={SectionHeading}>{t("menu.program.title")}</RadioGroup.Label>
-        <For each={data()!.data.programs[group.controls.degree!.value]}>
+        <For each={data()?.data.programs[group.controls.degree.value]}>
           {(program) => (
             <section class="ml-2">
               <Show when={program.specializations.length > 0} fallback={RadioItem(program)}>
@@ -164,22 +164,43 @@ export function GradeSelect() {
     <Text class={typographyVariants({ class: "!mt-0 text-sm ml-2" })}>{t("menu.grade.selectToShow")}</Text>
   );
 
-  const SelectedHiddenCourses = ({ grade }: { grade: StudyOverviewGrade }) => {
-    const count = createMemo(() => {
-      const courses = data()!.data.courses[grade.key][group.controls.semester.value];
-      const compulsorySelected = courses.compulsory.filter((course) =>
-        group.controls.coursesCompulsory.value.includes(course.id)
-      ).length;
-      const optionalSelected = courses.voluntary.filter((course) =>
-        group.controls.coursesVoluntary.value.includes(course.id)
-      ).length;
-      return compulsorySelected + optionalSelected || null;
-    });
+  const RenderContent = () => {
+    const ddata = data()?.data;
+    if (!ddata) {
+      return null;
+    }
 
+    const SelectedHiddenCourses = ({ grade }: { grade: StudyOverviewGrade }) => {
+      const count = createMemo(() => {
+        const courses = ddata.courses[grade.key][group.controls.semester.value];
+        const compulsorySelected = courses.compulsory.filter((course) =>
+          group.controls.coursesCompulsory.value.includes(course.id)
+        ).length;
+        const optionalSelected = courses.voluntary.filter((course) =>
+          group.controls.coursesVoluntary.value.includes(course.id)
+        ).length;
+        return compulsorySelected + optionalSelected || null;
+      });
+
+      return (
+        <Show when={group.controls.grade.value !== grade.key && count()} keyed>
+          {SelectedCountIndicator}
+        </Show>
+      );
+    };
     return (
-      <Show when={group.controls.grade.value !== grade.key && count()} keyed>
-        {SelectedCountIndicator}
-      </Show>
+      <For each={ddata.grades}>
+        {(grade) => {
+          return (
+            <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
+              <RadioGroupItemInput class="bottom-0" />
+              <RadioGroupItemControl as="button" type="button" />
+              <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>{grade.label}</RadioGroupItemLabel>
+              <SelectedHiddenCourses grade={grade} />
+            </RadioGroupItem>
+          );
+        }}
+      </For>
     );
   };
 
@@ -196,19 +217,8 @@ export function GradeSelect() {
     >
       <RadioGroup.Label as={SectionHeading}>{t("menu.grade.title")}</RadioGroup.Label>
       <Suspense fallback={<Loader />}>
-        <Show when={data() && group.controls.degree.value === data()!.values.degree} fallback={<Fallback />}>
-          <For each={data()!.data.grades}>
-            {(grade) => {
-              return (
-                <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
-                  <RadioGroupItemInput class="bottom-0" />
-                  <RadioGroupItemControl as="button" type="button" />
-                  <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>{grade.label}</RadioGroupItemLabel>
-                  <SelectedHiddenCourses grade={grade} />
-                </RadioGroupItem>
-              );
-            }}
-          </For>
+        <Show when={group.controls.degree.value === data()?.values.degree} fallback={<Fallback />}>
+          <RenderContent />
         </Show>
       </Suspense>
     </RadioGroup>
@@ -220,10 +230,16 @@ export function SemesterSelect() {
   const data = getData();
   const { t } = useI18n();
 
+  const semesetrs = () => data()?.data.semesters ?? Object.values(SEMESTER);
+
   const SelectedHiddenCourses = ({ semester }: { semester: SEMESTER }) => {
+    const ddata = data()?.data;
+    if (!ddata) {
+      return null;
+    }
     const count = createMemo(() => {
-      return data()!.data.grades.reduce((acc, grade) => {
-        const courses = data()!.data.courses[grade.key][semester];
+      return ddata.grades.reduce((acc, grade) => {
+        const courses = ddata.courses[grade.key][semester];
         const compulsorySelected = courses.compulsory.filter((course) =>
           group.controls.coursesCompulsory.value.includes(course.id)
         ).length;
@@ -252,7 +268,7 @@ export function SemesterSelect() {
       class="grid gap-x-2"
     >
       <RadioGroup.Label as={SectionHeading}>{t("menu.semester.title")}</RadioGroup.Label>
-      <For each={data()?.data.semesters}>
+      <For each={semesetrs()}>
         {(semester) => {
           return (
             <RadioGroupItem value={semester} class="flex items-center gap-2">
@@ -327,7 +343,7 @@ export function CoursesSelect() {
               <Checkbox
                 class="flex items-center cursor-pointer"
                 value="all"
-                checked={group.controls.coursesCompulsory.value!.length === compulsoryCourses.length}
+                checked={group.controls.coursesCompulsory.value.length === compulsoryCourses.length}
                 onChange={(checked) =>
                   checked
                     ? group.controls.coursesCompulsory.setValue(compulsoryCourses.map((e) => e.id))
