@@ -225,24 +225,36 @@ export default function SchedulerGenerator() {
     const maxAttempts = 10000;
 
     try {
-      while (currentPosition.attempt >= 0 && currentPosition.attempt < maxAttempts) {
-        currentPosition.attempt += forward ? 1 : -1;
+      const generateForDirection = async (condition: () => boolean, updateAttempt: () => void): Promise<void> => {
+        while (condition()) {
+          updateAttempt();
 
-        if (currentPosition.attempt < 0 || currentPosition.attempt >= maxAttempts) {
-          console.warn("Attempt out of bounds");
+          const result = await generateSchedule(store.courses, currentPosition.attempt);
+          if (result) {
+            applyScheduleToStore(result);
+            break;
+          }
+
+          // Yield every 10 attempts to prevent blocking
+          if (currentPosition.attempt % 10 === 0) {
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+          }
+        }
+      };
+
+      switch (forward) {
+        case true:
+          await generateForDirection(
+            () => currentPosition.attempt < maxAttempts,
+            () => currentPosition.attempt++
+          );
           break;
-        }
-
-        const result = await generateSchedule(store.courses, currentPosition.attempt);
-        if (result) {
-          applyScheduleToStore(result);
+        case false:
+          await generateForDirection(
+            () => currentPosition.attempt > 0,
+            () => currentPosition.attempt--
+          );
           break;
-        }
-
-        // Yield every 10 attempts to prevent blocking
-        if (currentPosition.attempt % 10 === 0) {
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-        }
       }
     } finally {
       currentPosition.isGenerating = false;
