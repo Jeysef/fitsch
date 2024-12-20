@@ -120,8 +120,6 @@ export default function Wrapper() {
   function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
     const data = resource[0];
     const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
-    console.log("🚀 ~ file: MenuContent.tsx:123 ~ Content ~ data:", data());
-    console.log("🚀 ~ file: MenuContent.tsx:125 ~ Content ~ cData:", cData());
     const dataValues = data()?.values;
     if (!dataValues) {
       return null;
@@ -132,7 +130,6 @@ export default function Wrapper() {
 
     const submit: typeof _submit = (data) => {
       const submission = _submit(data).then((res) => {
-        console.log("🚀 ~ file: MenuContent.tsx:120 ~ submission ~ res:", res);
         if (Object.hasOwn(res, "statusCode")) throw new Error("Server error");
         return res;
       });

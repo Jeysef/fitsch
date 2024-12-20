@@ -31,7 +31,6 @@ export const getStudyCoursesDetails = (
   const languageProvider = new LanguageProvider(language);
   const dataProvider = new DataProvider(languageProvider, fromURL);
   const data = errorResolver(dataProvider.getStudyCoursesDetails(rest));
-  console.log("🚀 ~ file: functions.ts:34 ~ data:", data);
   return data;
 };
 

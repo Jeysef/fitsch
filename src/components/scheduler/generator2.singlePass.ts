@@ -54,7 +54,6 @@ export default function SchedulerGenerator() {
 
   const orderedEvents = createMemo(() => {
     const data = store.data;
-    console.log("orderedEvents", data);
     if (!data) return [];
     return chain(data)
       .values()

@@ -183,7 +183,6 @@ export class SchedulerStore {
   }
 
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
-    console.log("🚀 ~ file: store.ts:186 ~ SchedulerStore ~ setnewCourses ~ courses:", courses);
     if (courses.length === 0) {
       this.resetCourses();
       return;

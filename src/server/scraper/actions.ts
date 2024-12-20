@@ -6,7 +6,6 @@ export const getStudyCoursesDetailsAction = action(async (config: GetStudyCourse
   "use server";
   try {
     const serializedData = JSON.parse(JSON.stringify(await getStudyCoursesDetails(config)));
-    console.log("🚀 ~ file: actions.ts:9 ~ getStudyCoursesDetailsAction ~ serializedData:", serializedData);
     return json(serializedData);
   } catch (error) {
     // Return a serializable error object
