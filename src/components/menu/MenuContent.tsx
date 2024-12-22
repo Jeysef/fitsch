@@ -1,7 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
-import { mapValues } from "lodash-es";
+import { flatMap, forEach, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import {
   type Accessor,
@@ -45,14 +45,9 @@ import {
 } from "~/packages/solid-forms/";
 import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
-import { DEGREE, SEMESTER } from "~/server/scraper/enums";
+import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import type {
-  DataProviderTypes,
-  GetStudyCoursesDetailsFunctionConfig,
-  StudyCourseObligation,
-  StudyOverview,
-} from "~/server/scraper/types";
+import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -85,7 +80,7 @@ export default function Wrapper() {
     { name: "groupData", storage: monthCookie }
   );
   const [submittedCourses, setSubmittedCourses] = makePersisted(
-    createSignal<Record<StudyCourseObligation, string[]>>({ compulsory: [], voluntary: [] }),
+    createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
     { name: "submittedCourses", storage: monthCookie }
   );
   const locale = useI18n().locale;
@@ -157,7 +152,7 @@ export default function Wrapper() {
         language: locale(),
         year: c.year.value.value,
         semester: c.semester.value,
-        courses: [...c.coursesCompulsory.value, ...c.coursesVoluntary.value],
+        courses: flatMap(OBLIGATION, (type) => c[type].value),
       } satisfies GetStudyCoursesDetailsFunctionConfig;
     };
 
@@ -200,11 +195,11 @@ export default function Wrapper() {
       semester: SEMESTER.WINTER,
       degree: DEGREE.BACHELOR,
       grade: undefined,
-      coursesCompulsory: [],
-      coursesVoluntary: [],
+      [OBLIGATION.COMPULSORY]: [],
+      [OBLIGATION.COMPULSORY_ELECTIVE]: [],
+      [OBLIGATION.ELECTIVE]: [],
     };
-    const isSubmittedCompulsory = submittedCourses().compulsory.length > 0;
-    const isSubmittedOptional = submittedCourses().voluntary.length > 0;
+    const submittedObligation = mapValues(submittedCourses(), (courses) => courses.length > 0 && courses);
 
     const values: FormGroupValues = {
       year: dataValues.year,
@@ -212,14 +207,7 @@ export default function Wrapper() {
       program: dataValues.program?.id ?? persistentGroupData()?.program,
       grade: persistentGroupData()?.grade ?? defaultValues.grade,
       semester: persistentGroupData()?.semester ?? defaultValues.semester,
-      coursesCompulsory:
-        (isSubmittedCompulsory && submittedCourses().compulsory) ||
-        persistentGroupData()?.coursesCompulsory ||
-        defaultValues.coursesCompulsory,
-      coursesVoluntary:
-        (isSubmittedOptional && submittedCourses().voluntary) ||
-        persistentGroupData()?.coursesVoluntary ||
-        defaultValues.coursesVoluntary,
+      ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultValues[type]),
     };
 
     const formGroupControls = ObjectTyped.fromEntries(
@@ -266,8 +254,7 @@ export default function Wrapper() {
         if (isServer) return true;
         if (firstEffect) return false;
         batch(() => {
-          group.controls.coursesCompulsory.setValue([]);
-          group.controls.coursesVoluntary.setValue([]);
+          forEach(OBLIGATION, (type) => group.controls[type].setValue([]));
         });
         return false;
       }),
@@ -293,7 +280,7 @@ export default function Wrapper() {
       group.markSubmitted(true);
       submit(getDataToSubmit());
       const c = group.controls;
-      setSubmittedCourses({ compulsory: c.coursesCompulsory.value, voluntary: c.coursesVoluntary.value });
+      setSubmittedCourses(mapValues(OBLIGATION, (type) => c[type].value));
     };
 
     return (

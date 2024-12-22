@@ -11,7 +11,7 @@ import type {
   StudySpecialization,
 } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { type DAY, DEGREE, LECTURE_TYPE, SEMESTER } from "./enums";
+import { type DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = "https://www.fit.vut.cz/study/";
@@ -219,25 +219,26 @@ export class StudyApi {
             const completion = $(element).children("td").eq(3).text().trim();
             const faculty = $(element).children("td").last().text().trim();
             const note = $(element).children("td").first().children("sup").length > 0;
-            let obligation = false;
-            switch (rowBgColor) {
-              case "#ffe4c0":
-                obligation = true;
-                break;
-              case "#ffffd0":
-                obligation = false;
-                break;
-              default:
-                // fallback to text
-                if (obligationText === locales.course.obligation.compulsory) {
-                  obligation = true;
-                } else if (obligationText === locales.course.obligation.compulsoryElective) {
-                  obligation = true;
-                } else if (obligationText === locales.course.obligation.elective) {
-                  obligation = false;
-                }
-                break;
+            let obligation: OBLIGATION = OBLIGATION.ELECTIVE;
+            if (obligationText.includes(locales.course.obligation.compulsoryElective)) {
+              obligation = OBLIGATION.COMPULSORY_ELECTIVE;
+            } else if (obligationText.includes(locales.course.obligation.compulsory)) {
+              obligation = OBLIGATION.COMPULSORY;
+            } else if (obligationText.includes(locales.course.obligation.elective)) {
+              obligation = OBLIGATION.ELECTIVE;
+            } else {
+              // fallback to colors if text doesn't match
+              switch (rowBgColor) {
+                case "#ffe4c0":
+                  obligation = OBLIGATION.COMPULSORY;
+                  break;
+                case "#ffffd0":
+                  obligation = OBLIGATION.ELECTIVE;
+                  break;
+              }
             }
+
+            console.log("🚀 ~ file: api.ts:243 ~ StudyApi ~ .map ~ obligation:", obligation);
             return { abbreviation, name, url, credits, obligation, completion, faculty, note, id };
           })
           .get();
@@ -340,7 +341,8 @@ export class StudyApi {
           groups,
           info,
           note: hasNote ? noteText : null,
-        };
+          capacity,
+        } satisfies StudyApiTypes.getStudyCourseDetailsReturn["data"][number];
       })
       .get();
 

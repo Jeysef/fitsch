@@ -1,8 +1,11 @@
 import { Tooltip } from "@kobalte/core/tooltip";
+import { flatMap, reduce } from "lodash-es";
 import Link from "lucide-solid/icons/link";
-import { For, Show, Suspense, createMemo } from "solid-js";
+import { For, Show, Suspense, createEffect, createMemo, type JSXElement } from "solid-js";
+import type { StrictExtract } from "ts-essentials";
 import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
+import type { NavigationSchemaKey } from "~/components/menu/schema";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
@@ -18,7 +21,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import { SEMESTER } from "~/server/scraper/enums";
+import { OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
 import { asMerge } from "~/utils/asMerge";
 
@@ -173,13 +176,16 @@ export function GradeSelect() {
     const SelectedHiddenCourses = ({ grade }: { grade: StudyOverviewGrade }) => {
       const count = createMemo(() => {
         const courses = ddata.courses[grade.key][group.controls.semester.value];
-        const compulsorySelected = courses.compulsory.filter((course) =>
-          group.controls.coursesCompulsory.value.includes(course.id)
-        ).length;
-        const optionalSelected = courses.voluntary.filter((course) =>
-          group.controls.coursesVoluntary.value.includes(course.id)
-        ).length;
-        return compulsorySelected + optionalSelected || null;
+        const selected = reduce(
+          courses,
+          (acc, courseType) =>
+            acc +
+            courseType.filter((course) => flatMap(OBLIGATION, (type) => group.controls[type].value).includes(course.id))
+              .length,
+          0
+        );
+
+        return selected || null;
       });
 
       return (
@@ -240,13 +246,15 @@ export function SemesterSelect() {
     const count = createMemo(() => {
       return ddata.grades.reduce((acc, grade) => {
         const courses = ddata.courses[grade.key][semester];
-        const compulsorySelected = courses.compulsory.filter((course) =>
-          group.controls.coursesCompulsory.value.includes(course.id)
-        ).length;
-        const optionalSelected = courses.voluntary.filter((course) =>
-          group.controls.coursesVoluntary.value.includes(course.id)
-        ).length;
-        return acc + compulsorySelected + optionalSelected;
+        const selected = reduce(
+          courses,
+          (acc, courseType) =>
+            acc +
+            courseType.filter((course) => flatMap(OBLIGATION, (type) => group.controls[type].value).includes(course.id))
+              .length,
+          0
+        );
+        return acc + selected;
       }, 0);
     });
 
@@ -293,18 +301,31 @@ export function CoursesSelect() {
 
   const Fallback = () => <ItemText>{group.controls.grade.value ? "no courses to show" : "select grade to show"}</ItemText>;
 
+  createEffect(() => {
+    console.log(
+      "🚀 ~ file: MenuComponents.tsx:317 ~ createEffect ~ data()?.data.courses[group.controls.grade.value]:",
+      group.controls.grade.value,
+      group.controls.grade.value && data()?.data.courses[group.controls.grade.value]
+    );
+  });
+
   const compulsoryCourses = createMemo(
     () =>
       !!group.controls.grade.value &&
-      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].compulsory
+      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.COMPULSORY]
+  );
+  const compulsoryElectiveCourses = createMemo(
+    () =>
+      !!group.controls.grade.value &&
+      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.COMPULSORY_ELECTIVE]
   );
   const optionalCourses = createMemo(
     () =>
       !!group.controls.grade.value &&
-      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value].voluntary
+      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.ELECTIVE]
   );
 
-  const handleChange = (checked: boolean, type: "coursesCompulsory" | "coursesVoluntary", courseId: string) => {
+  const handleChange = (checked: boolean, type: StrictExtract<NavigationSchemaKey, OBLIGATION>, courseId: string) => {
     group.controls[type].setValue(
       checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter((id) => id !== courseId)
     );
@@ -332,39 +353,37 @@ export function CoursesSelect() {
     );
   };
 
-  return (
-    <Show when={group.controls.degree.value === data()?.values.degree}>
-      <SectionHeading>{t("menu.courses.title")}</SectionHeading>
-      <section class="ml-2">
-        <SubSectionHeading>{t("menu.courses.compulsory")}</SubSectionHeading>
-        <Show when={compulsoryCourses()} fallback={<Fallback />} keyed>
-          {(compulsoryCourses) => (
+  const SectionRender = (props: {
+    obligation: OBLIGATION;
+    alwaysShowHEading?: boolean;
+    preChild?: (courses: StudyOverviewCourse[]) => JSXElement;
+  }) => {
+    const courses = createMemo(
+      () =>
+        !!group.controls.grade.value &&
+        data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][props.obligation]
+    );
+    const Subsection = () => <SubSectionHeading>{t(`menu.courses.${props.obligation}`)}</SubSectionHeading>;
+
+    return (
+      <>
+        {props.alwaysShowHEading && <Subsection />}
+        <Show when={courses()} keyed fallback={props.alwaysShowHEading ? <Fallback /> : null}>
+          {(courses) => (
             <>
-              <Checkbox
-                class="flex items-center cursor-pointer"
-                value="all"
-                checked={group.controls.coursesCompulsory.value.length === compulsoryCourses.length}
-                onChange={(checked) =>
-                  checked
-                    ? group.controls.coursesCompulsory.setValue(compulsoryCourses.map((e) => e.id))
-                    : group.controls.coursesCompulsory.setValue([])
-                }
-              >
-                <CheckboxControl />
-                <CheckboxLabel
-                  as={asMerge([ItemText, CheckboxLabel])}
-                  class={"ml-2  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}
-                >
-                  {t("menu.courses.all")}
-                </CheckboxLabel>
-              </Checkbox>
-              <For each={compulsoryCourses}>
+              <Show when={!props.alwaysShowHEading} fallback={null}>
+                <Subsection />
+              </Show>
+              <Show when={props.preChild} keyed>
+                {(render) => render(courses)}
+              </Show>
+              <For each={courses}>
                 {(course) => (
                   <Checkbox
                     class="flex items-center cursor-pointer"
                     value={course.id}
-                    checked={group.controls.coursesCompulsory.value.includes(course.id)}
-                    onChange={(checked) => handleChange(checked, "coursesCompulsory", course.id)}
+                    checked={group.controls[props.obligation].value.includes(course.id)}
+                    onChange={(checked) => handleChange(checked, props.obligation, course.id)}
                   >
                     <CheckboxControl />
                     <CourseCheckboxLabel course={course} />
@@ -374,24 +393,38 @@ export function CoursesSelect() {
             </>
           )}
         </Show>
-        <SubSectionHeading>{t("menu.courses.voluntary")}</SubSectionHeading>
-        <Show when={optionalCourses()} fallback={<Fallback />} keyed>
-          {(optionalCourses) => (
-            <For each={optionalCourses}>
-              {(course) => (
-                <Checkbox
-                  checked={group.controls.coursesVoluntary.value.includes(course.id)}
-                  class="flex items-center cursor-pointer"
-                  value={course.id}
-                  onChange={(checked) => handleChange(checked, "coursesVoluntary", course.id)}
-                >
-                  <CheckboxControl />
-                  <CourseCheckboxLabel course={course} />
-                </Checkbox>
-              )}
-            </For>
-          )}
-        </Show>
+      </>
+    );
+  };
+
+  const CheckAll = (obligation: OBLIGATION) => {
+    return (courses: StudyOverviewCourse[]) => (
+      <Checkbox
+        class="flex items-center cursor-pointer"
+        value={`all-${obligation}`}
+        checked={courses.every((course) => group.controls[obligation].value.includes(course.id))}
+        onChange={(checked) =>
+          checked ? group.controls[obligation].setValue(courses.map((e) => e.id)) : group.controls[obligation].setValue([])
+        }
+      >
+        <CheckboxControl />
+        <CheckboxLabel
+          as={asMerge([ItemText, CheckboxLabel])}
+          class={"ml-2  peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}
+        >
+          {t("menu.courses.all")}
+        </CheckboxLabel>
+      </Checkbox>
+    );
+  };
+
+  return (
+    <Show when={group.controls.degree.value === data()?.values.degree}>
+      <SectionHeading>{t("menu.courses.title")}</SectionHeading>
+      <section class="ml-2">
+        <SectionRender obligation={OBLIGATION.COMPULSORY} alwaysShowHEading preChild={CheckAll(OBLIGATION.COMPULSORY)} />
+        <SectionRender obligation={OBLIGATION.COMPULSORY_ELECTIVE} />
+        <SectionRender obligation={OBLIGATION.ELECTIVE} />
       </section>
     </Show>
   );

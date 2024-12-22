@@ -1,4 +1,4 @@
-import { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
+import { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 import type Schema from "./cs";
 
 export default {
@@ -80,8 +80,9 @@ export default {
     },
     courses: {
       title: "Courses",
-      compulsory: "Compulsory",
-      voluntary: "Voluntary",
+      [OBLIGATION.COMPULSORY]: "Compulsory",
+      [OBLIGATION.COMPULSORY_ELECTIVE]: "Compulsory elective",
+      [OBLIGATION.ELECTIVE]: "Elective",
       all: "All",
     },
     load: "Load",

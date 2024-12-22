@@ -1,7 +1,7 @@
 import type { TimeSpan } from "~/components/scheduler/time";
 import type { LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
-import type { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
+import type { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 
@@ -70,18 +70,14 @@ interface StudyOverview {
      * grade > semester > type > courses
      * because pages are structured like this
      */
-    courses: Record<GradeKey, Record<SEMESTER, Record<StudyCourseObligation, StudyOverviewCourse[]>>>;
+    courses: Record<GradeKey, Record<SEMESTER, Record<OBLIGATION, StudyOverviewCourse[]>>>;
   };
 }
 
-type StudyCourseObligation = "compulsory" | "voluntary";
 interface StudyOverviewCourse extends StudyProgramBase {}
 interface StudyCourse extends StudyOverviewCourse {
   credits: string;
-  /**
-   * 1: compulsory, 0: voluntary
-   */
-  obligation: boolean;
+  obligation: OBLIGATION;
   /**
    * type of completion
    * @example Ex, Cr+Ex
@@ -207,7 +203,6 @@ export type {
   ProgramStudyCourses,
   SemesterTimeSchedule,
   StudyCourse,
-  StudyCourseObligation,
   StudyId,
   StudyOverview,
   StudyOverviewCourse,

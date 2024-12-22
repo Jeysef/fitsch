@@ -1,4 +1,4 @@
-import { DAY, DEGREE, LECTURE_TYPE, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
+import { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 
 export default {
   course: {
@@ -79,8 +79,9 @@ export default {
     },
     courses: {
       title: "Předměty",
-      compulsory: "Povinné",
-      voluntary: "Volitelné",
+      [OBLIGATION.COMPULSORY]: "Povinné",
+      [OBLIGATION.COMPULSORY_ELECTIVE]: "Povinně volitelné",
+      [OBLIGATION.ELECTIVE]: "Volitelné",
       all: "Všechny",
     },
     load: "Načíst",

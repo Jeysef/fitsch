@@ -1,11 +1,12 @@
 import type { fromURL } from "cheerio";
+import { chain, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { StudyApi } from "~/server/scraper/api";
 import type { LanguageProvider } from "~/server/scraper/languageProvider";
 import { MutateLectureData } from "~/server/scraper/lectureMutator";
 import { constructGradeLabel } from "~/server/scraper/utils";
 import { LANGUAGE } from "../../enums";
-import { DEGREE, SEMESTER } from "./enums";
+import { DEGREE, OBLIGATION, SEMESTER } from "./enums";
 import type {
   DataProviderTypes,
   StudyOverview,
@@ -74,29 +75,15 @@ export class DataProvider {
     const degrees = Object.values(DEGREE);
     const semesters = Object.values(SEMESTER);
 
-    const courses: DataProviderTypes.getStudyOverviewReturn["data"]["courses"] = ObjectTyped.fromEntries(
-      ObjectTyped.entries(programData).map(
-        ([grade, gradeData]) =>
-          [
-            grade,
-            ObjectTyped.fromEntries(
-              semesters.map(
-                (semester) =>
-                  [
-                    semester,
-                    gradeData[semester].reduce(
-                      (acc, course) => {
-                        const { name, abbreviation, id, url } = course;
-                        const key = course.obligation ? "compulsory" : "voluntary";
-                        acc[key].push({ name, abbreviation, id, url } satisfies StudyOverviewCourse);
-                        return acc;
-                      },
-                      { compulsory: [], voluntary: [] } as Record<"compulsory" | "voluntary", StudyOverviewCourse[]>
-                    ),
-                  ] as const
-              )
-            ),
-          ] satisfies [string, Record<SEMESTER, Record<"compulsory" | "voluntary", StudyOverviewCourse[]>>]
+    const courses: DataProviderTypes.getStudyOverviewReturn["data"]["courses"] = mapValues(programData, (gradeData) =>
+      ObjectTyped.fromEntries(
+        semesters.map((semester) => [
+          semester,
+          chain(gradeData[semester])
+            .groupBy("obligation")
+            .defaults(mapValues(OBLIGATION, () => []))
+            .value() as Record<OBLIGATION, StudyOverviewCourse[]>,
+        ])
       )
     );
 
