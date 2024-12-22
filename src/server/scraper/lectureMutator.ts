@@ -3,9 +3,9 @@ import { isEqual, isString, union } from "lodash-es";
 import uniq from "lodash-es/uniq";
 import { ObjectTyped } from "object-typed";
 import { v4 as uuidv4 } from "uuid";
-import { days } from "~/components/scheduler/constants";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import { conjunctableRooms } from "~/config/rooms";
+import { days } from "~/config/scheduler";
 import { LECTURE_TYPE, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
 import type {
   APICourseLecture,

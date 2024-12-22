@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { days } from "~/components/scheduler/constants";
+import { days } from "~/config/scheduler";
 import { SchedulerStore, createColumns } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
 

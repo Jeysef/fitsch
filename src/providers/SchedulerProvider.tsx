@@ -15,9 +15,10 @@ import {
   type Setter,
 } from "solid-js";
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
-import { days } from "~/components/scheduler/constants";
+import { days } from "~/config/scheduler";
 import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
+import { end, start, step } from "~/config/scheduler";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
@@ -42,9 +43,9 @@ export function SchedulerProvider(props: ParentProps) {
     new SchedulerStore(
       {
         columns: createColumns({
-          start: { hour: 7, minute: 0 },
-          step: { hour: 1, minute: 0 },
-          end: { hour: 20, minute: 0 },
+          start: start,
+          step: step,
+          end: end,
           getTimeHeader: formatTime,
         }),
         rows: days.map(formatDay),
