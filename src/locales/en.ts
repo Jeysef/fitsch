@@ -80,7 +80,7 @@ export default {
     },
     courses: {
       title: "Courses",
-      compulsaory: "Compulsory",
+      compulsory: "Compulsory",
       voluntary: "Voluntary",
       all: "All",
     },

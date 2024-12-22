@@ -336,7 +336,7 @@ export function CoursesSelect() {
     <Show when={group.controls.degree.value === data()?.values.degree}>
       <SectionHeading>{t("menu.courses.title")}</SectionHeading>
       <section class="ml-2">
-        <SubSectionHeading>{t("menu.courses.compulsaory")}</SubSectionHeading>
+        <SubSectionHeading>{t("menu.courses.compulsory")}</SubSectionHeading>
         <Show when={compulsoryCourses()} fallback={<Fallback />} keyed>
           {(compulsoryCourses) => (
             <>
