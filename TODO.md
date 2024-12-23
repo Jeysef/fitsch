@@ -15,5 +15,5 @@
   - Load data from local storage
 - [] **Optimize tab switching**
   - check getters in store
-- [] **Make timespanTab responsive**
+- [x] **Make timespanTab responsive**
   - Make it so that the timespanTab is responsive to the store changes.
