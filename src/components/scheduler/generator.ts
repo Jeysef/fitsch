@@ -1,4 +1,4 @@
-import { chain, uniqBy } from "lodash-es";
+import { uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
@@ -53,15 +53,25 @@ export function SchedulerGenerator() {
   });
 
   const orderedEvents = createMemo(() => {
-    const storeDayData = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
-    return chain(storeDayData)
-      .flatMap((d) => d.events)
-      .map(({ event }) => ({
-        event: event,
-        score: rateEvent(event, undefined, currentPosition.attempt),
-      }))
-      .orderBy(["score"], "asc")
-      .value();
+    try {
+      // Get all days from store
+      const allDays = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
+      console.log("🚀 ~ file: generator.ts:58 ~ orderedEvents ~ allDays:", allDays);
+
+      // Flatten all events and calculate their scores
+      const eventsWithScores = allDays.flatMap((day) =>
+        day.events.map(({ event }) => ({
+          event,
+          score: rateEvent(event, undefined, currentPosition.attempt),
+        }))
+      );
+
+      // Sort events by score (ascending)
+      return eventsWithScores.sort((a, b) => a.score - b.score);
+    } catch (error) {
+      console.error("🚀 ~ file: generator.ts:58 ~ orderedEvents ~ error", error);
+      return [];
+    }
   });
 
   const getEmptyCompletedHours = () => {
