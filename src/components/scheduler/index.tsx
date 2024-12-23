@@ -69,7 +69,8 @@ function SchedulerGrid() {
   const handlePointerUp = (ev: PointerEvent) => {
     const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
     evCache.splice(index, 1);
-    (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
+    (ev.target as HTMLElement).hasPointerCapture(ev.pointerId) &&
+      (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
     if (evCache.length < 2) prevDiff = -1;
   };
 
