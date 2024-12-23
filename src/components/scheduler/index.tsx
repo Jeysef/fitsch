@@ -170,7 +170,6 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 function Week() {
   const store = useStore();
   const storeData = createMemo(() => values(store.data || store.getEmptyData()));
-  console.log("🚀 ~ file: index.tsx:173 ~ Week ~ storeData:", storeData(), store.data);
   const createLinkedHighlightClass = (property: StrictExtract<keyof Event, "linked" | "strongLinked">, color: string) =>
     createMemo(() =>
       flow([

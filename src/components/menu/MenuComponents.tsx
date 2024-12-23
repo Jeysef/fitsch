@@ -301,30 +301,6 @@ export function CoursesSelect() {
 
   const Fallback = () => <ItemText>{group.controls.grade.value ? "no courses to show" : "select grade to show"}</ItemText>;
 
-  createEffect(() => {
-    console.log(
-      "🚀 ~ file: MenuComponents.tsx:317 ~ createEffect ~ data()?.data.courses[group.controls.grade.value]:",
-      group.controls.grade.value,
-      group.controls.grade.value && data()?.data.courses[group.controls.grade.value]
-    );
-  });
-
-  const compulsoryCourses = createMemo(
-    () =>
-      !!group.controls.grade.value &&
-      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.COMPULSORY]
-  );
-  const compulsoryElectiveCourses = createMemo(
-    () =>
-      !!group.controls.grade.value &&
-      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.COMPULSORY_ELECTIVE]
-  );
-  const optionalCourses = createMemo(
-    () =>
-      !!group.controls.grade.value &&
-      data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][OBLIGATION.ELECTIVE]
-  );
-
   const handleChange = (checked: boolean, type: StrictExtract<NavigationSchemaKey, OBLIGATION>, courseId: string) => {
     group.controls[type].setValue(
       checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter((id) => id !== courseId)
