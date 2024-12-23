@@ -230,11 +230,14 @@ export function SchedulerGenerator() {
 
     currentPosition.isGenerating = true;
     const maxAttempts = 10000;
+    const maxRepeatedAttempts = 50;
+    let repeatedAttempts = 0;
 
     try {
       const generateForDirection = async (condition: () => boolean, updateAttempt: () => void): Promise<void> => {
-        while (condition()) {
+        while (condition() && repeatedAttempts < maxRepeatedAttempts) {
           updateAttempt();
+          repeatedAttempts++;
 
           const result = await generateSchedule(store.courses, currentPosition.attempt);
           if (result) {
