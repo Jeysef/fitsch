@@ -1,12 +1,10 @@
 # TODO
 
-- [] **Streaming Courses via Server Action**
-  - Stream Course by course. sort as they come.
 - [] **Fetching New Courses**
   - Fetch only the necessary courses when updating.
   - Return other courses as empty placeholders.
   - Allow placeholders to be filled in the store as needed.
-- [] **discuss behaviour of select all**
+- [x] **discuss behaviour of select all**
   - Current: `select all` deletes all courses from other grades
   - Current pros:
     - standard student expected behaviour
@@ -17,3 +15,6 @@
   - check getters in store
 - [x] **Make timespanTab responsive**
   - Make it so that the timespanTab is responsive to the store changes.
+- [] **Local Storage data validation**
+  - Validate data before loading (zod)
+  - Optional: versioning
