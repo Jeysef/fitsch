@@ -53,10 +53,8 @@ export function SchedulerGenerator() {
   });
 
   const orderedEvents = createMemo(() => {
-    const data = store.data;
-    if (!data) return [];
-    return chain(data)
-      .values()
+    const storeDayData = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
+    return chain(storeDayData)
       .flatMap((d) => d.events)
       .map(({ event }) => ({
         event: event,
