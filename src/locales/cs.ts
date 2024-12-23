@@ -107,6 +107,7 @@ export default {
         previous: "Generovat předchozí",
         generating: "Generuji...",
         warning: "Generování zruší stávající výběr",
+        couldNotGenerate: "Nepodařilo se vygenerovat platný rozvrh. Zkuste to znovu nebo upravte výběr předmětů.",
       },
     },
   },

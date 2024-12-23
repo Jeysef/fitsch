@@ -109,6 +109,7 @@ export default {
         previous: "Generate previous",
         generating: "Generating...",
         warning: "Generating will unselect the current selection",
+        couldNotGenerate: "Could not generate a valid schedule. Try again or adjust your course selection.",
       },
     },
   },

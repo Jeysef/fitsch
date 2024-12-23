@@ -4,6 +4,8 @@ import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { CourseData, Event } from "~/components/scheduler/types";
+import { useI18n } from "~/i18n";
+import { toast } from "~/packages/solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
 
@@ -33,6 +35,7 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
 
 export function SchedulerGenerator() {
   const { store } = useScheduler();
+  const { t } = useI18n();
   const currentPosition = createMutable({
     attempt: -1,
     isGenerating: false,
@@ -232,6 +235,7 @@ export function SchedulerGenerator() {
     const maxAttempts = 10000;
     const maxRepeatedAttempts = 50;
     let repeatedAttempts = 0;
+    let success = false;
 
     try {
       const generateForDirection = async (condition: () => boolean, updateAttempt: () => void): Promise<void> => {
@@ -242,6 +246,7 @@ export function SchedulerGenerator() {
           const result = await generateSchedule(store.courses, currentPosition.attempt);
           if (result) {
             applyScheduleToStore(result);
+            success = true;
             break;
           }
 
@@ -262,6 +267,10 @@ export function SchedulerGenerator() {
         case false:
           await generateForDirection(canGeneratePrevious, () => currentPosition.attempt--);
           break;
+      }
+
+      if (!success) {
+        toast.error(t("menu.actions.generate.couldNotGenerate"));
       }
     } finally {
       currentPosition.isGenerating = false;
