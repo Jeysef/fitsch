@@ -147,6 +147,7 @@ export default {
   },
   error: {
     tryAgain: "Zkusit znova",
+    purgeAndReload: "Pokud chyba přetrvává, vymaže lokální úložiště a znovu načtěte stránku",
   },
   info: {
     appInfo: {

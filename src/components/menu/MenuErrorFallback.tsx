@@ -1,3 +1,4 @@
+import { cookieStorage } from "@solid-primitives/storage";
 import { type Component, Show, createSignal } from "solid-js";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
@@ -74,6 +75,17 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
             </Button>
           </details>
         )}
+        <Button
+          variant="outline"
+          class="mt-2 h-auto"
+          onClick={() => {
+            localStorage.clear();
+            cookieStorage.clear();
+            window.location.reload();
+          }}
+        >
+          {t("error.purgeAndReload")}
+        </Button>
         <Button
           variant="destructive"
           disabled={loading()}

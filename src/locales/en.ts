@@ -199,5 +199,6 @@ export default {
   },
   error: {
     tryAgain: "Try again",
+    purgeAndReload: "If the error persists, clear the local storage and reload the page",
   },
 } satisfies typeof Schema;
