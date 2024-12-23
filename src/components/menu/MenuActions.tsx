@@ -1,4 +1,5 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
+import { onMount } from "solid-js";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
 import { SchedulerGenerator } from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
@@ -72,7 +73,10 @@ export function Actions() {
     input.remove();
   };
 
-  const generator = SchedulerGenerator();
+  let generator = {};
+  onMount(() => {
+    generator = SchedulerGenerator();
+  });
 
   return (
     <Collapsible defaultOpen>
