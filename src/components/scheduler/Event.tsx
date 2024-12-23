@@ -75,12 +75,6 @@ export default function ScheduleEvent(props: EventProps) {
         </Text>
         <Text em variant="smallText" class="wm:text-xxs hidden md:block">
           ​
-          {/* <div class="flex flex-col items-center">
-            <span>{event.Pr}</span>
-            <span>{event.Tr}</span>
-            <span>{event.Vr}</span>
-            <span>{event.score}</span>
-          </div> */}
         </Text>
         <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2">
           {formatWeeks(event.weeks.weeks)}
