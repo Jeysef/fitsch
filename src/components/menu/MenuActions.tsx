@@ -1,45 +1,46 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
-import { onMount } from "solid-js";
+import CircleAlert from "lucide-solid/icons/circle-alert";
+import { createSignal, type Setter } from "solid-js";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
 import { SchedulerGenerator } from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 
 export function Actions() {
   const { store, recreateStore } = useScheduler();
-  // const store = persistedStore();
   const { t } = useI18n();
-  // const [tooltipOpen, setTooltipOpen] = createSignal(false);
-  // const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
+  const [tooltipOpen, setTooltipOpen] = createSignal(false);
+  const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
 
-  // const openTooltip = () => {
-  //   setTooltipOpen(true);
-  //   startTooltipTimer();
-  // };
+  const openTooltip = () => {
+    setTooltipOpen(true);
+    startTooltipTimer();
+  };
 
-  // const closeTooltip = () => {
-  //   setTooltipOpen(false);
-  //   const timer = tooltipTimer();
-  //   if (timer) clearTimeout(timer);
-  // };
+  const closeTooltip = () => {
+    setTooltipOpen(false);
+    const timer = tooltipTimer();
+    if (timer) clearTimeout(timer);
+  };
 
-  // const startTooltipTimer = () => {
-  //   const existingTimer = tooltipTimer();
-  //   if (existingTimer) {
-  //     clearTimeout(existingTimer);
-  //   }
-  //   const timer = setTimeout(() => setTooltipOpen(false), 3000);
-  //   setTooltipTimer(timer);
-  // };
+  const startTooltipTimer = () => {
+    const existingTimer = tooltipTimer();
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+    const timer = setTimeout(() => setTooltipOpen(false), 3000);
+    setTooltipTimer(timer);
+  };
 
-  // const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
-  //   let val = value;
-  //   if (typeof value === "function") val = value(tooltipOpen());
-  //   if (val) openTooltip();
-  //   else closeTooltip();
-  // };
+  const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
+    let val = value;
+    if (typeof value === "function") val = value(tooltipOpen());
+    if (val) openTooltip();
+    else closeTooltip();
+  };
 
   const exportJSON = () => {
     const a = document.createElement("a");
@@ -73,10 +74,7 @@ export function Actions() {
     input.remove();
   };
 
-  let generator = {};
-  onMount(() => {
-    generator = SchedulerGenerator();
-  });
+  const generator = SchedulerGenerator();
 
   return (
     <Collapsible defaultOpen>
@@ -107,7 +105,7 @@ export function Actions() {
             {t("menu.actions.importJson")}
           </Button>
         </ItemText>
-        {/* <ItemText as="div" class="flex items-center gap-1">
+        <ItemText as="div" class="flex items-center gap-1">
           <Button
             type="button"
             size={null}
@@ -136,7 +134,7 @@ export function Actions() {
           >
             {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.previous")}
           </Button>
-        </ItemText> */}
+        </ItemText>
       </CollapsibleContent>
     </Collapsible>
   );
