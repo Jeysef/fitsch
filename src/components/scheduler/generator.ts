@@ -34,7 +34,7 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
 export function SchedulerGenerator() {
   const { store } = useScheduler();
   const currentPosition = createMutable({
-    attempt: 0,
+    attempt: -1,
     isGenerating: false,
   });
 
@@ -104,6 +104,7 @@ export function SchedulerGenerator() {
   }
 
   function getPerturbation(event: Event, attempt: number): number {
+    if (attempt === 0) return 0;
     const seed = hashCode(`${event.id}_${attempt}`);
     const random = (Math.sin(seed) + 1) / 2; // Range [0, 1]
     const magnitude = 1.0; // Increased magnitude for greater variation
@@ -256,10 +257,7 @@ export function SchedulerGenerator() {
           );
           break;
         case false:
-          await generateForDirection(
-            () => currentPosition.attempt > 0,
-            () => currentPosition.attempt--
-          );
+          await generateForDirection(canGeneratePrevious, () => currentPosition.attempt--);
           break;
       }
     } finally {
