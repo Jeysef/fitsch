@@ -1,6 +1,6 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
-import SchedulerGenerator from "~/components/scheduler/generator";
+import { SchedulerGenerator } from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { useI18n } from "~/i18n";

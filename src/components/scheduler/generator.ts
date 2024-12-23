@@ -31,7 +31,7 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
   return (timespan.end.hours - RATING_WEIGHTS.IDEAL_START_HOUR) / (24 - RATING_WEIGHTS.IDEAL_START_HOUR);
 }
 
-export default function SchedulerGenerator() {
+export function SchedulerGenerator() {
   const { store } = useScheduler();
   const currentPosition = createMutable({
     attempt: 0,
