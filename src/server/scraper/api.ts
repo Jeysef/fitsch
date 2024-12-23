@@ -238,7 +238,6 @@ export class StudyApi {
               }
             }
 
-            console.log("🚀 ~ file: api.ts:243 ~ StudyApi ~ .map ~ obligation:", obligation);
             return { abbreviation, name, url, credits, obligation, completion, faculty, note, id };
           })
           .get();
