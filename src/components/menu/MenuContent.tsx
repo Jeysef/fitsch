@@ -226,7 +226,9 @@ export default function Wrapper() {
 
     // TODO: find something better
     createEffect(() => {
-      setPersistentGroupData(mapValues(trackStore(group).controls, (value) => value.rawValue) as FormGroupValues);
+      const store = trackStore(group);
+      console.log("🚀 ~ file: MenuContent.tsx:230 ~ createEffect ~ store:", store);
+      setPersistentGroupData(mapValues(store.controls, (value) => value.rawValue) as FormGroupValues);
     });
 
     const getFetchableData = () => ({
