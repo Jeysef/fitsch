@@ -36,12 +36,7 @@ export default function Home() {
 
   createEffect(() => {
     const tab = initialTab();
-    requestIdleCallback(
-      () => {
-        navigate(`#${tab}`, { replace: true });
-      },
-      { timeout: 1000 }
-    );
+    requestIdleCallback(() => navigate(`#${tab}`, { replace: true }), { timeout: 1000 });
   });
 
   const tabs = {
