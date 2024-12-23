@@ -53,25 +53,19 @@ export function SchedulerGenerator() {
   });
 
   const orderedEvents = createMemo(() => {
-    try {
-      // Get all days from store
-      const allDays = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
-      console.log("🚀 ~ file: generator.ts:58 ~ orderedEvents ~ allDays:", allDays);
+    // Get all days from store
+    const allDays = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
 
-      // Flatten all events and calculate their scores
-      const eventsWithScores = allDays.flatMap((day) =>
-        day.events.map(({ event }) => ({
-          event,
-          score: rateEvent(event, undefined, currentPosition.attempt),
-        }))
-      );
+    // Flatten all events and calculate their scores
+    const eventsWithScores = allDays.flatMap((day) =>
+      day.events.map(({ event }) => ({
+        event,
+        score: rateEvent(event, undefined, currentPosition.attempt),
+      }))
+    );
 
-      // Sort events by score (ascending)
-      return eventsWithScores.sort((a, b) => a.score - b.score);
-    } catch (error) {
-      console.error("🚀 ~ file: generator.ts:58 ~ orderedEvents ~ error", error);
-      return [];
-    }
+    // Sort events by score (ascending)
+    return eventsWithScores.sort((a, b) => a.score - b.score);
   });
 
   const getEmptyCompletedHours = () => {
