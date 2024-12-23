@@ -55,8 +55,9 @@ export function SchedulerProvider(props: ParentProps) {
     store.data = store.combineData(store.courses.map((c) => c.data));
   };
 
-  const store = createMutable(newSchedulerStore());
-  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(store), {
+  const newStore = newSchedulerStore();
+  const store = createMutable(newStore);
+  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newStore), {
     name: "schedulerStore",
   });
 
