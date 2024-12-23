@@ -22,7 +22,6 @@ import {
   useContext,
 } from "solid-js";
 import { isServer } from "solid-js/web";
-import { Actions } from "~/components/menu/MenuActions";
 import {
   CoursesSelect,
   DegreeSelect,
@@ -299,7 +298,7 @@ export default function Wrapper() {
               <CoursesSelect />
             </Suspense>
           </DataContext.Provider>
-          <Actions />
+          {/* <Actions /> */}
           <SubmitButton />
         </GroupContext.Provider>
       </form>
