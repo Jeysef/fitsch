@@ -85,10 +85,9 @@ export class SchedulerStore {
   }
 
   getEmptyData(): Data {
+    // TODO: lookup table
     const getDayRow = (day: DAY): number => this.settings.rows.findIndex((row) => row.day === day) + 1;
-    return ObjectTyped.fromEntries(
-      Object.values(DAY).map((day) => [`${day}`, { dayRow: getDayRow(day), dayRows: 1, events: [] }])
-    );
+    return mapValues(DAY, (day) => ({ dayRow: getDayRow(day), dayRows: 1, events: [] }));
   }
 
   private findAvailableRow(pivotEvent: Event, precedingEvents: DayEvent[]): number {

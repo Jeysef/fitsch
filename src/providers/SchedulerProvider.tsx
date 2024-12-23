@@ -15,10 +15,9 @@ import {
   type Setter,
 } from "solid-js";
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
-import { days } from "~/config/scheduler";
 import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
-import { end, start, step } from "~/config/scheduler";
+import { days, end, start, step } from "~/config/scheduler";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
@@ -52,12 +51,15 @@ export function SchedulerProvider(props: ParentProps) {
       },
       filter
     );
+  const updateStoreData = (store: SchedulerStore) => {
+    store.data = store.combineData(store.courses.map((c) => c.data));
+  };
 
-  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newSchedulerStore()), {
+  const store = createMutable(newSchedulerStore());
+  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(store), {
     name: "schedulerStore",
   });
 
-  const store = createMutable(newSchedulerStore());
   const recreateStore = (plainStore: SchedulerStore) => {
     plainStore.settings.columns = recreateColumns(plainStore.settings.columns);
     for (const course of plainStore.courses) {
@@ -71,10 +73,10 @@ export function SchedulerProvider(props: ParentProps) {
     batch(() => {
       modifyMutable(store, reconcile(merge(store, plainStore)));
       // link data to courses, must be done after createMutable to link not duplicate
-      store.data = store.combineData(store.courses.map((c) => c.data));
-      setPersistedShedulerStore(store);
+      updateStoreData(store);
     });
   };
+  updateStoreData(store);
   recreateStore(persistedStore());
 
   createComputed(
