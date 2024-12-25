@@ -28,7 +28,7 @@ export default function AppInfo() {
           <InstallButton class="absolute top-0 right-10 hidden md:block lg:hidden" />
         </DialogHeader>
         <InstallButton class="sm:hidden" />
-        <div class="max-h-[calc(100vh-10rem)] overflow-auto space-y-2">
+        <div class="max-h-[calc(100svh-10rem)] overflow-auto space-y-2">
           <div class="flex flex-col md:grid md:grid-cols-2 ">
             <div class="max-w-prose w-full flex flex-col">
               <Heading variant="h3">{t("info.appInfo.title")}</Heading>
