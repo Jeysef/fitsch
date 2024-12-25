@@ -1,7 +1,9 @@
 import { css } from "@emotion/css";
-import { compact, difference, flatMap, flow, values } from "lodash-es";
+import { compact, difference, flatMap, flow, merge, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
+import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
+import { animated, createSpring } from "solid-spring";
 import type { StrictExtract } from "ts-essentials";
 import ScheduleEvent from "~/components/scheduler/Event";
 import { type SchedulerStore, getDayEventData } from "~/components/scheduler/store";
@@ -38,80 +40,53 @@ export default function Scheduler(props: WorkScheduleProps) {
 
 function SchedulerGrid() {
   const store = useStore();
-  const [scale, setScale] = createSignal(100);
-  const evCache: PointerEvent[] = [];
-  let prevDiff = -1;
+  const [scale, setScale] = createSignal(window.innerWidth < 720 ? 70 : 100);
+  const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
-  const handleZoom = (currentDiff: number) => {
-    if (prevDiff > 0) {
-      const scaleFactor = (currentDiff - prevDiff) * 0.6;
-      setScale((s) => Math.max(40, Math.min(150, s + scaleFactor)));
+  const styles = createSpring(() => ({
+    "--scheduler-scale": `${scale()}%`,
+    "touch-action": touchAction(),
+    config: {
+      tension: 500,
+      friction: 43,
+      precision: 0.05,
+    },
+  }));
+
+  const bind = usePinch(
+    // @ts-ignore
+    ({ offset: [s], first, last, type }) => {
+      if (first) {
+        setTouchAction("none");
+      }
+      if (last) {
+        setTouchAction("pan-x pan-y");
+      }
+      if (type === "wheel") {
+        // wheel moves it too fast, so we need to slow it down
+        setScale((prev) => prev + (s - prev) / 10);
+        return;
+      }
+
+      setScale(s);
+    },
+    {
+      scaleBounds: { min: 40, max: 150 },
+      rubberband: true,
+      // pointer: { touch: true },
+      eventOptions: { passive: true },
     }
-    prevDiff = currentDiff;
-  };
-
-  const handlePointerDown = (ev: PointerEvent) => {
-    (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
-    evCache.push(ev);
-  };
-
-  const handlePointerMove = (ev: PointerEvent) => {
-    ev.preventDefault();
-    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
-    evCache[index] = ev;
-
-    if (evCache.length === 2) {
-      const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
-      handleZoom(curDiff);
-    }
-  };
-
-  const handlePointerUp = (ev: PointerEvent) => {
-    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === ev.pointerId);
-    evCache.splice(index, 1);
-    (ev.target as HTMLElement).hasPointerCapture(ev.pointerId) &&
-      (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
-    if (evCache.length < 2) prevDiff = -1;
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    if (e.touches.length === 2) {
-      e.preventDefault();
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
-      const currentDiff = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-      handleZoom(currentDiff);
-    }
-  };
-
-  const handleTouchStart = (e: TouchEvent) => {
-    if (e.touches.length === 2) {
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
-      prevDiff = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    prevDiff = -1;
-  };
+  );
 
   return (
-    <div
+    <animated.div
       class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out"
-      style={{
-        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.5em, 10rem))`,
-        "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
-        "--scheduler-scale": `${scale()}%`,
+      {...bind()}
+      style={merge(styles(), {
         "font-size": "var(--scheduler-scale, 100%)",
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 10rem))`,
+        "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
+      })}
     >
       <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
         <Corner />
@@ -120,7 +95,7 @@ function SchedulerGrid() {
         <Week />
         <ColumnLines />
       </div>
-    </div>
+    </animated.div>
   );
 }
 

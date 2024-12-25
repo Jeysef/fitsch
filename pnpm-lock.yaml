@@ -86,9 +86,15 @@ importers:
       postcss:
         specifier: ^8.4.49
         version: 8.4.49
+      solid-gesture:
+        specifier: ^0.0.3
+        version: 0.0.3(solid-js@1.9.3)
       solid-js:
         specifier: ^1.9.3
         version: 1.9.3
+      solid-spring:
+        specifier: ^0.0.7
+        version: 0.0.7(solid-js@1.9.3)
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.5.4
@@ -1305,6 +1311,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@use-gesture/core@10.3.1':
+    resolution: {integrity: sha512-WcINiDt8WjqBdUXye25anHiNxPc0VOrlT8F6LLkU6cycrOGUDyY/yyFmsg3k8i5OLvv25llc0QC45GhR/C8llw==}
 
   '@vercel/nft@0.27.6':
     resolution: {integrity: sha512-mwuyUxskdcV8dd7N7JnxBgvFEz1D9UOePI/WyLLzktv6HSCwgPNQGit/UJ2IykAWGlypKw4pBQjOKWvIbXITSg==}
@@ -3200,6 +3209,11 @@ packages:
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
+  solid-gesture@0.0.3:
+    resolution: {integrity: sha512-7vbhm+eYXXqr0y9/uVMHknscn9THHozx4wA0SEUwVsRjEPUd1Y9BKWDaG2s+GZafAEEucr7bWsMQKb49c0X1Fw==}
+    peerDependencies:
+      solid-js: '>=1.4.0'
+
   solid-js@1.9.3:
     resolution: {integrity: sha512-5ba3taPoZGt9GY3YlsCB24kCg0Lv/rie/HTD4kG6h4daZZz7+yK02xn8Vx8dLYBc9i6Ps5JwAbEiqjmKaLB3Ag==}
 
@@ -3217,6 +3231,11 @@ packages:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
     peerDependencies:
       solid-js: ^1.3
+
+  solid-spring@0.0.7:
+    resolution: {integrity: sha512-/sP/z4nvXYSHH557IRPKN+H33OrnshT89mOlFynMqxbHGKxReut0xTkGrdWysp+mLR7DlqX+vqNJBY4PPtwgyg==}
+    peerDependencies:
+      solid-js: ^1.3.13
 
   solid-use@0.9.0:
     resolution: {integrity: sha512-8TGwB4m3qQ7qKo8Lg0pi/ZyyGVmQIjC4sPyxRCH7VPds0BzSsT734PhP3jhR6zMJxoYHM+uoivjq0XdpzXeOJg==}
@@ -4772,6 +4791,8 @@ snapshots:
   '@types/parse-json@4.0.2': {}
 
   '@types/resolve@1.20.2': {}
+
+  '@use-gesture/core@10.3.1': {}
 
   '@vercel/nft@0.27.6':
     dependencies:
@@ -6860,6 +6881,11 @@ snapshots:
 
   smob@1.5.0: {}
 
+  solid-gesture@0.0.3(solid-js@1.9.3):
+    dependencies:
+      '@use-gesture/core': 10.3.1
+      solid-js: 1.9.3
+
   solid-js@1.9.3:
     dependencies:
       csstype: 3.1.3
@@ -6884,6 +6910,10 @@ snapshots:
       solid-js: 1.9.3
     transitivePeerDependencies:
       - supports-color
+
+  solid-spring@0.0.7(solid-js@1.9.3):
+    dependencies:
+      solid-js: 1.9.3
 
   solid-use@0.9.0(solid-js@1.9.3):
     dependencies:

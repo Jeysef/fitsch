@@ -2,7 +2,7 @@
   "name": "fitsch",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
+    "dev": "vinxi dev --host",
     "build": "vinxi build",
     "start": "vinxi start",
     "lint": "biome lint",
@@ -39,7 +39,9 @@
     "lucide-solid": "^0.460.0",
     "object-typed": "^1.0.0",
     "postcss": "^8.4.49",
+    "solid-gesture": "^0.0.3",
     "solid-js": "^1.9.3",
+    "solid-spring": "^0.0.7",
     "tailwind-merge": "^2.5.4",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
