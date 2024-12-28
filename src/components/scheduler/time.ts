@@ -48,8 +48,8 @@ export class Time {
     return new Time({ hour, minute });
   }
 
-  get formatted() {
-    return `${this.hour.toString().padStart(2, "0")}:${this.minute.toString().padStart(2, "0")}`;
+  public formatted(separator = ":") {
+    return `${this.hour.toString().padStart(2, "0")}${separator}${this.minute.toString().padStart(2, "0")}`;
   }
 }
 

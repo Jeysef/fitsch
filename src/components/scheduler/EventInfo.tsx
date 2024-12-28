@@ -37,7 +37,7 @@ const EventPopup = (props: { event: Event; children: JSX.Element }) => {
             <div class="flex-1">
               <p class="text-sm font-medium">{t("course.detail.popover.time")}</p>
               <p class="text-sm text-muted-foreground">
-                {timeSpan.start.formatted} - {timeSpan.end.formatted}
+                {timeSpan.start.formatted()} - {timeSpan.end.formatted()}
               </p>
             </div>
           </div>
