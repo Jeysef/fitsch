@@ -2,28 +2,7 @@ import { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/
 
 export default {
   course: {
-    obligation: {
-      compulsory: "P",
-      compulsoryElective: "PV",
-      elective: "V",
-    },
     detail: {
-      timeSpan: {
-        title: "Rozsah",
-        data: {
-          [LECTURE_TYPE.LECTURE]: "přednášk",
-          [LECTURE_TYPE.LABORATORY]: "lab",
-          [LECTURE_TYPE.EXERCISE]: "cvičení",
-          [LECTURE_TYPE.SEMINAR]: "seminář",
-        },
-      },
-      day: {
-        [DAY.MON]: "Po",
-        [DAY.TUE]: "Út",
-        [DAY.WED]: "St",
-        [DAY.THU]: "Čt",
-        [DAY.FRI]: "Pá",
-      },
       type: {
         [LECTURE_TYPE.LECTURE]: "přednáška",
         [LECTURE_TYPE.LABORATORY]: "laboratoř",
