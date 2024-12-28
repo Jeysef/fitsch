@@ -8,7 +8,7 @@ export const subjectTypeColors = {
   [LECTURE_TYPE.EXERCISE]: "#ffffcc",
   [LECTURE_TYPE.SEMINAR]: "#ccffff",
   [LECTURE_TYPE.LABORATORY]: "#ffe4b5",
-  [LECTURE_TYPE.EXAM]: "#ff9999", // this one is guessed, on web it's: #ffe6cc
+  [LECTURE_TYPE.EXAM]: "#ff9999", // this one is suggestive, on web it's: #ffe6cc, in the app it's: #e9f1fe, but that I don't like
 };
 
 export const hoverColors = {
