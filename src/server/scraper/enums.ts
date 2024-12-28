@@ -27,7 +27,9 @@ export enum DAY {
   THU = "THU",
   FRI = "FRI",
 }
-
+/**
+ * It may be a bit confusing, but the parity is determined by the parity of the week number not in the schedule, but in a year.
+ */
 export enum WEEK_PARITY {
   EVEN = "EVEN",
   ODD = "ODD",
