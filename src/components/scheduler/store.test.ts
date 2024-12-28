@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { days } from "~/config/scheduler";
 import { SchedulerStore, createColumns } from "~/components/scheduler/store";
 import { TimeSpan } from "~/components/scheduler/time";
+import { days } from "~/config/scheduler";
 
 describe("scheduler store", () => {
   let store: SchedulerStore;
@@ -20,49 +20,135 @@ describe("scheduler store", () => {
     });
   });
 
-  test("should have overlap", () => {
-    const events1 = {
-      start: { hour: 16, minute: 0 },
-      end: { hour: 17, minute: 0 },
+  test("findAvailableRow should return 1 for first event", () => {
+    const pivotEvent = {
+      timeSpan: TimeSpan.fromPlain({
+        start: { hour: 10, minute: 0 },
+        end: { hour: 11, minute: 0 },
+      }),
     };
-    const events2 = {
-      start: { hour: 16, minute: 0 },
-      end: { hour: 16, minute: 50 },
-    };
-    expect(store.hasOverlap(events1, events2)).toBe(true);
-    expect(store.hasOverlap(events2, events1)).toBe(true);
+    const precedingEvents = [] as const;
 
-    const event3 = {
-      start: { hour: 10, minute: 0 },
-      end: { hour: 11, minute: 50 },
-    };
-
-    const event4 = {
-      start: { hour: 11, minute: 0 },
-      end: { hour: 12, minute: 50 },
-    };
-    expect(store.hasOverlap(TimeSpan.fromPlain(event3), TimeSpan.fromPlain(event4))).toBe(true);
+    // @ts-ignore
+    expect(store.findAvailableRow(pivotEvent, precedingEvents)).toBe(1);
   });
 
-  test("should not have overlaps", () => {
-    const event1 = {
-      start: { hour: 16, minute: 0 },
-      end: { hour: 17, minute: 0 },
+  test("findAvailableRow should return next available row for overlapping events", () => {
+    const pivotEvent = {
+      timeSpan: TimeSpan.fromPlain({
+        start: { hour: 10, minute: 0 },
+        end: { hour: 11, minute: 0 },
+      }),
     };
-    const event2 = {
-      start: { hour: 16, minute: 0 },
-      end: { hour: 16, minute: 50 },
-    };
-    const event3 = {
-      start: { hour: 16, minute: 0 },
-      end: { hour: 17, minute: 50 },
-    };
-    expect([event2, event3].filter((e) => store.hasOverlap(event1, e)).length).toBe(2);
-    expect([event1, event3].filter((e) => store.hasOverlap(event2, e)).length).toBe(2);
-    expect([event1, event2].filter((e) => store.hasOverlap(event3, e)).length).toBe(2);
+    const precedingEvents = [
+      {
+        row: 1,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 30 },
+            end: { hour: 11, minute: 30 },
+          }),
+        },
+      },
+    ];
 
-    expect([event3, event2].filter((e) => store.hasOverlap(event1, e)).length).toBe(2);
-    expect([event3, event1].filter((e) => store.hasOverlap(event2, e)).length).toBe(2);
-    expect([event2, event1].filter((e) => store.hasOverlap(event3, e)).length).toBe(2);
+    // @ts-ignore
+    expect(store.findAvailableRow(pivotEvent, precedingEvents)).toBe(2);
+  });
+
+  test("findAvailableRow should reuse row for non-overlapping events", () => {
+    const pivotEvent = {
+      timeSpan: TimeSpan.fromPlain({
+        start: { hour: 12, minute: 0 },
+        end: { hour: 13, minute: 0 },
+      }),
+    };
+    const precedingEvents = [
+      {
+        row: 1,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 0 },
+            end: { hour: 11, minute: 0 },
+          }),
+        },
+      },
+    ];
+
+    // @ts-ignore
+    expect(store.findAvailableRow(pivotEvent, precedingEvents)).toBe(1);
+  });
+
+  test("findAvailableRow should find first available gap", () => {
+    const pivotEvent = {
+      timeSpan: TimeSpan.fromPlain({
+        start: { hour: 10, minute: 0 },
+        end: { hour: 11, minute: 0 },
+      }),
+    };
+    const precedingEvents = [
+      {
+        row: 1,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 0 },
+            end: { hour: 11, minute: 0 },
+          }),
+        },
+      },
+      {
+        row: 2,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 0 },
+            end: { hour: 11, minute: 0 },
+          }),
+        },
+      },
+      {
+        row: 4,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 0 },
+            end: { hour: 11, minute: 0 },
+          }),
+        },
+      },
+    ];
+
+    // @ts-ignore
+    expect(store.findAvailableRow(pivotEvent, precedingEvents)).toBe(3);
+  });
+
+  test("findAvailableRow should fit 30 min event in gap", () => {
+    const pivotEvent = {
+      timeSpan: TimeSpan.fromPlain({
+        start: { hour: 10, minute: 0 },
+        end: { hour: 10, minute: 30 },
+      }),
+    };
+    const precedingEvents = [
+      {
+        row: 1,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 9, minute: 0 },
+            end: { hour: 10, minute: 0 },
+          }),
+        },
+      },
+      {
+        row: 1,
+        event: {
+          timeSpan: TimeSpan.fromPlain({
+            start: { hour: 10, minute: 30 },
+            end: { hour: 11, minute: 30 },
+          }),
+        },
+      },
+    ];
+
+    // @ts-ignore
+    expect(store.findAvailableRow(pivotEvent, precedingEvents)).toBe(1);
   });
 });
