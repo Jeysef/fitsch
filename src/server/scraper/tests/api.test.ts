@@ -327,6 +327,46 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
       ],
     };
     expect(programs).toEqual(expected);
+    expect(programs).toBeDefined();
+    expect(programs.programs).toBeDefined();
+    expect(programs.years).toBeInstanceOf(Array);
+    expect(programs.currentYear).toBeDefined();
+
+    // Verify structure for bachelor programs
+    const bachelorPrograms = programs.programs[DEGREE.BACHELOR];
+    expect(bachelorPrograms).toBeDefined();
+    expect(Object.values(bachelorPrograms)[0]).toMatchObject({
+      name: expect.any(String),
+      url: expect.any(String),
+      isEnglish: expect.any(Boolean),
+      specializations: expect.any(Array),
+      attendanceType: expect.any(String),
+      abbreviation: expect.any(String),
+      id: expect.any(String),
+    });
+  });
+
+  test("should get program courses", async () => {
+    const courses = await studyApi.getStudyProgramCourses({
+      programUrl: "https://www.fit.vut.cz/study/program/8953/",
+    });
+    expect(courses).toBeDefined();
+
+    // Check structure of courses
+    const firstYearCourses = courses["1"];
+    expect(firstYearCourses).toBeDefined();
+    expect(firstYearCourses[SEMESTER.WINTER]).toBeInstanceOf(Array);
+    expect(firstYearCourses[SEMESTER.WINTER][0]).toMatchObject({
+      abbreviation: expect.any(String),
+      name: expect.any(String),
+      url: expect.any(String),
+      credits: expect.any(String),
+      obligation: expect.any(String),
+      completion: expect.any(String),
+      faculty: expect.any(String),
+      note: expect.any(Boolean),
+      id: expect.any(String),
+    });
   });
 
   test.each(Object.values(DEGREE).flatMap((d) => [2024, 2023, 2022, 2020].map((y) => [d, y] as [DEGREE, number])))(
@@ -349,16 +389,14 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
   );
 
   test.each(["2024", "2023", "2022"])(`should get calendar ${lang}`, async (year) => {
+    // @ts-expect-error private property
     const schedule = await studyApi.getTimeSchedule({ year });
     const expected = {
       [SEMESTER.WINTER]: {
         start: new Date("2024-09-16T00:00:00.000Z"),
         end: new Date("2024-12-13T00:00:00.000Z"),
       },
-      [SEMESTER.SUMMER]: {
-        start: new Date("2025-02-10T00:00:00.000Z"),
-        end: new Date("2025-05-09T00:00:00.000Z"),
-      },
+      [SEMESTER.SUMMER]: { start: new Date("2025-02-10T00:00:00.000Z"), end: new Date("2025-05-09T00:00:00.000Z") },
     };
     expect(fetcher).toBeCalledWith(`https://www.fit.vut.cz/study/calendar/${year}/.${lang}`);
     expect(schedule).toEqual(expected);
@@ -385,12 +423,58 @@ describe.each([LANGUAGE.ENGLISH, LANGUAGE.CZECH])("StudyApi lang: $lang", (lang:
   });
 
   test("should get course details", async () => {
-    const courses = await studyApi.getStudyCourseDetails({ courseId: "281030", semester: SEMESTER.WINTER, year: "2024" });
-    // TODO: add test when the interface is defined
+    const courseDetails = await studyApi.getStudyCoursesDetails({
+      courses: ["281030"],
+      year: "2024",
+      semester: SEMESTER.WINTER,
+    });
+    expect(courseDetails).toBeDefined();
+    expect(courseDetails.semesterTimeSchedule).toMatchObject({
+      start: expect.any(Date),
+      end: expect.any(Date),
+    });
+
+    const firstCourse = courseDetails.data[0];
+    expect(firstCourse.detail).toMatchObject({
+      abbreviation: expect.any(String),
+      name: expect.any(String),
+      link: expect.any(String),
+      timeSpan: expect.any(Object),
+      timeSpanText: expect.any(Array),
+      id: expect.any(String),
+    });
+
+    expect(firstCourse.data[0]).toMatchObject({
+      capacity: expect.any(String),
+      groups: expect.any(String),
+      info: expect.any(String),
+      lectureGroup: expect.any(Array),
+      room: expect.any(Array),
+      timeSpan: expect.any(Object),
+      type: expect.any(String),
+      weeks: expect.any(Object),
+    });
+  });
+
+  test("should handle empty course list", async () => {
+    const courseDetails = await studyApi.getStudyCoursesDetails({
+      courses: [],
+      year: "2024",
+      semester: SEMESTER.WINTER,
+    });
+    expect(courseDetails.data).toHaveLength(0);
+    expect(courseDetails.semesterTimeSchedule).toBeDefined();
   });
 
   test("should get time schedule", async () => {
-    const schedule = await studyApi.getTimeSchedule();
-    expect(schedule).toBeDefined();
+    const schedule = await studyApi.getStudyCoursesDetails({
+      courses: ["281030"],
+      year: "2024",
+      semester: SEMESTER.WINTER,
+    });
+    expect(schedule.semesterTimeSchedule).toMatchObject({
+      start: new Date("2024-09-16T00:00:00.000Z"),
+      end: new Date("2024-12-13T00:00:00.000Z"),
+    });
   });
 });
