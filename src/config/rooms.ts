@@ -22,8 +22,8 @@ type ConjunctableRooms = (
  * @constant
  * @readonly
  */
-export const conjunctableRooms = [
+export const conjunctableRooms: ConjunctableRooms = [
   { main: "D105", streamed: ["D0206", "D0207"] },
   { main: "E112", streamed: ["E104", "E105"] },
   ["N103", "N104", "N105"],
-] satisfies ConjunctableRooms;
+] as const;
