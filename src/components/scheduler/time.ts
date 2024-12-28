@@ -2,8 +2,11 @@ import type { WritableKeys } from "ts-essentials";
 import type { ISchedulerTime } from "~/components/scheduler/types";
 
 // getters are readonly
-type ExcludeReadonlyDeep<T extends object> = {
-  [P in WritableKeys<T>]: T[P] extends object ? ExcludeReadonlyDeep<T[P]> : T[P];
+// filter out functions and readonly properties
+type ObjectPlainType<T extends object> = {
+  [P in WritableKeys<T> as T[P] extends (...args: any[]) => any ? never : P]: T[P] extends object
+    ? ObjectPlainType<T[P]>
+    : T[P];
 };
 
 export class TimeSpan {
@@ -19,7 +22,7 @@ export class TimeSpan {
   get hours() {
     return Math.ceil(this.minutes / 60);
   }
-  static fromPlain(timeSpan: ExcludeReadonlyDeep<TimeSpan>) {
+  static fromPlain(timeSpan: ObjectPlainType<TimeSpan>) {
     return new TimeSpan(new Time(timeSpan.start), new Time(timeSpan.end));
   }
 }
