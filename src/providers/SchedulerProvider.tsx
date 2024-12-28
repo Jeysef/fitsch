@@ -21,6 +21,7 @@ import { days, end, start, step } from "~/config/scheduler";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
+import type { DataProviderTypes } from "~/server/scraper/types";
 
 interface SchedulerContextType {
   store: SchedulerStore;
@@ -83,7 +84,7 @@ export function SchedulerProvider(props: ParentProps) {
   createComputed(
     on(
       () => data.result,
-      (result) => {
+      (result: DataProviderTypes.getStudyCoursesDetailsReturn) => {
         if (!result) return;
         batch(() => {
           store.newCourses = result;
