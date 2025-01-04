@@ -3,7 +3,7 @@ import type { LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
-import type { MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
+import type { LectureMutatorConfig, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 
 /**
  * @example "program-8956", "course-xxxxx"
@@ -190,7 +190,9 @@ export namespace DataProviderTypes {
     data: APICourseLecture[];
   }
 
-  export type getStudyCoursesDetailsConfig = StudyApiTypes.getStudyCoursesDetailsConfig;
+  export type getStudyCoursesDetailsConfig = StudyApiTypes.getStudyCoursesDetailsConfig & {
+    mutatorConfig?: LectureMutatorConfig;
+  };
   export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[];
 }
 

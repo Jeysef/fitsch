@@ -104,7 +104,7 @@ export class DataProvider {
     config: DataProviderTypes.getStudyCoursesDetailsConfig
   ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
     const coursesDetails = await this.studyApi.getStudyCoursesDetails(config);
-    const data = MutateLectureData(coursesDetails);
+    const data = MutateLectureData(coursesDetails, config.mutatorConfig ?? {});
     return data;
   }
 }

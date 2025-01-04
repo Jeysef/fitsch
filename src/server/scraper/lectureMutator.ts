@@ -26,6 +26,10 @@ interface IDdCourseLecture extends IDdCourseLectureBase, APICourseLecture {}
 
 type FilteredCourseLecture = ReturnType<typeof filterData>[number];
 
+export interface LectureMutatorConfig {
+  fillWeeks?: boolean;
+}
+
 export interface LinkedLectureData {
   id: string;
   day: DAY;
@@ -41,14 +45,16 @@ export interface MgetStudyCourseDetailsReturn {
   data: MCourseLecture[];
 }
 
-export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDetailsReturn) {
+export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDetailsReturn, config: LectureMutatorConfig) {
   const { data, semesterTimeSchedule } = props;
   const semesterWeeks = getWeekFromSemesterStart(semesterTimeSchedule.end, semesterTimeSchedule.start);
   for (const _course of data) {
     const course = idCourse(_course);
     const data = filterData(course.data);
     for (let [i, lecture] of data.entries()) {
-      lecture = fillWeeksLecture(lecture, semesterWeeks);
+      if (config.fillWeeks !== false) {
+        lecture = fillWeeksLecture(lecture, semesterWeeks);
+      }
 
       if (i === data.length - 1) break;
 
@@ -61,6 +67,16 @@ export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDeta
       linkLectrues(lecture, data, semesterWeeks);
     }
     course.data = data;
+    // log weeks of each lecture
+    // for (const lecture of course.data) {
+    //   // console.log(lecture.weeks);
+    //   console.log({
+    //     weeks: lecture.weeks,
+    //     room: lecture.room,
+    //     day: lecture.day,
+    //     type: lecture.type,
+    //   });
+    // }
   }
   return data as unknown as MgetStudyCourseDetailsReturn[];
 }
