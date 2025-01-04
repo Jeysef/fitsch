@@ -1,7 +1,7 @@
 import { load } from "cheerio";
 import { type Browser, chromium } from "playwright";
-import { createMutable } from "solid-js/store";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { createMutable, unwrap } from "solid-js/store";
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days, end, start, step } from "~/config/scheduler";
 import { LANGUAGE } from "~/enums";
@@ -9,6 +9,7 @@ import { DataProvider } from "~/server/scraper/dataProvider";
 import { type DAY, LECTURE_TYPE, SEMESTER } from "~/server/scraper/enums";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
+import { getUrlContent } from "~/tests/helpers/loadContent";
 import { ScheduleComparer } from "../helpers/compareData";
 import { OldAppScraper } from "../helpers/oldAppScraper";
 
@@ -37,6 +38,13 @@ describe("Schedule Data Comparison", () => {
 
   afterAll(async () => {
     await browser.close();
+  });
+
+  afterEach(async () => {
+    // Clear local storage between tests
+    await oldAppScraper.page.evaluate(() => window.localStorage.clear());
+    // reload page to clear state
+    await oldAppScraper.page.reload();
   });
 
   test.each([
@@ -107,27 +115,32 @@ describe("Schedule Data Comparison", () => {
     const courseIds = params.course;
     const languageProvider = new LanguageProvider(LANGUAGE.CZECH);
     const fetcher = async (url: string) => {
-      const browser = await chromium.launch();
-      try {
-        const page = await browser.newPage();
-        await page.goto(url, { waitUntil: "domcontentloaded" });
-        const html = await page.content();
-        return load(html);
-      } finally {
-        await browser.close();
-      }
+      return load(await getUrlContent(url));
     };
     const dataProvider = new DataProvider(languageProvider, fetcher as any);
     const courses = await dataProvider.getStudyCoursesDetails({
-      courses: Array.from(courseIds),
+      courses: courseIds,
       year: params.year,
       semester: params.semester,
+      mutatorConfig: {
+        fillWeeks: false,
+      },
     });
+    console.log("new courses loaded");
 
     scheduler.newCourses = courses;
 
+    // log data for debugging0011411
+    // // console.table(scheduler.data);
+    // for (const day of Object.values(scheduler.data)) {
+    //   console.log(day.dayRow);
+    //   for (const event of day.events) {
+    //     console.table(JSON.parse(JSON.stringify(event.event)), ["weeks", "room", "timeSpan", "type"]);
+    //   }
+    // }
+    // return;
     // Replace compareData implementation with new ScheduleComparer
-    const comparer = new ScheduleComparer(oldAppData, scheduler);
+    const comparer = new ScheduleComparer(oldAppData, unwrap(scheduler.data));
     const compareData = comparer.compare();
 
     // Calculate overall match percentages
@@ -151,9 +164,7 @@ describe("Schedule Data Comparison", () => {
     console.log(`Issues found: ${totals.total - totals.exactMatches}`);
 
     // Only show detailed day info if there are issues
-    const daysWithIssues = compareData.filter(
-      (d) => d.partialMatches.length > 0 || d.extraEvents.length > 0 || d.missingEvents.length > 0
-    );
+    const daysWithIssues = compareData.filter((d) => d.extraEvents.length > 0 || d.missingEvents.length > 0);
 
     // Updated logging section
     if (daysWithIssues.length > 0) {
@@ -168,14 +179,14 @@ describe("Schedule Data Comparison", () => {
         if (dayData.extraEvents.length > 0) {
           console.log("\n  Extra Events (in new only):");
           for (const event of dayData.extraEvents) {
-            console.log(JSON.stringify(comparer.logEventDetails(event.newEvent, "new"), null, 2));
+            console.log(JSON.stringify(comparer.logEventDetails(event.newEvent, "new", dayData.day), null, 2));
           }
         }
 
         if (dayData.missingEvents.length > 0) {
           console.log("\n  Missing Events (in old only):");
           for (const event of dayData.missingEvents) {
-            console.log(JSON.stringify(comparer.logEventDetails(event.oldEvent, "old"), null, 2));
+            console.log(JSON.stringify(comparer.logEventDetails(event.oldEvent, "old", dayData.day), null, 2));
           }
         }
       }

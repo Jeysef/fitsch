@@ -23,12 +23,13 @@ export class OldAppScraper {
 
   async loadSchedule() {
     // await this.page.click(".menu_submit_button[value='Načíst předměty']", { timeout: 3000, strict: true });
-    const button = await this.page.$(".menu_submit_button[value='Načíst předměty']");
-    await button?.click({
-      timeout: 3000,
-      delay: 100,
-      force: true,
-    });
+    await this.page.waitForSelector(".menu_submit_button", { timeout: 3000 });
+    const button = await this.page.$(".menu_submit_button");
+    // await button?.click({
+    //   timeout: 3000,
+    //   force: true,
+    // });
+    await button?.click({ timeout: 3000 });
     // await this.page.dispatchEvent(".menu_submit_button", "click");
     // Additional wait to ensure all animations and dynamic content is loaded
     // await this.page.waitForSelector(".schedule_row_layer:not(:empty)");

@@ -1,6 +1,6 @@
 import type { SchedulerStore } from "~/components/scheduler/store";
 import type { TimeSpan } from "~/components/scheduler/time";
-import type { DayEvent } from "~/components/scheduler/types";
+import type { DayEvent, Event } from "~/components/scheduler/types";
 import { days } from "~/config/scheduler";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import { conjunctConjunctableRooms } from "~/server/scraper/utils";
@@ -10,16 +10,16 @@ export interface ComparisonResult {
   matches: boolean;
   partialMatch: boolean;
   oldEvent: ScrapedEvent | null;
-  newEvent: any;
+  newEvent: Event | null;
   differences: EventDifferences | null;
   source: "old" | "new"; // Add source to track which system the event came from
 }
 
 export interface EventDifferences {
-  time: boolean;
-  room: boolean;
-  type: boolean;
-  weeks: boolean;
+  time?: boolean;
+  room?: boolean;
+  type?: boolean;
+  weeks?: boolean;
 }
 
 export interface DayComparisonResult {
@@ -37,7 +37,7 @@ export interface DayComparisonResult {
 export class ScheduleComparer {
   constructor(
     private oldAppData: ScrapedLectureData[],
-    private schedulerData: SchedulerStore
+    private schedulerData: SchedulerStore["data"]
   ) {}
 
   private weeksFormat(weeks: number[] | string): string {
@@ -111,14 +111,20 @@ export class ScheduleComparer {
   //   };
   // }
 
-  public logEventDetails(event: any, type: "old" | "new") {
-    const base = type === "old" ? event : event.event;
+  public logEventDetails<T extends "old" | "new">(event: T extends "old" ? ScrapedEvent : DayEvent, type: T, day?: DAY) {
+    const base = type === "old" ? (event as ScrapedEvent) : (event as DayEvent).event;
     return {
-      time: this.formatTimeSpan(base.timeSpan),
+      time: `${this.formatTimeSpan(base.timeSpan)} ${day}`,
       room: base.room,
       type: base.type,
-      weeks: type === "old" ? base.weeks : this.weeksFormat(base.weeks.weeks),
-      courseId: type === "old" ? base.courseId : base.courseDetail.id,
+      weeks:
+        type === "old"
+          ? base.weeks
+          : this.weeksFormat(base.weeks.weeks) + (base.weeks.parity ? ` (${base.weeks.parity})` : ""),
+      courseId:
+        type === "old"
+          ? `${base.courseId} ${base.courseName}`
+          : `${base.courseDetail.id} ${base.courseDetail.abbreviation}`,
     };
   }
 
@@ -137,7 +143,7 @@ export class ScheduleComparer {
   // }
 
   private getNewEventsForDay(day: DAY): DayEvent[] {
-    const dayData = this.schedulerData.data[day];
+    const dayData = this.schedulerData[day];
     return dayData?.events || [];
   }
 
@@ -149,10 +155,18 @@ export class ScheduleComparer {
   private getEventKey(event: any, type: "old" | "new"): string {
     const timeSpan = type === "old" ? event.timeSpan : event.event.timeSpan;
     const room = type === "old" ? conjunctConjunctableRooms(event.room.split(" ")) : event.event.room;
+    const weeksExact =
+      type === "old"
+        ? event.weeks.split(" ").length > 1 || event.weeks.split(" ").includes(".")
+        : typeof event.event.weeks.weeks !== "string";
     // const eventType = type === "old" ? event.type : event.event.type;
+    // oldEvent.weeks.split(" ").length > 1 &&
+    //       typeof newEvent.event.weeks.weeks !== "string"
 
     // Use only start time in the key
-    return `${this.normalizeTime(this.formatTimeSpan(timeSpan))}-${room}`;
+
+    // log
+    return `${this.normalizeTime(this.formatTimeSpan(timeSpan))}-${room}-${+weeksExact}`;
   }
 
   private compareDay(day: DAY): DayComparisonResult {
@@ -177,11 +191,17 @@ export class ScheduleComparer {
             newEvent.event.type === oldEvent.type ||
             (newEvent.event.type === LECTURE_TYPE.SEMINAR && oldEvent.type === LECTURE_TYPE.EXERCISE)
           ) {
+            const differences: EventDifferences = {};
+
             if (oldEvent.weeks !== this.weeksFormat(newEvent.event.weeks.weeks)) {
+              differences.weeks = true;
               console.log(
                 "Weeks don't match",
-                this.logEventDetails(oldEvent, "old"),
-                this.logEventDetails(newEvent, "new"),
+                "Expected (old): ",
+                this.logEventDetails(oldEvent, "old", day),
+                "\n",
+                "Recieved (new): ",
+                this.logEventDetails(newEvent, "new", day),
                 "Suggested weeks:",
                 newEvent.event.metrics.weeks
               );
@@ -191,10 +211,10 @@ export class ScheduleComparer {
               processedNewEvents.add(newEventKey);
               eventComparisons.push({
                 matches: true,
-                partialMatch: false,
+                partialMatch: Object.keys(differences).length > 0,
                 oldEvent,
                 newEvent,
-                differences: null,
+                differences: differences,
                 source: "old",
               });
             }
