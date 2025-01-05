@@ -15,6 +15,6 @@
   - check getters in store
 - [x] **Make timespanTab responsive**
   - Make it so that the timespanTab is responsive to the store changes.
-- [] **Local Storage data validation**
+- [x] **Local Storage data validation**
   - Validate data before loading (zod)
-  - Optional: versioning
+  - [] Optional: versioning

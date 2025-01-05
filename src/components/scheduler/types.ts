@@ -75,5 +75,5 @@ export interface LectureMetrics {
 export interface CourseData {
   detail: CourseDetail;
   data: Data;
-  metrics: Record<LECTURE_TYPE, LectureMetrics>;
+  metrics: Partial<Record<LECTURE_TYPE, LectureMetrics>>;
 }

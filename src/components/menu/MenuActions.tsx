@@ -1,7 +1,10 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
 import CircleAlert from "lucide-solid/icons/circle-alert";
 import { createSignal, type Setter } from "solid-js";
+import { exportJSON, importJSON } from "~/components/menu/ImportExport";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
+import { parseStoreJson } from "~/components/menu/storeJsonValidator";
+import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { SchedulerGenerator } from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
@@ -42,36 +45,22 @@ export function Actions() {
     else closeTooltip();
   };
 
-  const exportJSON = () => {
-    const a = document.createElement("a");
-    const file = new Blob([JSON.stringify(store)], { type: "application/json" });
-    a.href = URL.createObjectURL(file);
-    a.download = "schedule.json";
-    a.click();
-    a.remove();
+  const saveJSON = () => {
+    exportJSON({ obj: store, filename: "schedule" });
   };
 
-  const importJSON = async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = false;
-    input.accept = ".json";
-    input.click();
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result as string);
-          recreateStore(data);
-        } catch (e) {
-          console.error(e);
+  const loadJSON = () => {
+    importJSON({
+      onImport: (data) => {
+        const parsedData = JSON.parse(data, ClassRegistry.reviver);
+        const validatedData = parseStoreJson(parsedData);
+        if (!validatedData.success) {
+          console.error(validatedData.error);
+          return;
         }
-      };
-      reader.readAsText(file);
-    };
-    input.remove();
+        recreateStore(validatedData.data);
+      },
+    });
   };
 
   const generator = SchedulerGenerator();
@@ -89,7 +78,7 @@ export function Actions() {
             size={null}
             variant={"ghost"}
             class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-            on:click={exportJSON}
+            on:click={saveJSON}
           >
             {t("menu.actions.exportJson")}
           </Button>
@@ -100,7 +89,7 @@ export function Actions() {
             size={null}
             variant={"ghost"}
             class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-            on:click={importJSON}
+            on:click={loadJSON}
           >
             {t("menu.actions.importJson")}
           </Button>

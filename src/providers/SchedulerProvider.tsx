@@ -15,20 +15,23 @@ import {
   type Setter,
 } from "solid-js";
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
-import { createColumns, recreateColumns, SchedulerStore } from "~/components/scheduler/store";
-import { TimeSpan } from "~/components/scheduler/time";
+import { ClassRegistry } from "~/components/scheduler/classRegistry";
+import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days, end, start, step } from "~/config/scheduler";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
 
+// some classes are already revived by ClassRegistry
+export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;
+
 interface SchedulerContextType {
   store: SchedulerStore;
   newSchedulerStore: () => SchedulerStore;
   persistedStore: Accessor<SchedulerStore>;
   setPersistedShedulerStore: Setter<SchedulerStore>;
-  recreateStore: (plainStore: SchedulerStore) => void;
+  recreateStore: (plainStore: PlainStore) => void;
 }
 
 const SchedulerContext = createContext<SchedulerContextType>();
@@ -60,18 +63,10 @@ export function SchedulerProvider(props: ParentProps) {
   const store = createMutable(newStore);
   const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newStore), {
     name: "schedulerStore",
+    deserialize: (value) => JSON.parse(value, ClassRegistry.reviver),
   });
 
-  const recreateStore = (plainStore: SchedulerStore) => {
-    plainStore.settings.columns = recreateColumns(plainStore.settings.columns);
-    for (const course of plainStore.courses) {
-      for (const dayData of Object.values(course.data)) {
-        for (const event of dayData.events) {
-          event.event.timeSpan = TimeSpan.fromPlain(event.event.timeSpan);
-        }
-      }
-    }
-
+  const recreateStore = (plainStore: PlainStore) => {
     batch(() => {
       modifyMutable(store, reconcile(merge(store, plainStore)));
       // link data to courses, must be done after createMutable to link not duplicate
