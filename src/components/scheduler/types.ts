@@ -65,7 +65,7 @@ export interface LectureMetrics {
   weeks: number;
   weeklyLectures: number;
 }
-export interface CourseData {
+export interface Course {
   detail: CourseDetail;
   data: Data;
   metrics: Partial<Record<LECTURE_TYPE, LectureMetrics>>;

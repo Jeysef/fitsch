@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
-import type { CourseData, Event } from "~/components/scheduler/types";
+import type { Course, Event } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
@@ -123,7 +123,7 @@ export function SchedulerGenerator() {
     return hash;
   }
 
-  async function generateSchedule(courses: CourseData[], attempt: number): Promise<ScheduleResult | null> {
+  async function generateSchedule(courses: Course[], attempt: number): Promise<ScheduleResult | null> {
     console.log(`Generating schedule for attempt ${attempt}`);
 
     const state: ScheduleResult = {

@@ -2,7 +2,7 @@ import ChevronRight from "lucide-solid/icons/chevron-right";
 import { ObjectTyped } from "object-typed";
 import { For, Index, Show } from "solid-js";
 import type { SchedulerStore } from "~/components/scheduler/store";
-import type { CourseData } from "~/components/scheduler/types";
+import type { Course } from "~/components/scheduler/types";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
@@ -30,7 +30,7 @@ export default function TimeSpan(props: TimeSpanProps) {
   );
 }
 
-function TimeSpanCourse(props: { course: CourseData; selected: Record<LECTURE_TYPE, number> }) {
+function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, number> }) {
   const { t } = useI18n();
   return (
     <div class="border border-gray-200 rounded-lg hover:border-gray-300 bg-white overflow-hidden whitespace-nowrap flex flex-col">

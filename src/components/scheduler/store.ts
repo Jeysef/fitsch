@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import type { StrictOmit } from "ts-essentials";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
 import type {
-  CourseData,
+  Course,
   Data,
   DayData,
   DayEvent,
@@ -58,7 +58,7 @@ export class SchedulerStore {
     rows: [],
   };
   public settings: ISchedulerSettings;
-  public courses: CourseData[];
+  public courses: Course[];
   public data: Data;
   constructor(
     settings: ISchedulerSettings,
