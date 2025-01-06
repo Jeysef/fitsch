@@ -38,19 +38,13 @@ export interface IScheduleColumn {
   title: string;
   duration: TimeSpan;
 }
+interface IScheduleDimensionsSize {
+  min: string | "auto";
+  max: string | "auto";
+}
 interface IScheduleDimensions {
-  width:
-    | {
-        min: string | "auto";
-        max: string | "auto";
-      }
-    | string;
-  height:
-    | {
-        min: string | "auto";
-        max: string | "auto";
-      }
-    | string;
+  width: IScheduleDimensionsSize | string;
+  height: IScheduleDimensionsSize | string;
 }
 
 export interface ISchedulerSettings {
