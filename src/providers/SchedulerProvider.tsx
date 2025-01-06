@@ -79,10 +79,14 @@ export function SchedulerProvider(props: ParentProps) {
   createComputed(
     on(
       () => data.result,
-      (result: DataProviderTypes.getStudyCoursesDetailsReturn) => {
+      (result) => {
         if (!result) return;
+        const revivedData = JSON.parse(
+          JSON.stringify(result),
+          ClassRegistry.reviver
+        ) as DataProviderTypes.getStudyCoursesDetailsReturn;
         batch(() => {
-          store.newCourses = result;
+          store.newCourses = revivedData;
         });
       }
     ),
