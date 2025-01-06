@@ -1,5 +1,6 @@
 import { action, json } from "@solidjs/router";
 import type { Jsonify } from "type-fest";
+import type { StudyCoursesDetailsActionReturn } from "~/server/scraper/actionTypes";
 import { getStudyCoursesDetails } from "~/server/scraper/functions";
 import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
 
@@ -7,7 +8,7 @@ export const getStudyCoursesDetailsAction = action(async (config: GetStudyCourse
   "use server";
   try {
     const data = await getStudyCoursesDetails(config);
-    const serializedData = JSON.parse(JSON.stringify(data)) as Jsonify<typeof data>;
+    const serializedData: StudyCoursesDetailsActionReturn = JSON.parse(JSON.stringify(data)) satisfies Jsonify<typeof data>;
     return json(serializedData);
   } catch (error) {
     // Return a serializable error object

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import type { ISchedulerTime } from "~/components/scheduler/types";
 import { Time, TimeSpan, hasOverlap, hourDifference } from "./time";
 
 describe("Time", () => {
@@ -72,7 +73,7 @@ describe("TimeSpan", () => {
       start: { hour: 14, minute: 30 },
       end: { hour: 15, minute: 45 },
     };
-    const timeSpan = TimeSpan.fromPlain(plainTimeSpan);
+    const timeSpan = timespanFromPlain(plainTimeSpan);
 
     expect(timeSpan.start.hour).toBe(14);
     expect(timeSpan.start.minute).toBe(30);
@@ -111,8 +112,8 @@ describe("hasOverlap", () => {
     ];
 
     for (const { a, b, expected } of cases) {
-      const timeSpanA = TimeSpan.fromPlain(a);
-      const timeSpanB = TimeSpan.fromPlain(b);
+      const timeSpanA = timespanFromPlain(a);
+      const timeSpanB = timespanFromPlain(b);
       expect(hasOverlap(timeSpanA, timeSpanB)).toBe(expected);
       // Test symmetry
       expect(hasOverlap(timeSpanB, timeSpanA)).toBe(expected);
@@ -129,8 +130,8 @@ describe("hasOverlap", () => {
       end: { hour: 16, minute: 50 },
     };
 
-    const span1 = TimeSpan.fromPlain(events1);
-    const span2 = TimeSpan.fromPlain(events2);
+    const span1 = timespanFromPlain(events1);
+    const span2 = timespanFromPlain(events2);
     expect(hasOverlap(span1, span2)).toBe(true);
     expect(hasOverlap(span2, span1)).toBe(true);
 
@@ -143,8 +144,8 @@ describe("hasOverlap", () => {
       end: { hour: 12, minute: 50 },
     };
 
-    const span3 = TimeSpan.fromPlain(event3);
-    const span4 = TimeSpan.fromPlain(event4);
+    const span3 = timespanFromPlain(event3);
+    const span4 = timespanFromPlain(event4);
     expect(hasOverlap(span3, span4)).toBe(true);
   });
 
@@ -162,7 +163,7 @@ describe("hasOverlap", () => {
       end: { hour: 17, minute: 50 },
     };
 
-    const spans = [event1, event2, event3].map(TimeSpan.fromPlain);
+    const spans = [event1, event2, event3].map(timespanFromPlain);
 
     // Test that event1 overlaps with both event2 and event3
     expect(spans.slice(1).filter((e) => hasOverlap(spans[0], e)).length).toBe(2);
@@ -187,3 +188,7 @@ describe("hourDifference", () => {
     expect(hourDifference(14, 14)).toBe(0);
   });
 });
+
+function timespanFromPlain(timeSpan: { start: ISchedulerTime; end: ISchedulerTime }) {
+  return new TimeSpan(new Time(timeSpan.start), new Time(timeSpan.end));
+}

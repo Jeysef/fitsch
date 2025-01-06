@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { SchedulerStore, createColumns } from "~/components/scheduler/store";
-import { TimeSpan } from "~/components/scheduler/time";
+import { Time, TimeSpan } from "~/components/scheduler/time";
 import { days } from "~/config/scheduler";
 
 describe("scheduler store", () => {
@@ -22,10 +22,7 @@ describe("scheduler store", () => {
 
   test("findAvailableRow should return 1 for first event", () => {
     const pivotEvent = {
-      timeSpan: TimeSpan.fromPlain({
-        start: { hour: 10, minute: 0 },
-        end: { hour: 11, minute: 0 },
-      }),
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
     };
     const precedingEvents = [] as const;
 
@@ -35,19 +32,13 @@ describe("scheduler store", () => {
 
   test("findAvailableRow should return next available row for overlapping events", () => {
     const pivotEvent = {
-      timeSpan: TimeSpan.fromPlain({
-        start: { hour: 10, minute: 0 },
-        end: { hour: 11, minute: 0 },
-      }),
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
     };
     const precedingEvents = [
       {
         row: 1,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 30 },
-            end: { hour: 11, minute: 30 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
         },
       },
     ];
@@ -58,19 +49,13 @@ describe("scheduler store", () => {
 
   test("findAvailableRow should reuse row for non-overlapping events", () => {
     const pivotEvent = {
-      timeSpan: TimeSpan.fromPlain({
-        start: { hour: 12, minute: 0 },
-        end: { hour: 13, minute: 0 },
-      }),
+      timeSpan: new TimeSpan(new Time({ hour: 12, minute: 0 }), new Time({ hour: 13, minute: 0 })),
     };
     const precedingEvents = [
       {
         row: 1,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 0 },
-            end: { hour: 11, minute: 0 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
         },
       },
     ];
@@ -81,37 +66,25 @@ describe("scheduler store", () => {
 
   test("findAvailableRow should find first available gap", () => {
     const pivotEvent = {
-      timeSpan: TimeSpan.fromPlain({
-        start: { hour: 10, minute: 0 },
-        end: { hour: 11, minute: 0 },
-      }),
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
     };
     const precedingEvents = [
       {
         row: 1,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 0 },
-            end: { hour: 11, minute: 0 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
         },
       },
       {
         row: 2,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 0 },
-            end: { hour: 11, minute: 0 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
         },
       },
       {
         row: 4,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 0 },
-            end: { hour: 11, minute: 0 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
         },
       },
     ];
@@ -122,28 +95,19 @@ describe("scheduler store", () => {
 
   test("findAvailableRow should fit 30 min event in gap", () => {
     const pivotEvent = {
-      timeSpan: TimeSpan.fromPlain({
-        start: { hour: 10, minute: 0 },
-        end: { hour: 10, minute: 30 },
-      }),
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 10, minute: 30 })),
     };
     const precedingEvents = [
       {
         row: 1,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 9, minute: 0 },
-            end: { hour: 10, minute: 0 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 9, minute: 0 }), new Time({ hour: 10, minute: 0 })),
         },
       },
       {
         row: 1,
         event: {
-          timeSpan: TimeSpan.fromPlain({
-            start: { hour: 10, minute: 30 },
-            end: { hour: 11, minute: 30 },
-          }),
+          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
         },
       },
     ];

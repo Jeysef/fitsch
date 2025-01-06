@@ -25,10 +25,6 @@ export class TimeSpan {
     return Math.ceil(this.minutes / 60);
   }
 
-  static fromPlain(data: NoClassTypeType<Jsonify<ReturnType<TimeSpan["toJSON"]>>>) {
-    return new TimeSpan(Time.fromJSON(data.start), Time.fromJSON(data.end));
-  }
-
   toJSON() {
     return {
       __type: TimeSpan.__type,

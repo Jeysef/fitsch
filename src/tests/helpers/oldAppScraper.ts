@@ -1,5 +1,5 @@
 import type { Page } from "playwright";
-import { TimeSpan } from "~/components/scheduler/time";
+import { Time, TimeSpan } from "~/components/scheduler/time";
 import { DAY, LECTURE_TYPE, SEMESTER } from "~/server/scraper/enums";
 
 export interface ScrapedEvent {
@@ -102,16 +102,10 @@ export class OldAppScraper {
     // Therefore: to = (width + 12) / (fullLength / 14) + from
     const toHour = (width + 12) / (fullLength / 14) + fromHour;
 
-    return TimeSpan.fromPlain({
-      start: {
-        hour: Math.floor(fromHour) + 7,
-        minute: Math.round((fromHour % 1) * 60),
-      },
-      end: {
-        hour: Math.floor(toHour) + 7,
-        minute: Math.round((toHour % 1) * 60),
-      },
-    });
+    return new TimeSpan(
+      new Time({ hour: Math.floor(fromHour) + 7, minute: Math.round((fromHour % 1) * 60) }),
+      new Time({ hour: Math.floor(toHour) + 7, minute: Math.round((toHour % 1) * 60) })
+    );
   }
 
   async scrapeSchedule(): Promise<ScrapedLectureData[]> {

@@ -273,7 +273,7 @@ function fillData(
 
   for (const event of data) {
     if (filter && !filter(event)) continue;
-    const timeSpan = TimeSpan.fromPlain(event.timeSpan);
+    const timeSpan = event.timeSpan;
     const metric = getMetrics(event.type);
     const filledEvent: Event = {
       ...event,
@@ -286,7 +286,7 @@ function fillData(
     const linkedDuration = event.strongLinked.reduce((acc, linked) => {
       const linkedLecture = data.find((l) => l.id === linked.id);
       if (!linkedLecture) return acc;
-      const timeSpan = TimeSpan.fromPlain(linkedLecture.timeSpan);
+      const timeSpan = linkedLecture.timeSpan;
       return acc + timeSpan.minutes;
     }, timeSpan.minutes);
 
