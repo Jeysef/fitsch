@@ -59,7 +59,7 @@ export class SchedulerStore {
   };
   public settings: ISchedulerSettings;
   public courses: CourseData[];
-  // data: Data;
+  public data: Data;
   constructor(
     settings: ISchedulerSettings,
     private readonly eventFilter?: (event: MCourseLecture) => boolean
@@ -208,9 +208,6 @@ export class SchedulerStore {
   get checkedData(): Data {
     return this.sortData(this.cloneData(this.data, (event) => event.event.checked));
   }
-
-  // this will allow us to set and get data, but not persist it
-  set data(_: Data) {}
 
   get selected(): Record<LECTURE_TYPE, number>[] {
     return this.courses.map((course) => {
