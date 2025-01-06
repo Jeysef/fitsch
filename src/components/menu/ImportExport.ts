@@ -5,13 +5,14 @@ interface ImportJSONProps {
   onImport: (data: string) => void;
 }
 
-interface ExportJSONProps {
-  obj: any;
+interface ExportJSONProps<T> {
+  obj: T;
   /**
    * The filename to save the JSON file as.
    * Without the extension.
    */
   filename: string;
+  serializer?: (obj: T) => string;
 }
 
 export function importJSON(props: ImportJSONProps) {
@@ -40,9 +41,9 @@ export function importJSON(props: ImportJSONProps) {
 
 const JSON_MIME_TYPE = "text/json;charset=utf-8";
 
-export function exportJSON(props: ExportJSONProps) {
+export function exportJSON<T>(props: ExportJSONProps<T>) {
   const { obj, filename } = props;
-  const plainObj = JSON.stringify(obj, null, 2);
+  const plainObj = props.serializer ? props.serializer(obj) : JSON.stringify(obj);
   const blob = new Blob([plainObj], {
     type: JSON_MIME_TYPE,
   });

@@ -36,6 +36,13 @@ interface SchedulerContextType {
 
 const SchedulerContext = createContext<SchedulerContextType>();
 
+export const storeSerializer = (store: SchedulerStore) => {
+  return JSON.stringify({
+    settings: store.settings,
+    courses: store.courses,
+  });
+};
+
 export function SchedulerProvider(props: ParentProps) {
   const data = useSubmission(getStudyCoursesDetailsAction);
   const formatTime = (start: { hour: number; minute: number }, end: { hour: number; minute: number }) =>
@@ -56,7 +63,7 @@ export function SchedulerProvider(props: ParentProps) {
       filter
     );
   const updateStoreData = (store: SchedulerStore) => {
-    store.data = store.combineData(store.courses.map((c) => c.data));
+    store.data = store.createDataFromCourses(store.courses);
   };
 
   const newStore = newSchedulerStore();
@@ -64,6 +71,7 @@ export function SchedulerProvider(props: ParentProps) {
   const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newStore), {
     name: "schedulerStore",
     deserialize: (value) => JSON.parse(value, ClassRegistry.reviver),
+    serialize: storeSerializer,
   });
 
   const recreateStore = (plainStore: PlainStore) => {
@@ -73,7 +81,7 @@ export function SchedulerProvider(props: ParentProps) {
       updateStoreData(store);
     });
   };
-  updateStoreData(store);
+  // updateStoreData(store);
   recreateStore(persistedStore());
 
   createComputed(
@@ -99,6 +107,7 @@ export function SchedulerProvider(props: ParentProps) {
       () => trackStore(store),
       (store, _, firstEffect) => {
         if (firstEffect) return false;
+        console.log("store changed", store);
         setPersistedShedulerStore(store);
         return false;
       }

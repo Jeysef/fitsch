@@ -1,0 +1,4414 @@
+{
+  "settings": {
+    "blockDimensions": {
+      "width": {
+        "min": "5.5rem",
+        "max": "10rem"
+      },
+      "height": "auto"
+    },
+    "columns": [
+      {
+        "title": "07:00 - 08:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 7,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 8,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "08:00 - 09:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 8,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 9,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "09:00 - 10:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 9,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 10,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "10:00 - 11:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 10,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 11,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "11:00 - 12:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 11,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 12,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "12:00 - 13:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 12,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 13,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "13:00 - 14:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 13,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 14,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "14:00 - 15:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 14,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 15,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "15:00 - 16:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 15,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 16,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "16:00 - 17:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 16,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 17,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "17:00 - 18:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 17,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 18,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "18:00 - 19:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 18,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 19,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "19:00 - 20:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 19,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 20,
+            "minute": 0
+          }
+        }
+      },
+      {
+        "title": "20:00 - 21:00",
+        "duration": {
+          "__type": "TimeSpan",
+          "start": {
+            "__type": "Time",
+            "hour": 20,
+            "minute": 0
+          },
+          "end": {
+            "__type": "Time",
+            "hour": 21,
+            "minute": 0
+          }
+        }
+      }
+    ],
+    "rows": [
+      {
+        "day": "MON"
+      },
+      {
+        "day": "TUE"
+      },
+      {
+        "day": "WED"
+      },
+      {
+        "day": "THU"
+      },
+      {
+        "day": "FRI"
+      }
+    ]
+  },
+  "courses": [
+    {
+      "detail": {
+        "abbreviation": "IDM",
+        "name": "Diskrétní matematika",
+        "link": "https://www.fit.vut.cz/study/course/281068/.cs",
+        "timeSpan": {
+          "LECTURE": 26,
+          "LABORATORY": 0,
+          "EXERCISE": 26,
+          "SEMINAR": 0
+        },
+        "timeSpanText": ["26 hod. přednášky", "26 hod. cvičení"],
+        "id": "281068"
+      },
+      "metrics": {
+        "EXERCISE": {
+          "weeks": 12,
+          "weeklyLectures": 2
+        },
+        "LECTURE": {
+          "weeks": 13,
+          "weeklyLectures": 2
+        }
+      },
+      "data": [
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "64",
+          "id": "ed437e9c-12bf-4de0-be4a-f2a452a118fb",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": true
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.02",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "56",
+          "id": "efed39ea-4a36-4627-bf1a-90f5dde75914",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.02",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "56",
+          "id": "dd844915-4f6b-422b-9b3b-ab313843074e",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null,
+            "calculated": true
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "470",
+          "id": "1046a98b-958d-48dc-9aaa-86c65a1d9cc1",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "64",
+          "id": "249d446b-485f-4b6f-861b-6e3110140e8d",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "64",
+          "id": "3ef37d98-0d65-4aff-89cc-5d9cad6d4e09",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null,
+            "calculated": true
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "470",
+          "id": "14c2f8da-e3d4-45f4-8ed9-08baf6c4596d",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "64",
+          "id": "b48a36e1-062d-4b63-9558-b685f389c764",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.02",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vážanová",
+          "note": null,
+          "capacity": "56",
+          "id": "9d8c4f72-6471-4356-93e9-4d238e04d86b",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.02",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vážanová",
+          "note": null,
+          "capacity": "56",
+          "id": "2adab300-099c-44dc-93e3-f35b6ce39da0",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "64",
+          "id": "996e9fb0-451e-431f-9ddd-2f2467c8a5fe",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Tůma",
+          "note": null,
+          "capacity": "67",
+          "id": "9ef94e0e-0804-4626-95b8-70e712f74795",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "64",
+          "id": "7c1e6cfb-d389-4472-b287-66265773d127",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Fuchs",
+          "note": null,
+          "capacity": "64",
+          "id": "ee906280-2d19-49f4-884c-1b072a2c6883",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Fuchs",
+          "note": null,
+          "capacity": "64",
+          "id": "372ecd80-ac7d-49ec-8858-c3f127b34b5d",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        }
+      ]
+    },
+    {
+      "detail": {
+        "abbreviation": "IEL",
+        "name": "Elektronika pro informační technologie",
+        "link": "https://www.fit.vut.cz/study/course/281030/.cs",
+        "timeSpan": {
+          "LECTURE": 39,
+          "LABORATORY": 12,
+          "EXERCISE": 0,
+          "SEMINAR": 6
+        },
+        "timeSpanText": ["39 hod. přednášky", "6 hod. seminář", "12 hod. laboratoře", "8 hod. projekty"],
+        "id": "281030"
+      },
+      "metrics": {
+        "LECTURE": {
+          "weeks": 12,
+          "weeklyLectures": 3
+        },
+        "LABORATORY": {
+          "weeks": 6,
+          "weeklyLectures": 2
+        },
+        "SEMINAR": {
+          "weeks": 7,
+          "weeklyLectures": 1
+        }
+      },
+      "data": [
+        {
+          "type": "LECTURE",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 13]
+          },
+          "room": "E112+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Růžička, Peringer",
+          "note": "",
+          "capacity": "319",
+          "id": "9ee72d0b-854e-4632-a9af-2c5b02f35e14",
+          "lecturesCount": 20,
+          "strongLinked": [
+            {
+              "id": "a25de2d7-5b94-4283-93de-432bbe3a7891",
+              "day": "WED"
+            }
+          ],
+          "linked": [
+            {
+              "id": "681ae9f9-e467-4885-9a6e-cb7fea3c71ee",
+              "day": "WED"
+            },
+            {
+              "id": "a25de2d7-5b94-4283-93de-432bbe3a7891",
+              "day": "WED"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": "ODD",
+            "weeks": [2, 4, 6, 8, 10, 12]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Strnadel, Šimek",
+          "note": "",
+          "capacity": "20",
+          "id": "c204826e-f81d-47c2-a0c3-bc99a3347ee4",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [3, 5, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Strnadel",
+          "note": null,
+          "capacity": "20",
+          "id": "afe3e354-f71c-484f-9c93-a72f830a9a3d",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "ea78bd22-96ff-4bed-bf7e-b04af209efc3",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "fb1cc6e2-5e97-49b1-8213-add40aced25f",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "38b1a844-e049-4094-94f9-6ca9cb4c99d3",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "82db8422-1227-4398-b3d9-7f9a6a0f760f",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šimek, Strnadel",
+          "note": "",
+          "capacity": "20",
+          "id": "20929b3b-2e95-4254-a249-8d84ce253bb5",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šimek",
+          "note": null,
+          "capacity": "20",
+          "id": "83cf441e-c2dd-49f3-995e-d6e9f112d4ec",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend, Bidlo, Veigend",
+          "note": "",
+          "capacity": "20",
+          "id": "a0fdbdd9-f186-4104-af91-e63d77970860",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null,
+          "capacity": "20",
+          "id": "143571e5-3eff-4336-b577-ad85f0d33234",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Růžička, Peringer",
+          "note": "",
+          "capacity": "470",
+          "id": "0156aa20-3ddf-4202-affd-daebf700df64",
+          "lecturesCount": 20,
+          "strongLinked": [
+            {
+              "id": "badca531-8d29-4393-9747-7ac557b96c93",
+              "day": "WED"
+            }
+          ],
+          "linked": [
+            {
+              "id": "a6ab202b-9d04-4760-8eb4-9773ee7d9cc3",
+              "day": "WED"
+            },
+            {
+              "id": "badca531-8d29-4393-9747-7ac557b96c93",
+              "day": "WED"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null,
+          "capacity": "21",
+          "id": "c307907d-dbdb-4fc4-96b7-66c1957809da",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null,
+          "capacity": "21",
+          "id": "a102660f-72e8-4d13-93a4-337590b00da6",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null,
+          "capacity": "20",
+          "id": "86884455-5792-44ec-ae10-ef5dbb213f74",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Goldmann",
+          "note": null,
+          "capacity": "20",
+          "id": "6ec6ee41-ee70-4061-a55d-4dc7895a598b",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend, Plevač, Bidlo, Veigend",
+          "note": "",
+          "capacity": "21",
+          "id": "b7bf4791-b82c-470f-b01d-bf37788b2faf",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null,
+          "capacity": "21",
+          "id": "7f281ab8-0bc1-4d19-802a-e1522edb4adc",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Plevač",
+          "note": null,
+          "capacity": "20",
+          "id": "c72dc1c3-46b5-4a2c-91ba-5eb35446c5c1",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Plevač",
+          "note": null,
+          "capacity": "20",
+          "id": "dfec49d2-a3d1-4ad9-b8d0-6f6d2f8ccae9",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Šátek, Veigend, Peringer, Růžička",
+          "note": "",
+          "capacity": "470",
+          "id": "badca531-8d29-4393-9747-7ac557b96c93",
+          "lecturesCount": 39,
+          "strongLinked": [
+            {
+              "id": "0156aa20-3ddf-4202-affd-daebf700df64",
+              "day": "TUE"
+            }
+          ],
+          "linked": [
+            {
+              "id": "a6ab202b-9d04-4760-8eb4-9773ee7d9cc3",
+              "day": "WED"
+            },
+            {
+              "id": "0156aa20-3ddf-4202-affd-daebf700df64",
+              "day": "TUE"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Strnadel, Plevač",
+          "note": "",
+          "capacity": "20",
+          "id": "c6e5b9f8-d2ff-46ad-adcf-948a8e1d2099",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Strnadel",
+          "note": null,
+          "capacity": "20",
+          "id": "1c7a2ec2-aedf-43a4-bd34-74c0675d941a",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "SEMINAR",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 7, 9, 11]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Šátek, Veigend",
+          "note": "",
+          "capacity": "470",
+          "id": "a6ab202b-9d04-4760-8eb4-9773ee7d9cc3",
+          "lecturesCount": 6,
+          "linked": [
+            {
+              "id": "0156aa20-3ddf-4202-affd-daebf700df64",
+              "day": "TUE"
+            },
+            {
+              "id": "badca531-8d29-4393-9747-7ac557b96c93",
+              "day": "WED"
+            }
+          ],
+          "strongLinked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13]
+          },
+          "room": "D105",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Šátek, Peringer, Růžička, Veigend",
+          "note": "",
+          "capacity": "319",
+          "id": "a25de2d7-5b94-4283-93de-432bbe3a7891",
+          "lecturesCount": 39,
+          "strongLinked": [
+            {
+              "id": "9ee72d0b-854e-4632-a9af-2c5b02f35e14",
+              "day": "MON"
+            }
+          ],
+          "linked": [
+            {
+              "id": "681ae9f9-e467-4885-9a6e-cb7fea3c71ee",
+              "day": "WED"
+            },
+            {
+              "id": "9ee72d0b-854e-4632-a9af-2c5b02f35e14",
+              "day": "MON"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "SEMINAR",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 7, 9, 11]
+          },
+          "room": "D105",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Šátek, Veigend",
+          "note": "",
+          "capacity": "320",
+          "id": "681ae9f9-e467-4885-9a6e-cb7fea3c71ee",
+          "lecturesCount": 6,
+          "linked": [
+            {
+              "id": "9ee72d0b-854e-4632-a9af-2c5b02f35e14",
+              "day": "MON"
+            },
+            {
+              "id": "a25de2d7-5b94-4283-93de-432bbe3a7891",
+              "day": "WED"
+            }
+          ],
+          "strongLinked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová, Šimek",
+          "note": "",
+          "capacity": "21",
+          "id": "cef972c4-57c2-4b23-b0c6-c0b45e9a9a58",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "21",
+          "id": "a56f3a59-c5f7-4a57-991e-af63d44778f5",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová, Šimek",
+          "note": "",
+          "capacity": "20",
+          "id": "ed57109c-4f04-4ba1-8d09-eec37b3bfd5e",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "20",
+          "id": "98f0e42b-bf79-4bb0-b7ff-1e90d86795a7",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Bidlo",
+          "note": null,
+          "capacity": "21",
+          "id": "ee985a31-4cb5-4f03-8e17-ab2802f430e4",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Bidlo",
+          "note": null,
+          "capacity": "20",
+          "id": "82ebe755-b6bc-4ec6-9b00-0acf3c8ca063",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9, 11, 13]
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šimek, Nečasová",
+          "note": "",
+          "capacity": "20",
+          "id": "34a5f20c-f4f1-4624-8b50-ffd5bb021c48",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šimek",
+          "note": null,
+          "capacity": "20",
+          "id": "310ae43e-3632-4088-bdfb-ed45b4810dbc",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "20",
+          "id": "79c235a0-ef31-4d70-9306-2a88181a9f35",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 7,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "20",
+          "id": "edd203ce-2577-4612-974f-c987dc4b43db",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "9899ee91-80d1-44c2-b673-0d8eb76cc6c6",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "90bc5c01-0219-4a93-ad29-218e89ae0eb2",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "20",
+          "id": "590598e0-9839-41d1-b705-8f087efd1232",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Nečasová",
+          "note": null,
+          "capacity": "21",
+          "id": "1a49b2a5-a64d-480f-ba1f-06b9ecdd909e",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Bidlo",
+          "note": null,
+          "capacity": "20",
+          "id": "a7cea16d-3781-4aa9-a42a-f689d94a5382",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Bidlo",
+          "note": null,
+          "capacity": "20",
+          "id": "8c8fb21f-e3e7-4174-826f-abbae9e9ab7b",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [3, 5, 7, 9, 11, 13],
+            "parity": "EVEN"
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "45e9a58a-85cc-4da1-bf94-8483b2b2be00",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [2, 4, 6, 8, 10, 12],
+            "parity": "ODD",
+            "calculated": true
+          },
+          "room": "L306.1 L306.2",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozman",
+          "note": null,
+          "capacity": "20",
+          "id": "841992e5-445c-4f66-87f2-07994e40bbed",
+          "lecturesCount": 6,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        }
+      ]
+    },
+    {
+      "detail": {
+        "abbreviation": "ILG",
+        "name": "Lineární algebra",
+        "link": "https://www.fit.vut.cz/study/course/281066/.cs",
+        "timeSpan": {
+          "LECTURE": 26,
+          "LABORATORY": 0,
+          "EXERCISE": 26,
+          "SEMINAR": 0
+        },
+        "timeSpanText": ["26 hod. přednášky", "26 hod. cvičení"],
+        "id": "281066"
+      },
+      "metrics": {
+        "EXERCISE": {
+          "weeks": 12,
+          "weeklyLectures": 2
+        },
+        "LECTURE": {
+          "weeks": 13,
+          "weeklyLectures": 2
+        }
+      },
+      "data": [
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hartmanová",
+          "note": null,
+          "capacity": "63",
+          "id": "c53a7052-2a5a-4be8-ad5c-60bda3fcf30d",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hartmanová",
+          "note": null,
+          "capacity": "60",
+          "id": "7df8e879-8f1d-4039-b139-0d17260d53ae",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hartmanová",
+          "note": null,
+          "capacity": "60",
+          "id": "6562e92d-121b-4f77-a510-99e7c2792c2c",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.12",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Pekárková",
+          "note": null,
+          "capacity": "56",
+          "id": "853b90d0-966f-40ba-908a-e18a56f3665c",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null,
+            "calculated": true
+          },
+          "room": "Aula profesora Braunera",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Hlavičková",
+          "note": null,
+          "capacity": "338",
+          "id": "f0da0204-0358-4887-a316-8397dede6ce1",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vévodová",
+          "note": null,
+          "capacity": "60",
+          "id": "672b2527-d685-4f28-a73b-b6cfbcff8098",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vévodová",
+          "note": null,
+          "capacity": "60",
+          "id": "cec73978-2b43-4102-9845-1568318d0295",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null,
+            "calculated": true
+          },
+          "room": "D105+7",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "503",
+          "id": "3794c362-c8ef-48e9-ac81-7da75b27049d",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A112",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vévodová",
+          "note": null,
+          "capacity": "60",
+          "id": "dc36d02c-c3ce-4f1b-8687-787f229674eb",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hlavičková",
+          "note": null,
+          "capacity": "60",
+          "id": "5c534b38-86b3-4f55-8c44-1bcad9ba271a",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Pekárková",
+          "note": null,
+          "capacity": "60",
+          "id": "fb3859c3-f607-47fa-b494-b8e7d2ddb905",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "T8/T 3.02",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hlavičková",
+          "note": null,
+          "capacity": "56",
+          "id": "9cdfdfed-2caa-48ee-a092-4b9a54d9de98",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Pekárková",
+          "note": null,
+          "capacity": "60",
+          "id": "d1e20509-d5a9-4a81-8d4c-8253dddfe173",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "60",
+          "id": "47bbac97-357a-47e1-a508-9fcae390ec5c",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Hliněná",
+          "note": null,
+          "capacity": "60",
+          "id": "0954f342-1607-4419-a754-8758d3b5d4f4",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        }
+      ]
+    },
+    {
+      "detail": {
+        "abbreviation": "IUS",
+        "name": "Úvod do softwarového inženýrství",
+        "link": "https://www.fit.vut.cz/study/course/281002/.cs",
+        "timeSpan": {
+          "LECTURE": 39,
+          "LABORATORY": 0,
+          "EXERCISE": 8,
+          "SEMINAR": 0
+        },
+        "timeSpanText": ["39 hod. přednášky", "8 hod. cvičení", "10 hod. projekty"],
+        "id": "281002"
+      },
+      "metrics": {
+        "EXERCISE": {
+          "weeks": 5,
+          "weeklyLectures": 2
+        },
+        "LECTURE": {
+          "weeks": 13,
+          "weeklyLectures": 3
+        }
+      },
+      "data": [
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [3, 5, 8, 10],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null,
+          "capacity": "48",
+          "id": "c5c6f248-56fc-4eee-b62e-a4bf68a5ca4e",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [4, 6, 9, 11],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Veigend",
+          "note": null,
+          "capacity": "48",
+          "id": "18104533-e556-4af6-98a3-b77f14368e02",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Kočí Skutečná kapacita je 470 míst. Abyste si mohli přednášku zarezerovat do svého rozvrhu, navýšili jsme ji. Ze zkušeností víme, že ne všichni studenti vždy příjdou., Křena Skutečná kapacita je 470 míst. Abyste si mohli přednášku zarezerovat do svého rozvrhu, navýšili jsme ji. Ze zkušeností víme, že ne všichni studenti vždy příjdou.",
+          "note": "",
+          "capacity": "670",
+          "id": "b7b3b3e7-7e97-445a-ad0b-ae95133a7204",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [3, 5, 8, 10],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Olekšák",
+          "note": null,
+          "capacity": "48",
+          "id": "7a396040-0a71-4263-ab7f-a6fb32c8c547",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [4, 6, 9, 11],
+            "parity": null
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Olekšák",
+          "note": null,
+          "capacity": "48",
+          "id": "78ec8b06-e70a-4a41-99b4-ee351bc4a05c",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozsíval",
+          "note": null,
+          "capacity": "49",
+          "id": "94824524-a23a-47d8-bc1c-f7bc33a0f035",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozsíval",
+          "note": null,
+          "capacity": "49",
+          "id": "207fe02b-338a-4844-8e9b-e9b2179e3bbe",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šedý",
+          "note": null,
+          "capacity": "48",
+          "id": "bfc93708-b394-43f6-a14c-62f38bec49dd",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Chocholatý",
+          "note": null,
+          "capacity": "48",
+          "id": "7b5bbe6b-14ea-43b2-8d93-5cd6fd522405",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Šedý",
+          "note": null,
+          "capacity": "48",
+          "id": "cdd16508-9095-4090-838d-af5bf6b4965e",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "A113",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Chocholatý",
+          "note": null,
+          "capacity": "48",
+          "id": "5d123d80-c384-408c-8a44-6d76e241f8fa",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "G202",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Janoušek",
+          "note": null,
+          "capacity": "48",
+          "id": "b2b59ed1-b299-4b61-98e5-f984fa70d75a",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "G202",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Janoušek",
+          "note": null,
+          "capacity": "48",
+          "id": "1233b906-ebe2-4d24-8a9b-e481770cbf42",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "G202",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Janoušek",
+          "note": null,
+          "capacity": "48",
+          "id": "4356610a-d9e9-4569-bb51-d86e51be3598",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "WED",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "G202",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Janoušek",
+          "note": null,
+          "capacity": "48",
+          "id": "133dce89-9046-4220-b354-e6c93e303996",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "parity": "EVEN",
+            "weeks": [3, 5, 7, 9]
+          },
+          "room": "IO/E339",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rogalewicz, Olekšák",
+          "note": "",
+          "capacity": "47",
+          "id": "196d837b-9fcc-468e-9aab-77c563250c71",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [3, 5, 7, 8, 9]
+          },
+          "room": "IO/E339",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rogalewicz, Šedý, Olekšák",
+          "note": "",
+          "capacity": "47",
+          "id": "c857f8e9-63ca-43e2-9fd8-d78ae7e5adf0",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [4, 6, 10],
+            "parity": "ODD"
+          },
+          "room": "IO/E339",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rogalewicz",
+          "note": null,
+          "capacity": "47",
+          "id": "1f7e223f-4e6f-4e3f-a48a-445b292e0137",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "THU",
+          "weeks": {
+            "weeks": [3, 5, 7, 9],
+            "parity": "EVEN"
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Vargovčík",
+          "note": null,
+          "capacity": "49",
+          "id": "34d9c4a9-271d-4345-a806-ff1d853229b7",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "FRI",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+          },
+          "room": "D105+6,7",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Křena, Rogalewicz",
+          "note": "",
+          "capacity": "560",
+          "id": "fa4be061-9aee-48dc-831c-b8fec0393f44",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "weeks": {
+            "weeks": [4, 6, 8, 10],
+            "parity": "ODD"
+          },
+          "room": "D0207",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Aparovich V angličtině",
+          "note": null,
+          "capacity": "48",
+          "id": "7170dbbe-6b1c-4b28-84c8-2ca8421f46a0",
+          "lecturesCount": 4,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        }
+      ]
+    },
+    {
+      "detail": {
+        "abbreviation": "IZP",
+        "name": "Základy programování",
+        "link": "https://www.fit.vut.cz/study/course/280953/.cs",
+        "timeSpan": {
+          "LECTURE": 39,
+          "LABORATORY": 20,
+          "EXERCISE": 0,
+          "SEMINAR": 12
+        },
+        "timeSpanText": ["39 hod. přednášky", "12 hod. seminář", "20 hod. pc laboratoře", "7 hod. projekty"],
+        "id": "280953"
+      },
+      "metrics": {
+        "LABORATORY": {
+          "weeks": 11,
+          "weeklyLectures": 2
+        },
+        "LECTURE": {
+          "weeks": 13,
+          "weeklyLectures": 3
+        },
+        "SEMINAR": {
+          "weeks": 13,
+          "weeklyLectures": 1
+        }
+      },
+      "data": [
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "7c8cbcf5-b602-4fc5-a815-1f419b3313af",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "MON",
+          "weeks": {
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+            "parity": null
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Smrčka",
+          "note": null,
+          "capacity": "470",
+          "id": "1fed2c8a-6956-4332-b37a-a205c7fa1ce2",
+          "lecturesCount": 20,
+          "strongLinked": [
+            {
+              "id": "7b16e93a-d26b-4bb7-a91f-d8255ec488ab",
+              "day": "WED"
+            }
+          ],
+          "linked": [
+            {
+              "id": "419cf5e3-9718-4183-8cf4-fe567a6f59ba",
+              "day": "WED"
+            },
+            {
+              "id": "7b16e93a-d26b-4bb7-a91f-d8255ec488ab",
+              "day": "WED"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Husa, Veigend",
+          "note": "",
+          "capacity": "20",
+          "id": "49b00216-9eec-405b-99ae-b9627f4227d7",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Husa",
+          "note": "",
+          "capacity": "20",
+          "id": "c8722f67-0cd5-4bb0-b7b9-1a3b86d2dcb8",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "MON",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Husa",
+          "note": "",
+          "capacity": "20",
+          "id": "987b7ffc-d3ee-4f85-a35b-7c75121a0e9e",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "42a36dd2-9fd5-40c8-858c-b0646dc441d3",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "add733b9-39fd-451b-bef7-a8a29be4c513",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "534af828-95fa-4a6b-8de5-48a5f8065fc3",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Dolejška, Husa, Dolejška",
+          "note": "",
+          "capacity": "20",
+          "id": "957ad3a2-b5ba-4aba-87c8-d5d089ba1597",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Dolejška, Ondrušková, Husa, Dolejška, Ondrušková, Veigend",
+          "note": "",
+          "capacity": "20",
+          "id": "e83d1116-d55a-4faf-9541-6e5d1d6a6c26",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "TUE",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Dolejška, Ondrušková, Husa, Dolejška, Ondrušková, Veigend",
+          "note": "",
+          "capacity": "20, 21, 20, 20, 21, 20, 20",
+          "id": "07bd56c9-9133-4c84-9356-64f818e0d620",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "O204",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "0f2ca7f2-0606-40f6-b932-504800254457",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "O204",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Grézl",
+          "note": "",
+          "capacity": "20",
+          "id": "a26e4929-68da-4d9a-a89d-a9c3abd61d78",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Husa",
+          "note": "",
+          "capacity": "20",
+          "id": "1524eb88-a403-4dac-8535-934b8780b85a",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Smrčka, Smrčka, Polčák",
+          "note": "",
+          "capacity": "470",
+          "id": "7b16e93a-d26b-4bb7-a91f-d8255ec488ab",
+          "lecturesCount": 39,
+          "strongLinked": [
+            {
+              "id": "1fed2c8a-6956-4332-b37a-a205c7fa1ce2",
+              "day": "MON"
+            }
+          ],
+          "linked": [
+            {
+              "id": "419cf5e3-9718-4183-8cf4-fe567a6f59ba",
+              "day": "WED"
+            },
+            {
+              "id": "1fed2c8a-6956-4332-b37a-a205c7fa1ce2",
+              "day": "MON"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Lazúr, Dubovec, Husa, Dubovec, Lazúr, Ondrušková",
+          "note": "",
+          "capacity": "20",
+          "id": "97ada0c0-d1b8-4d05-96c5-e28bcf4981cc",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "SEMINAR",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "2BIA", "2BIB"],
+          "groups": "10 - 29 xx",
+          "info": "Smrčka, Smrčka, Dolejška, ",
+          "note": "",
+          "capacity": "470",
+          "id": "419cf5e3-9718-4183-8cf4-fe567a6f59ba",
+          "lecturesCount": 12,
+          "linked": [
+            {
+              "id": "1fed2c8a-6956-4332-b37a-a205c7fa1ce2",
+              "day": "MON"
+            },
+            {
+              "id": "7b16e93a-d26b-4bb7-a91f-d8255ec488ab",
+              "day": "WED"
+            }
+          ],
+          "strongLinked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "WED",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Lazúr, Dubovec, Husa, Dubovec, Lazúr, Ondrušková",
+          "note": "",
+          "capacity": "20",
+          "id": "2fe329c6-276e-486a-9f3b-de3cfa88ae85",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LECTURE",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 10,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Polčák, Jeřábek",
+          "note": "",
+          "capacity": "470",
+          "id": "be457b34-c3d9-4c7f-9b49-6be804edeb20",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": [
+            {
+              "id": "c4545c07-3aa8-4843-950f-0e02c3794f2f",
+              "day": "THU"
+            }
+          ],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Rozsíval, Rozsíval, Lazúr",
+          "note": "",
+          "capacity": "20",
+          "id": "235483f7-15d6-41d1-9cf0-c1fee0c00948",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "SEMINAR",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+          },
+          "room": "D105+6",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 11,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIB", "2BIA", "2BIB"],
+          "groups": "30 - 49 xx",
+          "info": "Dolejška, Smrčka",
+          "note": "",
+          "capacity": "470",
+          "id": "c4545c07-3aa8-4843-950f-0e02c3794f2f",
+          "lecturesCount": 12,
+          "linked": [
+            {
+              "id": "be457b34-c3d9-4c7f-9b49-6be804edeb20",
+              "day": "THU"
+            }
+          ],
+          "strongLinked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 16,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 17,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Zavřel, Husa, Jeřábek, Husa, Jeřábek, Zavřel, Dolejška, Dolejška",
+          "note": "",
+          "capacity": "20",
+          "id": "1731e9c7-43b1-4d8c-a987-9c256d162727",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "THU",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 18,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 19,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Zavřel, Husa, Jeřábek, Husa, Jeřábek, Zavřel, Dolejška, Dolejška",
+          "note": "",
+          "capacity": "20",
+          "id": "2e0548ad-848c-498a-8a7f-0ab4a90d5747",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 8,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 9,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Grézl, Veigend, Rozsíval, Grézl, Rozsíval, Veigend, Lazúr",
+          "note": "",
+          "capacity": "20",
+          "id": "678dc7c0-46ee-4e58-bc1f-0868f4dfc3ab",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N103+4,5",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 12,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 13,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Polčák, Veigend, Škarvada, Polčák, Škarvada, Veigend, Lazúr",
+          "note": "",
+          "capacity": "20",
+          "id": "38392bb9-38c4-4d0a-9e0b-cd50cca16748",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        },
+        {
+          "type": "LABORATORY",
+          "day": "FRI",
+          "weeks": {
+            "parity": null,
+            "weeks": [1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13]
+          },
+          "room": "N104",
+          "timeSpan": {
+            "__type": "TimeSpan",
+            "start": {
+              "__type": "Time",
+              "hour": 14,
+              "minute": 0
+            },
+            "end": {
+              "__type": "Time",
+              "hour": 15,
+              "minute": 50
+            }
+          },
+          "lectureGroup": ["1BIA", "1BIB", "2BIA", "2BIB"],
+          "groups": "xx",
+          "info": "Husa, Husa",
+          "note": "",
+          "capacity": "20",
+          "id": "ad70d8f3-e5a3-4460-8f57-9d5b302b2e4c",
+          "lecturesCount": 10,
+          "strongLinked": [],
+          "linked": [],
+          "checked": false
+        }
+      ]
+    }
+  ]
+}

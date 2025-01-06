@@ -80,7 +80,11 @@ export default {
     actions: {
       title: "Akce",
       exportJson: "Exportovat JSON",
-      importJson: "Importovat JSON",
+      importJson: {
+        title: "Importovat JSON",
+        error: "Nepodařilo se načíst data z JSON",
+        errorDescription: "Zkontrolujte zda je soubor ve správném formátu. více informací v konzoli",
+      },
       generate: {
         next: "Generovat další",
         previous: "Generovat předchozí",

@@ -124,7 +124,7 @@ export class ScheduleComparer {
       courseId:
         type === "old"
           ? `${base.courseId} ${base.courseName}`
-          : `${base.courseDetail.id} ${base.courseDetail.abbreviation}`,
+          : `${event.courseDetail.id} ${event.courseDetail.abbreviation}`,
     };
   }
 
@@ -203,7 +203,7 @@ export class ScheduleComparer {
                 "Recieved (new): ",
                 this.logEventDetails(newEvent, "new", day),
                 "Suggested weeks:",
-                newEvent.event.metrics.weeks
+                newEvent.metrics.weeks
               );
             }
             foundMatch = true;
@@ -213,7 +213,7 @@ export class ScheduleComparer {
                 matches: true,
                 partialMatch: Object.keys(differences).length > 0,
                 oldEvent,
-                newEvent,
+                newEvent: newEvent.event,
                 differences: differences,
                 source: "old",
               });
@@ -243,7 +243,7 @@ export class ScheduleComparer {
           matches: false,
           partialMatch: false,
           oldEvent: null,
-          newEvent,
+          newEvent: newEvent.event,
           differences: null,
           source: "new",
         });

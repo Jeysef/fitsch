@@ -3,11 +3,12 @@ import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
-import type { Course, Event } from "~/components/scheduler/types";
+import type { Course, Event, LectureMetrics } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
+import type { CourseDetail } from "~/server/scraper/types";
 
 interface ScheduleResult {
   selectedEvents: Map<string, Event>;
@@ -48,7 +49,8 @@ export function SchedulerGenerator() {
     for (const day of storeDayData) {
       for (const dayEvent of day.events) {
         const event = dayEvent.event;
-        const key = `${event.courseDetail.id}-${event.type}`;
+        const courseDetail = dayEvent.courseDetail;
+        const key = `${courseDetail.id}-${event.type}`;
         counts.set(key, (counts.get(key) || 0) + 1);
       }
     }
@@ -61,9 +63,11 @@ export function SchedulerGenerator() {
 
     // Flatten all events and calculate their scores
     const eventsWithScores = allDays.flatMap((day) =>
-      day.events.map(({ event }) => ({
+      day.events.map(({ event, courseDetail, metrics }) => ({
         event,
-        score: rateEvent(event, undefined, currentPosition.attempt),
+        courseDetail,
+        metrics,
+        score: rateEvent(event, courseDetail, undefined, currentPosition.attempt),
       }))
     );
 
@@ -85,8 +89,8 @@ export function SchedulerGenerator() {
     return false;
   }
 
-  function rateEvent(event: Event, state?: ScheduleResult, attempt = 0): number {
-    const typeCount = courseTypeCounts().get(`${event.courseDetail.id}-${event.type}`) || 0;
+  function rateEvent(event: Event, courseDetail: CourseDetail, state?: ScheduleResult, attempt = 0): number {
+    const typeCount = courseTypeCounts().get(`${courseDetail.id}-${event.type}`) || 0;
     const Pr = 1 - 1 / (typeCount + 1);
     const Tr = getTimePreferencePenalty(event.timeSpan);
     const perturbation = getPerturbation(event, attempt);
@@ -132,7 +136,7 @@ export function SchedulerGenerator() {
     };
 
     let processedCount = 0;
-    for (const { event } of orderedEvents()) {
+    for (const { event, courseDetail, metrics } of orderedEvents()) {
       // Yield every 100 iterations to prevent blocking
       if (++processedCount % 100 === 0) {
         await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -141,8 +145,8 @@ export function SchedulerGenerator() {
       if (hasTimeOverlap(event, state.selectedEvents.values())) continue;
 
       const type = event.type;
-      const courseId = event.courseDetail.id;
-      const requiredHours = event.metrics.weeklyLectures;
+      const courseId = courseDetail.id;
+      const requiredHours = metrics.weeklyLectures;
       const completedHours = state.completedHours[courseId][type] || 0;
 
       // if does not fit, skip
@@ -151,29 +155,30 @@ export function SchedulerGenerator() {
       const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id);
 
       let canAddAllLinks = true;
-      const linkedEventDataMap = new Map<string, Event>();
+      const linkedEventDataMap = new Map<string, Event & { courseDetail: CourseDetail; metrics: LectureMetrics }>();
 
       for (const linkedEventData of allLinkedEvents) {
-        const linkedEvent = store.data[linkedEventData.day].events.find((e) => e.event.id === linkedEventData.id)?.event;
+        const linkedEvent = store.data[linkedEventData.day].events.find((e) => e.event.id === linkedEventData.id);
         if (!linkedEvent) {
           canAddAllLinks = false;
           break;
         }
-        if (hasTimeOverlap(linkedEvent, state.selectedEvents.values())) {
+        const le = { ...linkedEvent.event, courseDetail: linkedEvent.courseDetail, metrics: linkedEvent.metrics };
+        if (hasTimeOverlap(le, state.selectedEvents.values())) {
           canAddAllLinks = false;
           break;
         }
 
-        const linkedType = linkedEvent.type;
-        const linkedCourseId = linkedEvent.courseDetail.id;
-        const linkedRequiredHours = linkedEvent.metrics.weeklyLectures;
+        const linkedType = le.type;
+        const linkedCourseId = le.courseDetail.id;
+        const linkedRequiredHours = le.metrics.weeklyLectures;
         const linkedCompletedHours = state.completedHours[linkedCourseId][linkedType] || 0;
 
-        if (linkedCompletedHours + linkedEvent.timeSpan.hours > linkedRequiredHours) {
+        if (linkedCompletedHours + le.timeSpan.hours > linkedRequiredHours) {
           canAddAllLinks = false;
           break;
         }
-        linkedEventDataMap.set(linkedEvent.id, linkedEvent);
+        linkedEventDataMap.set(le.id, le);
       }
 
       if (canAddAllLinks) {

@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
 import { compact, difference, flatMap, flow, merge, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
+// @ts-ignore no types
 import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import { animated, createSpring } from "solid-spring";
@@ -195,7 +196,12 @@ function Week() {
                     "padding-inline-end": `${event.paddingEnd}%`,
                   }}
                 >
-                  <ScheduleEvent event={event.event} store={store} />
+                  <ScheduleEvent
+                    event={event.event}
+                    courseDetail={event.courseDetail}
+                    metrics={event.metrics}
+                    store={store}
+                  />
                 </div>
               )}
             </For>

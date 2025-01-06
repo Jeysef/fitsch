@@ -10,7 +10,8 @@ import { Button } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { toast } from "~/packages/solid-sonner";
+import { storeSerializer, useScheduler } from "~/providers/SchedulerProvider";
 
 export function Actions() {
   const { store, recreateStore } = useScheduler();
@@ -46,7 +47,7 @@ export function Actions() {
   };
 
   const saveJSON = () => {
-    exportJSON({ obj: store, filename: "schedule" });
+    exportJSON({ obj: store, filename: "schedule", serializer: storeSerializer });
   };
 
   const loadJSON = () => {
@@ -56,6 +57,7 @@ export function Actions() {
         const validatedData = parseStoreJson(parsedData);
         if (!validatedData.success) {
           console.error(validatedData.error);
+          toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });
           return;
         }
         recreateStore(validatedData.data);
@@ -91,7 +93,7 @@ export function Actions() {
             class="px-2 py-1 text-link hover:text-link hover:saturate-150"
             on:click={loadJSON}
           >
-            {t("menu.actions.importJson")}
+            {t("menu.actions.importJson.title")}
           </Button>
         </ItemText>
         <ItemText as="div" class="flex items-center gap-1">

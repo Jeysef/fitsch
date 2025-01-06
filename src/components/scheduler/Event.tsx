@@ -6,10 +6,9 @@ import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import { type DAY, WEEK_PARITY } from "~/server/scraper/enums";
-import type { Data, Event, ISchedulerSettings } from "./types";
+import type { Data, DayEvent, ISchedulerSettings } from "./types";
 
-interface EventProps {
-  event: Event;
+interface EventProps extends Pick<DayEvent, "event" | "courseDetail" | "metrics"> {
   store: {
     settings: ISchedulerSettings;
     data: Data;
@@ -19,6 +18,8 @@ interface EventProps {
 export default function ScheduleEvent(props: EventProps) {
   const store = props.store;
   const event = props.event;
+  const courseDetail = props.courseDetail;
+  const metrics = props.metrics;
   const color = subjectTypeColors[event.type];
   const getLinkedEvent = (linked: {
     id: string;
@@ -63,7 +64,7 @@ export default function ScheduleEvent(props: EventProps) {
           <Info size={"1em"} />
         </EventPopup>
         <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">
-          {event.courseDetail.abbreviation}
+          {courseDetail.abbreviation}
         </Text>
         <Checkbox checked={props.event.checked} onChange={handleCheck}>
           <CheckboxControl class="em:size-4" />

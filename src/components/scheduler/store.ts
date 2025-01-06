@@ -1,4 +1,4 @@
-import { forEach, mapValues, reduce } from "lodash-es";
+import { flow, forEach, map, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import type { StrictOmit } from "ts-essentials";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
@@ -137,11 +137,11 @@ export class SchedulerStore {
     return data;
   };
   private findExistingCourse(courseId: string) {
-    const found = this.courses.find((course) => course.detail.id === courseId);
-    forEach(found?.data, (dayData) => {
-      for (const event of dayData.events) event.row = 1;
-    });
-    return found;
+    return this.courses.find((course) => course.detail.id === courseId);
+  }
+
+  public createDataFromCourses(courses: Course[]): Data {
+    return this.combineData(courses.map(this.dataFromCourse));
   }
 
   /**
@@ -150,23 +150,26 @@ export class SchedulerStore {
    * @param data array of UnfilledData
    * @returns Data
    */
-  public combineData(data: Data[]): Data {
-    return this.sortData(
-      reduce(
-        data,
-        (acc, item) => {
-          forEach(item, (dayData, day) => {
-            acc[day as DAY] = {
-              dayRow: dayData.dayRow,
-              dayRows: 1,
-              events: [...(acc[day as DAY]?.events || []), ...dayData.events],
-            };
-          });
-          return acc;
-        },
-        this.getEmptyData()
-      )
-    );
+  private combineData(data: Data[]): Data {
+    return flow(
+      (data: Data[]) =>
+        reduce(
+          data,
+          (acc, item) => {
+            forEach(item, (dayData, day) => {
+              acc[day as DAY] = {
+                dayRow: dayData.dayRow,
+                dayRows: 1,
+                events: [...(acc[day as DAY]?.events || []), ...dayData.events],
+              };
+            });
+            return acc;
+          },
+          this.getEmptyData()
+        ),
+      // Sort the combined data
+      this.sortData
+    )(data);
   }
 
   private cloneData(data: Data, filterEvents?: (event: DayEvent) => unknown): Data {
@@ -182,26 +185,47 @@ export class SchedulerStore {
     this.data = this.getEmptyData();
   }
 
+  private dataFromCourse = (course: Course): Data => {
+    return reduce(
+      course.data,
+      (acc, event) => {
+        // const filledEvent: FilledEvent = {
+        //   ...event,
+        //   // to keep it connected
+        //   checked: event.checked,
+        //   courseDetail: course.detail,
+        //   metrics: course.metrics[event.type]!,
+        // };
+        acc[event.day].events.push({
+          ...getDayEventData(this.settings.columns, event.timeSpan),
+          event: event,
+          courseDetail: course.detail,
+          metrics: course.metrics[event.type]!,
+        });
+        return acc;
+      },
+      this.getEmptyData()
+    );
+  };
+
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     if (courses.length === 0) {
       this.resetCourses();
       return;
     }
-    const coursesData = courses.map((course) => {
+    const coursesData = courses.map<Course>((course) => {
       const existingCourse = this.findExistingCourse(course.detail.id);
       if (existingCourse) {
-        let { data, detail, metrics } = existingCourse;
+        let { detail } = existingCourse;
         // is same language. link ends .cs or .en
         if (detail.link !== course.detail.link) detail = course.detail;
         // data is inherently proxied, so we need to copy it
-        const dataCopy = this.cloneData(data);
-        return { data: dataCopy, detail, metrics };
+        return existingCourse;
       }
-      const newCourse = fillData(this.getEmptyData(), course, this.settings, this.eventFilter);
-      return newCourse;
+      return createNewCourse(course, this.eventFilter);
     });
     this.courses = coursesData;
-    this.data = this.combineData(coursesData.map((c) => c.data));
+    this.data = this.createDataFromCourses(coursesData);
   }
 
   /** returns filtered copy of data */
@@ -210,30 +234,31 @@ export class SchedulerStore {
   }
 
   get selected(): Record<LECTURE_TYPE, number>[] {
-    return this.courses.map((course) => {
-      return reduce(
+    return map(this.courses, (course) =>
+      reduce(
         course.data,
-        (selectedHours, dayData) => {
-          for (const event of dayData.events) {
-            if (event.event.checked) {
-              selectedHours[event.event.type] = (selectedHours[event.event.type] || 0) + event.event.timeSpan.hours;
-            }
+        (selectedHours, event) => {
+          if (event.checked) {
+            selectedHours[event.type] = (selectedHours[event.type] || 0) + event.timeSpan.hours;
           }
           return selectedHours;
         },
         {} as Record<LECTURE_TYPE, number>
-      );
-    });
+      )
+    );
   }
 }
 
-export function getEventColumn(event: TimeSpan, columns: TimeSpan[]) {
+export function getEventColumn(event: TimeSpan, columns: IScheduleColumn[]) {
   let colStart = columns.findIndex(
-    (column) => column.start.minutes <= event.start.minutes && column.end.minutes > event.start.minutes
+    ({ duration }) => duration.start.minutes <= event.start.minutes && duration.end.minutes > event.start.minutes
   );
-  let colEnd = columns.findIndex(
-    (column) => column.start.minutes < event.end.minutes && column.end.minutes >= event.end.minutes
-  );
+  let colEnd =
+    colStart >= 0
+      ? columns.findIndex(
+          ({ duration }) => duration.start.minutes < event.end.minutes && duration.end.minutes >= event.end.minutes
+        )
+      : -1;
   if (colStart === -1 || colEnd === -1) {
     console.warn("Event is not in any column range", { colStart, colEnd }, event);
     if (colStart === -1) colStart = 0;
@@ -245,23 +270,64 @@ export function getEventColumn(event: TimeSpan, columns: TimeSpan[]) {
 export const columnDuration = (columns: IScheduleColumn[], colStart: number, colEnd: number) =>
   new TimeSpan(columns[colStart].duration.start, columns[colEnd].duration.end);
 
-export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan): StrictOmit<DayEvent, "event"> {
-  const { colStart, colEnd } = getEventColumn(
-    timeSpan,
-    columns.map((column) => column.duration)
-  );
+export function getDayEventData(
+  columns: IScheduleColumn[],
+  timeSpan: TimeSpan
+): StrictOmit<DayEvent, "event" | "courseDetail" | "metrics"> {
+  const { colStart, colEnd } = getEventColumn(timeSpan, columns);
   const colDuration = columnDuration(columns, colStart, colEnd);
   const paddingStart = (new TimeSpan(columns[colStart].duration.start, timeSpan.start).minutes * 100) / colDuration.minutes;
   const paddingEnd = (new TimeSpan(timeSpan.end, columns[colEnd].duration.end).minutes * 100) / colDuration.minutes;
+  // row is set later
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
 
-function fillData(
-  toFillData: Data,
-  courseData: MgetStudyCourseDetailsReturn,
-  settings: ISchedulerSettings,
-  filter?: (event: MCourseLecture) => boolean
-) {
+// function fillData(
+//   toFillData: Data,
+//   courseData: MgetStudyCourseDetailsReturn,
+//   settings: ISchedulerSettings,
+//   filter?: (event: MCourseLecture) => boolean
+// ): Course {
+//   const { data, detail: courseDetail } = courseData;
+//   const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
+//   const getMetrics = (type: LECTURE_TYPE) => {
+//     if (!metrics[type]) metrics[type] = { weeks: 0, weeklyLectures: 0 };
+//     return metrics[type];
+//   };
+
+//   for (const event of data) {
+//     if (filter && !filter(event)) continue;
+//     const timeSpan = event.timeSpan;
+//     const metric = getMetrics(event.type);
+//     const filledEvent: Event = {
+//       ...event,
+//       courseDetail,
+//       timeSpan,
+//       metrics: metric,
+//       checked: false,
+//     };
+
+//     const linkedDuration = event.strongLinked.reduce((acc, linked) => {
+//       const linkedLecture = data.find((l) => l.id === linked.id);
+//       if (!linkedLecture) return acc;
+//       const timeSpan = linkedLecture.timeSpan;
+//       return acc + timeSpan.minutes;
+//     }, timeSpan.minutes);
+
+//     metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
+//     metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
+
+//     toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent });
+//   }
+
+//   return {
+//     detail: courseDetail,
+//     data: toFillData,
+//     metrics,
+//   };
+// }
+
+function createNewCourse(courseData: MgetStudyCourseDetailsReturn, filter?: (event: MCourseLecture) => boolean): Course {
   const { data, detail: courseDetail } = courseData;
   const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
   const getMetrics = (type: LECTURE_TYPE) => {
@@ -271,15 +337,9 @@ function fillData(
 
   for (const event of data) {
     if (filter && !filter(event)) continue;
-    const timeSpan = event.timeSpan;
     const metric = getMetrics(event.type);
-    const filledEvent: Event = {
-      ...event,
-      courseDetail,
-      timeSpan,
-      metrics: metric,
-      checked: false,
-    };
+
+    const timeSpan = event.timeSpan;
 
     const linkedDuration = event.strongLinked.reduce((acc, linked) => {
       const linkedLecture = data.find((l) => l.id === linked.id);
@@ -290,13 +350,12 @@ function fillData(
 
     metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
     metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
-
-    toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent });
   }
 
   return {
     detail: courseDetail,
-    data: toFillData,
     metrics,
+    // event is created clientside in proveder, assigning to it is safe
+    data: map(data, (event) => Object.assign(event, { checked: false }) satisfies Event),
   };
 }

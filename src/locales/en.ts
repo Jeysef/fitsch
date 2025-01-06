@@ -82,7 +82,11 @@ export default {
     actions: {
       title: "Actions",
       exportJson: "Export JSON",
-      importJson: "Import JSON",
+      importJson: {
+        title: "Import JSON",
+        error: "Error occurred while importing data",
+        errorDescription: "Check if the file is in the correct format. More information in the console",
+      },
       generate: {
         next: "Generate next",
         previous: "Generate previous",

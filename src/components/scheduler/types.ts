@@ -1,14 +1,16 @@
+import type { Prettify } from "ts-essentials";
 import type { TimeSpan } from "~/components/scheduler/time";
 import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { CourseDetail } from "~/server/scraper/types";
 
-export type Event = MCourseLecture & {
-  courseDetail: CourseDetail;
-  metrics: LectureMetrics;
-  /** @default false */
-  checked: boolean;
-};
+export type Event = Prettify<
+  MCourseLecture & {
+    /** @default false */
+    checked: boolean;
+  }
+>;
+
 export interface DayEvent {
   /** @default 1 */
   row: number;
@@ -17,6 +19,8 @@ export interface DayEvent {
   paddingStart: number;
   paddingEnd: number;
   event: Event;
+  courseDetail: CourseDetail;
+  metrics: LectureMetrics;
 }
 export interface DayData {
   dayRow: number;
@@ -26,6 +30,8 @@ export interface DayData {
 }
 
 export type Data = Record<DAY, DayData>;
+export type CourseData = Event[];
+
 export interface ISchedulerTime {
   hour: number;
   minute: number;
@@ -67,6 +73,6 @@ export interface LectureMetrics {
 }
 export interface Course {
   detail: CourseDetail;
-  data: Data;
-  metrics: Partial<Record<LECTURE_TYPE, LectureMetrics>>;
+  data: CourseData;
+  metrics: Record<LECTURE_TYPE, LectureMetrics>;
 }
