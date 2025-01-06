@@ -3,10 +3,9 @@ import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { CourseDetail } from "~/server/scraper/types";
 
-export type Event = Omit<MCourseLecture, "start" | "end"> & {
+export type Event = MCourseLecture & {
   courseDetail: CourseDetail;
   metrics: LectureMetrics;
-  timeSpan: TimeSpan;
   /** @default false */
   checked: boolean;
 };

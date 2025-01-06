@@ -1,5 +1,6 @@
 import { forEach, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
+import type { StrictOmit } from "ts-essentials";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
 import type {
   CourseData,
@@ -247,7 +248,7 @@ export function getEventColumn(event: TimeSpan, columns: TimeSpan[]) {
 export const columnDuration = (columns: IScheduleColumn[], colStart: number, colEnd: number) =>
   new TimeSpan(columns[colStart].duration.start, columns[colEnd].duration.end);
 
-export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan): Omit<DayEvent, "event"> {
+export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan): StrictOmit<DayEvent, "event"> {
   const { colStart, colEnd } = getEventColumn(
     timeSpan,
     columns.map((column) => column.duration)

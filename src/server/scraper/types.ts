@@ -1,3 +1,4 @@
+import type { StrictOmit } from "ts-essentials";
 import type { TimeSpan } from "~/components/scheduler/time";
 import type { LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
@@ -101,7 +102,7 @@ interface APICourseLecture {
   info: string;
   note: string | null;
 }
-interface CourseLecture extends Omit<APICourseLecture, "room"> {
+interface CourseLecture extends StrictOmit<APICourseLecture, "room"> {
   room: string;
 }
 
