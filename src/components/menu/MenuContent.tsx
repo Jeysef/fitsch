@@ -34,6 +34,7 @@ import {
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
+import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
 import {
@@ -121,7 +122,7 @@ export default function Wrapper() {
     const dataValues = data()?.values;
     if (!dataValues) {
       if (data.state === "refreshing") return <Loader />;
-      return null;
+      return <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>;
     }
 
     const submit: typeof _submit = (data) => {
