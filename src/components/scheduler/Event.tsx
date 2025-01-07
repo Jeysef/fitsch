@@ -60,7 +60,7 @@ export default function ScheduleEvent(props: EventProps) {
       ondblclick={() => handleCheck()}
     >
       <div class="flex items-center w-full ">
-        <EventPopup event={event}>
+        <EventPopup event={event} courseDetail={courseDetail}>
           <Info size={"1em"} />
         </EventPopup>
         <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">

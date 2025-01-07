@@ -11,10 +11,12 @@ import type { Event } from "~/components/scheduler/types";
 import { Badge } from "~/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useI18n } from "~/i18n";
+import type { CourseDetail } from "~/server/scraper/types";
 
-const EventPopup = (props: { event: Event; children: JSX.Element }) => {
+const EventPopup = (props: { event: Event; children: JSX.Element; courseDetail: CourseDetail }) => {
   const { t } = useI18n();
-  const { courseDetail, timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.event;
+  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.event;
+  const courseDetail = props.courseDetail;
 
   return (
     <Popover flip placement="left-start">
