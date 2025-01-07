@@ -183,6 +183,13 @@ export default {
       },
     },
   },
+  schedulerProvider: {
+    importFromLocalStorage: {
+      error: "Nepodařilo se načíst data z JSON",
+      errorDescription: "Zkontrolujte zda je soubor ve správném formátu. více informací v konzoli",
+      clearLocalStorageAction: "Vymazat lokální úložiště",
+    },
+  },
 };
 
 /*

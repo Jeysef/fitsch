@@ -185,4 +185,11 @@ export default {
     tryAgain: "Try again",
     purgeAndReload: "If the error persists, clear the local storage and reload the page",
   },
+  schedulerProvider: {
+    importFromLocalStorage: {
+      error: "Failed to load data from JSON",
+      errorDescription: "Check if the file is in the correct format. More information in the console",
+      clearLocalStorageAction: "Clear local storage",
+    },
+  },
 } satisfies typeof Schema;

@@ -15,9 +15,12 @@ import {
   type Setter,
 } from "solid-js";
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
+import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days, end, start, step } from "~/config/scheduler";
+import { useI18n } from "~/i18n";
+import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
@@ -44,6 +47,7 @@ export const storeSerializer = (store: SchedulerStore) => {
 };
 
 export function SchedulerProvider(props: ParentProps) {
+  const { t } = useI18n();
   const data = useSubmission(getStudyCoursesDetailsAction);
   const formatTime = (start: { hour: number; minute: number }, end: { hour: number; minute: number }) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
@@ -70,7 +74,29 @@ export function SchedulerProvider(props: ParentProps) {
   const store = createMutable(newStore);
   const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newStore), {
     name: "schedulerStore",
-    deserialize: (value) => JSON.parse(value, ClassRegistry.reviver),
+    deserialize: (value) => {
+      const parsedStore = JSON.parse(value, ClassRegistry.reviver);
+      const validatedStoreResult = parseStoreJson(parsedStore);
+      if (!validatedStoreResult.success) {
+        console.log("error parsing store");
+        console.error(validatedStoreResult.error);
+        setTimeout(
+          () =>
+            toast.error(t("schedulerProvider.importFromLocalStorage.error"), {
+              description: t("schedulerProvider.importFromLocalStorage.errorDescription"),
+              action: {
+                label: t("schedulerProvider.importFromLocalStorage.clearLocalStorageAction"),
+                onClick: () => {
+                  setPersistedShedulerStore(store);
+                },
+              },
+            }),
+          1000
+        );
+        return newStore;
+      }
+      return validatedStoreResult.data as SchedulerStore;
+    },
     serialize: storeSerializer,
   });
 
