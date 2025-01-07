@@ -4,33 +4,34 @@ import { createSignal } from "solid-js";
 import Content from "~/components/menu/MenuContent";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-
-export const [openend, setOpened] = createSignal(true, { name: "menuOpened" });
-const [menuHidden, setMenuHidden] = createSignal(false, { name: "menuHidden" });
-
-/**
- * This is a workaround for the transition to work properly.
- * Not the best solution probably, but for low timeout, it works pretty reliably.
- */
-export const toggleNavigation = (openend: boolean) => {
-  openend
-    ? setMenuHidden(false)
-    : setTimeout(() => {
-        setMenuHidden(true);
-      }, 150);
-  setTimeout(() => {
-    setOpened(openend);
-  }, 5);
-};
+import { useMenuOpened } from "~/providers/MenuOpenedProvider";
 
 export default function Menu() {
+  const { opened, setOpened } = useMenuOpened();
+  const [menuHidden, setMenuHidden] = createSignal(!opened(), { name: "menuHidden" });
+
+  /**
+   * This is a workaround for the transition to work properly.
+   * Not the best solution probably, but for low timeout, it works pretty reliably.
+   */
+  const toggleNavigation = (openend: boolean) => {
+    openend
+      ? setMenuHidden(false)
+      : setTimeout(() => {
+          setMenuHidden(true);
+        }, 150);
+    setTimeout(() => {
+      setOpened(openend);
+    }, 5);
+  };
+
   return (
     <>
       <Button
         variant="default"
         size="icon"
         aria-label="navigation opener"
-        class={cn("absolute top-4 left-4 z-10", { hidden: openend() })}
+        class={cn("absolute top-4 left-4 z-10", { hidden: opened() })}
         onClick={() => toggleNavigation(true)}
       >
         <MenuIcon />
@@ -40,7 +41,7 @@ export default function Menu() {
         class={cn(
           "flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 z-10",
           {
-            "-ml-64": !openend(),
+            "-ml-64": !opened(),
             hidden: menuHidden(),
           }
         )}

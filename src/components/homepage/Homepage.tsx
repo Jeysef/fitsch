@@ -1,13 +1,13 @@
+import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useSearchParams } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, createMemo } from "solid-js";
-import { isServer } from "solid-js/web";
+import { For, createMemo, createSignal } from "solid-js";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
-import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
+import { useMenuOpened } from "~/providers/MenuOpenedProvider";
 import { useScheduler } from "~/providers/SchedulerProvider";
 
 const tabs = {
@@ -23,6 +23,7 @@ export default function Home() {
   const { t, locale } = useI18n();
   const { store } = useScheduler();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
+  const { opened } = useMenuOpened();
 
   const checkedDataMemo = createMemo(() => store.checkedData);
 
@@ -50,9 +51,12 @@ export default function Home() {
   return (
     <Tabs as="nav" value={tab()} onChange={setTab} class="items-center h-full w-full overflow-auto flex flex-col">
       <TabsList
-        class={cn("h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto justify-start z-0", {
-          "-ml-16 max-w-[calc(100%+64px)]": openend(),
-        })}
+        class={cn(
+          "h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto justify-start z-0 transition-[margin,max-width]",
+          {
+            "-ml-16 max-w-[calc(100%+64px)]": opened(),
+          }
+        )}
       >
         <div class="w-14 -left-2 h-full box-content bg-background shrink-0 z-20 sticky" />
         <div class="flex gap-x-4 h-full items-center">

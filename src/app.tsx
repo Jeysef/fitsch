@@ -11,6 +11,7 @@ import Layout from "~/components/layout";
 import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
 import { InstallationProvider } from "~/providers/InstallationProvider";
+import { MenuOpenedProvider } from "~/providers/MenuOpenedProvider";
 import { SchedulerProvider } from "~/providers/SchedulerProvider";
 import "./app.css";
 
@@ -23,12 +24,14 @@ export default function App() {
             <I18nProvider>
               <InstallationProvider>
                 <SchedulerProvider>
-                  <ColorModeScript initialColorMode="light" storageKey="kb-color-mode" />
-                  <ColorModeProvider>
-                    <Layout>
-                      <Suspense>{props.children}</Suspense>
-                    </Layout>
-                  </ColorModeProvider>
+                  <MenuOpenedProvider>
+                    <ColorModeScript initialColorMode="light" storageKey="kb-color-mode" />
+                    <ColorModeProvider>
+                      <Layout>
+                        <Suspense>{props.children}</Suspense>
+                      </Layout>
+                    </ColorModeProvider>
+                  </MenuOpenedProvider>
                 </SchedulerProvider>
               </InstallationProvider>
             </I18nProvider>
