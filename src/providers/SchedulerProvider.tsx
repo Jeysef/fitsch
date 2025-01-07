@@ -9,6 +9,7 @@ import {
   createEffect,
   createSignal,
   on,
+  onMount,
   useContext,
   type Accessor,
   type ParentProps,
@@ -108,7 +109,9 @@ export function SchedulerProvider(props: ParentProps) {
     });
   };
   // updateStoreData(store);
-  recreateStore(persistedStore());
+  onMount(() => {
+    recreateStore(persistedStore());
+  });
 
   createComputed(
     on(

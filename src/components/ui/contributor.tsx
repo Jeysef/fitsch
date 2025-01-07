@@ -113,6 +113,6 @@ const contributorStyle = css`
 
   &:focus-visible {
     outline: none;
-    ring: 1.5px solid hsl(var(--ring));
+    box-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) hsl(var(--ring));
   }
 `;

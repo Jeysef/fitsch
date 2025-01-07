@@ -4,6 +4,7 @@ import { ObjectTyped } from "object-typed";
 // @ts-ignore no types
 import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
+import { isServer } from "solid-js/web";
 import { animated, createSpring } from "solid-spring";
 import type { StrictExtract } from "ts-essentials";
 import ScheduleEvent from "~/components/scheduler/Event";
@@ -41,7 +42,7 @@ export default function Scheduler(props: WorkScheduleProps) {
 
 function SchedulerGrid() {
   const store = useStore();
-  const [scale, setScale] = createSignal(window.innerWidth < 720 ? 70 : 100);
+  const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 70 : 100);
   const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
   const styles = createSpring(() => ({
@@ -79,6 +80,16 @@ function SchedulerGrid() {
     }
   );
 
+  const InnerComponent = createMemo(() => (
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
+      <Corner />
+      <Heading />
+      <Days />
+      <Week />
+      <ColumnLines />
+    </div>
+  ));
+
   return (
     <animated.div
       class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out"
@@ -89,13 +100,7 @@ function SchedulerGrid() {
         "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
       })}
     >
-      <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
-        <Corner />
-        <Heading />
-        <Days />
-        <Week />
-        <ColumnLines />
-      </div>
+      <InnerComponent />
     </animated.div>
   );
 }

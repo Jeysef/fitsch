@@ -1,6 +1,7 @@
-import { useLocation, useNavigate } from "@solidjs/router";
+import { useSearchParams } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { For, createMemo } from "solid-js";
+import { isServer } from "solid-js/web";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import { openend } from "~/components/menu/MenuBase";
 import Scheduler from "~/components/scheduler";
@@ -9,13 +10,19 @@ import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { useScheduler } from "~/providers/SchedulerProvider";
 
+const tabs = {
+  workSchedule: "workSchedule",
+  resultSchedule: "resultSchedule",
+  timeSpan: "timeSpan",
+} as const;
+
+type TabValues = (typeof tabs)[keyof typeof tabs];
+type Tab = { tab: TabValues };
+
 export default function Home() {
   const { t, locale } = useI18n();
-  const { store, newSchedulerStore } = useScheduler();
-  const navigate = useNavigate();
-  const location = useLocation();
-  // empty for ssr
-  const [initialTab, setInitialTab] = createSignal("");
+  const { store } = useScheduler();
+  const [searchParams, setSearchParams] = useSearchParams<Tab>();
 
   const checkedDataMemo = createMemo(() => store.checkedData);
 
@@ -34,28 +41,14 @@ export default function Home() {
     },
   });
 
-  createEffect(() => {
-    const tab = initialTab();
-    tab && requestIdleCallback(() => navigate(`#${tab}`, { replace: true }), { timeout: 1000 });
-  });
+  const setTab = (tabValue: string) => {
+    setSearchParams({ tab: tabValue }, { replace: true });
+  };
 
-  const tabs = {
-    workSchedule: "workSchedule",
-    resultSchedule: "resultSchedule",
-    timeSpan: "timeSpan",
-  } as const;
-
-  onMount(() => {
-    setInitialTab(location.hash.slice(1));
-  });
+  const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
 
   return (
-    <Tabs
-      as="nav"
-      value={initialTab()}
-      onChange={setInitialTab}
-      class="items-center h-full w-full overflow-auto flex flex-col"
-    >
+    <Tabs as="nav" value={tab()} onChange={setTab} class="items-center h-full w-full overflow-auto flex flex-col">
       <TabsList
         class={cn("h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto justify-start z-0", {
           "-ml-16 max-w-[calc(100%+64px)]": openend(),
@@ -93,7 +86,7 @@ export default function Home() {
         as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
-        <TimeSpanPage store={filteredStore} />
+        <TimeSpanPage store={store} />
       </TabsContent>
     </Tabs>
   );

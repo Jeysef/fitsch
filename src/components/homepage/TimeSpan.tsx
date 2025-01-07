@@ -1,6 +1,6 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import { ObjectTyped } from "object-typed";
-import { For, Index, Show } from "solid-js";
+import { createMemo, For, Index, Show } from "solid-js";
 import type { SchedulerStore } from "~/components/scheduler/store";
 import type { Course } from "~/components/scheduler/types";
 import { typographyVariants } from "~/components/typography";
@@ -21,10 +21,11 @@ export default function TimeSpan(props: TimeSpanProps) {
       {t("scheduler.timeSpan.empty")}
     </Text>
   );
+  const selected = createMemo(() => props.store.selected);
   return (
     <div class="w-full max-w-4xl space-y-6 px-4">
       <Index each={props.store.courses} fallback={fallback}>
-        {(course, index) => <TimeSpanCourse course={course()} selected={props.store.selected[index]} />}
+        {(course, index) => <TimeSpanCourse course={course()} selected={selected()[index]} />}
       </Index>
     </div>
   );
