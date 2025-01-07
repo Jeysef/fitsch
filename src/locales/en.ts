@@ -71,7 +71,7 @@ export default {
         success: "Data was successfully loaded",
         error: "An error occurred while loading data",
         description:
-          "The language has been changed to {{ language }}, the lecture data will remain the same until they are regenerated.",
+          "The language has been changed to {{ language }}, the lecture data will remain the same until they are loaded again.",
       },
       generate: {
         loading: "Loading schedule",

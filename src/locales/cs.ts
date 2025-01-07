@@ -69,7 +69,7 @@ export default {
         loading: "Načítám data v novém jazyce",
         success: "Data byla úspěšně načtena",
         error: "Nastala chyba při načítání dat",
-        description: "Jazyk byl změněn na {{ language }}, data vyučování zůstnou stejná dokud nebudou znova generována.",
+        description: "Jazyk byl změněn na {{ language }}, data vyučování zůstnou stejná dokud nebudou znova načtena.",
       },
       generate: {
         loading: "Načítám rozvrh",
