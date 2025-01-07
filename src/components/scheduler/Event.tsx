@@ -48,6 +48,7 @@ export default function ScheduleEvent(props: EventProps) {
   return (
     <div
       class={cn(
+        "text-colored-event-foreground",
         "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         {
@@ -63,24 +64,24 @@ export default function ScheduleEvent(props: EventProps) {
         <EventPopup event={event} courseDetail={courseDetail}>
           <Info size={"1em"} />
         </EventPopup>
-        <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">
+        <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg text-colored-event-foreground">
           {courseDetail.abbreviation}
         </Text>
         <Checkbox checked={props.event.checked} onChange={handleCheck}>
-          <CheckboxControl class="em:size-4" />
+          <CheckboxControl class="em:size-4 text-colored-event-foreground light *:light" />
         </Checkbox>
       </div>
       <div class="w-full *:w-full">
-        <Text em variant="smallText" class="block">
+        <Text em variant="smallText" class="block text-colored-event-foreground">
           {event.room}
         </Text>
-        <Text em variant="smallText" class="wm:text-xxs hidden md:block">
+        <Text em variant="smallText" class="wm:text-xxs hidden md:block text-colored-event-foreground">
           ​
         </Text>
-        <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2">
+        <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground">
           {formatWeeks(event.weeks.weeks)}
         </Text>
-        <Text em variant="smallText" class="truncate block w-full">
+        <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground">
           {event.info}
         </Text>
       </div>

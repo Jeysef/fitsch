@@ -2,6 +2,7 @@
 // import "@fontsource/geist-mono";
 import "@fontsource/courier-prime";
 import "@fontsource/geist-sans";
+import { ColorModeProvider, ColorModeScript } from "@kobalte/core";
 import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
@@ -22,9 +23,12 @@ export default function App() {
             <I18nProvider>
               <InstallationProvider>
                 <SchedulerProvider>
-                  <Layout>
-                    <Suspense>{props.children}</Suspense>
-                  </Layout>
+                  <ColorModeScript initialColorMode="light" storageKey="kb-color-mode" />
+                  <ColorModeProvider>
+                    <Layout>
+                      <Suspense>{props.children}</Suspense>
+                    </Layout>
+                  </ColorModeProvider>
                 </SchedulerProvider>
               </InstallationProvider>
             </I18nProvider>

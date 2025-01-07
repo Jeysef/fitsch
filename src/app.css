@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  .light {
     --background: from theme("colors.white") h s l;
     --foreground: from theme("colors.black") h s l;
 
@@ -32,6 +33,8 @@
     --input: from theme("colors.zinc.200") h s l;
     --ring: from theme("colors.zinc.950") h s l;
 
+    --colored-event-foreground: from theme("colors.black") h s l;
+
     --link: 210 100% 40%;
 
     --radius: 0.5rem;
@@ -40,8 +43,9 @@
     height: 100%;
   }
 
+  /* dark mnode only for elements not containing .light class */
   [data-kb-theme="dark"] {
-    --background: from theme("colors.zinc.950") h s l;
+    --background: from theme("colors.zinc.900") h s l;
     --foreground: from theme("colors.zinc.50") h s l;
 
     --card: from theme("colors.zinc.950") h s l;
@@ -68,6 +72,8 @@
     --border: from theme("colors.zinc.800") h s l;
     --input: from theme("colors.zinc.800") h s l;
     --ring: from theme("colors.zinc.300") h s l;
+
+    --colored-event-foreground: from theme("colors.black") h s l;
   }
 }
 

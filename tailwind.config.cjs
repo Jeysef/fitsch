@@ -61,6 +61,7 @@ module.exports = {
         link: "hsl(var(--link))",
         parityEven: parityColors.EVEN,
         parityOdd: parityColors.ODD,
+        "colored-event-foreground": "hsl(var(--colored-event-foreground))",
       },
       borderRadius: {
         lg: "var(--radius)",

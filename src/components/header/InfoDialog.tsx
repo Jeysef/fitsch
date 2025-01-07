@@ -7,7 +7,7 @@ import { Typography, typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
 import Text from "~/components/typography/text";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { buttonVariants } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Contributor } from "~/components/ui/contributor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import InstallButton from "~/components/ui/InstallButton";
@@ -19,8 +19,8 @@ export default function AppInfo() {
   const { t } = useI18n();
   return (
     <Dialog>
-      <DialogTrigger>
-        <Lightbulb size={32} color="white" />
+      <DialogTrigger as={Button} variant="ghost" size="icon">
+        <Lightbulb color="currentColor" class="text-zinc-50" />
       </DialogTrigger>
       <DialogContent class="max-w-screen-lg">
         <DialogHeader class="relative space-y-0">
@@ -41,18 +41,20 @@ export default function AppInfo() {
                 {" "}
                 (podle mobilní aplikace)
               </Text>
-              <Text class="mt-2 list-none flex flex-wrap gap-1">
+              <div class="mt-2 list-none flex flex-wrap gap-1">
                 <For each={ObjectTyped.entries(subjectTypeColors)}>
                   {([type, color]) => {
                     const colorClass = css`background-color: ${color}`;
                     return (
-                      <div class={cn("px-4 py-2 rounded border", colorClass)}>{t(`scheduler.timeSpan.type.${type}`)}</div>
+                      <div class={cn("px-4 py-2 rounded border text-colored-event-foreground", colorClass)}>
+                        {t(`scheduler.timeSpan.type.${type}`)}
+                      </div>
                     );
                   }}
                 </For>
-              </Text>
+              </div>
               <Text class="text-lg font-semibold">Parita týdne</Text>
-              <Text class="mt-2 list-none flex flex-wrap gap-1">
+              <div class="mt-2 list-none flex flex-wrap gap-1">
                 <For each={ObjectTyped.entries(parityColors)}>
                   {([parity, color]) => {
                     const colorClass = css`border-color: ${color}`;
@@ -63,7 +65,7 @@ export default function AppInfo() {
                     );
                   }}
                 </For>
-              </Text>
+              </div>
               <Heading variant="h4" class="mt-8">
                 Funkčnost
               </Heading>
