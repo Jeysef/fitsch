@@ -24,7 +24,7 @@ interface IDdCourseLectureBase {
 
 interface IDdCourseLecture extends IDdCourseLectureBase, APICourseLecture {}
 
-type FilteredCourseLecture = ReturnType<typeof filterData>[number];
+export type FilteredCourseLecture = ReturnType<typeof filterData>[number];
 
 export interface LectureMutatorConfig {
   fillWeeks?: boolean;
@@ -51,7 +51,10 @@ export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDeta
   for (const _course of data) {
     const course = idCourse(_course);
     const data = filterData(course.data);
-    for (let [i, lecture] of data.entries()) {
+
+    for (let i = 0; i < data.length; i++) {
+      let lecture = data[i];
+
       if (config.fillWeeks !== false) {
         lecture = fillWeeksLecture(lecture, semesterWeeks);
       }
@@ -160,7 +163,7 @@ function fillWeeksLecture(lecture: FilteredCourseLecture, semesterWeeks: number)
   return lecture;
 }
 
-function conjunctLectures(
+export function conjunctLectures(
   lecture: FilteredCourseLecture,
   lectures: FilteredCourseLecture[],
   index: number,
@@ -189,11 +192,16 @@ function conjunctLectures(
 
     if (
       // ref: README-> Notes > Timespans. Plus one should not matter in terms of splitting odd/even lectures, but helps with the conjuncting
-      union(lecture.weeks.weeks, comparedLecture.weeks.weeks).length > lecture.lecturesCount + 1 &&
-      // even if the lecture exceeds the semester weeks, it should be conjuncted if groups id defined
-      lecture.groups === "xx"
+      (union(lecture.weeks.weeks, comparedLecture.weeks.weeks).length > lecture.lecturesCount + 1 &&
+        // even if the lecture exceeds the semester weeks, it should be conjuncted if groups id defined
+        lecture.groups === "xx") ||
+      (lecture.lecturesCount <= 6 &&
+        lecture.weeks.parity &&
+        comparedLecture.weeks.parity &&
+        lecture.weeks.parity !== comparedLecture.weeks.parity)
     )
       continue;
+    lecture.weeks.weeks = union(lecture.weeks.weeks, comparedLecture.weeks.weeks);
 
     conjunct();
   }
