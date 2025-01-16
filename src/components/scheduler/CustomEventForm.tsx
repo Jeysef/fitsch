@@ -324,6 +324,10 @@ function Form(props: FormProps) {
       <TwitterPicker
         triangle="hide"
         width={"auto"}
+        styles={{
+          card: { "background-color": "transparent" },
+          hash: { "background-color": "hsl(var(--accent))" },
+        }}
         colors={customColors}
         color={form.controls.color.value}
         onChange={(color) => form.controls.color.setValue(color.hex)}
