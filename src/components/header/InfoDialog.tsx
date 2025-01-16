@@ -19,7 +19,7 @@ export default function AppInfo() {
   const { t } = useI18n();
   return (
     <Dialog>
-      <DialogTrigger as={Button} variant="ghost" size="icon">
+      <DialogTrigger as={Button} variant="ghost" size="icon" class="hover:bg-muted-foreground">
         <Lightbulb color="currentColor" class="text-zinc-50" />
       </DialogTrigger>
       <DialogContent class="max-w-screen-lg">
