@@ -1,4 +1,4 @@
-import { chain, flow, map, mapValues, reduce } from "lodash-es";
+import { map, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import type { StrictOmit } from "ts-essentials";
 import type { CustomEvent, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
@@ -203,29 +203,6 @@ export class SchedulerStore {
   }
 
   get data(): Data {
-    // const dataWithCustom = this.customEvents.reduce<Data>((acc, event) => {
-    //   const dayEvent = this.fillCustomEvent(event);
-    //   acc[event.day].events.push(dayEvent);
-    //   return acc;
-    // }, this.getEmptyData());
-
-    // const data = this.sortData(
-    //   this.courses.reduce<Data>((acc, course) => {
-    //     return course.data.reduce((acc, event) => {
-    //       const dayEvent: DayEvent = {
-    //         ...getDayEventData(this.settings.columns, event.timeSpan),
-    //         eventData: {
-    //           event,
-    //           courseDetail: course.detail,
-    //           metrics: course.metrics[event.type],
-    //         },
-    //       };
-    //       acc[event.day].events.push(dayEvent);
-    //       return acc;
-    //     }, acc);
-    //   }, dataWithCustom)
-    // );
-
     const fillCustomEvent = (event: CustomEvent) => {
       // TODO: think about automatically infering dayData using getters
       const dayEvent: DayEvent = {
@@ -235,48 +212,73 @@ export class SchedulerStore {
       return dayEvent;
     };
 
-    return chain(this.getEmptyData())
-      .tap((data) => {
-        reduce(
-          this.customEvents,
-          (acc, event) => {
-            acc[event.day].events.push(fillCustomEvent(event));
-            return acc;
-          },
-          data
-        );
-      })
-      .thru(
-        flow(
-          (data) =>
-            // for each course
-            reduce(
-              this.courses,
-              (acc, course) =>
-                // and each event in the course
-                reduce(
-                  course.data,
-                  (acc, event) => {
-                    // add the event to data
-                    acc[event.day].events.push({
-                      ...getDayEventData(this.settings.columns, event.timeSpan),
-                      eventData: {
-                        event,
-                        courseDetail: course.detail,
-                        metrics: course.metrics[event.type],
-                      },
-                    });
-                    return acc;
-                  },
-                  acc
-                ),
-              data
-            ),
-          // then sort the data
-          this.sortData
-        )
-      )
-      .value();
+    const dataWithCustom = this.customEvents.reduce<Data>((acc, event) => {
+      const dayEvent = fillCustomEvent(event);
+      acc[event.day].events.push(dayEvent);
+      return acc;
+    }, this.getEmptyData());
+
+    const data = this.sortData(
+      this.courses.reduce<Data>((acc, course) => {
+        return course.data.reduce((acc, event) => {
+          const dayEvent: DayEvent = {
+            ...getDayEventData(this.settings.columns, event.timeSpan),
+            eventData: {
+              event,
+              courseDetail: course.detail,
+              metrics: course.metrics[event.type],
+            },
+          };
+          acc[event.day].events.push(dayEvent);
+          return acc;
+        }, acc);
+      }, dataWithCustom)
+    );
+
+    return data;
+
+    // return chain(this.getEmptyData())
+    //   .tap((data) => {
+    //     reduce(
+    //       this.customEvents,
+    //       (acc, event) => {
+    //         acc[event.day].events.push(fillCustomEvent(event));
+    //         return acc;
+    //       },
+    //       data
+    //     );
+    //   })
+    //   .thru(
+    //     flow(
+    //       (data) =>
+    //         // for each course
+    //         reduce(
+    //           this.courses,
+    //           (acc, course) =>
+    //             // and each event in the course
+    //             reduce(
+    //               course.data,
+    //               (acc, event) => {
+    //                 // add the event to data
+    //                 acc[event.day].events.push({
+    //                   ...getDayEventData(this.settings.columns, event.timeSpan),
+    //                   eventData: {
+    //                     event,
+    //                     courseDetail: course.detail,
+    //                     metrics: course.metrics[event.type],
+    //                   },
+    //                 });
+    //                 return acc;
+    //               },
+    //               acc
+    //             ),
+    //           data
+    //         ),
+    //       // then sort the data
+    //       this.sortData
+    //     )
+    //   )
+    //   .value();
   }
 }
 
