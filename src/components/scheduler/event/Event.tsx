@@ -25,7 +25,7 @@ export interface EventProps {
 
 export const EventTitle: VoidComponent<{ title: string }> = (props) => {
   return (
-    <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">
+    <Text em variant="largeText" class="text-colored-event-foreground w-full truncate em:text-base md:em:text-lg">
       {props.title}
     </Text>
   );
@@ -54,6 +54,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
       on:dblclick={() => local.handleCheck()}
       {...rest}
       class={cn(
+        "text-colored-event-foreground",
         "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         rest.class
