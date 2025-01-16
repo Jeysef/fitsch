@@ -20,16 +20,17 @@ import type { DataProviderTypes } from "~/server/scraper/types";
 export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   // create columns from start to end with step
   const columns: IScheduleColumn[] = [];
-  let start = new Time(config.start);
-  const end = new Time(config.end);
-  const step = new Time(config.step);
-  while (start.minutes <= end.minutes) {
-    const end = start.add(step);
+  const step = config.step;
+  const end = config.end;
+  let spanStart = config.start;
+  let spanEnd = spanStart.add(step);
+  while (spanEnd.minutes <= end.minutes) {
     columns.push({
-      title: config.getTimeHeader(start, end),
-      duration: new TimeSpan(start, end),
+      title: config.getTimeHeader(spanStart, spanEnd),
+      duration: new TimeSpan(spanStart, spanEnd),
     });
-    start = end;
+    spanStart = spanEnd;
+    spanEnd = spanEnd.add(step);
   }
 
   return columns;
