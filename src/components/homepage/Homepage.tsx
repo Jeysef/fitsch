@@ -1,7 +1,5 @@
-import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useSearchParams } from "@solidjs/router";
-import { ObjectTyped } from "object-typed";
-import { For, createMemo, createSignal } from "solid-js";
+import { For, createMemo } from "solid-js";
 import TimeSpanPage from "~/components/homepage/TimeSpan";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -60,10 +58,10 @@ export default function Home() {
       >
         <div class="w-14 -left-2 h-full box-content bg-background shrink-0 z-20 sticky" />
         <div class="flex gap-x-4 h-full items-center">
-          <For each={ObjectTyped.entries(tabs)}>
-            {([key, value]) => (
+          <For each={Object.values(tabs)}>
+            {(value) => (
               <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
-                {t(`scheduler.tabs.${key}`)}
+                {t(`scheduler.tabs.${value}`)}
               </TabsTrigger>
             )}
           </For>

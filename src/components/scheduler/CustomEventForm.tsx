@@ -32,8 +32,8 @@ interface EventFormProps {
 
 const startTimeOptions = (() => {
   const options: Time[] = [];
-  let current = new Time(start);
-  const endTime = new Time(end);
+  let current = start;
+  const endTime = end;
   const stepTime = new Time({ hour: 0, minute: 30 });
 
   while (current.minutes <= endTime.minutes) {
@@ -45,7 +45,7 @@ const startTimeOptions = (() => {
 
 const endTimeOptions = (() => {
   const options: Time[] = [];
-  const endTime = new Time(end);
+  const endTime = end;
   const stepTime = new Time({ hour: 0, minute: 30 });
   let current = Time.fromMinutes(start.minutes + stepTime.minutes);
 
