@@ -219,7 +219,7 @@ export function conjunctLectures(
   if (mainEvent && preConjunctedLecturesValues.length > 1) {
     const lect = lecture as unknown as MCourseLecture;
     lect.room = conjunctConjunctableRooms(uniq(preConjunctedLecturesValues.flatMap((lect) => lect.room)));
-    lect.info = preConjunctedLecturesValues.map((lect) => lect.info).join(", ");
+    lect.info = uniq(preConjunctedLecturesValues.map((lect) => lect.info)).join(", ");
     lect.note = preConjunctedLecturesValues
       .map((lect) => lect.note)
       .filter(Boolean)
