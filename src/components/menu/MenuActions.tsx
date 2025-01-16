@@ -1,12 +1,15 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
 import CircleAlert from "lucide-solid/icons/circle-alert";
+import PlusCircle from "lucide-solid/icons/plus-circle";
 import { createSignal, type Setter } from "solid-js";
 import { exportJSON, importJSON } from "~/components/menu/ImportExport";
 import { ItemText, SectionHeading } from "~/components/menu/MenuCommonComponents";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { ClassRegistry } from "~/components/scheduler/classRegistry";
+import EventForm from "~/components/scheduler/CustomEventForm";
+import type { CustomEvent } from "~/components/scheduler/event/types";
 import { SchedulerGenerator } from "~/components/scheduler/generator";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
@@ -62,10 +65,15 @@ export function Actions() {
         }
         recreateStore(validatedData.data);
       },
+      onError: (err) => {
+        toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });
+      },
     });
   };
 
   const generator = SchedulerGenerator();
+
+  const handleAddEvent = (event: CustomEvent) => store.addCustomEvent(event);
 
   return (
     <Collapsible defaultOpen>
@@ -125,6 +133,15 @@ export function Actions() {
           >
             {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.previous")}
           </Button>
+        </ItemText>
+        <ItemText as="div">
+          <EventForm
+            onSubmit={handleAddEvent}
+            class={buttonVariants({ size: null, variant: "ghost", class: "px-2 py-1 flex items-center gap-1" })}
+          >
+            <PlusCircle class="w-4 h-4" />
+            {t("menu.actions.addCustomEvent.title")}
+          </EventForm>
         </ItemText>
       </CollapsibleContent>
     </Collapsible>

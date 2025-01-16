@@ -22,3 +22,5 @@ export const parityColors = {
   [WEEK_PARITY.EVEN]: "#ef4444",
   [WEEK_PARITY.ODD]: "#3b82f6",
 } as const;
+
+export const customColors = ["#ABB8C3", "#FF6900", "#FCB900", "#7BDCB5", "#9900EF"];

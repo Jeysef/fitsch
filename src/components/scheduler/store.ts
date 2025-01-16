@@ -1,20 +1,19 @@
-import { flow, forEach, map, mapValues, reduce } from "lodash-es";
+import { chain, flow, map, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import type { StrictOmit } from "ts-essentials";
+import type { CustomEvent, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
 import type {
   Course,
   Data,
   DayData,
-  DayEvent,
-  Event,
   ICreateColumns,
   IScheduleColumn,
   ISchedulerSettings,
   LectureMetrics,
 } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import type { MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
+import type { LinkedLectureData, MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
 
 // TODO: test
@@ -25,11 +24,10 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   const end = new Time(config.end);
   const step = new Time(config.step);
   while (start.minutes <= end.minutes) {
-    const end = Time.fromMinutes(start.minutes + step.minutes);
-    const duration = new TimeSpan(start, end);
+    const end = start.add(step);
     columns.push({
       title: config.getTimeHeader(start, end),
-      duration,
+      duration: new TimeSpan(start, end),
     });
     start = end;
   }
@@ -37,39 +35,33 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
   return columns;
 }
 
-/** for recreating columns from localStorage */
-export function recreateColumns(columns: IScheduleColumn[]) {
-  return columns.map((column) => ({
-    title: column.title,
-    duration: new TimeSpan(new Time(column.duration.start), new Time(column.duration.end)),
-  }));
-}
+const defaultSettings: ISchedulerSettings = {
+  blockDimensions: {
+    width: {
+      min: "5.5rem",
+      max: "10rem",
+    },
+    height: "auto",
+  },
+  columns: [],
+  rows: [],
+};
 
 export class SchedulerStore {
-  private static readonly defaultSettings: ISchedulerSettings = {
-    blockDimensions: {
-      width: {
-        min: "5.5rem",
-        max: "10rem",
-      },
-      height: "auto",
-    },
-    columns: [],
-    rows: [],
-  };
+  private static readonly defaultSettings: ISchedulerSettings = defaultSettings;
   public settings: ISchedulerSettings;
   public courses: Course[];
-  public data: Data;
+  public customEvents: CustomEvent[];
   constructor(
     settings: ISchedulerSettings,
     private readonly eventFilter?: (event: MCourseLecture) => boolean
   ) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this.courses = [];
-    this.data = this.getEmptyData();
+    this.customEvents = [];
   }
 
-  private getEventTypePriority(type: LECTURE_TYPE): number {
+  private getEventTypePriority(type: LECTURE_TYPE | "CUSTOM"): number {
     // sorted so that 0 is the highest priority
     switch (type) {
       case LECTURE_TYPE.LECTURE:
@@ -91,13 +83,13 @@ export class SchedulerStore {
     return mapValues(DAY, (day) => ({ dayRow: getDayRow(day), dayRows: 1, events: [] }));
   }
 
-  private findAvailableRow(pivotEvent: Event, precedingEvents: DayEvent[]): number {
+  private findAvailableRow(pivotEvent: EventData, precedingEvents: DayEvent[]): number {
     const occupiedRows = new Set<number>();
 
     // Find all rows that are occupied by overlapping events
-    for (const event of precedingEvents) {
-      if (hasOverlap(pivotEvent.timeSpan, event.event.timeSpan)) {
-        occupiedRows.add(event.row);
+    for (const dayEvent of precedingEvents) {
+      if (hasOverlap(pivotEvent.event.timeSpan, dayEvent.eventData.event.timeSpan)) {
+        occupiedRows.add(dayEvent.row);
       }
     }
 
@@ -112,14 +104,16 @@ export class SchedulerStore {
 
   private sortDayData = (data: DayData) => {
     const { events } = data;
-    events.sort((a, b) => this.getEventTypePriority(a.event.type) - this.getEventTypePriority(b.event.type));
+    events.sort(
+      (a, b) => this.getEventTypePriority(a.eventData.event.type) - this.getEventTypePriority(b.eventData.event.type)
+    );
 
     // /** using dayRows to mutate the data.dayRows only once */
     // let dayRows = 1
     // Assign rows based on the new order
     data.dayRows = 1;
     events.reduce<DayEvent[]>((acc, event) => {
-      const row = this.findAvailableRow(event.event, acc);
+      const row = this.findAvailableRow(event.eventData, acc);
       data.dayRows = Math.max(data.dayRows, row);
       event.row = row;
       acc.push(event);
@@ -136,40 +130,9 @@ export class SchedulerStore {
     }
     return data;
   };
+
   private findExistingCourse(courseId: string) {
     return this.courses.find((course) => course.detail.id === courseId);
-  }
-
-  public createDataFromCourses(courses: Course[]): Data {
-    return this.combineData(courses.map(this.dataFromCourse));
-  }
-
-  /**
-   *
-   * Combines data from multiple courses into one and sorts it
-   * @param data array of UnfilledData
-   * @returns Data
-   */
-  private combineData(data: Data[]): Data {
-    return flow(
-      (data: Data[]) =>
-        reduce(
-          data,
-          (acc, item) => {
-            forEach(item, (dayData, day) => {
-              acc[day as DAY] = {
-                dayRow: dayData.dayRow,
-                dayRows: 1,
-                events: [...(acc[day as DAY]?.events || []), ...dayData.events],
-              };
-            });
-            return acc;
-          },
-          this.getEmptyData()
-        ),
-      // Sort the combined data
-      this.sortData
-    )(data);
   }
 
   private cloneData(data: Data, filterEvents?: (event: DayEvent) => unknown): Data {
@@ -180,37 +143,27 @@ export class SchedulerStore {
     });
   }
 
-  private resetCourses() {
-    this.courses = [];
-    this.data = this.getEmptyData();
+  public addCustomEvent(event: CustomEvent) {
+    this.customEvents.push(event);
   }
 
-  private dataFromCourse = (course: Course): Data => {
-    return reduce(
-      course.data,
-      (acc, event) => {
-        // const filledEvent: FilledEvent = {
-        //   ...event,
-        //   // to keep it connected
-        //   checked: event.checked,
-        //   courseDetail: course.detail,
-        //   metrics: course.metrics[event.type]!,
-        // };
-        acc[event.day].events.push({
-          ...getDayEventData(this.settings.columns, event.timeSpan),
-          event: event,
-          courseDetail: course.detail,
-          metrics: course.metrics[event.type]!,
-        });
-        return acc;
-      },
-      this.getEmptyData()
-    );
-  };
+  public removeCustomEvent(eventId: string): void {
+    const eventIndex = this.customEvents.findIndex((event) => event.id === eventId);
+    if (eventIndex === -1) return;
+    this.customEvents.splice(eventIndex, 1);
+  }
+
+  public getEventData(data: LinkedLectureData): EventData | undefined {
+    return this.data[data.day].events.find((event) => event.eventData.event.id === data.id)?.eventData;
+  }
+
+  public getEvent(data: LinkedLectureData): ScheduleEvent | CustomEvent | undefined {
+    return this.getEventData(data)?.event;
+  }
 
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     if (courses.length === 0) {
-      this.resetCourses();
+      this.courses = [];
       return;
     }
     const coursesData = courses.map<Course>((course) => {
@@ -225,12 +178,12 @@ export class SchedulerStore {
       return createNewCourse(course, this.eventFilter);
     });
     this.courses = coursesData;
-    this.data = this.createDataFromCourses(coursesData);
+    // this.data = this.createDataFromCourses(coursesData);
   }
 
   /** returns filtered copy of data */
   get checkedData(): Data {
-    return this.sortData(this.cloneData(this.data, (event) => event.event.checked));
+    return this.sortData(this.cloneData(this.data, (event) => event.eventData.event.checked));
   }
 
   get selected(): Record<LECTURE_TYPE, number>[] {
@@ -246,6 +199,83 @@ export class SchedulerStore {
         {} as Record<LECTURE_TYPE, number>
       )
     );
+  }
+
+  get data(): Data {
+    // const dataWithCustom = this.customEvents.reduce<Data>((acc, event) => {
+    //   const dayEvent = this.fillCustomEvent(event);
+    //   acc[event.day].events.push(dayEvent);
+    //   return acc;
+    // }, this.getEmptyData());
+
+    // const data = this.sortData(
+    //   this.courses.reduce<Data>((acc, course) => {
+    //     return course.data.reduce((acc, event) => {
+    //       const dayEvent: DayEvent = {
+    //         ...getDayEventData(this.settings.columns, event.timeSpan),
+    //         eventData: {
+    //           event,
+    //           courseDetail: course.detail,
+    //           metrics: course.metrics[event.type],
+    //         },
+    //       };
+    //       acc[event.day].events.push(dayEvent);
+    //       return acc;
+    //     }, acc);
+    //   }, dataWithCustom)
+    // );
+
+    const fillCustomEvent = (event: CustomEvent) => {
+      // TODO: think about automatically infering dayData using getters
+      const dayEvent: DayEvent = {
+        ...getDayEventData(this.settings.columns, event.timeSpan),
+        eventData: { event },
+      };
+      return dayEvent;
+    };
+
+    return chain(this.getEmptyData())
+      .tap((data) => {
+        reduce(
+          this.customEvents,
+          (acc, event) => {
+            acc[event.day].events.push(fillCustomEvent(event));
+            return acc;
+          },
+          data
+        );
+      })
+      .thru(
+        flow(
+          (data) =>
+            // for each course
+            reduce(
+              this.courses,
+              (acc, course) =>
+                // and each event in the course
+                reduce(
+                  course.data,
+                  (acc, event) => {
+                    // add the event to data
+                    acc[event.day].events.push({
+                      ...getDayEventData(this.settings.columns, event.timeSpan),
+                      eventData: {
+                        event,
+                        courseDetail: course.detail,
+                        metrics: course.metrics[event.type],
+                      },
+                    });
+                    return acc;
+                  },
+                  acc
+                ),
+              data
+            ),
+          // then sort the data
+          this.sortData
+        )
+      )
+      .value();
   }
 }
 
@@ -270,10 +300,7 @@ export function getEventColumn(event: TimeSpan, columns: IScheduleColumn[]) {
 export const columnDuration = (columns: IScheduleColumn[], colStart: number, colEnd: number) =>
   new TimeSpan(columns[colStart].duration.start, columns[colEnd].duration.end);
 
-export function getDayEventData(
-  columns: IScheduleColumn[],
-  timeSpan: TimeSpan
-): StrictOmit<DayEvent, "event" | "courseDetail" | "metrics"> {
+export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan): StrictOmit<DayEvent, "eventData"> {
   const { colStart, colEnd } = getEventColumn(timeSpan, columns);
   const colDuration = columnDuration(columns, colStart, colEnd);
   const paddingStart = (new TimeSpan(columns[colStart].duration.start, timeSpan.start).minutes * 100) / colDuration.minutes;
@@ -281,51 +308,6 @@ export function getDayEventData(
   // row is set later
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
-
-// function fillData(
-//   toFillData: Data,
-//   courseData: MgetStudyCourseDetailsReturn,
-//   settings: ISchedulerSettings,
-//   filter?: (event: MCourseLecture) => boolean
-// ): Course {
-//   const { data, detail: courseDetail } = courseData;
-//   const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
-//   const getMetrics = (type: LECTURE_TYPE) => {
-//     if (!metrics[type]) metrics[type] = { weeks: 0, weeklyLectures: 0 };
-//     return metrics[type];
-//   };
-
-//   for (const event of data) {
-//     if (filter && !filter(event)) continue;
-//     const timeSpan = event.timeSpan;
-//     const metric = getMetrics(event.type);
-//     const filledEvent: Event = {
-//       ...event,
-//       courseDetail,
-//       timeSpan,
-//       metrics: metric,
-//       checked: false,
-//     };
-
-//     const linkedDuration = event.strongLinked.reduce((acc, linked) => {
-//       const linkedLecture = data.find((l) => l.id === linked.id);
-//       if (!linkedLecture) return acc;
-//       const timeSpan = linkedLecture.timeSpan;
-//       return acc + timeSpan.minutes;
-//     }, timeSpan.minutes);
-
-//     metric.weeklyLectures = Math.max(metric.weeklyLectures, Time.fromMinutes(linkedDuration).hours);
-//     metric.weeks = Math.max(metric.weeks, event.weeks.weeks.length);
-
-//     toFillData[event.day].events.push({ ...getDayEventData(settings.columns, timeSpan), event: filledEvent });
-//   }
-
-//   return {
-//     detail: courseDetail,
-//     data: toFillData,
-//     metrics,
-//   };
-// }
 
 function createNewCourse(courseData: MgetStudyCourseDetailsReturn, filter?: (event: MCourseLecture) => boolean): Course {
   const { data, detail: courseDetail } = courseData;
@@ -356,6 +338,6 @@ function createNewCourse(courseData: MgetStudyCourseDetailsReturn, filter?: (eve
     detail: courseDetail,
     metrics,
     // event is created clientside in proveder, assigning to it is safe
-    data: map(data, (event) => Object.assign(event, { checked: false }) satisfies Event),
+    data: map(data, (event) => Object.assign(event, { checked: false }) satisfies ScheduleEvent),
   };
 }

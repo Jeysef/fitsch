@@ -3,6 +3,7 @@ interface ImportJSONProps {
    * @param data The imported JSON string.
    */
   onImport: (data: string) => void;
+  onError: (err: unknown) => void;
 }
 
 interface ExportJSONProps<T> {
@@ -16,7 +17,7 @@ interface ExportJSONProps<T> {
 }
 
 export function importJSON(props: ImportJSONProps) {
-  const { onImport } = props;
+  const { onImport, onError } = props;
   const input = document.createElement("input");
   input.type = "file";
   input.multiple = false;
@@ -31,7 +32,7 @@ export function importJSON(props: ImportJSONProps) {
       try {
         onImport(reader.result as string);
       } catch (e) {
-        console.error(e);
+        onError ? onError(e) : console.error(e);
       }
     };
     reader.readAsText(file);

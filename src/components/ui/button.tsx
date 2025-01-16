@@ -33,13 +33,13 @@ export const buttonVariants = cva(
   }
 );
 
-export type buttonProps<T extends ValidComponent = "button"> = ButtonRootProps<T> &
+export type ButtonProps<T extends ValidComponent = "button"> = ButtonRootProps<T> &
   VariantProps<typeof buttonVariants> & {
     class?: string;
   };
 
-export const Button = <T extends ValidComponent = "button">(props: PolymorphicProps<T, buttonProps<T>>) => {
-  const [local, rest] = splitProps(props as buttonProps, ["class", "variant", "size"]);
+export const Button = <T extends ValidComponent = "button">(props: PolymorphicProps<T, ButtonProps<T>>) => {
+  const [local, rest] = splitProps(props as ButtonProps, ["class", "variant", "size"]);
 
   return (
     <ButtonPrimitive

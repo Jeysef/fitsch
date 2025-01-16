@@ -1,6 +1,5 @@
 import type { Jsonify } from "type-fest";
 import { ClassRegistry } from "~/components/scheduler/classRegistry";
-import type { ISchedulerTime } from "~/components/scheduler/types";
 
 type NoClassTypeType<T> = T extends Time | TimeSpan
   ? T
@@ -39,11 +38,16 @@ export class TimeSpan {
   }
 }
 
+export interface TimeProps {
+  hour: number;
+  minute: number;
+}
+
 export class Time {
   static readonly __type = "Time";
   public hour: number;
   public minute: number;
-  constructor(time: ISchedulerTime) {
+  constructor(time: TimeProps) {
     this.hour = time.hour;
     this.minute = time.minute;
   }
@@ -66,6 +70,10 @@ export class Time {
 
   public formatted(separator = ":") {
     return `${this.hour.toString().padStart(2, "0")}${separator}${this.minute.toString().padStart(2, "0")}`;
+  }
+
+  public add(time: Time) {
+    return Time.fromMinutes(this.minutes + time.minutes);
   }
 
   toJSON() {

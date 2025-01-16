@@ -2,13 +2,14 @@ import { uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
+import { isCustomEventData } from "~/components/scheduler/event/Event";
+import type { Event, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
-import type { Course, Event, LectureMetrics } from "~/components/scheduler/types";
+import type { Course } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
-import type { CourseDetail } from "~/server/scraper/types";
 
 interface ScheduleResult {
   selectedEvents: Map<string, Event>;
@@ -34,6 +35,23 @@ function getTimePreferencePenalty(timespan: TimeSpan): number {
   return (timespan.end.hours - RATING_WEIGHTS.IDEAL_START_HOUR) / (24 - RATING_WEIGHTS.IDEAL_START_HOUR);
 }
 
+function getPerturbation(event: ScheduleEvent, attempt: number): number {
+  if (attempt === 0) return 0;
+  const seed = hashCode(`${event.id}_${attempt}`);
+  const random = (Math.sin(seed) + 1) / 2; // Range [0, 1]
+  const magnitude = 1.0; // Increased magnitude for greater variation
+  return (random - 0.5) * magnitude; // Range [-0.5, 0.5]
+}
+
+function hashCode(str: string): number {
+  let hash = 0;
+  for (const char of str) {
+    hash = (hash << 5) - hash + char.charCodeAt(0);
+    hash |= 0; // Convert to 32-bit integer
+  }
+  return hash;
+}
+
 export function SchedulerGenerator() {
   const { store } = useScheduler();
   const { t } = useI18n();
@@ -42,46 +60,46 @@ export function SchedulerGenerator() {
     isGenerating: false,
   });
 
+  const storeDayData = createMemo(() => Object.values(store.data));
+
   // precalculate type counts,... using solid primitives
+  // in the form: `<courseId>-<eventType>`
   const courseTypeCounts = createMemo(() => {
     const counts = new Map<string, number>();
-    const storeDayData = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
-    for (const day of storeDayData) {
+    for (const day of storeDayData()) {
       for (const dayEvent of day.events) {
-        const event = dayEvent.event;
-        const courseDetail = dayEvent.courseDetail;
-        const key = `${courseDetail.id}-${event.type}`;
+        const event = dayEvent.eventData;
+        if (isCustomEventData(event)) continue;
+        const courseDetailId = event.courseDetail.id;
+        const key = `${courseDetailId}-${event.event.type}`;
         counts.set(key, (counts.get(key) || 0) + 1);
       }
     }
     return counts;
   });
 
+  const selectedCustomEvents = createMemo(() => store.customEvents.filter((e) => e.checked));
+
+  // events sorted based on their score
   const orderedEvents = createMemo(() => {
-    // Get all days from store
-    const allDays = Object.hasOwn(store, "data") ? Object.values(store.data) : [];
-
-    // Flatten all events and calculate their scores
-    const eventsWithScores = allDays.flatMap((day) =>
-      day.events.map(({ event, courseDetail, metrics }) => ({
-        event,
-        courseDetail,
-        metrics,
-        score: rateEvent(event, courseDetail, undefined, currentPosition.attempt),
-      }))
-    );
-
-    // Sort events by score (ascending)
-    return eventsWithScores.sort((a, b) => a.score - b.score);
+    return storeDayData()
+      .flatMap((day) => day.events)
+      .filter((dayEvent) => !isCustomEventData(dayEvent.eventData))
+      .map((dayEvent) => {
+        const eventData = dayEvent.eventData as ScheduleEventData;
+        return {
+          eventData,
+          score: rateEvent(eventData, currentPosition.attempt),
+        };
+      })
+      .sort((a, b) => a.score - b.score);
   });
 
-  const getEmptyCompletedHours = () => {
-    return ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
-  };
+  const getEmptyCompletedHours = () => ObjectTyped.fromEntries(store.courses.map((c) => [c.detail.id, {}]));
 
-  function hasTimeOverlap(event: Event, events: Iterable<Event>): boolean {
+  function hasTimeOverlap(event: ScheduleEvent, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
-    for (const selected of events) {
+    for (const selected of [...events, ...selectedCustomEvents()]) {
       if (selected.id !== event.id && selected.day === event.day && hasOverlap(selected.timeSpan, eventSpan)) {
         return true;
       }
@@ -89,54 +107,27 @@ export function SchedulerGenerator() {
     return false;
   }
 
-  function rateEvent(event: Event, courseDetail: CourseDetail, state?: ScheduleResult, attempt = 0): number {
+  function rateEvent(eventData: ScheduleEventData, attempt = 0): number {
+    const { courseDetail, event } = eventData;
     const typeCount = courseTypeCounts().get(`${courseDetail.id}-${event.type}`) || 0;
     const Pr = 1 - 1 / (typeCount + 1);
     const Tr = getTimePreferencePenalty(event.timeSpan);
     const perturbation = getPerturbation(event, attempt);
 
-    // // Logs
-    // batch(() => {
-    //   // @ts-ignore
-    //   event.Pr = Math.round(Pr * 100) / 100;
-    //   // @ts-ignore
-    //   event.Tr = Math.round(Tr * 100) / 100;
-    //   // @ts-ignore
-    //   event.Vr = Math.round(perturbation * 100) / 100;
-    //   // @ts-ignore
-    //   event.score = Math.round((Pr + Tr + perturbation) * 100) / 100;
-    // });
-
     return Pr + Tr + perturbation;
-  }
-
-  function getPerturbation(event: Event, attempt: number): number {
-    if (attempt === 0) return 0;
-    const seed = hashCode(`${event.id}_${attempt}`);
-    const random = (Math.sin(seed) + 1) / 2; // Range [0, 1]
-    const magnitude = 1.0; // Increased magnitude for greater variation
-    return (random - 0.5) * magnitude; // Range [-0.5, 0.5]
-  }
-
-  function hashCode(str: string): number {
-    let hash = 0;
-    for (const char of str) {
-      hash = (hash << 5) - hash + char.charCodeAt(0);
-      hash |= 0; // Convert to 32-bit integer
-    }
-    return hash;
   }
 
   async function generateSchedule(courses: Course[], attempt: number): Promise<ScheduleResult | null> {
     console.log(`Generating schedule for attempt ${attempt}`);
 
     const state: ScheduleResult = {
-      selectedEvents: new Map<string, Event>(),
+      selectedEvents: new Map<string, Event>(selectedCustomEvents().map((e) => [e.id, e])),
       completedHours: getEmptyCompletedHours(),
     };
 
     let processedCount = 0;
-    for (const { event, courseDetail, metrics } of orderedEvents()) {
+    for (const { eventData } of orderedEvents()) {
+      const { event, courseDetail, metrics } = eventData;
       // Yield every 100 iterations to prevent blocking
       if (++processedCount % 100 === 0) {
         await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -155,31 +146,35 @@ export function SchedulerGenerator() {
       const allLinkedEvents = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id);
 
       let canAddAllLinks = true;
-      const linkedEventDataMap = new Map<string, Event & { courseDetail: CourseDetail; metrics: LectureMetrics }>();
+      const linkedEventDataMap = new Map<string, ScheduleEventData>();
 
-      for (const linkedEventData of allLinkedEvents) {
-        const linkedEvent = store.data[linkedEventData.day].events.find((e) => e.event.id === linkedEventData.id);
-        if (!linkedEvent) {
-          canAddAllLinks = false;
-          break;
-        }
-        const le = { ...linkedEvent.event, courseDetail: linkedEvent.courseDetail, metrics: linkedEvent.metrics };
-        if (hasTimeOverlap(le, state.selectedEvents.values())) {
-          canAddAllLinks = false;
-          break;
-        }
+      const addLinked = (map: Map<string, ScheduleEventData>) => {
+        for (const linkedLectureData of allLinkedEvents) {
+          const linkedEventData = store.getEventData(linkedLectureData) as ScheduleEventData | undefined;
+          if (!linkedEventData) {
+            canAddAllLinks = false;
+            break;
+          }
+          const le = linkedEventData.event;
+          if (hasTimeOverlap(le, state.selectedEvents.values())) {
+            canAddAllLinks = false;
+            break;
+          }
 
-        const linkedType = le.type;
-        const linkedCourseId = le.courseDetail.id;
-        const linkedRequiredHours = le.metrics.weeklyLectures;
-        const linkedCompletedHours = state.completedHours[linkedCourseId][linkedType] || 0;
+          const linkedType = le.type;
+          const linkedCourseId = linkedEventData.courseDetail.id;
+          const linkedRequiredHours = linkedEventData.metrics.weeklyLectures;
+          const linkedCompletedHours = state.completedHours[linkedCourseId][linkedType] || 0;
 
-        if (linkedCompletedHours + le.timeSpan.hours > linkedRequiredHours) {
-          canAddAllLinks = false;
-          break;
+          if (linkedCompletedHours + le.timeSpan.hours > linkedRequiredHours) {
+            canAddAllLinks = false;
+            break;
+          }
+          map.set(le.id, linkedEventData);
         }
-        linkedEventDataMap.set(le.id, le);
-      }
+      };
+
+      addLinked(linkedEventDataMap);
 
       if (canAddAllLinks) {
         state.selectedEvents.set(event.id, event);
@@ -187,9 +182,10 @@ export function SchedulerGenerator() {
 
         for (const linkedEventData of allLinkedEvents) {
           const linkedEvent = linkedEventDataMap.get(linkedEventData.id)!;
-          state.selectedEvents.set(linkedEvent.id, linkedEvent);
-          state.completedHours[linkedEvent.courseDetail.id][linkedEvent.type] =
-            (state.completedHours[linkedEvent.courseDetail.id][linkedEvent.type] || 0) + linkedEvent.timeSpan.hours;
+          state.selectedEvents.set(linkedEvent.event.id, linkedEvent.event);
+          state.completedHours[linkedEvent.courseDetail.id][linkedEvent.event.type] =
+            (state.completedHours[linkedEvent.courseDetail.id][linkedEvent.event.type] || 0) +
+            linkedEvent.event.timeSpan.hours;
         }
       }
       // Check if all courses have required hours
@@ -227,7 +223,7 @@ export function SchedulerGenerator() {
     batch(() => {
       for (const dayData of Object.values(store.data)) {
         for (const e of dayData.events) {
-          e.event.checked = result.selectedEvents.has(e.event.id);
+          e.eventData.event.checked = result.selectedEvents.has(e.eventData.event.id);
         }
       }
     });

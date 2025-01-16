@@ -1,9 +1,9 @@
-import { Button, type buttonProps } from "~/components/ui/button";
+import { Button, type ButtonProps } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { useInstallation } from "~/providers/InstallationProvider";
 
-export default function InstallButton(props: buttonProps) {
+export default function InstallButton(props: ButtonProps) {
   const { canInstall, install } = useInstallation();
   const { t } = useI18n();
 

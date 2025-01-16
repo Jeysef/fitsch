@@ -24,6 +24,10 @@ export default {
         info: "Informace",
         detail: "Detail",
       },
+      customAction: {
+        edit: "Upravit událost",
+        delete: "Odstranit",
+      },
     },
   },
   studyPlan: {
@@ -91,6 +95,26 @@ export default {
         generating: "Generuji...",
         warning: "Generování zruší stávající výběr",
         couldNotGenerate: "Nepodařilo se vygenerovat platný rozvrh. Zkuste to znovu nebo upravte výběr předmětů.",
+      },
+      addCustomEvent: {
+        trigger: "Přidat vlastní událost",
+        title: "Přidat vlastní událost",
+        form: {
+          title: "Název události",
+          day: "Den",
+          dayPlaceholder: "Vyberte den",
+          info: "Detaily",
+          start: "Čas začátku",
+          end: "Čas konce",
+          cancel: "Zrušit",
+          submit: "Přidat událost",
+          edit: "Upravit událost",
+          errors: {
+            titleRequired: "Název události je povinný",
+            endBeforeStart: "Čas konce musí být po času začátku",
+            outsideAllowedRange: "Čas musí být v rámci povolených hodin rozvrhu",
+          },
+        },
       },
     },
   },

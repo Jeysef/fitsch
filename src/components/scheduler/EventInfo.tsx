@@ -7,20 +7,21 @@ import Link from "lucide-solid/icons/link";
 import MapPin from "lucide-solid/icons/map-pin";
 import Users from "lucide-solid/icons/users";
 import type { JSX } from "solid-js";
-import type { Event } from "~/components/scheduler/types";
+import type { ScheduleEventData } from "~/components/scheduler/event/types";
 import { Badge } from "~/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useI18n } from "~/i18n";
-import type { CourseDetail } from "~/server/scraper/types";
 
-const EventPopup = (props: { event: Event; children: JSX.Element; courseDetail: CourseDetail }) => {
+const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element }) => {
   const { t } = useI18n();
-  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.event;
-  const courseDetail = props.courseDetail;
+  const {
+    event: { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks },
+    courseDetail,
+  } = props.eventData;
 
   return (
     <Popover flip placement="left-start">
-      <PopoverTrigger>{props.children}</PopoverTrigger>
+      <PopoverTrigger on:dblclick={(e) => e.stopPropagation()}>{props.children}</PopoverTrigger>
       <PopoverContent class="w-80">
         {/* Header */}
         <div class="space-y-1 mb-4 mr-8">

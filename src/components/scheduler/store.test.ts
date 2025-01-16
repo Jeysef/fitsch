@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
+import type { DayEvent, EventData } from "~/components/scheduler/event/types";
 import { SchedulerStore, createColumns } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import { days } from "~/config/scheduler";
@@ -11,9 +12,9 @@ describe("scheduler store", () => {
 
     store = new SchedulerStore({
       columns: createColumns({
-        start: { hour: 7, minute: 0 },
-        step: { hour: 1, minute: 0 },
-        end: { hour: 20, minute: 0 },
+        start: new Time({ hour: 7, minute: 0 }),
+        step: new Time({ hour: 1, minute: 0 }),
+        end: new Time({ hour: 20, minute: 0 }),
         getTimeHeader: formatTime,
       }),
       rows: days.map((day) => ({ title: day, day })),
@@ -21,8 +22,11 @@ describe("scheduler store", () => {
   });
 
   test("findAvailableRow should return 1 for first event", () => {
-    const pivotEvent = {
-      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+    const pivotEvent: EventData = {
+      // @ts-expect-error not all needed
+      event: {
+        timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+      },
     };
     const precedingEvents = [] as const;
 
@@ -31,14 +35,20 @@ describe("scheduler store", () => {
   });
 
   test("findAvailableRow should return next available row for overlapping events", () => {
-    const pivotEvent = {
-      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+    const pivotEvent: EventData = {
+      // @ts-expect-error not all needed
+      event: {
+        timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+      },
     };
-    const precedingEvents = [
+    const precedingEvents: DayEvent[] = [
       {
         row: 1,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
+          },
         },
       },
     ];
@@ -48,14 +58,20 @@ describe("scheduler store", () => {
   });
 
   test("findAvailableRow should reuse row for non-overlapping events", () => {
-    const pivotEvent = {
-      timeSpan: new TimeSpan(new Time({ hour: 12, minute: 0 }), new Time({ hour: 13, minute: 0 })),
+    const pivotEvent: EventData = {
+      // @ts-expect-error not all needed
+      event: {
+        timeSpan: new TimeSpan(new Time({ hour: 12, minute: 0 }), new Time({ hour: 13, minute: 0 })),
+      },
     };
-    const precedingEvents = [
+    const precedingEvents: DayEvent[] = [
       {
         row: 1,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+          },
         },
       },
     ];
@@ -65,26 +81,38 @@ describe("scheduler store", () => {
   });
 
   test("findAvailableRow should find first available gap", () => {
-    const pivotEvent = {
-      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+    const pivotEvent: EventData = {
+      // @ts-expect-error not all needed
+      event: {
+        timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+      },
     };
-    const precedingEvents = [
+    const precedingEvents: DayEvent[] = [
       {
         row: 1,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+          },
         },
       },
       {
         row: 2,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+          },
         },
       },
       {
         row: 4,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 0 })),
+          },
         },
       },
     ];
@@ -94,20 +122,29 @@ describe("scheduler store", () => {
   });
 
   test("findAvailableRow should fit 30 min event in gap", () => {
-    const pivotEvent = {
-      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 10, minute: 30 })),
+    const pivotEvent: EventData = {
+      // @ts-expect-error not all needed
+      event: {
+        timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 10, minute: 30 })),
+      },
     };
-    const precedingEvents = [
+    const precedingEvents: DayEvent[] = [
       {
         row: 1,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 9, minute: 0 }), new Time({ hour: 10, minute: 0 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 9, minute: 0 }), new Time({ hour: 10, minute: 0 })),
+          },
         },
       },
       {
         row: 1,
-        event: {
-          timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
+        eventData: {
+          // @ts-expect-error not all needed
+          event: {
+            timeSpan: new TimeSpan(new Time({ hour: 10, minute: 30 }), new Time({ hour: 11, minute: 30 })),
+          },
         },
       },
     ];

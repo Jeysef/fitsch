@@ -7,10 +7,11 @@ import { For, Index, createContext, createMemo, createSignal, useContext } from 
 import { isServer } from "solid-js/web";
 import { animated, createSpring } from "solid-spring";
 import type { StrictExtract } from "ts-essentials";
-import ScheduleEvent from "~/components/scheduler/Event";
+import EventComponent, { isCustomEventData } from "~/components/scheduler/event/Event";
+import type { ScheduleEvent } from "~/components/scheduler/event/types";
 import { type SchedulerStore, getDayEventData } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
-import type { Event } from "~/components/scheduler/types";
+import type { DayData } from "~/components/scheduler/types";
 import Text from "~/components/typography/text";
 import { hoverColors } from "~/config/colors";
 import { useI18n } from "~/i18n";
@@ -152,22 +153,30 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 function Week() {
   const store = useStore();
   const storeData = createMemo(() => values(store.data || store.getEmptyData()));
-  const createLinkedHighlightClass = (property: StrictExtract<keyof Event, "linked" | "strongLinked">, color: string) =>
+  const createLinkedHighlightClass = (
+    property: StrictExtract<keyof ScheduleEvent, "linked" | "strongLinked">,
+    color: string
+  ) =>
     createMemo(() =>
-      flow([
-        (data) => flatMap(data, "events"),
+      flow(
+        (data: DayData[]) => flatMap(data, (e) => e.events),
         (events) =>
-          flatMap(events, (event) =>
-            createLinkedCss(
-              event.event.id,
-              property === "linked" ? difference(event.event.linked, event.event.strongLinked) : event.event.strongLinked,
-              color
-            )
+          flatMap(
+            events,
+            (event) =>
+              !isCustomEventData(event.eventData) &&
+              createLinkedCss(
+                event.eventData.event.id,
+                property === "linked"
+                  ? difference(event.eventData.event.linked, event.eventData.event.strongLinked)
+                  : event.eventData.event.strongLinked,
+                color
+              )
           ),
         compact,
         (links) => links.join("\n"),
-        css,
-      ])(storeData())
+        css
+      )(storeData())
     );
 
   // Usage:
@@ -201,12 +210,7 @@ function Week() {
                     "padding-inline-end": `${event.paddingEnd}%`,
                   }}
                 >
-                  <ScheduleEvent
-                    event={event.event}
-                    courseDetail={event.courseDetail}
-                    metrics={event.metrics}
-                    store={store}
-                  />
+                  <EventComponent event={event} store={store} />
                 </div>
               )}
             </For>

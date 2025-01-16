@@ -25,6 +25,10 @@ export default {
         info: "Information",
         detail: "Detail",
       },
+      customAction: {
+        edit: "Edit event",
+        delete: "Delete",
+      },
     },
   },
   studyPlan: {
@@ -93,6 +97,26 @@ export default {
         generating: "Generating...",
         warning: "Generating will unselect the current selection",
         couldNotGenerate: "Could not generate a valid schedule. Try again or adjust your course selection.",
+      },
+      addCustomEvent: {
+        trigger: "Add custom event",
+        title: "Add Custom Event",
+        form: {
+          title: "Event title",
+          info: "Event details",
+          day: "Day",
+          dayPlaceholder: "Select day",
+          start: "Start time",
+          end: "End time",
+          cancel: "Cancel",
+          submit: "Add event",
+          edit: "Edit event",
+          errors: {
+            titleRequired: "Event title is required",
+            endBeforeStart: "End time must be after start time",
+            outsideAllowedRange: "Time must be within allowed schedule hours",
+          },
+        },
       },
     },
   },

@@ -45,6 +45,7 @@ import {
   createFormGroup,
 } from "~/packages/solid-forms/";
 import { toast } from "~/packages/solid-sonner";
+import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
@@ -114,6 +115,7 @@ export default function Wrapper() {
     </div>
   );
   function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
+    const { store } = useScheduler();
     const data = resource[0];
     const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
     const { refetch, mutate } = resource[1];
@@ -280,7 +282,12 @@ export default function Wrapper() {
     const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = async (e) => {
       e.preventDefault();
       group.markSubmitted(true);
-      submit(getDataToSubmit());
+      const dataToSubmit = getDataToSubmit();
+      if (dataToSubmit.courses.length !== 0) {
+        submit(getDataToSubmit());
+      } else {
+        store.courses = [];
+      }
       const c = group.controls;
       setSubmittedCourses(mapValues(OBLIGATION, (type) => c[type].value));
     };

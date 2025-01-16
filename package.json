@@ -1,6 +1,7 @@
 {
   "name": "fitsch",
   "type": "module",
+  "resolutions": {},
   "scripts": {
     "dev": "vinxi dev --host",
     "build": "vinxi build",
@@ -45,6 +46,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
+    "tinycolor2": "^1.6.0",
     "type-fest": "^4.27.0",
     "uuid": "^11.0.3",
     "vinxi": "^0.4.3",

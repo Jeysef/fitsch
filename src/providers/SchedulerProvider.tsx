@@ -19,6 +19,7 @@ import { createMutable, modifyMutable, reconcile } from "solid-js/store";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
+import type { Time } from "~/components/scheduler/time";
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
@@ -44,13 +45,14 @@ export const storeSerializer = (store: SchedulerStore) => {
   return JSON.stringify({
     settings: store.settings,
     courses: store.courses,
+    customEvents: store.customEvents,
   });
 };
 
 export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
   const data = useSubmission(getStudyCoursesDetailsAction);
-  const formatTime = (start: { hour: number; minute: number }, end: { hour: number; minute: number }) =>
+  const formatTime = (start: Time, end: Time) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
   const formatDay = (day: DAY) => ({ day });
   const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
@@ -58,18 +60,15 @@ export function SchedulerProvider(props: ParentProps) {
     new SchedulerStore(
       {
         columns: createColumns({
-          start: start,
-          step: step,
-          end: end,
+          start,
+          step,
+          end,
           getTimeHeader: formatTime,
         }),
         rows: days.map(formatDay),
       },
       filter
     );
-  const updateStoreData = (store: SchedulerStore) => {
-    store.data = store.createDataFromCourses(store.courses);
-  };
 
   const newStore = newSchedulerStore();
   const store = createMutable(newStore);
@@ -104,8 +103,6 @@ export function SchedulerProvider(props: ParentProps) {
   const recreateStore = (plainStore: PlainStore) => {
     batch(() => {
       modifyMutable(store, reconcile(merge(store, plainStore)));
-      // link data to courses, must be done after createMutable to link not duplicate
-      updateStoreData(store);
     });
   };
   // updateStoreData(store);

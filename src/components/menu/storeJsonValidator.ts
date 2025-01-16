@@ -26,28 +26,37 @@ const linkedLectureDataSchema = z.object({
 
 const courseTimeSpan = RecordOf(LECTURE_TYPE, z.number().optional());
 
-const coursesDataSchema = z.array(
-  z.object({
-    type: z.nativeEnum(LECTURE_TYPE),
-    day: z.nativeEnum(DAY),
-    weeks: z.object({
-      parity: z.nativeEnum(WEEK_PARITY).nullable(),
-      weeks: z.array(z.number()),
-    }),
-    room: z.string(),
-    timeSpan: timespanSchema,
-    lectureGroup: z.array(z.string()),
-    groups: z.string(),
-    info: z.string(),
-    note: z.string().nullable(),
-    capacity: z.string(),
-    id: z.string(),
-    lecturesCount: z.number(),
-    strongLinked: z.array(linkedLectureDataSchema),
-    linked: z.array(linkedLectureDataSchema),
-    checked: z.boolean(),
-  })
-);
+const eventBaseSchema = z.object({
+  id: z.string(),
+  day: z.nativeEnum(DAY),
+  timeSpan: timespanSchema,
+  info: z.string(),
+  checked: z.boolean(),
+});
+
+export const customEventSchema = eventBaseSchema.extend({
+  title: z.string(),
+  color: z.string(),
+  type: z.literal("CUSTOM"),
+});
+
+const scheduleEventSchema = eventBaseSchema.extend({
+  type: z.nativeEnum(LECTURE_TYPE),
+  weeks: z.object({
+    parity: z.nativeEnum(WEEK_PARITY).nullable(),
+    weeks: z.array(z.number()),
+  }),
+  room: z.string(),
+  lectureGroup: z.array(z.string()),
+  groups: z.string(),
+  note: z.string().nullable(),
+  capacity: z.string(),
+  lecturesCount: z.number(),
+  strongLinked: z.array(linkedLectureDataSchema),
+  linked: z.array(linkedLectureDataSchema),
+});
+
+const coursesDataSchema = z.array(scheduleEventSchema);
 
 const schema = z.object({
   settings: z.object({
@@ -101,6 +110,7 @@ const schema = z.object({
       ),
     })
   ),
+  customEvents: z.array(customEventSchema).optional(),
 });
 
 export function parseStoreJson(json: any) {
