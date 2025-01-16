@@ -44,7 +44,7 @@ const scheduleEventSchema = eventBaseSchema.extend({
   type: z.nativeEnum(LECTURE_TYPE),
   weeks: z.object({
     parity: z.nativeEnum(WEEK_PARITY).nullable(),
-    weeks: z.array(z.number()),
+    weeks: z.array(z.number()).or(z.string()),
   }),
   room: z.string(),
   lectureGroup: z.array(z.string()),
