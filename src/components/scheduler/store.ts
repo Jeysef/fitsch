@@ -212,30 +212,32 @@ export class SchedulerStore {
       return dayEvent;
     };
 
-    const dataWithCustom = this.customEvents.reduce<Data>((acc, event) => {
+    // First, initialize data with custom events
+    const dataWithCustom = this.getEmptyData();
+    for (const event of this.customEvents) {
       const dayEvent = fillCustomEvent(event);
-      acc[event.day].events.push(dayEvent);
-      return acc;
-    }, this.getEmptyData());
+      dataWithCustom[event.day].events.push(dayEvent);
+    }
 
-    const data = this.sortData(
-      this.courses.reduce<Data>((acc, course) => {
-        return course.data.reduce((acc, event) => {
-          const dayEvent: DayEvent = {
-            ...getDayEventData(this.settings.columns, event.timeSpan),
-            eventData: {
-              event,
-              courseDetail: course.detail,
-              metrics: course.metrics[event.type],
-            },
-          };
-          acc[event.day].events.push(dayEvent);
-          return acc;
-        }, acc);
-      }, dataWithCustom)
-    );
+    // Then add course events
+    for (const course of this.courses) {
+      for (const event of course.data) {
+        const dayEvent: DayEvent = {
+          ...getDayEventData(this.settings.columns, event.timeSpan),
+          eventData: {
+            event,
+            courseDetail: course.detail,
+            metrics: course.metrics[event.type],
+          },
+        };
+        dataWithCustom[event.day].events.push(dayEvent);
+      }
+    }
 
-    return data;
+    // Sort the final data
+    const sortedData = this.sortData(dataWithCustom);
+
+    return sortedData;
 
     // return chain(this.getEmptyData())
     //   .tap((data) => {
