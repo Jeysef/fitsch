@@ -18,7 +18,7 @@ import { storeSerializer, useScheduler } from "~/providers/SchedulerProvider";
 
 export function Actions() {
   const { store, recreateStore } = useScheduler();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [tooltipOpen, setTooltipOpen] = createSignal(false);
   const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
 
@@ -50,7 +50,8 @@ export function Actions() {
   };
 
   const saveJSON = () => {
-    exportJSON({ obj: store, filename: "schedule", serializer: storeSerializer });
+    const filename = `schedule-${store.courses.map((c) => c.detail.abbreviation).join(",")}-${new Date().toLocaleDateString(locale())}`;
+    exportJSON({ obj: store, filename, serializer: storeSerializer });
   };
 
   const loadJSON = () => {
