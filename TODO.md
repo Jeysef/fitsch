@@ -18,7 +18,7 @@
 - [x] **Local Storage data validation**
   - Validate data before loading (zod)
   - [] Optional: versioning
-- [] **Saved data optimalization**
+- [x] **Saved data optimalization**
 - [] **Move course metrics to server**
   - compare 1more loop or sending more data
 - [] **add linked courses to event **
