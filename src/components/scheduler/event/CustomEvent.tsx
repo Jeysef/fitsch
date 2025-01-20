@@ -2,7 +2,7 @@ import CircleEllipsis from "lucide-solid/icons/circle-ellipsis";
 import { createSignal } from "solid-js";
 import { modifyMutable, reconcile } from "solid-js/store";
 import EventForm from "~/components/scheduler/CustomEventForm";
-import { EventWrapper, type EventProps } from "~/components/scheduler/event/Event";
+import { EventTitle, EventWrapper, type EventProps } from "~/components/scheduler/event/Event";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
@@ -63,9 +63,7 @@ export default function CustomEventComponent(props: CustomEventProps) {
       header={
         <>
           <ActionsMenu />
-          <Text em variant="largeText" class="w-full truncate em:text-base md:em:text-lg">
-            {event.title}
-          </Text>
+          <EventTitle title={event.title} />
           <Checkbox checked={event.checked} onChange={handleCheck}>
             <CheckboxControl class="em:size-4" />
           </Checkbox>
