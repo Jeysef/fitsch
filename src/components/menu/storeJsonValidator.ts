@@ -42,10 +42,18 @@ export const customEventSchema = eventBaseSchema.extend({
 
 const scheduleEventSchema = eventBaseSchema.extend({
   type: z.nativeEnum(LECTURE_TYPE),
-  weeks: z.object({
-    parity: z.nativeEnum(WEEK_PARITY).nullable(),
-    weeks: z.array(z.number()).or(z.string()),
-  }),
+  weeks: z.union([
+    z.object({
+      weeks: z.array(z.number()),
+      parity: z.nativeEnum(WEEK_PARITY).nullable(),
+      calculated: z.boolean().optional(),
+    }),
+    z.object({
+      weeks: z.string(),
+      parity: z.nativeEnum(WEEK_PARITY).nullable(),
+      calculated: z.boolean().optional(),
+    }),
+  ]),
   room: z.string(),
   lectureGroup: z.array(z.string()),
   groups: z.string(),
