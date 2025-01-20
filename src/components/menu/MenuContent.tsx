@@ -284,7 +284,7 @@ export default function Wrapper() {
       group.markSubmitted(true);
       const dataToSubmit = getDataToSubmit();
       if (dataToSubmit.courses.length !== 0) {
-        submit(getDataToSubmit());
+        submit(dataToSubmit);
       } else {
         store.courses = [];
       }
