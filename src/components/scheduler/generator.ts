@@ -221,7 +221,7 @@ export function SchedulerGenerator() {
 
   function applyScheduleToStore(result: ScheduleResult) {
     batch(() => {
-      for (const dayData of Object.values(store.data)) {
+      for (const dayData of storeDayData()) {
         for (const e of dayData.events) {
           e.eventData.event.checked = result.selectedEvents.has(e.eventData.event.id);
         }
