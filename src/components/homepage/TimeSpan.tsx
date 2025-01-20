@@ -6,6 +6,7 @@ import type { Course } from "~/components/scheduler/types";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitleLink } from "~/components/ui/card";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
@@ -33,36 +34,35 @@ export default function TimeSpan(props: TimeSpanProps) {
 
 function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, number> }) {
   const { t } = useI18n();
-  return (
-    <div class="border border-border rounded-lg hover:border-border/75 overflow-hidden whitespace-nowrap flex flex-col">
-      <div class="flex flex-col p-4 bg-muted text-muted-foreground">
-        <div class="flex flex-col mb-4">
-          <a
-            href={props.course.detail.link}
-            class={cn(
-              buttonVariants({ variant: "link" }),
-              typographyVariants({ variant: "h4" }),
-              "justify-normal text-card-foreground p-0"
-            )}
-          >
-            {props.course.detail.abbreviation} <ChevronRight size={20} />
-          </a>
-          <Text variant="smallText" class="text-accent-foreground">
-            {props.course.detail.name}
-          </Text>
-        </div>
-        <div class="space-y-1.5 flex flex-col">
-          <For each={props.course.detail.timeSpanText}>
-            {(hours) => (
-              <Text variant="smallText" class="text-inherit text-sm">
-                {hours}
-              </Text>
-            )}
-          </For>
-        </div>
-      </div>
 
-      <div class="p-4 text-foreground flex flex-col">
+  const getColor = (valid: boolean) => (valid ? "bg-green-500" : "bg-red-500");
+  const isAllCourseSelected = ObjectTyped.entries(props.course.metrics).every(
+    ([type, { weeklyLectures }]) => props.selected[type] === weeklyLectures
+  );
+  return (
+    <Card class="overflow-hidden">
+      <CardHeader class="bg-muted space-y-0 relative">
+        <div class={`absolute top-0 left-0 bottom-0 w-1 ${getColor(isAllCourseSelected)} `} />
+        <CardTitleLink
+          href={props.course.detail.link}
+          class={cn(
+            buttonVariants({ variant: "link" }),
+            typographyVariants({ variant: "h4" }),
+            "justify-start text-card-foreground p-0"
+          )}
+        >
+          {props.course.detail.abbreviation} <ChevronRight size={20} />
+        </CardTitleLink>
+        <CardDescription class="text-accent-foreground !mt-0 !mb-4">{props.course.detail.name}</CardDescription>
+        <For each={props.course.detail.timeSpanText}>
+          {(hours) => (
+            <Text variant="smallText" class="text-sm text-muted-foreground">
+              {hours}
+            </Text>
+          )}
+        </For>
+      </CardHeader>
+      <CardContent class="pt-4">
         <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
         <div class="space-y-2">
           <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
@@ -70,9 +70,7 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
               {([type, { weeks, weeklyLectures }]) => (
                 <>
                   <div class="flex items-center gap-2">
-                    <div
-                      class={`w-2 h-2 rounded-full shrink-0 ${props.selected[type] === weeklyLectures ? "bg-emerald-500" : "bg-red-500"}`}
-                    />
+                    <div class={`w-2 h-2 rounded-full shrink-0 ${getColor(props.selected[type] === weeklyLectures)}`} />
                     <Text variant="smallText" class="text-inherit text-sm capitalize">
                       {t(`scheduler.timeSpan.type.${type}`)}
                     </Text>
@@ -93,7 +91,7 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
             </For>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

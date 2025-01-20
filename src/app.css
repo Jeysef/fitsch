@@ -48,7 +48,7 @@
     --background: from theme("colors.zinc.900") h s l;
     --foreground: from theme("colors.zinc.50") h s l;
 
-    --card: from theme("colors.zinc.950") h s l;
+    --card: from theme("colors.zinc.900") h s l;
     --card-foreground: from theme("colors.zinc.50") h s l;
 
     --popover: from theme("colors.zinc.950") h s l;
