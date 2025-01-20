@@ -34,7 +34,7 @@ export default function TimeSpan(props: TimeSpanProps) {
 function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, number> }) {
   const { t } = useI18n();
   return (
-    <div class="border border-gray-200 rounded-lg hover:border-gray-300 bg-white overflow-hidden whitespace-nowrap flex flex-col">
+    <div class="border border-gray-200 rounded-lg hover:border-gray-300  overflow-hidden whitespace-nowrap flex flex-col">
       <div class="flex flex-col p-4 bg-muted text-muted-foreground">
         <div class="flex flex-col mb-4">
           <a
