@@ -24,8 +24,24 @@ export default function Home() {
   const { opened } = useMenuOpened();
 
   const checkedDataMemo = createMemo(() => store.checkedData);
+  const data = createMemo(() => store.data);
 
-  const filteredStore = new Proxy(store, {
+  const storeProxy = new Proxy(store, {
+    get(store, prop) {
+      if (prop === "data") return data();
+      // Forward all other property access to original store
+      // @ts-ignore
+      return store[prop];
+    },
+    set(store, prop, value) {
+      // Forward all property sets to original store
+      // @ts-ignore
+      store[prop] = value;
+      return true;
+    },
+  });
+
+  const filteredStore = new Proxy(storeProxy, {
     get(store, prop) {
       if (prop === "data") return checkedDataMemo();
       // Forward all other property access to original store
@@ -74,7 +90,7 @@ export default function Home() {
         as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background"
       >
-        <Scheduler store={store} />
+        <Scheduler store={storeProxy} />
       </TabsContent>
       <TabsContent
         value={tabs.resultSchedule}
@@ -88,7 +104,7 @@ export default function Home() {
         as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
-        <TimeSpanPage store={store} />
+        <TimeSpanPage store={storeProxy} />
       </TabsContent>
     </Tabs>
   );
