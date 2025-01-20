@@ -71,6 +71,9 @@ importers:
       deep-equal:
         specifier: ^2.2.3
         version: 2.2.3
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1

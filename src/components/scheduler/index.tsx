@@ -24,6 +24,8 @@ export interface WorkScheduleProps {
 }
 
 const SchedulerStoreContext = createContext<SchedulerStore>();
+// export const scheduleRef: HTMLDivElement | null = null; // Reference to the schedule container
+export const [scheduleRef, setScheduleRef] = createSignal<HTMLDivElement | null>(null);
 
 function useStore() {
   const value = useContext(SchedulerStoreContext);
@@ -93,7 +95,8 @@ function SchedulerGrid() {
 
   return (
     <animated.div
-      class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out"
+      ref={setScheduleRef}
+      class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out bg-background"
       {...bind()}
       style={merge(styles(), {
         "font-size": "var(--scheduler-scale, 100%)",

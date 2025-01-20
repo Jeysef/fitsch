@@ -118,6 +118,10 @@ export default {
           },
         },
       },
+      saveImage: {
+        title: "Save as image",
+        info: "The currently open schedule will be saved",
+      },
     },
   },
   header: {

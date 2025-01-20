@@ -116,6 +116,10 @@ export default {
           },
         },
       },
+      saveImage: {
+        title: "Uložit jako obrázek",
+        info: "Bude uložen aktuálně otevřený rozvrh",
+      },
     },
   },
   header: {
