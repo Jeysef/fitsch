@@ -20,6 +20,12 @@ export const CardTitle: ParentComponent<ComponentProps<"h1">> = (props) => {
   return <h1 class={cn("font-semibold leading-none tracking-tight", local.class)} {...rest} />;
 };
 
+export const CardTitleLink: ParentComponent<ComponentProps<"a">> = (props) => {
+  const [local, rest] = splitProps(props, ["class"]);
+
+  return <a class={cn("font-semibold leading-none tracking-tight", local.class)} {...rest} />;
+};
+
 export const CardDescription: ParentComponent<ComponentProps<"h3">> = (props) => {
   const [local, rest] = splitProps(props, ["class"]);
 
