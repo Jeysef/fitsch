@@ -11,7 +11,7 @@ export default function InstallButton(props: ButtonProps) {
     <Button
       onClick={install}
       disabled={!canInstall()}
-      class={cn("text-white hover:text-primary-foreground/80 disabled:opacity-50 disabled:cursor-not-allowed", {
+      class={cn("text-inherit hover:text-primary-foreground/80 disabled:opacity-50 disabled:cursor-not-allowed", {
         hidden: !canInstall(),
       })}
       title="Nainstalovat aplikaci"

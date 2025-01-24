@@ -40,7 +40,7 @@ export function LanguageSwitcher() {
         </SelectItem>
       )}
     >
-      <SelectTrigger class="text-primary-foreground border-muted-foreground">
+      <SelectTrigger class="border-muted-foreground">
         <SelectValue<Options>>{({ selectedOption }) => <SelectItemContent {...selectedOption()} />}</SelectValue>
       </SelectTrigger>
       <SelectContent />
@@ -50,7 +50,7 @@ export function LanguageSwitcher() {
 
 function SelectItemContent(props: { label: string; flag: string; value: LANGUAGE }) {
   return (
-    <div class="flex items-center gap-2 text-zinc-50">
+    <div class="flex items-center gap-2 text-inherit">
       <span>
         <img src={props.flag} alt={`${props.value} flag`} class="w-4" />
       </span>
