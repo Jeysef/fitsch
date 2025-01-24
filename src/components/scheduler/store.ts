@@ -7,7 +7,6 @@ import type {
   Course,
   Data,
   DayData,
-  ICreateColumns,
   IScheduleColumn,
   ISchedulerSettings,
   LectureMetrics,
@@ -15,26 +14,6 @@ import type {
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LinkedLectureData, MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
-
-// TODO: test
-export function createColumns(config: ICreateColumns): IScheduleColumn[] {
-  // create columns from start to end with step
-  const columns: IScheduleColumn[] = [];
-  const step = config.step;
-  const end = config.end;
-  let spanStart = config.start;
-  let spanEnd = spanStart.add(step);
-  while (spanEnd.minutes <= end.minutes) {
-    columns.push({
-      title: config.getTimeHeader(spanStart, spanEnd),
-      duration: new TimeSpan(spanStart, spanEnd),
-    });
-    spanStart = spanEnd;
-    spanEnd = spanEnd.add(step);
-  }
-
-  return columns;
-}
 
 const defaultSettings: ISchedulerSettings = {
   blockDimensions: {

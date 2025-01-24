@@ -6,15 +6,15 @@ import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
-import { storeSerializer, useScheduler } from "~/providers/SchedulerProvider";
+import { useScheduler } from "~/providers/SchedulerProvider";
 
 function ExportImportJsonAction() {
-  const { store, recreateStore } = useScheduler();
+  const { store, recreateStore, serialize } = useScheduler();
   const { t, locale } = useI18n();
 
   const saveJSON = () => {
     const filename = getFileName({ locale, store });
-    exportJSON({ obj: store, filename, serializer: storeSerializer });
+    exportJSON({ obj: store, filename, serializer: serialize });
   };
 
   const loadJSON = () => {

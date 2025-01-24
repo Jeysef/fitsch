@@ -18,13 +18,14 @@ import {
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { ClassRegistry } from "~/components/scheduler/classRegistry";
-import { createColumns, SchedulerStore } from "~/components/scheduler/store";
-import type { Time } from "~/components/scheduler/time";
+import { SchedulerStore } from "~/components/scheduler/store";
+import { TimeSpan, type Time } from "~/components/scheduler/time";
+import type { ICreateColumns, IScheduleColumn, IScheduleRow } from "~/components/scheduler/types";
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { toast } from "~/packages/solid-sonner";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
-import { LECTURE_TYPE, type DAY } from "~/server/scraper/enums";
+import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
 
@@ -33,71 +34,86 @@ export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;
 
 interface SchedulerContextType {
   store: SchedulerStore;
-  newSchedulerStore: () => SchedulerStore;
   persistedStore: Accessor<SchedulerStore>;
   setPersistedShedulerStore: Setter<SchedulerStore>;
   recreateStore: (plainStore: PlainStore) => void;
+  serialize: (store: SchedulerStore) => string;
 }
 
 const SchedulerContext = createContext<SchedulerContextType>();
 
-export const storeSerializer = (store: SchedulerStore) => {
-  return JSON.stringify({
-    settings: store.settings,
-    courses: store.courses,
-    customEvents: store.customEvents,
-  });
-};
+export function createColumns(config: ICreateColumns): IScheduleColumn[] {
+  // create columns from start to end with step
+  const columns: IScheduleColumn[] = [];
+  const step = config.step;
+  const end = config.end;
+  let spanStart = config.start;
+  let spanEnd = spanStart.add(step);
+  while (spanEnd.minutes <= end.minutes) {
+    columns.push({
+      title: config.getTimeHeader(spanStart, spanEnd),
+      duration: new TimeSpan(spanStart, spanEnd),
+    });
+    spanStart = spanEnd;
+    spanEnd = spanEnd.add(step);
+  }
+
+  return columns;
+}
 
 export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
   const data = useSubmission(getStudyCoursesDetailsAction);
+
   const formatTime = (start: Time, end: Time) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
-  const formatDay = (day: DAY) => ({ day });
   const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
-  const newSchedulerStore = () =>
-    new SchedulerStore(
-      {
-        columns: createColumns({
-          start,
-          step,
-          end,
-          getTimeHeader: formatTime,
-        }),
-        rows: days.map(formatDay),
-      },
-      filter
-    );
+  const rows: IScheduleRow[] = days.map((day) => ({ day }));
+  const columns = createColumns({
+    start,
+    step,
+    end,
+    getTimeHeader: formatTime,
+  });
+  const emptyStore = new SchedulerStore({ columns, rows }, filter);
 
-  const newStore = newSchedulerStore();
-  const store = createMutable(newStore);
-  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(newStore), {
-    name: "schedulerStore",
-    deserialize: (value) => {
-      const parsedStore = JSON.parse(value, ClassRegistry.reviver);
-      const validatedStoreResult = parseStoreJson(parsedStore);
-      if (!validatedStoreResult.success) {
-        console.log("error parsing store");
-        console.error(validatedStoreResult.error);
-        setTimeout(
-          () =>
-            toast.error(t("schedulerProvider.importFromLocalStorage.error"), {
-              description: t("schedulerProvider.importFromLocalStorage.errorDescription"),
-              action: {
-                label: t("schedulerProvider.importFromLocalStorage.clearLocalStorageAction"),
-                onClick: () => {
-                  setPersistedShedulerStore(store);
-                },
+  const serialize = (store: SchedulerStore) => {
+    return JSON.stringify({
+      settings: store.settings,
+      courses: store.courses,
+      customEvents: store.customEvents,
+    });
+  };
+
+  const deserialize = (value: string) => {
+    const parsedStore = JSON.parse(value, ClassRegistry.reviver);
+    const validatedStoreResult = parseStoreJson(parsedStore);
+    if (!validatedStoreResult.success) {
+      console.log("error parsing store");
+      console.error(validatedStoreResult.error);
+      setTimeout(
+        () =>
+          toast.error(t("schedulerProvider.importFromLocalStorage.error"), {
+            description: t("schedulerProvider.importFromLocalStorage.errorDescription"),
+            action: {
+              label: t("schedulerProvider.importFromLocalStorage.clearLocalStorageAction"),
+              onClick: () => {
+                setPersistedShedulerStore(store);
               },
-            }),
-          1000
-        );
-        return newStore;
-      }
-      return validatedStoreResult.data as SchedulerStore;
-    },
-    serialize: storeSerializer,
+            },
+          }),
+        1000
+      );
+      return store;
+    }
+    return validatedStoreResult.data as SchedulerStore;
+  };
+
+  const store = createMutable(emptyStore);
+  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(emptyStore), {
+    name: "schedulerStore",
+    deserialize,
+    serialize,
   });
 
   const recreateStore = (plainStore: PlainStore) => {
@@ -148,8 +164,8 @@ export function SchedulerProvider(props: ParentProps) {
         store: store,
         persistedStore,
         setPersistedShedulerStore,
-        newSchedulerStore,
         recreateStore,
+        serialize,
       }}
     >
       {props.children}

@@ -13,7 +13,7 @@ export interface DayData {
 export type Data = Record<DAY, DayData>;
 export type CourseData = ScheduleEvent[];
 
-interface IScheduleRow {
+export interface IScheduleRow {
   day: DAY;
 }
 export interface IScheduleColumn {
