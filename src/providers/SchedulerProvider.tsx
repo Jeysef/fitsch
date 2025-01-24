@@ -11,7 +11,6 @@ import {
   on,
   onMount,
   useContext,
-  type Accessor,
   type ParentProps,
   type Setter,
 } from "solid-js";
@@ -34,8 +33,6 @@ export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;
 
 interface SchedulerContextType {
   store: SchedulerStore;
-  persistedStore: Accessor<SchedulerStore>;
-  setPersistedShedulerStore: Setter<SchedulerStore>;
   recreateStore: (plainStore: PlainStore) => void;
   serialize: (store: SchedulerStore) => string;
 }
@@ -63,7 +60,6 @@ export function createColumns(config: ICreateColumns): IScheduleColumn[] {
 
 export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
-  const data = useSubmission(getStudyCoursesDetailsAction);
 
   const formatTime = (start: Time, end: Time) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
@@ -116,16 +112,15 @@ export function SchedulerProvider(props: ParentProps) {
     serialize,
   });
 
-  const recreateStore = (plainStore: PlainStore) => {
-    batch(() => {
-      modifyMutable(store, reconcile(merge(store, plainStore)));
-    });
-  };
-  // updateStoreData(store);
+  // must be merged to carry over the functions
+  const recreateStore = (plainStore: PlainStore) => modifyMutable(store, reconcile(merge(store, plainStore)));
+
   onMount(() => {
     recreateStore(persistedStore());
   });
 
+  // --- update on data from server
+  const data = useSubmission(getStudyCoursesDetailsAction);
   createComputed(
     on(
       () => data.result,
@@ -144,9 +139,11 @@ export function SchedulerProvider(props: ParentProps) {
     { name: "addCoursesToStore" }
   );
 
+  // create Effect so the set store does not delay the render
   createEffect(
     on(
       () => trackStore(store),
+      // I don't want to trigger on first effect because it's the initial store
       (store, _, firstEffect) => {
         if (firstEffect) return false;
         console.log("store changed", store);
@@ -162,8 +159,6 @@ export function SchedulerProvider(props: ParentProps) {
     <SchedulerContext.Provider
       value={{
         store: store,
-        persistedStore,
-        setPersistedShedulerStore,
         recreateStore,
         serialize,
       }}

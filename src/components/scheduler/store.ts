@@ -1,6 +1,7 @@
 import { map, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import type { StrictOmit } from "ts-essentials";
+import type { StoreJson } from "~/components/menu/storeJsonValidator";
 import type { CustomEvent, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
 import type {
@@ -27,7 +28,7 @@ const defaultSettings: ISchedulerSettings = {
   rows: [],
 };
 
-export class SchedulerStore {
+export class SchedulerStore implements StoreJson {
   private static readonly defaultSettings: ISchedulerSettings = defaultSettings;
   public settings: ISchedulerSettings;
   public courses: Course[];
