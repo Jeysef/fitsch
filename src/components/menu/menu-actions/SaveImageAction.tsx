@@ -18,12 +18,16 @@ const ScheduleScreenshot = () => {
 
   const saveImage = async () => {
     batch(() => setLoading(true));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     setTimeout(async () => {
       const scheduleRefVal = scheduleRef();
       if (scheduleRefVal && document.body.contains(scheduleRefVal)) {
         try {
-          scheduleRefVal.style.maxHeight = "unset";
-          const dataUrl = await toPng(scheduleRefVal); // Convert HTML to PNG
+          const dataUrl = await toPng(scheduleRefVal, {
+            style: { maxHeight: "unset" },
+            height: scheduleRefVal.scrollHeight,
+            width: scheduleRefVal.scrollWidth,
+          }); // Convert HTML to PNG
           const a = document.createElement("a");
           a.href = dataUrl;
           const filename = getFileName({ locale, store });
@@ -33,7 +37,6 @@ const ScheduleScreenshot = () => {
         } catch (error) {
           console.error("Failed to capture screenshot:", error);
         } finally {
-          scheduleRefVal.style.maxHeight = "100%";
           setLoading(false);
         }
       }
