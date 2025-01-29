@@ -44,7 +44,7 @@ import {
   createFormControl,
   createFormGroup,
 } from "~/packages/solid-forms/";
-import { toast } from "~/packages/solid-sonner";
+import { toast } from "solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";

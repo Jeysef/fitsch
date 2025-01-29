@@ -2,12 +2,12 @@ import { uniqBy } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
+import { toast } from "solid-sonner";
 import { isCustomEventData } from "~/components/scheduler/event/Event";
 import type { Event, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { Course } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
-import { toast } from "~/packages/solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
 

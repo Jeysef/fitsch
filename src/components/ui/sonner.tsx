@@ -1,4 +1,4 @@
-import { Toaster as Sonner } from "~/packages/solid-sonner";
+import { Toaster as Sonner } from "solid-sonner";
 
 export const Toaster = (props: Parameters<typeof Sonner>[0]) => {
   return (
