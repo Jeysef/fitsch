@@ -14,6 +14,7 @@ import InstallButton from "~/components/ui/InstallButton";
 import { parityColors, subjectTypeColors } from "~/config/colors";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
+import { LECTURE_TYPE } from "~/server/scraper/enums";
 
 export default function AppInfo() {
   const { t } = useI18n();
@@ -47,7 +48,7 @@ export default function AppInfo() {
                 (podle mobilní aplikace)
               </Text>
               <div class="mt-2 list-none flex flex-wrap gap-1">
-                <For each={ObjectTyped.entries(subjectTypeColors)}>
+                <For each={ObjectTyped.entries(subjectTypeColors).filter(([type]) => type !== LECTURE_TYPE.EXAM)}>
                   {([type, color]) => {
                     const colorClass = css`background-color: ${color}`;
                     return (
