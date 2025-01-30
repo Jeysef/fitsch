@@ -145,7 +145,16 @@ export default function Wrapper() {
         toast.error(resolvedData.errorMessage);
       }, 1000);
       return (
-        <Button onClick={() => refetch()} class="h-auto flex-col">
+        <Button
+          onClick={async () => {
+            const res = await refetch();
+            if (res && isErrorReturn(res)) {
+              toast.error(res.errorMessage);
+            }
+          }}
+          disabled={data.state === "refreshing"}
+          class="h-auto flex-col"
+        >
           {resolvedData.errorMessage}
           <span class="h-[2ch]" />
           Click to reload menu

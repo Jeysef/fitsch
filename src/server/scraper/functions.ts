@@ -40,7 +40,13 @@ export const getStudyCoursesDetails = (
 };
 
 const errorResolver = <T>(promise: Promise<T>): Promise<FunctionReturn<T>> => {
-  return promise.catch((error) => {
+  return Promise.race([
+    promise,
+    new Promise<FunctionReturn<T>>((_, reject) =>
+      // netlify allows 10 seconds for a function to run
+      setTimeout(() => reject(new Error("Request timeout after 9 seconds")), 9800)
+    ),
+  ]).catch((error) => {
     console.error("Error occurred:", error);
     return { error: true, errorMessage: error.message } satisfies FunctionReturnError;
   });
