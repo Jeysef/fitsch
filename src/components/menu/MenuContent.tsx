@@ -3,6 +3,7 @@ import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
+import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
 import {
   type Accessor,
   ErrorBoundary,
@@ -38,13 +39,6 @@ import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } fro
 import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
-import {
-  type IFormControl,
-  type IFormGroup,
-  type ValidatorFn,
-  createFormControl,
-  createFormGroup,
-} from "~/packages/solid-forms/";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
