@@ -3,11 +3,16 @@ import { fromURL } from "cheerio";
 import type { ResourceFetcher } from "solid-js";
 import { DataProvider } from "~/server/scraper/dataProvider";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
-import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
+import type {
+  DataProviderTypes,
+  FunctionReturn,
+  FunctionReturnError,
+  GetStudyCoursesDetailsFunctionConfig,
+} from "~/server/scraper/types";
 
 export const getStudyOverview: ResourceFetcher<
   DataProviderTypes.getStudyOverviewConfig,
-  StudyOverview,
+  FunctionReturn<DataProviderTypes.getStudyOverviewReturn>,
   DataProviderTypes.getStudyOverviewConfig
 > = async (source, { value, refetching }) => {
   "use server";
@@ -25,7 +30,7 @@ export const getStudyOverview: ResourceFetcher<
 
 export const getStudyCoursesDetails = (
   config: GetStudyCoursesDetailsFunctionConfig
-): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> => {
+): Promise<FunctionReturn<DataProviderTypes.getStudyCoursesDetailsReturn>> => {
   "use server";
   const { language, ...rest } = config;
   const languageProvider = new LanguageProvider(language);
@@ -34,9 +39,9 @@ export const getStudyCoursesDetails = (
   return data;
 };
 
-const errorResolver = <T>(promise: Promise<T>): Promise<T> => {
+const errorResolver = <T>(promise: Promise<T>): Promise<FunctionReturn<T>> => {
   return promise.catch((error) => {
     console.error("Error occurred:", error);
-    throw error;
+    return { error: true, errorMessage: error.message } satisfies FunctionReturnError;
   });
 };

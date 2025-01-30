@@ -136,6 +136,9 @@ interface GetStudyCoursesDetailsFunctionConfig extends DataProviderTypes.getStud
 
 type SemesterTimeSchedule = { start: Date; end: Date };
 
+type FunctionReturnError = { error: true; errorMessage: string };
+type FunctionReturn<T> = T | FunctionReturnError;
+
 export namespace StudyApiTypes {
   export interface getStudyTimeScheduleConfig {
     year: string | null;
@@ -201,6 +204,8 @@ export type {
   APICourseLecture,
   CourseDetail,
   CourseLecture,
+  FunctionReturn,
+  FunctionReturnError,
   GetStudyCoursesDetailsFunctionConfig,
   GradeKey,
   ProgramStudyCourses,

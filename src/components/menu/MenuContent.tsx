@@ -22,6 +22,7 @@ import {
   useContext,
 } from "solid-js";
 import { isServer } from "solid-js/web";
+import { toast } from "solid-sonner";
 import { Actions } from "~/components/menu/MenuActions";
 import {
   CoursesSelect,
@@ -44,12 +45,17 @@ import {
   createFormControl,
   createFormGroup,
 } from "~/packages/solid-forms/";
-import { toast } from "solid-sonner";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import { getStudyOverview } from "~/server/scraper/functions";
-import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
+import type {
+  DataProviderTypes,
+  FunctionReturn,
+  FunctionReturnError,
+  GetStudyCoursesDetailsFunctionConfig,
+  StudyOverview,
+} from "~/server/scraper/types";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -114,14 +120,39 @@ export default function Wrapper() {
       </ErrorBoundary>
     </div>
   );
-  function Content({ resource }: { resource: ResourceReturn<StudyOverview, DataProviderTypes.getStudyOverviewConfig> }) {
+  function Content({
+    resource,
+  }: {
+    resource: ResourceReturn<
+      FunctionReturn<DataProviderTypes.getStudyOverviewReturn>,
+      DataProviderTypes.getStudyOverviewConfig
+    >;
+  }) {
     const { store } = useScheduler();
     const data = resource[0];
     const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
     const { refetch, mutate } = resource[1];
     const _submit = useAction(getStudyCoursesDetailsAction);
     const { t } = useI18n();
-    const dataValues = data()?.values;
+
+    function isErrorReturn<T>(data: FunctionReturn<T>): data is FunctionReturnError {
+      return typeof data === "object" && data !== null && "error" in data && data.error === true;
+    }
+    const resolvedData = data();
+    if (isErrorReturn(resolvedData)) {
+      // wait for toast to initialize
+      setTimeout(() => {
+        toast.error(resolvedData.errorMessage);
+      }, 1000);
+      return (
+        <Button onClick={() => refetch()} class="h-auto flex-col">
+          {resolvedData.errorMessage}
+          <span class="h-[2ch]" />
+          Click to reload menu
+        </Button>
+      );
+    }
+    const dataValues = resolvedData?.values;
     if (!dataValues) {
       if (data.state === "refreshing") return <Loader />;
       return <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>;

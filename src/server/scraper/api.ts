@@ -34,7 +34,10 @@ export class StudyApi {
   };
 
   private fetchDocument(url: string) {
-    return this.fetcher(url);
+    return this.fetcher(url, { requestOptions: { method: "GET", throwOnError: true } }).catch((error) => {
+      const urlBase = new URL(url).origin;
+      throw new Error(`Failed to fetch document from ${urlBase}`);
+    });
   }
 
   /**
