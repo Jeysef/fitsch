@@ -130,7 +130,9 @@ export default function Wrapper() {
   }) {
     const { store } = useScheduler();
     const data = resource[0];
-    const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data()));
+    const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
+      DataProviderTypes.getStudyOverviewReturn | undefined
+    >;
     const { refetch, mutate } = resource[1];
     const _submit = useAction(getStudyCoursesDetailsAction);
     const { t } = useI18n();
@@ -342,7 +344,7 @@ export default function Wrapper() {
             <DegreeSelect />
             <ProgramSelect />
           </DataContext.Provider>
-          <DataContext.Provider value={data}>
+          <DataContext.Provider value={data as Accessor<DataProviderTypes.getStudyOverviewReturn | undefined>}>
             <GradeSelect />
             <Suspense>
               <CoursesSelect />
