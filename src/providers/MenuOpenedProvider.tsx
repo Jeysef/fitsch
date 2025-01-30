@@ -26,6 +26,6 @@ export function MenuOpenedProvider(props: ParentProps) {
 
 export function useMenuOpened() {
   const context = useContext(MenuOpenedContext);
-  if (!context) throw new Error("useInstallation must be used within an MenuOpenedProvider");
+  if (!context) throw new Error("useMenuOpened must be used within an MenuOpenedProvider");
   return context;
 }
