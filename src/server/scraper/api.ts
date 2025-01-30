@@ -34,16 +34,15 @@ export class StudyApi {
   };
 
   private fetchDocument(url: string) {
-    console.log("fetching", url);
     const urlBase = new URL(url).origin;
     return Promise.race([
       this.fetcher(url, {
         requestOptions: { method: "GET", throwOnError: true },
       }).catch((error) => {
         console.log("error fetching", url, error);
-        throw new Error(`Failed to fetch document from ${urlBase}`);
+        throw new Error(`Failed to fetch from ${urlBase}`);
       }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error(`Failed to fetch document from ${urlBase}`)), 1000)),
+      new Promise((_, reject) => setTimeout(() => reject(new Error(`Failed to fetch from ${urlBase}`)), 1000)),
     ]);
   }
 
