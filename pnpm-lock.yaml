@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  solid-gesture:
+    hash: qngen3cgh66noeb7s3xpmhegdy
+    path: patches/solid-gesture.patch
+
 importers:
 
   .:
@@ -91,7 +96,7 @@ importers:
         version: 8.5.1
       solid-gesture:
         specifier: ^0.0.3
-        version: 0.0.3(solid-js@1.9.4)
+        version: 0.0.3(patch_hash=qngen3cgh66noeb7s3xpmhegdy)(solid-js@1.9.4)
       solid-js:
         specifier: ^1.9.4
         version: 1.9.4
@@ -7046,7 +7051,7 @@ snapshots:
 
   smob@1.5.0: {}
 
-  solid-gesture@0.0.3(solid-js@1.9.4):
+  solid-gesture@0.0.3(patch_hash=qngen3cgh66noeb7s3xpmhegdy)(solid-js@1.9.4):
     dependencies:
       '@use-gesture/core': 10.3.1
       solid-js: 1.9.4

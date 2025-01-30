@@ -1,7 +1,6 @@
 import { css } from "@emotion/css";
 import { compact, difference, flatMap, flow, merge, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-// @ts-ignore no types
 import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
@@ -59,7 +58,6 @@ function SchedulerGrid() {
   }));
 
   const bind = usePinch(
-    // @ts-ignore
     ({ offset: [s], first, last, type }) => {
       if (first) {
         setTouchAction("none");
@@ -104,6 +102,7 @@ function SchedulerGrid() {
         "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
       })}
     >
+      {/* @ts-ignore */}
       <InnerComponent />
     </animated.div>
   );
