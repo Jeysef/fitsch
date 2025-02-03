@@ -22,3 +22,7 @@
 - [] **Move course metrics to server**
   - compare 1more loop or sending more data
 - [] **add linked courses to event **
+- [] **Make the event have state like `chosen in IS` so they can generate schedule with those kept**
+  - add a new state to the event
+  - the ui side of this is to be discussed
+  - modify the generator to use this state
