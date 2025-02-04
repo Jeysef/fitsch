@@ -115,12 +115,11 @@ function conjunctCourse(data: FilteredCourseLecture[]): ConjunctedLecture[] {
   for (let i = 0; i < data.length; i++) {
     const lecture = data[i];
 
-    // last lecture does not have anything to conjunct with
-    if (i === data.length - 1) break;
-
-    const remainingLecturesLength = data.length - i;
     const toBeConjunctedLectures = { [i]: lecture };
-    for (let j = 1; j < remainingLecturesLength; j++) {
+    const remainingLecturesLength = data.length - i;
+    const isLast = i === data.length - 1;
+    // // last lecture does not have anything to conjunct with
+    for (let j = 1; !isLast && j < remainingLecturesLength; j++) {
       const comparedLecture = data[i + j];
       function addToBeConjuncted() {
         toBeConjunctedLectures[i + j] = comparedLecture;
