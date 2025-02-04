@@ -13,7 +13,12 @@ import type {
   LectureMetrics,
 } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import type { LinkedLectureData, MCourseLecture, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
+import type {
+  LinkedLectureData,
+  MCourseLecture,
+  MgetStudyCourseDetailsReturn,
+  MgetStudyCourseDetailsReturnNotStale,
+} from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
 
 const defaultSettings: ISchedulerSettings = {
@@ -147,17 +152,24 @@ export class SchedulerStore implements StoreJson {
       this.courses = [];
       return;
     }
-    const coursesData = courses.map<Course>((course) => {
-      const existingCourse = this.findExistingCourse(course.detail.id);
-      if (existingCourse) {
-        let { detail } = existingCourse;
-        // is same language. link ends .cs or .en
-        if (detail.link !== course.detail.link) detail = course.detail;
-        // data is inherently proxied, so we need to copy it
-        return existingCourse;
+    const coursesData = courses.reduce((acc, newCourse) => {
+      if (newCourse.isStale) {
+        const existingCourse = this.findExistingCourse(newCourse.detail.id);
+        if (existingCourse) acc.push(existingCourse);
+        return acc;
       }
-      return createNewCourse(course, this.eventFilter);
-    });
+
+      const existingCourse = this.findExistingCourse(newCourse.detail.id);
+      if (existingCourse) {
+        if (newCourse.detail.link && existingCourse.detail.link !== newCourse.detail.link) {
+          existingCourse.detail = newCourse.detail;
+        }
+        acc.push(existingCourse);
+      } else {
+        acc.push(createNewCourse(newCourse, this.eventFilter));
+      }
+      return acc;
+    }, [] as Course[]);
     this.courses = coursesData;
     // this.data = this.createDataFromCourses(coursesData);
   }
@@ -294,7 +306,10 @@ export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan):
   return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
 
-function createNewCourse(courseData: MgetStudyCourseDetailsReturn, filter?: (event: MCourseLecture) => boolean): Course {
+function createNewCourse(
+  courseData: MgetStudyCourseDetailsReturnNotStale,
+  filter?: (event: MCourseLecture) => boolean
+): Course {
   const { data, detail: courseDetail } = courseData;
   const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;
   const getMetrics = (type: LECTURE_TYPE) => {

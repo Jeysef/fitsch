@@ -44,10 +44,18 @@ interface linkedLecture extends ConjunctedLecture {
 }
 export interface MCourseLecture extends linkedLecture {}
 
-export interface MgetStudyCourseDetailsReturn {
+export type MgetStudyCourseDetailsReturnStale = {
+  isStale: true;
+  detail: { id: string };
+};
+
+export type MgetStudyCourseDetailsReturnNotStale = {
+  isStale: undefined;
   detail: CourseDetail;
   data: MCourseLecture[];
-}
+};
+
+export type MgetStudyCourseDetailsReturn = MgetStudyCourseDetailsReturnStale | MgetStudyCourseDetailsReturnNotStale;
 
 export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDetailsReturn, config: LectureMutatorConfig) {
   const { data, semesterTimeSchedule } = props;

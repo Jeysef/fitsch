@@ -196,6 +196,7 @@ export namespace DataProviderTypes {
 
   export type getStudyCoursesDetailsConfig = StudyApiTypes.getStudyCoursesDetailsConfig & {
     mutatorConfig?: LectureMutatorConfig;
+    staleCoursesId?: string[];
   };
   export type getStudyCoursesDetailsReturn = MgetStudyCourseDetailsReturn[];
 }

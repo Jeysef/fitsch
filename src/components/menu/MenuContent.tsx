@@ -38,7 +38,6 @@ import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
 import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
-import type { LANGUAGE } from "~/enums";
 import { useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
@@ -118,13 +117,6 @@ export default function Wrapper() {
   );
 }
 
-interface LoadCoursesData {
-  language: LANGUAGE;
-  year: string;
-  semester: SEMESTER;
-  courses: string[];
-}
-
 function Content({
   resource,
 }: {
@@ -142,8 +134,8 @@ function Content({
   const submit = useAction(getStudyCoursesDetailsAction);
   const { t, locale } = useI18n();
 
-  const loadCourses = (data: LoadCoursesData) => {
-    if (data.courses.length === 0) {
+  const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
+    if (!data.courses.length && !data.staleCoursesId?.length) {
       store.courses = [];
       return;
     }
@@ -200,13 +192,18 @@ function Content({
       program: c.program.value,
     } satisfies DataProviderTypes.getStudyOverviewConfig;
   };
-  const getDataToSubmit = () => {
+  const getDataToSubmit = (makeStale = true) => {
     const c = group.controls;
+    const currentCoursesId = makeStale ? store.courses.map((c) => c.detail.id) : [];
+    const selectedCourses = flatMap(OBLIGATION, (type) => c[type].value);
+    const staleCoursesId = currentCoursesId.filter((id) => selectedCourses.includes(id));
+    const courses = selectedCourses.filter((id) => !staleCoursesId.includes(id));
     return {
       language: locale(),
       year: c.year.value.value,
       semester: c.semester.value,
-      courses: flatMap(OBLIGATION, (type) => c[type].value),
+      courses,
+      staleCoursesId,
     } satisfies GetStudyCoursesDetailsFunctionConfig;
   };
 
@@ -219,7 +216,7 @@ function Content({
       const toastId = createUniqueId();
       const onRegenerate = () => {
         toast.dismiss(toastId);
-        loadCourses(getDataToSubmit());
+        loadCourses(getDataToSubmit(false));
       };
       toast.promise(newData, {
         loading: t("menu.toast.languageChanged.loading"),

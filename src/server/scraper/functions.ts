@@ -35,7 +35,12 @@ export const getStudyCoursesDetails = (
   const { language, ...rest } = config;
   const languageProvider = new LanguageProvider(language);
   const dataProvider = new DataProvider(languageProvider, fromURL);
-  const data = errorResolver(dataProvider.getStudyCoursesDetails(rest));
+  const data = errorResolver(
+    dataProvider.getStudyCoursesDetails(rest).then((d) => {
+      const staleCoursesData = config.staleCoursesId?.map((id) => ({ detail: { id }, isStale: true }) as const);
+      return d.concat(staleCoursesData ?? []);
+    })
+  );
   return data;
 };
 

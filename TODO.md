@@ -1,9 +1,9 @@
 # TODO
 
-- [] **Fetching New Courses**
+- [x] **Fetching New Courses**
   - Fetch only the necessary courses when updating.
-  - Return other courses as empty placeholders.
-  - Allow placeholders to be filled in the store as needed.
+  - NO Return other courses as empty placeholders.
+  - NO Allow placeholders to be filled in the store as needed.
 - [x] **discuss behaviour of select all**
   - Current: `select all` deletes all courses from other grades
   - Current pros:
