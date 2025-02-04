@@ -34,15 +34,13 @@ const eventBaseSchema = z.object({
   checked: z.boolean(),
 });
 
-export const customEventSchema = z
-  .array(
-    eventBaseSchema.extend({
-      title: z.string(),
-      color: z.string(),
-      type: z.literal("CUSTOM"),
-    })
-  )
-  .optional();
+export const customEventSchema = eventBaseSchema.extend({
+  title: z.string(),
+  color: z.string(),
+  type: z.literal("CUSTOM"),
+});
+
+export const customEventsSchema = z.array(customEventSchema).optional();
 
 const scheduleEventSchema = eventBaseSchema.extend({
   type: z.nativeEnum(LECTURE_TYPE),
@@ -124,7 +122,7 @@ const settingsSchema = z.object({
 const schema = z.object({
   settings: settingsSchema,
   courses: coursesSchema,
-  customEvents: customEventSchema,
+  customEvents: customEventsSchema,
 });
 
 export type StoreJson = z.infer<typeof schema>;
