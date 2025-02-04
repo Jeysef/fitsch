@@ -9,3 +9,6 @@ export const launchDayTime = {
   [DAY.THU]: { start: "11:00", end: "14:30" },
   [DAY.FRI]: { start: "11:00", end: "14:00" },
 };
+
+export const semesterWeeks = 13;
+export const halfSemesterWeeks = 6;

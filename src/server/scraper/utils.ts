@@ -2,7 +2,7 @@ import { conjunctableRooms } from "~/config/rooms";
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
-import type { StudyId } from "~/server/scraper/types";
+import type { APICourseLecture, CourseDetail, StudyId } from "~/server/scraper/types";
 import { WEEK_PARITY } from "./enums";
 
 export function removeSpaces(text: string): string {
@@ -111,3 +111,23 @@ export const conjunctConjunctableRooms = (roomsInput: string[]): string => {
 
   return processRooms(roomsInput).join(" ");
 };
+
+/**
+ * This function calculates the number of lectures that should be in the semester based on the length of given lecture
+ * Problem n.1: In a week there may be more lectures with different lengths -> solved by concatenating the lectures elsewhere
+ * Problem n.2: the calculation doesn't have to reflect what's written in the detail. Viz README.md
+ */
+export function getLectureLectures(lecture: APICourseLecture, detail: CourseDetail) {
+  const lectureTimeSpan = detail.timeSpan[lecture.type];
+  if (lectureTimeSpan === undefined) return null;
+  const duration = lecture.timeSpan.minutes;
+  // round up to nearest hour, 7:00 - 7:50 => 50 minutes => 1 hour
+
+  // ---- when assuming lecture duration is in atleast 60 minute intervals
+  const lectureDuration = Math.ceil(duration / 60);
+  const lectureLectures = Math.round(lectureTimeSpan / lectureDuration);
+
+  // ---- when assuming lecture duration in minutes -- WRONG
+  // const lectureLectures = Math.floor(lectureTimeSpan * 60 / duration)
+  return lectureLectures;
+}

@@ -20,6 +20,15 @@ export enum LECTURE_TYPE {
   SEMINAR = "SEMINAR", // exercises performed by lecturer for many students
   EXAM = "EXAM",
 }
+
+// LECTURE_TYPE without EXAM
+export const lecturesWithoutExam: LECTURE_TYPE[] = [
+  LECTURE_TYPE.LECTURE,
+  LECTURE_TYPE.LABORATORY,
+  LECTURE_TYPE.EXERCISE,
+  LECTURE_TYPE.SEMINAR,
+];
+
 export enum DAY {
   MON = "MON",
   TUE = "TUE",

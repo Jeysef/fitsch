@@ -1,20 +1,15 @@
-import deepEqual from "deep-equal";
 import { isEqual, isString, union } from "lodash-es";
 import uniq from "lodash-es/uniq";
 import { ObjectTyped } from "object-typed";
+import type { StrictOmit } from "ts-essentials";
 import { v4 as uuidv4 } from "uuid";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import { conjunctableRooms } from "~/config/rooms";
 import { days } from "~/config/scheduler";
-import { LECTURE_TYPE, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
-import type {
-  APICourseLecture,
-  CourseDetail,
-  CourseLecture,
-  DataProviderTypes,
-  StudyApiTypes,
-} from "~/server/scraper/types";
-import { conjunctConjunctableRooms, getWeekFromSemesterStart } from "~/server/scraper/utils";
+import { halfSemesterWeeks } from "~/server/scraper/constants";
+import { lecturesWithoutExam, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
+import type { APICourseLecture, CourseDetail, DataProviderTypes, StudyApiTypes } from "~/server/scraper/types";
+import { conjunctConjunctableRooms, getLectureLectures, getWeekFromSemesterStart } from "~/server/scraper/utils";
 
 interface IDdCourseLectureBase {
   id: string;
@@ -23,6 +18,10 @@ interface IDdCourseLectureBase {
 }
 
 interface IDdCourseLecture extends IDdCourseLectureBase, APICourseLecture {}
+
+interface IdCourseReturn extends DataProviderTypes.getStudyCourseDetailsReturn {
+  data: IDdCourseLecture[];
+}
 
 export type FilteredCourseLecture = ReturnType<typeof filterData>[number];
 
@@ -35,10 +34,15 @@ export interface LinkedLectureData {
   day: DAY;
 }
 
-export interface MCourseLecture extends IDdCourseLectureBase, CourseLecture {
+interface ConjunctedLecture extends StrictOmit<FilteredCourseLecture, "room"> {
+  room: string;
+}
+
+interface linkedLecture extends ConjunctedLecture {
   strongLinked: LinkedLectureData[];
   linked: LinkedLectureData[];
 }
+export interface MCourseLecture extends linkedLecture {}
 
 export interface MgetStudyCourseDetailsReturn {
   detail: CourseDetail;
@@ -50,48 +54,25 @@ export async function MutateLectureData(props: StudyApiTypes.getStudyCoursesDeta
   const semesterWeeks = getWeekFromSemesterStart(semesterTimeSchedule.end, semesterTimeSchedule.start);
   for (const _course of data) {
     const course = idCourse(_course);
-    const data = filterData(course.data);
 
-    for (let i = 0; i < data.length; i++) {
-      let lecture = data[i];
-
-      if (config.fillWeeks !== false) {
-        lecture = fillWeeksLecture(lecture, semesterWeeks);
-      }
-
-      if (i === data.length - 1) break;
-
-      const nextLectures = data.slice(i + 1);
-      conjunctLectures(lecture, nextLectures, i, data);
-    }
-    for (const lecture of data) {
-      // @ts-expect-error the type will be changed elsewhere
-      if (!isString(lecture.room)) lecture.room = conjunctConjunctableRooms(lecture.room);
-      linkLectrues(lecture, data, semesterWeeks);
-    }
-    course.data = data;
-    // log weeks of each lecture
-    // for (const lecture of course.data) {
-    //   // console.log(lecture.weeks);
-    //   console.log({
-    //     weeks: lecture.weeks,
-    //     room: lecture.room,
-    //     day: lecture.day,
-    //     type: lecture.type,
-    //   });
-    // }
+    const filteredData = filterData(course.data);
+    fillWeeksCourse(filteredData, semesterWeeks, config.fillWeeks);
+    const conjunctedData = conjunctCourse(fillWeeksCourse(filteredData, semesterWeeks, config.fillWeeks));
+    const linkedData = linkCourse(conjunctedData, semesterWeeks);
+    // @ts-ignore
+    course.data = linkedData;
   }
   return data as unknown as MgetStudyCourseDetailsReturn[];
 }
 
-function idCourse(course: DataProviderTypes.getStudyCourseDetailsReturn) {
-  const newData = course.data.map((lecture) => {
-    return Object.assign(lecture, {
+function idCourse(course: DataProviderTypes.getStudyCourseDetailsReturn): IdCourseReturn {
+  for (const lecture of course.data) {
+    Object.assign(lecture, {
       id: idLecture(lecture),
-      lecturesCount: getLectureLectures(lecture, course.detail),
-    }) as IDdCourseLecture;
-  });
-  return Object.assign(course, { data: newData });
+      lecturesCount: getLectureLectures(lecture, course.detail)!,
+    }) satisfies IDdCourseLecture;
+  }
+  return course as IdCourseReturn;
 }
 
 // TODO: implement
@@ -99,45 +80,115 @@ function idLecture(lecture: APICourseLecture) {
   return uuidv4();
 }
 
-/**
- * This function calculates the number of lectures that should be in the semester based on the length of given lecture
- * Problem n.1: In a week there may be more lectures with different lengths -> solved by concatenating the lectures elsewhere
- * Problem n.2: the calculation doesn't have to reflect what's written in the detail. Viz README.md
- */
-function getLectureLectures(lecture: APICourseLecture, detail: CourseDetail) {
-  const lectureTimeSpan = detail.timeSpan[lecture.type];
-  if (lectureTimeSpan === undefined) return false;
-  const duration = lecture.timeSpan.minutes;
-  // round up to nearest hour, 7:00 - 7:50 => 50 minutes => 1 hour
-
-  // ---- when assuming lecture duration is in atleast 60 minute intervals
-  const lectureDuration = Math.ceil(duration / 60);
-  const lectureLectures = Math.round(lectureTimeSpan / lectureDuration);
-
-  // ---- when assuming lecture duration in minutes -- WRONG
-  // const lectureLectures = Math.floor(lectureTimeSpan * 60 / duration)
-  return lectureLectures;
+function fillWeeksCourse(data: FilteredCourseLecture[], semesterWeeks: number, fillWeeks?: boolean) {
+  if (fillWeeks === false) return data;
+  for (const lecture of data) {
+    fillWeeksLecture(lecture, semesterWeeks);
+  }
+  return data;
 }
 
 function filterData(data: IDdCourseLecture[]) {
   return data.filter((lecture) => {
-    if (lecture.type === "EXAM") return false;
+    if (!lecturesWithoutExam.includes(lecture.type)) return false;
+    // if note is present, It is not possible to register (probably)
     if (lecture.note) return false;
+    // if day not supported
     if (!days.includes(lecture.day)) return false;
-    if (!LECTURE_TYPE[lecture.type]) return false;
+    // if lectures count is not defined, which it should
     if (!lecture.lecturesCount) return false;
     return true;
   }) as {
     [K in keyof IDdCourseLecture]: K extends "type"
-      ? Exclude<IDdCourseLecture[K], "EXAM">
+      ? (typeof lecturesWithoutExam)[number]
       : K extends "note"
         ? never
         : K extends "day"
-          ? (typeof days)[number]
+          ? DAY
           : K extends "lecturesCount"
             ? number
             : IDdCourseLecture[K];
   }[];
+}
+
+function conjunctCourse(data: FilteredCourseLecture[]): ConjunctedLecture[] {
+  for (let i = 0; i < data.length; i++) {
+    const lecture = data[i];
+
+    // last lecture does not have anything to conjunct with
+    if (i === data.length - 1) break;
+
+    const remainingLecturesLength = data.length - i;
+    const toBeConjunctedLectures = { [i]: lecture };
+    for (let j = 1; j < remainingLecturesLength; j++) {
+      const comparedLecture = data[i + j];
+      function addToBeConjuncted() {
+        toBeConjunctedLectures[i + j] = comparedLecture;
+      }
+      // break coz any next is still different day
+      if (lecture.day !== comparedLecture.day) break;
+      // any next will still be after the lecture
+      if (isAfterLecture(lecture, comparedLecture)) break;
+      if (lecture.type !== comparedLecture.type) continue;
+      if (!isSameTimeLecture(lecture, comparedLecture)) continue;
+      if (lecture.groups !== comparedLecture.groups) continue;
+      if (!isEqual(lecture.lectureGroup, comparedLecture.lectureGroup)) continue;
+      if (isString(lecture.weeks.weeks) || isString(comparedLecture.weeks.weeks)) continue;
+      const combinedWeeks = union(lecture.weeks.weeks, comparedLecture.weeks.weeks).sort((a, b) => a - b);
+      if (lecture.groups === "xx" && combinedWeeks.length > lecture.lecturesCount + 1) continue;
+      if (
+        lecture.lecturesCount <= halfSemesterWeeks &&
+        lecture.weeks.parity &&
+        comparedLecture.weeks.parity &&
+        lecture.weeks.parity !== comparedLecture.weeks.parity
+      )
+        continue;
+      // add the weeks to the lecture so in another iteration it is checked against optimistic weeks value
+      lecture.weeks.weeks = combinedWeeks;
+      addToBeConjuncted();
+    }
+    const toBeConjunctedLecturesValues = Object.values(toBeConjunctedLectures);
+    const lect = lecture as unknown as MCourseLecture;
+    if (toBeConjunctedLecturesValues.length === 1) {
+      lect.room = conjunctConjunctableRooms(uniq(toBeConjunctedLecturesValues.flatMap((lect) => lect.room)));
+      continue;
+    }
+    // info is commonly names of the lectures
+    lect.info = uniq(toBeConjunctedLecturesValues.map((lect) => lect.info)).join(", ");
+    // note is filtered out, but if it is present, it should be joined
+    // lect.note = toBeConjunctedLecturesValues
+    //   .map((lect) => lect.note)
+    //   .filter(Boolean)
+    //   .join(", ");
+    const main =
+      toBeConjunctedLecturesValues.find((lecture) =>
+        lecture.room.some((room) =>
+          conjunctableRooms.some((conjunctable) =>
+            Array.isArray(conjunctable) ? conjunctable.includes(room) : conjunctable.main === room
+          )
+        )
+      ) ?? toBeConjunctedLecturesValues[0];
+    lect.room = conjunctConjunctableRooms(uniq(toBeConjunctedLecturesValues.flatMap((lect) => lect.room)));
+    lect.weeks = {
+      parity: toBeConjunctedLecturesValues.every((lect) => lect.weeks.parity === main.weeks.parity)
+        ? main.weeks.parity
+        : null,
+      weeks: uniq(
+        toBeConjunctedLecturesValues
+          .flatMap((lect) => (Array.isArray(lect.weeks.weeks) ? lect.weeks.weeks : []))
+          .sort((a, b) => a - b)
+      ),
+    };
+    lect.capacity = toBeConjunctedLecturesValues.every((lect) => lect.capacity === main.capacity)
+      ? main.capacity
+      : toBeConjunctedLecturesValues.map((lect) => lect.capacity).join(", ");
+
+    // slice so it doesn.t remove the lecture that is being checked, reverse so it doesn't mess up the indexes
+    for (const i of ObjectTyped.keys(toBeConjunctedLectures).slice(1).reverse()) {
+      data.splice(i, 1);
+    }
+  }
+  return data as unknown as ConjunctedLecture[];
 }
 
 function fillWeeksLecture(lecture: FilteredCourseLecture, semesterWeeks: number) {
@@ -163,86 +214,86 @@ function fillWeeksLecture(lecture: FilteredCourseLecture, semesterWeeks: number)
   return lecture;
 }
 
-export function conjunctLectures(
-  lecture: FilteredCourseLecture,
-  lectures: FilteredCourseLecture[],
-  index: number,
-  data: FilteredCourseLecture[]
-) {
-  const preConjunctedLectures = { [index]: lecture };
-  for (const [shift, comparedLecture] of lectures.entries()) {
-    function conjunct() {
-      preConjunctedLectures[index + shift + 1] = comparedLecture;
-    }
-    // if the day is different, lectures cannot be conjuncted.
-    if (lecture.day !== comparedLecture.day) break;
-    if (lecture.type !== comparedLecture.type) continue;
-    if (!isSameTimeLecture(lecture, comparedLecture)) continue;
-    // if (!isConjunctable(lecture.room, comparedLecture.room) && !isEqual(lecture.room, comparedLecture.room)) continue;
-    if (lecture.groups !== comparedLecture.groups) continue;
-    if (!isEqual(lecture.lectureGroup, comparedLecture.lectureGroup)) continue;
-    if (isString(lecture.weeks.weeks) !== isString(comparedLecture.weeks.weeks)) {
-      // If there are lectures with same group but one has weeks and one hasn't it probabbly is same lecture in different rooms
-      if (lecture.groups === comparedLecture.groups && lecture.groups !== "xx" && lecture.room !== comparedLecture.room) {
-        conjunct();
-      }
-      continue;
-    }
-    if (isString(lecture.weeks.weeks) || isString(comparedLecture.weeks.weeks)) continue;
+// export function conjunctLectures(
+//   lecture: FilteredCourseLecture,
+//   lectures: FilteredCourseLecture[],
+//   index: number,
+//   data: FilteredCourseLecture[]
+// ) {
+//   const preConjunctedLectures = { [index]: lecture };
+//   for (const [shift, comparedLecture] of lectures.entries()) {
+//     function conjunct() {
+//       preConjunctedLectures[index + shift + 1] = comparedLecture;
+//     }
+//     // if the day is different, lectures cannot be conjuncted.
+//     if (lecture.day !== comparedLecture.day) break;
+//     if (lecture.type !== comparedLecture.type) continue;
+//     if (!isSameTimeLecture(lecture, comparedLecture)) continue;
+//     // if (!isConjunctable(lecture.room, comparedLecture.room) && !isEqual(lecture.room, comparedLecture.room)) continue;
+//     if (lecture.groups !== comparedLecture.groups) continue;
+//     if (!isEqual(lecture.lectureGroup, comparedLecture.lectureGroup)) continue;
+//     if (isString(lecture.weeks.weeks) !== isString(comparedLecture.weeks.weeks)) {
+//       // If there are lectures with same group but one has weeks and one hasn't it probabbly is same lecture in different rooms
+//       if (lecture.groups === comparedLecture.groups && lecture.groups !== "xx" && lecture.room !== comparedLecture.room) {
+//         conjunct();
+//       }
+//       continue;
+//     }
+//     if (isString(lecture.weeks.weeks) || isString(comparedLecture.weeks.weeks)) continue;
 
-    if (
-      // ref: README-> Notes > Timespans. Plus one should not matter in terms of splitting odd/even lectures, but helps with the conjuncting
-      (union(lecture.weeks.weeks, comparedLecture.weeks.weeks).length > lecture.lecturesCount + 1 &&
-        // even if the lecture exceeds the semester weeks, it should be conjuncted if groups id defined
-        lecture.groups === "xx") ||
-      (lecture.lecturesCount <= 6 &&
-        lecture.weeks.parity &&
-        comparedLecture.weeks.parity &&
-        lecture.weeks.parity !== comparedLecture.weeks.parity)
-    )
-      continue;
-    lecture.weeks.weeks = union(lecture.weeks.weeks, comparedLecture.weeks.weeks);
+//     if (
+//       // ref: README-> Notes > Timespans. Plus one should not matter in terms of splitting odd/even lectures, but helps with the conjuncting
+//       (union(lecture.weeks.weeks, comparedLecture.weeks.weeks).length > lecture.lecturesCount + 1 &&
+//         // even if the lecture exceeds the semester weeks, it should be conjuncted if groups id defined
+//         lecture.groups === "xx") ||
+//       (lecture.lecturesCount <= 6 &&
+//         lecture.weeks.parity &&
+//         comparedLecture.weeks.parity &&
+//         lecture.weeks.parity !== comparedLecture.weeks.parity)
+//     )
+//       continue;
+//     lecture.weeks.weeks = union(lecture.weeks.weeks, comparedLecture.weeks.weeks);
 
-    conjunct();
-  }
-  const preConjunctedLecturesValues = Object.values(preConjunctedLectures);
-  const hasEveryLectureSameRoom = preConjunctedLecturesValues.every((l) => deepEqual(l.room, lecture.room));
-  const mainEvent = hasEveryLectureSameRoom
-    ? lecture
-    : (preConjunctedLecturesValues.find((lecture) =>
-        lecture.room.some((room) =>
-          conjunctableRooms.some((conjunctable) =>
-            Array.isArray(conjunctable) ? conjunctable.includes(room) : conjunctable.main === room
-          )
-        )
-      ) ?? preConjunctedLecturesValues[0]);
-  if (mainEvent && preConjunctedLecturesValues.length > 1) {
-    const lect = lecture as unknown as MCourseLecture;
-    lect.room = conjunctConjunctableRooms(uniq(preConjunctedLecturesValues.flatMap((lect) => lect.room)));
-    lect.info = uniq(preConjunctedLecturesValues.map((lect) => lect.info)).join(", ");
-    lect.note = preConjunctedLecturesValues
-      .map((lect) => lect.note)
-      .filter(Boolean)
-      .join(", ");
-    const conjunctedWeeks = uniq(
-      preConjunctedLecturesValues.flatMap((lect) => lect.weeks.weeks as number[]).sort((a, b) => a - b)
-    );
-    lect.weeks = {
-      parity: preConjunctedLecturesValues.every((lect) => lect.weeks.parity === mainEvent.weeks.parity)
-        ? mainEvent.weeks.parity
-        : null,
-      weeks: conjunctedWeeks,
-    };
-    // // if capacity is same, keep it, if not, join them
-    lect.capacity = preConjunctedLecturesValues.every((lect) => lect.capacity === mainEvent.capacity)
-      ? mainEvent.capacity
-      : preConjunctedLecturesValues.map((lect) => lect.capacity).join(", ");
+//     conjunct();
+//   }
+//   const preConjunctedLecturesValues = Object.values(preConjunctedLectures);
+//   const hasEveryLectureSameRoom = preConjunctedLecturesValues.every((l) => deepEqual(l.room, lecture.room));
+//   const mainEvent = hasEveryLectureSameRoom
+//     ? lecture
+//     : (preConjunctedLecturesValues.find((lecture) =>
+//         lecture.room.some((room) =>
+//           conjunctableRooms.some((conjunctable) =>
+//             Array.isArray(conjunctable) ? conjunctable.includes(room) : conjunctable.main === room
+//           )
+//         )
+//       ) ?? preConjunctedLecturesValues[0]);
+//   if (mainEvent && preConjunctedLecturesValues.length > 1) {
+//     const lect = lecture as unknown as MCourseLecture;
+//     lect.room = conjunctConjunctableRooms(uniq(preConjunctedLecturesValues.flatMap((lect) => lect.room)));
+//     lect.info = uniq(preConjunctedLecturesValues.map((lect) => lect.info)).join(", ");
+//     lect.note = preConjunctedLecturesValues
+//       .map((lect) => lect.note)
+//       .filter(Boolean)
+//       .join(", ");
+//     const conjunctedWeeks = uniq(
+//       preConjunctedLecturesValues.flatMap((lect) => lect.weeks.weeks as number[]).sort((a, b) => a - b)
+//     );
+//     lect.weeks = {
+//       parity: preConjunctedLecturesValues.every((lect) => lect.weeks.parity === mainEvent.weeks.parity)
+//         ? mainEvent.weeks.parity
+//         : null,
+//       weeks: conjunctedWeeks,
+//     };
+//     // // if capacity is same, keep it, if not, join them
+//     lect.capacity = preConjunctedLecturesValues.every((lect) => lect.capacity === mainEvent.capacity)
+//       ? mainEvent.capacity
+//       : preConjunctedLecturesValues.map((lect) => lect.capacity).join(", ");
 
-    for (const i of ObjectTyped.keys(preConjunctedLectures).slice(1).reverse()) {
-      data.splice(i, 1);
-    }
-  }
-}
+//     for (const i of ObjectTyped.keys(preConjunctedLectures).slice(1).reverse()) {
+//       data.splice(i, 1);
+//     }
+//   }
+// }
 
 function isSameTimeLecture(lecture1: { day: DAY; timeSpan: TimeSpan }, lecture2: { day: DAY; timeSpan: TimeSpan }) {
   const isSameTime = (time1: Time, time2: Time) => time1.hour === time2.hour && time1.minute === time2.minute;
@@ -253,12 +304,22 @@ function isSameTimeLecture(lecture1: { day: DAY; timeSpan: TimeSpan }, lecture2:
   );
 }
 
-function linkLectrues(lecture: FilteredCourseLecture, data: FilteredCourseLecture[], semesterWeeks: number) {
-  const convertToMCourseLecture = (lecture: FilteredCourseLecture): MCourseLecture => {
-    // @ts-expect-error the rooms will be changed elsewhere
+function isAfterLecture(lecture1: { day: DAY; timeSpan: TimeSpan }, lecture2: { day: DAY; timeSpan: TimeSpan }) {
+  return lecture2.timeSpan.start.minutes > lecture1.timeSpan.end.minutes;
+}
+
+function linkCourse(data: ConjunctedLecture[], semesterWeeks: number) {
+  for (const lecture of data) {
+    linkLectrues(lecture, data, semesterWeeks);
+  }
+  return data as unknown as linkedLecture[];
+}
+
+function linkLectrues(lecture: ConjunctedLecture, data: ConjunctedLecture[], semesterWeeks: number) {
+  const convertToMCourseLecture = (lecture: ConjunctedLecture): linkedLecture => {
     return Object.assign(lecture, { strongLinked: [], linked: [] });
   };
-  const isStrongLinkedLecture = (lecture: MCourseLecture, otherLecture: MCourseLecture) => {
+  const isStrongLinkedLecture = (lecture: linkedLecture, otherLecture: ConjunctedLecture) => {
     if (lecture.type !== otherLecture.type) return false;
     if (typeof lecture.weeks.weeks === "string" || typeof otherLecture.weeks.weeks === "string") return false;
     if (!lecture.lecturesCount || !otherLecture.lecturesCount) return false;
@@ -266,10 +327,10 @@ function linkLectrues(lecture: FilteredCourseLecture, data: FilteredCourseLectur
       (lecture.lecturesCount * otherLecture.lecturesCount) / (lecture.lecturesCount + otherLecture.lecturesCount);
     return Math.round(combinedLecturesCount) === semesterWeeks;
   };
-  const getLinkedData = (lectures: MCourseLecture[]) => {
+  const getLinkedData = (lectures: ConjunctedLecture[]) => {
     return lectures.map((lecture) => ({ id: lecture.id, day: lecture.day }));
   };
-  const linkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
+  const linkThrough = (lecture: linkedLecture, linked: linkedLecture[]) => {
     const linkedIds = getLinkedData(linked);
     lecture.linked = lecture.linked ?? [];
     for (const linkedId of linkedIds) {
@@ -282,7 +343,7 @@ function linkLectrues(lecture: FilteredCourseLecture, data: FilteredCourseLectur
       linkedLecture.linked.push(...getLinkedData(linked.filter((linkedId) => linkedId.id !== linkedLecture.id)));
     }
   };
-  const strongLinkThrough = (lecture: MCourseLecture, linked: MCourseLecture[]) => {
+  const strongLinkThrough = (lecture: linkedLecture, linked: linkedLecture[]) => {
     const linkedIds = getLinkedData(linked);
     lecture.strongLinked = lecture.strongLinked ?? [];
     lecture.strongLinked = lecture.strongLinked ?? [];
@@ -298,19 +359,22 @@ function linkLectrues(lecture: FilteredCourseLecture, data: FilteredCourseLectur
   };
 
   const lect = convertToMCourseLecture(lecture);
+  // if groups are not defined, it is not possible to link
   if (!/\d/.test(lecture.groups)) return;
-  const strongLinkedLectures: MCourseLecture[] = [];
-  const linkedLectures = (data as unknown as MCourseLecture[]).filter((otherLecture) => {
-    if (isSameTimeLecture(lect, otherLecture)) return false;
-    if (otherLecture.groups !== lect.groups) return false;
-    if (!deepEqual(otherLecture.lectureGroup, lect.lectureGroup)) return false;
+  const strongLinkedLectures: ConjunctedLecture[] = [];
+  const linkedLectures: ConjunctedLecture[] = [];
+  for (const otherLecture of data) {
+    if (isSameTimeLecture(lect, otherLecture)) continue;
+    if (otherLecture.groups !== lect.groups) continue;
+    if (!isEqual(otherLecture.lectureGroup, lect.lectureGroup)) continue;
 
     if (isStrongLinkedLecture(lect, otherLecture)) {
       strongLinkedLectures.push(otherLecture);
-      return;
+      continue;
     }
-    return true;
-  });
-  linkThrough(lect, linkedLectures);
-  strongLinkThrough(lect, strongLinkedLectures);
+    linkedLectures.push(otherLecture);
+  }
+  // they will become LinkedLecture after it all passes
+  linkThrough(lect, linkedLectures as linkedLecture[]);
+  strongLinkThrough(lect, strongLinkedLectures as linkedLecture[]);
 }
