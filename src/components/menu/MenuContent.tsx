@@ -1,4 +1,3 @@
-import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "lodash-es";
@@ -276,11 +275,11 @@ function Content({
 
   const group: FormGroup = createFormGroup(formGroupControls);
 
-  // TODO: find something better
-  createEffect(() => {
-    const store = trackStore(group);
-    setPersistentGroupData(store.rawValue as FormGroupValues);
-  });
+  // // TODO: find something better
+  // createEffect(() => {
+  //   const store = trackStore(group);
+  //   setPersistentGroupData(store.rawValue as FormGroupValues);
+  // });
 
   const getFetchableData = () => ({
     year: group.controls.year.value?.value,
