@@ -1,4 +1,5 @@
 import ChevronDown from "lucide-solid/icons/chevron-down";
+import AddCustomEventAction from "~/components/menu/menu-actions/AddCustomEventAction";
 import ExportImportJsonAction from "~/components/menu/menu-actions/ExportImportJsonAction";
 import GenerateScheduleAction from "~/components/menu/menu-actions/GenerateScheduleAction";
 import ScheduleScreenshot from "~/components/menu/menu-actions/SaveImageAction";
@@ -19,6 +20,7 @@ export function Actions() {
         <ScheduleScreenshot />
         <ExportImportJsonAction />
         <GenerateScheduleAction />
+        <AddCustomEventAction />
       </CollapsibleContent>
     </Collapsible>
   );
