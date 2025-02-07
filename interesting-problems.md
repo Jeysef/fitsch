@@ -1,0 +1,5 @@
+# Interesting problems
+
+## A page that was unresponsive
+  so when cookies were not set, the page was fine, but when cookies were set, it was unresponsive after loading. 
+  I identified that the problem was in the MenuContent.tsx file, specifically in the `const [persistentGroupData, setPersistentGroupData] = makePersisted(...)` line. If I didn't set the persistentGroupData signal, and cleared the cookies, the page would be fine. For long time. On dev it seemd like it is an old known hydration issue, but on prod it was just unresponsive (error only in console. the is not function one). After while I just tried to move the persistent signal to component level instead at file level and it worked. On file level the persisted signal was not read correctly (maybye at all) on the server, but was rendered on client which caused hydration errors.

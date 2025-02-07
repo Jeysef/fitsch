@@ -1,3 +1,4 @@
+import { trackStore } from "@solid-primitives/deep";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "lodash-es";
@@ -21,6 +22,7 @@ import {
   startTransition,
   useContext,
 } from "solid-js";
+import { unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { toast } from "solid-sonner";
 import { Actions } from "~/components/menu/MenuActions";
@@ -74,21 +76,25 @@ const monthCookie = cookieStorage.withOptions({
   sameSite: "Strict",
 });
 
-const [persistentGroupData, setPersistentGroupData] = makePersisted(
-  createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] }>(),
-  { name: "groupData", storage: monthCookie }
-);
-const [submittedCourses, setSubmittedCourses] = makePersisted(
-  createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
-  { name: "submittedCourses", storage: monthCookie }
-);
+const emptyPersistentValue: { [K in keyof Required<NavigationSchema>]: undefined } = {
+  year: undefined,
+  semester: undefined,
+  grade: undefined,
+  degree: undefined,
+  program: undefined,
+  ...mapValues(OBLIGATION, () => undefined),
+};
 
 export default function Wrapper() {
+  const [persistentGroupData] = makePersisted(
+    createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] | undefined }>(emptyPersistentValue),
+    { name: "groupData", storage: monthCookie }
+  );
   // defer, so that the loading is not shown on client
   const locale = useI18n().locale;
   const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
     language: locale(),
-    year: persistentGroupData()?.year.value,
+    year: persistentGroupData()?.year?.value,
     degree: persistentGroupData()?.degree,
     program: persistentGroupData()?.program,
   };
@@ -124,6 +130,15 @@ function Content({
     DataProviderTypes.getStudyOverviewConfig
   >;
 }) {
+  const [persistentGroupData, setPersistentGroupData] = makePersisted(
+    createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] | undefined }>(emptyPersistentValue),
+    { name: "groupData", storage: monthCookie }
+  );
+
+  const [submittedCourses, setSubmittedCourses] = makePersisted(
+    createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
+    { name: "submittedCourses", storage: monthCookie }
+  );
   const { store } = useScheduler();
   const data = resource[0];
   const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
@@ -276,10 +291,14 @@ function Content({
   const group: FormGroup = createFormGroup(formGroupControls);
 
   // // TODO: find something better
-  // createEffect(() => {
-  //   const store = trackStore(group);
-  //   setPersistentGroupData(store.rawValue as FormGroupValues);
-  // });
+  createEffect(
+    on(
+      () => trackStore(group),
+      (data) => {
+        setPersistentGroupData(unwrap(data.rawValue));
+      }
+    )
+  );
 
   const getFetchableData = () => ({
     year: group.controls.year.value?.value,
