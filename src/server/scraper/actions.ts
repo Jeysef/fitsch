@@ -8,7 +8,7 @@ export const getStudyCoursesDetailsAction = action(async (config: GetStudyCourse
   "use server";
   try {
     const data = await getStudyCoursesDetails(config);
-    const serializedData: StudyCoursesDetailsActionReturn = JSON.parse(JSON.stringify(data)) satisfies Jsonify<typeof data>;
+    const serializedData: StudyCoursesDetailsActionReturn = JSON.parse(JSON.stringify(data)) as Jsonify<typeof data>;
     return json(serializedData);
   } catch (error) {
     // Return a serializable error object

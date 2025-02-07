@@ -23,9 +23,10 @@ import type { ICreateColumns, IScheduleColumn, IScheduleRow } from "~/components
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
+import type { StudyCoursesDetailsActionReturn } from "~/server/scraper/actionTypes";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { DataProviderTypes, FunctionReturnError } from "~/server/scraper/types";
 
 // some classes are already revived by ClassRegistry
 export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;
@@ -118,6 +119,10 @@ export function SchedulerProvider(props: ParentProps) {
     recreateStore(persistedStore());
   });
 
+  function isErrorReturn(data: StudyCoursesDetailsActionReturn): data is FunctionReturnError {
+    return typeof data === "object" && data !== null && "error" in data && data.error === true;
+  }
+
   // --- update on data from server
   const data = useSubmission(getStudyCoursesDetailsAction);
   createComputed(
@@ -125,6 +130,11 @@ export function SchedulerProvider(props: ParentProps) {
       () => data.result,
       (result) => {
         if (!result) return;
+        console.log("🚀 ~ SchedulerProvider ~ result:", result);
+        if (isErrorReturn(result)) {
+          toast.error(result.errorMessage);
+          return;
+        }
         const revivedData = JSON.parse(
           JSON.stringify(result),
           ClassRegistry.reviver

@@ -1,4 +1,4 @@
 import type { Jsonify } from "type-fest";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { DataProviderTypes, FunctionReturn } from "~/server/scraper/types";
 
-export type StudyCoursesDetailsActionReturn = Jsonify<DataProviderTypes.getStudyCoursesDetailsReturn>;
+export type StudyCoursesDetailsActionReturn = Jsonify<FunctionReturn<DataProviderTypes.getStudyCoursesDetailsReturn>>;
