@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vinxi dev --host",
     "build": "vinxi build",
-    "build-netlify": "cross-env NITRO_PRESET=netlify vinxi build",
+    "build-netlify": "vinxi build --preset netlify",
     "start": "vinxi start",
     "lint": "biome lint",
     "format": "biome format",
@@ -66,7 +66,6 @@
     "@biomejs/biome": "1.9.4",
     "@types/deep-equal": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
-    "cross-env": "^7.0.3",
     "playwright": "^1.50.0",
     "ts-essentials": "^10.0.4",
     "typescript": "^5.7.3"
