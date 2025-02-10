@@ -9,24 +9,31 @@ import type {
   FunctionReturnError,
   GetStudyCoursesDetailsFunctionConfig,
 } from "~/server/scraper/types";
+import { defineCachedFunction } from "~/server/utils/cache";
+
+const cacheMaxAge = 30 * 60;
+const cacheMaxAgeStale = 60 * 60;
 
 export const getStudyOverview: ResourceFetcher<
   DataProviderTypes.getStudyOverviewConfig,
   FunctionReturn<DataProviderTypes.getStudyOverviewReturn>,
   DataProviderTypes.getStudyOverviewConfig
-> = async (source, { value, refetching }) => {
-  "use server";
-  // Fetch the data and return a value.
-  //`source` tells you the current value of the source signal;
-  //`value` tells you the last returned value of the fetcher;
-  //`refetching` is true when the fetcher is triggered by calling `refetch()`,
-  // or equal to the optional data passed: `refetch(info)`
-  const val = typeof refetching === "boolean" ? source : { ...source, ...refetching };
-  const languageProvider = new LanguageProvider(val.language);
-  const dataProvider = new DataProvider(languageProvider, fromURL);
-  const data = await errorResolver(dataProvider.getStudyOverview(val));
-  return data;
-};
+> = defineCachedFunction(
+  async (source, { value, refetching }) => {
+    "use server";
+    // Fetch the data and return a value.
+    //`source` tells you the current value of the source signal;
+    //`value` tells you the last returned value of the fetcher;
+    //`refetching` is true when the fetcher is triggered by calling `refetch()`,
+    // or equal to the optional data passed: `refetch(info)`
+    const val = typeof refetching === "boolean" ? source : { ...source, ...refetching };
+    const languageProvider = new LanguageProvider(val.language);
+    const dataProvider = new DataProvider(languageProvider, fromURL);
+    const data = await errorResolver(dataProvider.getStudyOverview(val));
+    return data;
+  },
+  { maxAge: cacheMaxAge, name: "getStudyOverview", swr: false, staleMaxAge: cacheMaxAgeStale }
+);
 
 export const getStudyCoursesDetails = (
   config: GetStudyCoursesDetailsFunctionConfig
