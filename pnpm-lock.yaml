@@ -94,6 +94,9 @@ importers:
       object-typed:
         specifier: ^1.0.0
         version: 1.0.0
+      ohash:
+        specifier: ^1.1.4
+        version: 1.1.4
       postcss:
         specifier: ^8.5.1
         version: 8.5.1
@@ -155,6 +158,9 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
+      nitropack:
+        specifier: ^2.10.4
+        version: 2.10.4(typescript@5.7.3)
       playwright:
         specifier: ^1.50.0
         version: 1.50.0
@@ -6883,8 +6889,8 @@ snapshots:
 
   magicast@0.3.5:
     dependencies:
-      '@babel/parser': 7.26.7
-      '@babel/types': 7.26.7
+      '@babel/parser': 7.26.8
+      '@babel/types': 7.26.8
       source-map-js: 1.2.1
 
   math-intrinsics@1.1.0: {}
@@ -8039,9 +8045,9 @@ snapshots:
 
   untyped@1.5.2:
     dependencies:
-      '@babel/core': 7.26.7
+      '@babel/core': 7.26.8
       '@babel/standalone': 7.26.7
-      '@babel/types': 7.26.7
+      '@babel/types': 7.26.8
       citty: 0.1.6
       defu: 6.1.4
       jiti: 2.4.2
