@@ -1,7 +1,6 @@
 {
   "name": "fitsch",
   "type": "module",
-  "resolutions": {},
   "scripts": {
     "dev": "vinxi dev --host",
     "build": "vinxi build",
@@ -26,7 +25,7 @@
     "@solid-primitives/storage": "^4.3.1",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.0.11",
+    "@solidjs/start": "^1.1.0",
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
@@ -53,8 +52,8 @@
     "tinycolor2": "^1.6.0",
     "type-fest": "^4.33.0",
     "uuid": "^11.0.5",
-    "vinxi": "^0.4.3",
-    "vite": "^5.4.14",
+    "vinxi": "^0.5.3",
+    "vite": "^6.1.0",
     "vite-plugin-solid": "^2.11.0",
     "vitest": "^2.1.8",
     "zod": "^3.24.1"

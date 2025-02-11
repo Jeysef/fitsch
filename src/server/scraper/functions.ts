@@ -1,4 +1,4 @@
-"use server";
+// "use server";
 import { fromURL } from "cheerio";
 import type { ResourceFetcher } from "solid-js";
 import { DataProvider } from "~/server/scraper/dataProvider";
