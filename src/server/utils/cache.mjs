@@ -5,7 +5,7 @@ import { isEvent } from "vinxi/http";
 import { createStorage, fsDriver, memoryDriver, prefixStorage } from "vinxi/storage";
 
 const storage = createStorage({
-  driver: import.meta.env.DEV ? await fsDriver({ base: "/cache" }) : await memoryDriver(),
+  driver: import.meta.env.DEV ? await fsDriver({ base: "/.nitro" }) : await memoryDriver(),
 });
 export function useStorage(base = "") {
   return base ? prefixStorage(storage, base) : storage;
