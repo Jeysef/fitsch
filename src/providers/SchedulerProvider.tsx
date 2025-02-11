@@ -22,11 +22,11 @@ import { TimeSpan, type Time } from "~/components/scheduler/time";
 import type { ICreateColumns, IScheduleColumn, IScheduleRow } from "~/components/scheduler/types";
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
-import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import type { StudyCoursesDetailsActionReturn } from "~/server/scraper/actionTypes";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes, FunctionReturnError } from "~/server/scraper/types";
+import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 
 // some classes are already revived by ClassRegistry
 export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;

@@ -4,11 +4,21 @@ import { isEvent } from "vinxi/http";
 
 import { createStorage, fsDriver, memoryDriver, prefixStorage } from "vinxi/storage";
 
-const storage = createStorage({
-  driver: import.meta.env.DEV ? await fsDriver({ base: ".nitro" }) : await memoryDriver(),
-});
-export function useStorage(base = "") {
-  return base ? prefixStorage(storage, base) : storage;
+const storage = async () =>
+  createStorage({
+    driver: import.meta.env.DEV ? await fsDriver({ base: ".nitro" }) : await memoryDriver(),
+  });
+
+let globalStorage = undefined;
+export async function useStorage(base = "") {
+  let _storage = globalStorage;
+  // const _storage = await storage();
+  if (!_storage) {
+    _storage = await storage();
+    globalStorage = _storage;
+  }
+
+  return base ? prefixStorage(_storage, base) : _storage;
 }
 
 function defaultCacheOptions() {
@@ -29,12 +39,11 @@ export function defineCachedFunction(fn, opts = {}) {
   const validate = opts.validate || ((entry) => entry.value !== void 0);
   async function get(key, resolver, shouldInvalidateCache, event) {
     const cacheKey = [opts.base, group, name, key + ".json"].filter(Boolean).join(":").replace(/:\/$/, ":index");
+    console.log("🚀 ~ get ~ cacheKey:", cacheKey);
     let entry =
-      (await useStorage()
-        .getItem(cacheKey)
-        .catch((error) => {
-          console.error(`[nitro] [cache] Cache read error.`, error);
-        })) || {};
+      (await (await useStorage()).getItem(cacheKey).catch((error) => {
+        console.error(`[nitro] [cache] Cache read error.`, error);
+      })) || {};
     if (typeof entry !== "object") {
       entry = {};
       const error = new Error("Malformed data read from cache.");
@@ -77,11 +86,9 @@ export function defineCachedFunction(fn, opts = {}) {
           if (opts.maxAge && !opts.swr) {
             setOpts = { ttl: opts.maxAge };
           }
-          const promise = useStorage()
-            .setItem(cacheKey, entry, setOpts)
-            .catch((error) => {
-              console.error(`[nitro] [cache] Cache write error.`, error);
-            });
+          const promise = (await useStorage()).setItem(cacheKey, entry, setOpts).catch((error) => {
+            console.error(`[nitro] [cache] Cache write error.`, error);
+          });
           if (event?.waitUntil) {
             event.waitUntil(promise);
           }
@@ -108,6 +115,7 @@ export function defineCachedFunction(fn, opts = {}) {
       return fn(...args);
     }
     const key = await (opts.getKey || getKey)(...args);
+    console.log("🚀 ~ return ~ args:", args);
     const shouldInvalidateCache = await opts.shouldInvalidateCache?.(...args);
     const entry = await get(key, () => fn(...args), shouldInvalidateCache, args[0] && isEvent(args[0]) ? args[0] : void 0);
     let value = entry.value;
@@ -121,6 +129,6 @@ export function defineCachedFunction(fn, opts = {}) {
 export function cachedFunction(fn, opts = {}) {
   return defineCachedFunction(fn, opts);
 }
-function getKey(...args) {
+export function getKey(...args) {
   return args.length > 0 ? hash(args, {}) : "";
 }

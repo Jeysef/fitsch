@@ -1,8 +1,8 @@
 import { action, json } from "@solidjs/router";
 import type { Jsonify } from "type-fest";
 import type { StudyCoursesDetailsActionReturn } from "~/server/scraper/actionTypes";
-import { getStudyCoursesDetails } from "~/server/scraper/functions";
 import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
+import { getStudyCoursesDetails } from "~/server/server-fns/getCourses/functions";
 
 export const getStudyCoursesDetailsAction = action(async (config: GetStudyCoursesDetailsFunctionConfig) => {
   "use server";

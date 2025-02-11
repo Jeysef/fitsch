@@ -41,9 +41,7 @@ import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
-import { getStudyCoursesDetailsAction } from "~/server/scraper/actions";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
-import { getStudyOverview } from "~/server/scraper/functions";
 import type {
   DataProviderTypes,
   FunctionReturn,
@@ -51,6 +49,8 @@ import type {
   GetStudyCoursesDetailsFunctionConfig,
   StudyOverview,
 } from "~/server/scraper/types";
+import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
+import getStudyOverview from "~/server/server-fns/getOverview";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
