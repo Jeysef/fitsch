@@ -2,7 +2,6 @@ import type { CacheEntry, CacheOptions, NitroAsyncContext } from "nitropack/type
 import { hash } from "ohash";
 import { isEvent } from "vinxi/server";
 import type { TransactionOptions } from "vinxi/storage";
-import type { CachePluginData } from "~/plugins/cache.types";
 import { useStorage } from "./storage";
 
 type H3Event = NitroAsyncContext["event"];
@@ -46,7 +45,7 @@ export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
         .getItem(cacheKey)
         .catch((error) => {
           console.error(`[nitro] [cache] Cache read error.`, error);
-          (globalThis as unknown as { cache: CachePluginData }).cache.captureError(error, { event, tags: ["cache"] });
+          globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
         })) as unknown) || {};
 
     // https://github.com/nitrojs/nitro/issues/2160
@@ -54,7 +53,7 @@ export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
       entry = {};
       const error = new Error("Malformed data read from cache.");
       console.error("[nitro] [cache]", error);
-      (globalThis as unknown as { cache: CachePluginData }).cache.captureError(error, { event, tags: ["cache"] });
+      globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
     }
 
     const ttl = (opts.maxAge ?? 0) * 1000;
@@ -106,7 +105,7 @@ export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
             .setItem(cacheKey, entry, setOpts)
             .catch((error) => {
               console.error(`[nitro] [cache] Cache write error.`, error);
-              (globalThis as unknown as { cache: CachePluginData }).cache.captureError(error, { event, tags: ["cache"] });
+              globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
             });
           if (event?.waitUntil) {
             event.waitUntil(promise);
@@ -126,7 +125,7 @@ export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
     if (opts.swr && validate(entry) !== false) {
       _resolvePromise.catch((error) => {
         console.error(`[nitro] [cache] SWR handler error.`, error);
-        (globalThis as unknown as { cache: CachePluginData }).cache.captureError(error, { event, tags: ["cache"] });
+        globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
       });
       return entry as ResolvedCacheEntry<T>;
     }
