@@ -24,7 +24,10 @@ export default function TimeSpan(props: TimeSpanProps) {
   );
   const selected = createMemo(() => props.store.selected);
   return (
-    <div class="w-full max-w-4xl space-y-6 px-4">
+    <div
+      class="overflow-x-auto w-full px-4 grid grid-cols-[repeat(auto-fit,minmax(20rem,56rem))] gap-y-4 gap-x-8"
+      style={{ "justify-content": "safe center" }}
+    >
       <Index each={props.store.courses} fallback={fallback}>
         {(course, index) => <TimeSpanCourse course={course()} selected={selected()[index]} />}
       </Index>
