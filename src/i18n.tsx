@@ -10,10 +10,11 @@ export const locales = [LANGUAGE.CZECH, LANGUAGE.ENGLISH] as const;
 export type Locale = (typeof locales)[number];
 export type RawDictionary = typeof cs;
 export type Dictionary = i18n.Flatten<RawDictionary>;
+export type tType = i18n.Translator<Dictionary>;
 export type I18nContext = {
   locale: Accessor<Locale>;
   setLocale: Setter<Locale>;
-  t: i18n.Translator<Dictionary>;
+  t: tType;
 };
 // for keeping the switching being able on server from cookie I included all dictionaries. Also makes switching faster
 const dictionaries = {

@@ -36,9 +36,10 @@ import {
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
+import type { SchedulerStore } from "~/components/scheduler/store";
 import { Button } from "~/components/ui/button";
 import Loader from "~/components/ui/loader";
-import { useI18n } from "~/i18n";
+import { type tType, useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
@@ -50,26 +51,26 @@ type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
 type FormGroup = IFormGroup<FormGroupControls, FormGroupValues>;
 
+// ----- Context and Cookie Setup -----
 const GroupContext = createContext<FormGroup>();
 export const getGroup = () => {
   const group = useContext(GroupContext);
   if (!group) throw new Error("GroupContext not found");
   return group;
 };
+
 const DataContext = createContext<Accessor<StudyOverview | undefined>>();
 export const getData = () => {
   const data = useContext(DataContext);
   if (!data) throw new Error("DataContext not found");
   return data;
 };
-/**
- * Will be prolonged every time updated
- */
+
 const monthCookie = cookieStorage.withOptions({
   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-  // sameSite: "Strict",
 });
 
+// Default values for persistent data and form
 const emptyPersistentValue: { [K in keyof Required<NavigationSchema>]: undefined } = {
   year: undefined,
   semester: undefined,
@@ -79,12 +80,59 @@ const emptyPersistentValue: { [K in keyof Required<NavigationSchema>]: undefined
   ...mapValues(OBLIGATION, () => undefined),
 };
 
-export default function Wrapper() {
-  const [persistentGroupData] = makePersisted(
+const defaultFormValues = {
+  semester: SEMESTER.WINTER,
+  degree: DEGREE.BACHELOR,
+  grade: undefined,
+  [OBLIGATION.COMPULSORY]: [],
+  [OBLIGATION.COMPULSORY_ELECTIVE]: [],
+  [OBLIGATION.ELECTIVE]: [],
+};
+
+// ----- Custom Hooks -----
+function usePersistentGroupData() {
+  const [persistentGroupData, setPersistentGroupData] = makePersisted(
     createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] | undefined }>(emptyPersistentValue),
     { name: "groupData", storage: monthCookie }
   );
-  // defer, so that the loading is not shown on client
+
+  return { persistentGroupData, setPersistentGroupData };
+}
+
+function useSubmittedCourses() {
+  const [submittedCourses, setSubmittedCourses] = makePersisted(
+    createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
+    { name: "submittedCourses", storage: monthCookie }
+  );
+  return { submittedCourses, setSubmittedCourses };
+}
+
+function useLoadCourses(
+  submit: (data: GetStudyCoursesDetailsFunctionConfig) => ReturnType<typeof getStudyCoursesDetailsAction>,
+  t: tType,
+  store: SchedulerStore
+) {
+  const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
+    if (!data.courses.length && !data.staleCoursesId?.length) {
+      store.courses = [];
+      return;
+    }
+    const submission = submit(data).then((result) => {
+      if (isErrorReturn(result)) throw new Error(result.errorMessage);
+      return result;
+    });
+    toast.promise(submission, {
+      loading: t("menu.toast.generate.loading"),
+      success: t("menu.toast.generate.success"),
+      error: t("menu.toast.generate.error"),
+    });
+  };
+
+  return loadCourses;
+}
+
+export default function Wrapper() {
+  const { persistentGroupData } = usePersistentGroupData();
   const locale = useI18n().locale;
   const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
     language: locale(),
@@ -124,41 +172,20 @@ function Content({
     DataProviderTypes.getStudyOverviewConfig
   >;
 }) {
-  const [persistentGroupData, setPersistentGroupData] = makePersisted(
-    createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] | undefined }>(emptyPersistentValue),
-    { name: "groupData", storage: monthCookie }
-  );
-
-  const [submittedCourses, setSubmittedCourses] = makePersisted(
-    createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
-    { name: "submittedCourses", storage: monthCookie }
-  );
+  const { persistentGroupData, setPersistentGroupData } = usePersistentGroupData();
+  const { submittedCourses, setSubmittedCourses } = useSubmittedCourses();
   const { store } = useScheduler();
   const data = resource[0];
   const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
     DataProviderTypes.getStudyOverviewReturn | undefined
   >;
-  const { refetch, mutate } = resource[1];
+  const { refetch } = resource[1];
   const submit = useAction(getStudyCoursesDetailsAction);
   const { t, locale } = useI18n();
 
-  const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
-    if (!data.courses.length && !data.staleCoursesId?.length) {
-      store.courses = [];
-      return;
-    }
-    const submission = submit(data).then((res) => {
-      if (Object.hasOwn(res, "statusCode")) throw new Error("Server error");
-      return res;
-    });
+  const loadCourses = useLoadCourses(submit, t, store);
 
-    toast.promise(submission, {
-      loading: t("menu.toast.generate.loading"),
-      success: t("menu.toast.generate.success"),
-      error: t("menu.toast.generate.error"),
-    });
-  };
-
+  // ----- Error Handling -----
   const resolvedData = data();
   if (isErrorReturn(resolvedData)) {
     // wait for toast to initialize
@@ -188,6 +215,7 @@ function Content({
     return <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>;
   }
 
+  // ----- Helpers for Data Submission -----
   const getDataToRefetch = () => {
     const c = group.controls;
     return {
@@ -197,6 +225,7 @@ function Content({
       program: c.program.value,
     } satisfies DataProviderTypes.getStudyOverviewConfig;
   };
+
   const getDataToSubmit = (makeStale = true) => {
     const c = group.controls;
     const currentCoursesId = makeStale ? store.courses.map((c) => c.detail.id) : [];
@@ -212,6 +241,7 @@ function Content({
     } satisfies GetStudyCoursesDetailsFunctionConfig;
   };
 
+  // ----- Update Language Effect -----
   createEffect(
     on(locale, (language, _, firstEffect) => {
       if (firstEffect) return false;
@@ -237,6 +267,7 @@ function Content({
     true
   );
 
+  // ----- Form Setup -----
   const validator: <K extends NavigationSchemaKey>(
     name: K,
     value: NavigationSchema[K]
@@ -247,23 +278,15 @@ function Content({
     return returnType.error ? { error: returnType.error } : null;
   };
 
-  const defaultValues = {
-    semester: SEMESTER.WINTER,
-    degree: DEGREE.BACHELOR,
-    grade: undefined,
-    [OBLIGATION.COMPULSORY]: [],
-    [OBLIGATION.COMPULSORY_ELECTIVE]: [],
-    [OBLIGATION.ELECTIVE]: [],
-  };
   const submittedObligation = mapValues(submittedCourses(), (courses) => courses.length > 0 && courses);
 
   const values: FormGroupValues = {
     year: dataValues.year,
     degree: dataValues.degree,
     program: dataValues.program?.id ?? persistentGroupData()?.program,
-    grade: persistentGroupData()?.grade ?? defaultValues.grade,
-    semester: persistentGroupData()?.semester ?? defaultValues.semester,
-    ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultValues[type]),
+    grade: persistentGroupData()?.grade ?? defaultFormValues.grade,
+    semester: persistentGroupData()?.semester ?? defaultFormValues.semester,
+    ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultFormValues[type]),
   };
 
   const formGroupControls = ObjectTyped.fromEntries(
@@ -292,6 +315,7 @@ function Content({
     )
   );
 
+  // ----- Refetch and Clear Effects -----
   const getFetchableData = () => ({
     year: group.controls.year.value?.value,
     program: group.controls.program.value,
@@ -299,7 +323,7 @@ function Content({
 
   /** refetch data */
   createRenderEffect(
-    on(getFetchableData, (data, _, firstEffect) => {
+    on(getFetchableData, (_, __, firstEffect) => {
       if (firstEffect) return false;
       void refetch(getDataToRefetch());
       return false;
@@ -337,6 +361,7 @@ function Content({
     )
   );
 
+  // ----- Submission Handler -----
   const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = (e) => {
     e.preventDefault();
     group.markSubmitted(true);
