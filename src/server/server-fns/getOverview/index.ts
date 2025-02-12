@@ -1,9 +1,10 @@
 import { getStudyOverview } from "~/server/server-fns/getOverview/function";
+import withErrorHandeler from "~/server/server-fns/utils/errorHandeler";
 
-const getOverview: typeof getStudyOverview = async (...config) => {
+const getOverview = async (...config: Parameters<typeof getStudyOverview>) => {
   "use server";
   console.log("getOverview");
-  return getStudyOverview(...config);
+  return withErrorHandeler(getStudyOverview(...config));
 };
 
 export default getOverview;

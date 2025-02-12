@@ -1,12 +1,8 @@
-import type { fromURL } from "cheerio";
 import { chain, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { StudyApi } from "~/server/scraper/api";
-import type { LanguageProvider } from "~/server/scraper/languageProvider";
-import { MutateLectureData } from "~/server/scraper/lectureMutator";
-import { constructGradeLabel } from "~/server/scraper/utils";
-import { LANGUAGE } from "../../enums";
-import { DEGREE, OBLIGATION, SEMESTER } from "./enums";
+import { LANGUAGE } from "~/enums";
+import type { StudyApi } from "~/server/scraper/api";
+import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type {
   DataProviderTypes,
   StudyOverview,
@@ -14,25 +10,23 @@ import type {
   StudyOverviewGrade,
   StudyProgram,
   StudyPrograms,
-} from "./types";
+} from "~/server/scraper/types";
+import { constructGradeLabel } from "~/server/scraper/utils";
 
-export class DataProvider {
-  readonly studyApi: StudyApi;
+export class OverviewDataProvider {
   constructor(
-    private readonly languageProvider: LanguageProvider,
-    fetcher: typeof fromURL
-  ) {
-    this.studyApi = new StudyApi(languageProvider, fetcher);
-  }
+    private readonly studyApi: StudyApi,
+    private readonly language: LANGUAGE
+  ) {}
 
   public async getStudyOverview(
     config?: DataProviderTypes.getStudyOverviewConfig
   ): Promise<DataProviderTypes.getStudyOverviewReturn> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config);
-    const isEnglish = this.languageProvider.language === LANGUAGE.ENGLISH;
+    const isEnglish = this.language === LANGUAGE.ENGLISH;
     const values: StudyOverview["values"] = {
-      language: this.languageProvider.language,
-      year: config ? (years.find((year) => year.value === config.year) ?? currentYear) : currentYear,
+      language: this.language,
+      year: currentYear,
       degree: config?.degree ?? DEGREE.BACHELOR,
     };
 
@@ -98,13 +92,5 @@ export class DataProvider {
         courses,
       },
     } satisfies StudyOverview;
-  }
-
-  public async getStudyCoursesDetails(
-    config: DataProviderTypes.getStudyCoursesDetailsConfig
-  ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
-    const coursesDetails = await this.studyApi.getStudyCoursesDetails(config);
-    const data = MutateLectureData(coursesDetails, config.mutatorConfig ?? {});
-    return data;
   }
 }

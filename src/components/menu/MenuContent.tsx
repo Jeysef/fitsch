@@ -22,7 +22,6 @@ import {
   startTransition,
   useContext,
 } from "solid-js";
-import { unwrap } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { toast } from "solid-sonner";
 import { Actions } from "~/components/menu/MenuActions";
@@ -42,15 +41,10 @@ import Loader from "~/components/ui/loader";
 import { useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
-import type {
-  DataProviderTypes,
-  FunctionReturn,
-  FunctionReturnError,
-  GetStudyCoursesDetailsFunctionConfig,
-  StudyOverview,
-} from "~/server/scraper/types";
+import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
-import getStudyOverview from "~/server/server-fns/getOverview";
+import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
+import { type FunctionReturn, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -73,7 +67,7 @@ export const getData = () => {
  */
 const monthCookie = cookieStorage.withOptions({
   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-  sameSite: "Strict",
+  // sameSite: "Strict",
 });
 
 const emptyPersistentValue: { [K in keyof Required<NavigationSchema>]: undefined } = {
@@ -98,7 +92,7 @@ export default function Wrapper() {
     degree: persistentGroupData()?.degree,
     program: persistentGroupData()?.program,
   };
-  const resource = createResource(initialConfig, getStudyOverview, { deferStream: true });
+  const resource = createResource(initialConfig, getStudyOverviewResource, { deferStream: true });
 
   return (
     <div class="w-44 space-y-2">
@@ -165,9 +159,6 @@ function Content({
     });
   };
 
-  function isErrorReturn<T>(data: FunctionReturn<T>): data is FunctionReturnError {
-    return typeof data === "object" && data !== null && "error" in data && data.error === true;
-  }
   const resolvedData = data();
   if (isErrorReturn(resolvedData)) {
     // wait for toast to initialize
@@ -295,7 +286,8 @@ function Content({
     on(
       () => trackStore(group),
       (data) => {
-        setPersistentGroupData(unwrap(data.rawValue));
+        console.log("🚀 ~ setPersistentGroupData:");
+        setPersistentGroupData(data.rawValue);
       }
     )
   );
