@@ -1,10 +1,10 @@
-import { css } from "@emotion/css";
 import Lightbulb from "lucide-solid/icons/lightbulb";
 import TriangleAlert from "lucide-solid/icons/triangle-alert";
 import { ObjectTyped } from "object-typed";
 import { For } from "solid-js";
-import { Typography, typographyVariants } from "~/components/typography";
+import { typographyVariants } from "~/components/typography";
 import Heading from "~/components/typography/heading";
+import List from "~/components/typography/list";
 import Text from "~/components/typography/text";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -18,6 +18,112 @@ import { LECTURE_TYPE } from "~/server/scraper/enums";
 
 export default function AppInfo() {
   const { t } = useI18n();
+
+  const LeftCol = () => {
+    const subjectColors = ObjectTyped.entries(subjectTypeColors).filter(([type]) => type !== LECTURE_TYPE.EXAM);
+    return (
+      <div class="max-w-prose w-full flex flex-col">
+        <Heading variant="h3">{t("info.appInfo.overview.title")}</Heading>
+        <Text>{t("info.appInfo.overview.description")}</Text>
+        <Heading variant="h4" class="mt-8">
+          {t("info.appInfo.colors.title")}
+        </Heading>
+        <Text variant={"smallText"} class="inline">
+          {t("info.appInfo.colors.description")}
+        </Text>
+        <div class="mt-6 list-none flex flex-wrap gap-1">
+          <For each={subjectColors}>
+            {([type, color]) => (
+              <div
+                class={cn("px-4 py-2 rounded border text-colored-event-foreground")}
+                style={{ "background-color": color }}
+              >
+                {t(`scheduler.timeSpan.type.${type}`)}
+              </div>
+            )}
+          </For>
+        </div>
+        <Heading variant="h4" class="mt-8">
+          {t("info.appInfo.weekParity.title")}
+        </Heading>
+        <Text>{t("info.appInfo.weekParity.description")}</Text>
+
+        <div class="mt-6 list-none flex flex-wrap gap-1">
+          <For each={ObjectTyped.entries(parityColors)}>
+            {([parity, color]) => (
+              <div class={cn("px-4 py-2 rounded border-dashed border-2")} style={{ "border-color": color }}>
+                {t(`course.detail.weeks.${parity}`)}
+              </div>
+            )}
+          </For>
+        </div>
+        <Heading variant="h4" class="mt-8">
+          {t("info.appInfo.functionality.title")}
+        </Heading>
+        <List>
+          <For each={t("info.appInfo.functionality.description")}>{(text) => <li>{text}</li>}</For>
+        </List>
+        <Alert variant="destructive">
+          <TriangleAlert />
+          <AlertTitle>{t("info.appInfo.liabilityWarning.title")}</AlertTitle>
+          <AlertDescription innerHTML={t("info.appInfo.liabilityWarning.description")} />
+        </Alert>
+        <Heading variant="h4" class="mt-8">
+          {t("info.appInfo.links.title")}
+        </Heading>
+        <Text>
+          {t("info.appInfo.links.description")}
+          <List>
+            <For each={t("info.appInfo.links.links")}>
+              {({ title, link }) => (
+                <li>
+                  <a href={link} target="_blank" rel="noreferrer" class={buttonVariants({ variant: "link" })}>
+                    {title}
+                  </a>
+                </li>
+              )}
+            </For>
+          </List>
+        </Text>
+        <Heading variant="h4" class="mt-8">
+          {t("info.appInfo.thanks.title")}
+        </Heading>
+        <Text>{t("info.appInfo.thanks.description")}</Text>
+        <div class="flex-1" />
+        <span class="space-x-2">
+          <Text class="text-muted-foreground text-xs inline-block">{t("info.appInfo.createdBy.title")}</Text>
+          <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
+        </span>
+      </div>
+    );
+  };
+
+  const RightCol = () => {
+    return (
+      <div class="max-w-prose w-full flex flex-col">
+        <Heading variant="h3">{t("info.fitInfo.title")}</Heading>
+        <Text innerHTML={t("info.fitInfo.description")} />
+        <For each={ObjectTyped.entries(t("info.fitInfo.content"))}>
+          {([_, { title, description }]) => (
+            <>
+              <Heading variant="h4" class="mt-8">
+                {title}
+              </Heading>
+              <Text innerHTML={description} />
+            </>
+          )}
+        </For>
+        <Text
+          class="text-lg font-bold text-transparent mt-8 bg-clip-text"
+          style={{ "background-image": "linear-gradient(in oklch to right, #e4002b,  #00a9e0)" }}
+        >
+          {t("info.fitInfo.welcome")}
+        </Text>
+        <Text innerHTML={t("info.fitInfo.ask")} />
+      </div>
+    );
+  };
+
   return (
     <Dialog>
       <DialogTrigger
@@ -30,123 +136,14 @@ export default function AppInfo() {
       </DialogTrigger>
       <DialogContent class="max-w-screen-lg">
         <DialogHeader class="relative space-y-0">
-          <DialogTitle class={typographyVariants({ variant: "h2" })}>Info k aplikaci</DialogTitle>
+          <DialogTitle class={typographyVariants({ variant: "h2" })}>{t("info.heading")}</DialogTitle>
           <InstallButton class="absolute top-0 right-10 hidden md:block lg:hidden" />
         </DialogHeader>
         <InstallButton class="sm:hidden" />
         <div class="max-h-[calc(100svh-10rem)] overflow-auto space-y-2">
-          <div class="flex flex-col md:grid md:grid-cols-2 ">
-            <div class="max-w-prose w-full flex flex-col">
-              <Heading variant="h3">{t("info.appInfo.title")}</Heading>
-              <Text>{t("info.appInfo.overview.description")}</Text>
-              <Heading variant="h4" class="mt-8">
-                Lekce
-              </Heading>
-              <Text class="inline-block text-lg font-semibold">Barevná konvence</Text>
-              <Text variant={"smallText"} class="inline">
-                {" "}
-                (podle mobilní aplikace)
-              </Text>
-              <div class="mt-2 list-none flex flex-wrap gap-1">
-                <For each={ObjectTyped.entries(subjectTypeColors).filter(([type]) => type !== LECTURE_TYPE.EXAM)}>
-                  {([type, color]) => {
-                    const colorClass = css`background-color: ${color}`;
-                    return (
-                      <div class={cn("px-4 py-2 rounded border text-colored-event-foreground", colorClass)}>
-                        {t(`scheduler.timeSpan.type.${type}`)}
-                      </div>
-                    );
-                  }}
-                </For>
-              </div>
-              <Text class="text-lg font-semibold">Parita týdne</Text>
-              <div class="mt-2 list-none flex flex-wrap gap-1">
-                <For each={ObjectTyped.entries(parityColors)}>
-                  {([parity, color]) => {
-                    const colorClass = css`border-color: ${color}`;
-                    return (
-                      <div class={cn("px-4 py-2 rounded border-dashed border-2", colorClass)}>
-                        {t(`course.detail.weeks.${parity}`)}
-                      </div>
-                    );
-                  }}
-                </For>
-              </div>
-              <Heading variant="h4" class="mt-8">
-                Funkčnost
-              </Heading>
-              <Text>
-                Kliknutím na zaškrtávací políčko si předmět přidáte do výsedného rozvrhu.
-                <br />V kartě "Rozsahy" je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu.
-                <br />
-                Rozvrh je automaticky ukládán do prohlížeče.
-              </Text>
-              <Heading variant="h4" class="mt-8">
-                Odkazy
-              </Heading>
-              <Text>
-                Pokud si chcete svůj rozvrh skládat sami, zde jsou odkazy na užitečné stránky:
-                <Typography as="ul" class="list-disc ml-6">
-                  <li>
-                    <a
-                      href="https://www.fit.vut.cz/study/programs"
-                      target="_blank"
-                      rel="noreferrer"
-                      class={buttonVariants({ variant: "link" })}
-                    >
-                      Studijní programy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.fit.vut.cz/study/courses/"
-                      target="_blank"
-                      rel="noreferrer"
-                      class={buttonVariants({ variant: "link" })}
-                    >
-                      Seznam předmětů
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.fit.vut.cz/study/calendar"
-                      target="_blank"
-                      rel="noreferrer"
-                      class={buttonVariants({ variant: "link" })}
-                    >
-                      Časový plán
-                    </a>
-                  </li>
-                </Typography>
-              </Text>
-              <Heading variant="h4" class="mt-8">
-                Poděkování
-              </Heading>
-              <Text>
-                Děkuji všem, kteří se podíleli na vzniku předchozí aplikace nalezitelné na
-                "https://www.kubosh.net/apps/fitsch/", kerá mi poskytla předlohu a přiměla mě udělat tuto aplikaci jako její
-                náhradu.
-              </Text>
-              <div class="flex-1" />
-              <span class="space-x-2">
-                <Text class="text-muted-foreground text-xs inline-block">Vytvořil:</Text>
-                <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
-              </span>
-            </div>
-            <div>
-              <Heading variant="h3">{t("info.fitInfo.title")}</Heading>
-              <Text variant={"lead"}>{t("info.fitInfo.description")}</Text>
-              <For each={ObjectTyped.entries(t("info.fitInfo.content"))}>
-                {([theme, { title, description }]) => (
-                  <>
-                    <Heading variant="h4" class="mt-8">
-                      {title}
-                    </Heading>
-                    <Text>{description}</Text>
-                  </>
-                )}
-              </For>
-            </div>
+          <div class="flex flex-col md:grid md:grid-cols-2 gap-x-6 px-3 ">
+            <LeftCol />
+            <RightCol />
           </div>
           <Alert variant="destructive">
             <TriangleAlert />

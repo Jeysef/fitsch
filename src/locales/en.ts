@@ -160,53 +160,105 @@ export default {
     },
   },
   info: {
+    heading: "Info",
     appInfo: {
-      title: "Application Info",
       overview: {
-        title: "Overview",
+        title: "Application Info",
         description:
-          "The menu on the left allows you to select courses, years, etc. Schedule data is loaded from the FIT website's course pages; these times may not always align with reality or the student system. Some data are added for clarity, such as lesson weeks or parity (found in the lesson info).",
+          "The menu on the left is where you select items. The data is loaded from the FIT website, the individual blocks may not always match ISVUT and reality!",
       },
-      schedule: {
-        title: "Lessons",
-        colors: "",
-        lectures: "",
+      colors: {
+        title: "Color convention",
+        description: "According to the mobile app.",
+      },
+      weekParity: {
+        title: "WeekParity",
+        description:
+          "The red color of the box indicates that it is always in even calendar weeks. Blue indicates odd calendar weeks.",
+      },
+      functionality: {
+        title: "functionality",
+        description: [
+          "Click on the checkbox to add the item to the master schedule.",
+          "In the 'Scopes' tab, there is a check to check off all lectures and labs by course scope. It may not always work reliably!",
+          "Rozvrh je automaticky ukládán do prohlížeče.",
+          "V menu jsou tlačítka „Otevřít JSON“ a „Uložit JSON“, pomocí kterých si můžete rozvrh uložit a potom ho někomu poslat, přenést na jiné zařízení atd. Rozvrh v každém případě zůstává uložen v prohlížeči. Navíc lze rozvrh vyexportovat jako fotka.",
+        ],
+      },
+      liabilityWarning: {
+        title: "The application does not guarantee anything!",
+        description:
+          "Always check that your selected schedule blocks can actually be selected in <a href='https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani' target='_blank' rel='noreferrer'>registration of classes</a> in the BUT IS.",
+      },
+      links: {
+        title: "Links",
+        description: ["If you want to create your own schedule, here are links to useful sites:"],
+        links: [
+          {
+            title: "Study programs",
+            link: "https://www.fit.vut.cz/study/programs",
+          },
+          {
+            title: "List of courses",
+            link: "https://www.fit.vut.cz/study/courses/",
+          },
+          {
+            title: "Timetable",
+            link: "https://www.fit.vut.cz/study/calendar",
+          },
+        ],
+      },
+      thanks: {
+        title: "Acknowledgements",
+        description:
+          "I would like to thank everyone who contributed to the creation of the previous application found at 'https://www.kubosh.net/apps/fitsch/', who provided me with the template and made me create this application as its replacement.",
+      },
+      createdBy: {
+        title: "Created by:",
       },
     },
     fitInfo: {
-      title: "FIT Info",
-      description: "For freshmen.",
+      title: "Úvod do rozvrhů na FITu",
+      description:
+        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
       content: {
         schedule: {
           title: "Schedule",
           description:
-            "As you've probably noticed, university schedules work a bit differently than in high school. There's no unified schedule for each year; instead, each student composes their own schedule based on the courses they're enrolled in and their availability.",
+            "Schedules work quite differently in college than in high school. There is no single timetable for each year. You make your own timetable according to the subjects you enrol in.",
         },
         tuition: {
-          title: "Tuition",
+          title: "tuition",
           description:
-            "Classes consist mainly of lectures, demo exercises, and exercises. Lectures are held in large lecture halls, usually one main hall (D105, E112) that can't accommodate everyone. Therefore, for each main hall, there are two smaller rooms where the lecture is streamed (D0207 and D0206, E104 and E105). For example, the schedule might list a lecture in D105, D0206, and D0207. One or both of the smaller rooms may not open, depending on attendance. Lectures last 2 or 3 hours.",
+            "The teaching consists basically of lectures, seminars (demos) and exercises/labs. Lectures are typically held in large lecture halls. Usually they are in one big main one (D105, E112), but not everyone can fit in it, so there are two other smaller ones for the two big ones, where the lecture streams into (D0207 and D0206, E104 and E105). That's why the schedule sometimes says that the lecture is in D105, D0206 and D0207. One or both of the smaller ones don't always open, they open according to the number of people. The lecture usually lasts 2 or 3 hours",
         },
         groups: {
-          title: "Groups",
+          title: "groups",
           description:
-            "Since the entire year can't fit into one lecture hall (even with additional smaller rooms), the year is divided into two groups (1BIA and 1BIB), each with its own lecture during the week. Therefore, a course might have lectures twice a week. You choose which one to attend and how to schedule it with other lectures, exercises, lunch breaks, avoiding conflicts. Don't worry about which group you're officially in.",
+            "There are too many freshmen and sophomores to fit into one class. Therefore, freshman are divided into 2 groups (1BIA and 1BIB) and all required courses have two lecture dates. It is entirely up to you which one you choose (and how you combine it with other lectures, exercises, lunch breaks...). Technically the groups are divided by name, but don't worry about that! Choose as you need to.",
         },
         timeSpan: {
-          title: "Time Spans",
+          title: "ranges",
           description:
-            "Each course has a specific number of lecture hours. A semester has 13 weeks, so if a course has 39 lecture hours, that's 39 / 13 = 3 hours of lectures per week. Lectures might be in three-hour blocks or split into 2 hours one day and 1 hour another.",
+            "Each course has a range of lectures. The semester has 13 weeks. If a course has a lecture range of 39 hours, this works out to 39 / 13 = 3 hours of lecture per week.",
+        },
+        splitedLectures: {
+          title: "Split Lectures",
+          description:
+            "Usually lectures are three-hour blocks. Occasionally, some are cut into 2 + 1 hours. But remember that the lectures have two groups (1BIA and 1BIB). In these cases (only) you have to be careful to choose a two-hour and a one-hour block that sit in the same group",
         },
         demoLectures: {
-          title: "Demo Exercises",
+          title: "Demo Exercise / Seminar",
           description:
-            "Demo exercises are enhanced lectures where the instructor demonstrates the material in practice, such as solving problems (students don't go to the board here).",
+            "A seminar (demo exercise) is a slightly different lecture, where the lecturer demonstrates the material being taught in a more practical way, e.g. calculates examples. You don't go to the blackboard here",
         },
         exercises: {
           title: "Exercises",
-          description: `Exercises take place in classrooms with about 20–50 students, on PCs or in labs, depending on the course. To find out how many hours per week, add up "everything else" from the total course hours (adjusted to be divisible by 13) and divide by 13. Exercise times are listed on the course pages, but you need to register for them in WIS. If the times don't work for you, you'll need to adjust your schedule. Exercises are usually 2 hours per week. Sometimes the course page doesn't match WIS, but... WIS is always correct.`,
+          description: `Exercises (and laboratories) take place in classrooms of about 20–50 people. Sometimes they are every week, sometimes every other week, and sometimes only in specific weeks of teaching. You can estimate this by looking at the ranges for how many hours of exercises should be in total and dividing it by the length of the block. If you get ±13, there will probably be an exercise ±every week. The dates of the exercises are listed on the course card and in the <a target='_blank' rel='noreferrer' href="https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani">lecture registration</a> in the BUT IS, where you will also have to register them. If you don't manage to do so, you will have to change your schedule.`,
         },
       },
+      welcome: "Welcome to FIT! It takes a lot but it's worth it.",
+      ask: "If you don't understand something, don't be afraid to <a href='https://su.fit.vut.cz/kontakt' target='_blank' rel='noreferrer'>ask</a>!",
     },
   },
   error: {
