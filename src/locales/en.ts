@@ -188,7 +188,7 @@ export default {
       liabilityWarning: {
         title: "The application does not guarantee anything!",
         description:
-          "Always check that your selected schedule blocks can actually be selected in <a href='https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani' target='_blank' rel='noreferrer'>registration of classes</a> in the BUT IS.",
+          "Always check that your selected schedule blocks can actually be selected in <a href='https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani' target='_blank' rel='noreferrer noopener'>registration of classes</a> in the BUT IS.",
       },
       links: {
         title: "Links",
@@ -220,7 +220,7 @@ export default {
     fitInfo: {
       title: "Úvod do rozvrhů na FITu",
       description:
-        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
+        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer noopener' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
       content: {
         schedule: {
           title: "Schedule",
@@ -254,11 +254,11 @@ export default {
         },
         exercises: {
           title: "Exercises",
-          description: `Exercises (and laboratories) take place in classrooms of about 20–50 people. Sometimes they are every week, sometimes every other week, and sometimes only in specific weeks of teaching. You can estimate this by looking at the ranges for how many hours of exercises should be in total and dividing it by the length of the block. If you get ±13, there will probably be an exercise ±every week. The dates of the exercises are listed on the course card and in the <a target='_blank' rel='noreferrer' href="https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani">lecture registration</a> in the BUT IS, where you will also have to register them. If you don't manage to do so, you will have to change your schedule.`,
+          description: `Exercises (and laboratories) take place in classrooms of about 20–50 people. Sometimes they are every week, sometimes every other week, and sometimes only in specific weeks of teaching. You can estimate this by looking at the ranges for how many hours of exercises should be in total and dividing it by the length of the block. If you get ±13, there will probably be an exercise ±every week. The dates of the exercises are listed on the course card and in the <a target='_blank' rel='noreferrer noopener' href="https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani">lecture registration</a> in the BUT IS, where you will also have to register them. If you don't manage to do so, you will have to change your schedule.`,
         },
       },
       welcome: "Welcome to FIT! It takes a lot but it's worth it.",
-      ask: "If you don't understand something, don't be afraid to <a href='https://su.fit.vut.cz/kontakt' target='_blank' rel='noreferrer'>ask</a>!",
+      ask: "If you don't understand something, don't be afraid to <a href='https://su.fit.vut.cz/kontakt' target='_blank' rel='noreferrer noopener'>ask</a>!",
     },
   },
   error: {

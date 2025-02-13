@@ -37,24 +37,12 @@ function ExportImportJsonAction() {
   return (
     <>
       <ItemText as="div">
-        <Button
-          type="button"
-          size={null}
-          variant={"ghost"}
-          class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-          on:click={saveJSON}
-        >
+        <Button type="button" size={null} variant={"ghost"} class="px-2 py-1 text-link-external" on:click={saveJSON}>
           {t("menu.actions.exportJson")}
         </Button>
       </ItemText>
       <ItemText as="div">
-        <Button
-          type="button"
-          size={null}
-          variant={"ghost"}
-          class="px-2 py-1 text-link hover:text-link hover:saturate-150"
-          on:click={loadJSON}
-        >
+        <Button type="button" size={null} variant={"ghost"} class="px-2 py-1 text-link-external" on:click={loadJSON}>
           {t("menu.actions.importJson.title")}
         </Button>
       </ItemText>

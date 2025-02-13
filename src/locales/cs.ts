@@ -190,7 +190,7 @@ export default {
       liabilityWarning: {
         title: "Aplikace za nic neručí!",
         description:
-          "Vždy si ověřte, že vaše vybrané rozvrhové bloky skutečně jdou vybrat v <a href='https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani' target='_blank' rel='noreferrer'>registraci vyučování</a> v IS VUT.",
+          "Vždy si ověřte, že vaše vybrané rozvrhové bloky skutečně jdou vybrat v <a href='https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani' target='_blank' rel='noreferrer noopener'>registraci vyučování</a> v IS VUT.",
       },
       links: {
         title: "Odkazy",
@@ -222,7 +222,7 @@ export default {
     fitInfo: {
       title: "Úvod do rozvrhů na FITu",
       description:
-        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
+        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer noopener' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
       content: {
         schedule: {
           title: "Rozvrh",
@@ -256,11 +256,11 @@ export default {
         },
         exercises: {
           title: "Cvičení",
-          description: `Cvičení (a laboratoře) se odehrávají v učebnách po cca 20–50 lidech. Někdy bývají každý týden, někdy každý druhý týden a někdy jen v konkrétních týdnech výuky. Odhadnout to lze tak, že se podíváte do rozsahů, kolik má být hodin cvičení celkem a vydělíte to délkou bloku. Pokud vám vyjde ±13, pravděpodobně bude cviko ±každý týden. Termíny cvičení jsou vypsané na kartě předmětu a v <a target='_blank' rel='noreferrer' href="https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani">registraci vyučování</a> v IS VUT, kde si je taky budete muset zaregistrovat. Když vám to nevyjde, musíte si rozvrh překopat.`,
+          description: `Cvičení (a laboratoře) se odehrávají v učebnách po cca 20–50 lidech. Někdy bývají každý týden, někdy každý druhý týden a někdy jen v konkrétních týdnech výuky. Odhadnout to lze tak, že se podíváte do rozsahů, kolik má být hodin cvičení celkem a vydělíte to délkou bloku. Pokud vám vyjde ±13, pravděpodobně bude cviko ±každý týden. Termíny cvičení jsou vypsané na kartě předmětu a v <a target='_blank' rel='noreferrer noopener' href="https://www.vut.cz/studis/student.phtml?sn=registrace_vyucovani">registraci vyučování</a> v IS VUT, kde si je taky budete muset zaregistrovat. Když vám to nevyjde, musíte si rozvrh překopat.`,
         },
       },
       welcome: "Welcome to FIT! It takes a lot but it's worth it.",
-      ask: "Pokud něčemu nebudete rozumět, nebojte se <a href='https://su.fit.vut.cz/kontakt' target='_blank' rel='noreferrer'>zeptat</a>!",
+      ask: "Pokud něčemu nebudete rozumět, nebojte se <a href='https://su.fit.vut.cz/kontakt' target='_blank' rel='noreferrer noopener'>zeptat</a>!",
     },
   },
   schedulerProvider: {

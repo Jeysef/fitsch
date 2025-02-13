@@ -77,7 +77,7 @@ export default function AppInfo() {
             <For each={t("info.appInfo.links.links")}>
               {({ title, link }) => (
                 <li>
-                  <a href={link} target="_blank" rel="noreferrer" class={buttonVariants({ variant: "link" })}>
+                  <a href={link} target="_blank" rel="noreferrer noopener" class={buttonVariants({ variant: "link" })}>
                     {title}
                   </a>
                 </li>

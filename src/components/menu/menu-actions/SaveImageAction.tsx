@@ -80,7 +80,7 @@ const ScheduleScreenshot = () => {
         size={null}
         variant={"ghost"}
         disabled={isLoading()}
-        class="px-2 py-1 text-link hover:text-link hover:saturate-150"
+        class="px-2 py-1 text-link-external"
         on:click={saveImage}
       >
         {t("menu.actions.saveImage.title")}

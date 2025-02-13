@@ -6,7 +6,7 @@ import Info from "lucide-solid/icons/info";
 import Link from "lucide-solid/icons/link";
 import MapPin from "lucide-solid/icons/map-pin";
 import Users from "lucide-solid/icons/users";
-import type { JSX } from "solid-js";
+import { Show, type JSX } from "solid-js";
 import type { ScheduleEventData } from "~/components/scheduler/event/types";
 import { Badge } from "~/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
@@ -64,7 +64,7 @@ const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element
           </div>
 
           {/* Groups */}
-          {(lectureGroup?.length > 0 || groups) && (
+          <Show when={lectureGroup?.length > 0 || groups}>
             <div class="flex items-start space-x-2">
               <BookOpen class="h-4 w-4 mt-1 text-muted-foreground" />
               <div class="flex-1">
@@ -83,7 +83,7 @@ const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element
                 </div>
               </div>
             </div>
-          )}
+          </Show>
 
           {/* Weeks */}
           <div class="flex items-start space-x-2">
@@ -99,7 +99,7 @@ const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element
           </div>
 
           {/* Additional Info */}
-          {(info || note) && (
+          <Show when={info || note}>
             <div class="flex items-start space-x-2">
               <Info class="h-4 w-4 mt-1 text-muted-foreground" />
               <div class="flex-1">
@@ -108,20 +108,20 @@ const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element
                 {note && <p class="text-sm text-muted-foreground italic">{note}</p>}
               </div>
             </div>
-          )}
+          </Show>
 
           {/* Course Link */}
-          {courseDetail.link && (
+          <Show when={courseDetail.link}>
             <a
               href={courseDetail.link}
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-800 mt-2"
+              class="flex items-center space-x-2 text-sm mt-2"
             >
               <Link class="h-4 w-4" />
               <span>{t("course.detail.popover.detail")}</span>
             </a>
-          )}
+          </Show>
         </div>
       </PopoverContent>
     </Popover>

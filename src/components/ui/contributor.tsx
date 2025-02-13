@@ -34,7 +34,7 @@ export function Contributor(props: ContributorProps) {
       <a
         href={local.href}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener"
         {...others}
         class={cn(contributorBase, contributorStyle, others.class)}
       >
@@ -46,6 +46,7 @@ export function Contributor(props: ContributorProps) {
 }
 
 const contributorBase = css`
+  text-color: inherit;
   display: inline-flex;
   align-items: center;
   border-radius: 0.375rem;

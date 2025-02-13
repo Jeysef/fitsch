@@ -41,6 +41,10 @@
 
     touch-action: pan-x pan-y;
     height: 100%;
+    a[target="_blank"][rel~="noopener"][rel~="noreferrer"] {
+      /* @apply text-blue-600 hover:text-blue-800 visited:text-indigo-600; */
+      @apply text-link-external;
+    }
   }
 
   /* dark mnode only for elements not containing .light class */
@@ -122,5 +126,11 @@
       hsla(0, 0%, 0%, 0.013) 95.95%,
       hsla(0, 0%, 0%, 0) 100%
     );
+  }
+}
+
+@layer components {
+  .text-link-external {
+    @apply !text-link hover:saturate-150 hover:cursor-pointer visited:text-indigo-600;
   }
 }

@@ -110,7 +110,7 @@ export function ProgramSelect() {
         </TooltipTrigger>
         <TooltipContent class="bg-secondary text-secondary-foreground space-x-1 flex items-center">
           <ItemText class="text-secondary-foreground">{program.name}</ItemText>
-          <a href={program.url} target="_blank" rel="noopener noreferrer" class="text-link">
+          <a href={program.url} target="_blank" rel="noopener noreferrer">
             <Link class="w-4 h-4" />
           </a>
         </TooltipContent>
@@ -321,7 +321,7 @@ export function CoursesSelect() {
           <Text variant={null} class="text-secondary-foreground">
             {course.name}
           </Text>
-          <a href={course.url} target="_blank" rel="noopener noreferrer" class="text-link">
+          <a href={course.url} target="_blank" rel="noopener noreferrer" class="text-link-external">
             <Link class="w-4 h-4" />
           </a>
         </TooltipContent>
