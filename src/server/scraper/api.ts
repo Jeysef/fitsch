@@ -11,26 +11,21 @@ import type {
   StudySpecialization,
 } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
+import { defineCachedFunction } from "~/server/utils/cache";
 import { type DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER } from "./enums";
 
 export class StudyApi {
   private readonly baseUrl = "https://www.fit.vut.cz/study/";
-  private _languageSet: Awaited<typeof this.languageProvider.languageSet> | undefined;
-  private _timeSchedule: Map<string, StudyApiTypes.getStudyTimeScheduleReturn>;
   private readonly urlLanguage: string;
   constructor(
     private readonly languageProvider: LanguageProvider,
     private readonly fetcher: typeof fromURL
   ) {
-    this._languageSet = undefined;
-    this._timeSchedule = new Map();
     this.urlLanguage = `.${this.languageProvider.language}`;
   }
 
   private getLanguageSet = async () => {
-    if (this._languageSet) return this._languageSet;
-    this._languageSet = await this.languageProvider.languageSet;
-    return this._languageSet;
+    return await this.languageProvider.languageSet;
   };
 
   private fetchDocument(url: string) {
@@ -49,52 +44,55 @@ export class StudyApi {
   /**
    * I strongly recommend passing the year parameter, when passed data may be returned from cache
    */
-  private getTimeSchedule = async (
-    config: StudyApiTypes.getStudyTimeScheduleConfig = { year: null }
-  ): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
-    const { year } = config;
-    if (year && this._timeSchedule.has(year)) return this._timeSchedule.get(year)!;
-    const languageSet = await this.getLanguageSet();
-    const calendarUrl = `${this.baseUrl}calendar/${year ? `${year}/` : ""}${this.urlLanguage}`;
-    const $ = await this.fetchDocument(calendarUrl);
-    const dates: [string, string][] = [];
-    $("main .grid .grid__cell")
-      .filter(":has(.c-schedule__subtitle)")
-      .each((_, element) => {
-        // const title = $(element).find(".c-schedule__subtitle").text().trim();
-        const date = $(element)
-          .find("ul.c-schedule__list li.c-schedule__item")
-          .filter((_, element) =>
-            Object.values(languageSet.studyPlan).some((text) => $(element).find(".c-schedule__label").text().includes(text))
-          )
-          .children(".c-schedule__time")
-          .find("time")
-          .map((_, element) => $(element).attr("datetime"))
-          .get();
-        dates.push(date as [string, string]);
-      });
-    const timeSchedule = ObjectTyped.fromEntries(
-      Object.values(SEMESTER).map(
-        (semester, index) => [semester, { start: new Date(dates[index][0]), end: new Date(dates[index][1]) }] as const
-      )
-    );
+  private getTimeSchedule = defineCachedFunction(
+    async (
+      config: StudyApiTypes.getStudyTimeScheduleConfig = { year: null }
+    ): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
+      const { year } = config;
+      const languageSet = await this.getLanguageSet();
+      const calendarUrl = `${this.baseUrl}calendar/${year ? `${year}/` : ""}${this.urlLanguage}`;
+      const $ = await this.fetchDocument(calendarUrl);
+      const dates: [string, string][] = [];
+      $("main .grid .grid__cell")
+        .filter(":has(.c-schedule__subtitle)")
+        .each((_, element) => {
+          // const title = $(element).find(".c-schedule__subtitle").text().trim();
+          const date = $(element)
+            .find("ul.c-schedule__list li.c-schedule__item")
+            .filter((_, element) =>
+              Object.values(languageSet.studyPlan).some((text) =>
+                $(element).find(".c-schedule__label").text().includes(text)
+              )
+            )
+            .children(".c-schedule__time")
+            .find("time")
+            .map((_, element) => $(element).attr("datetime"))
+            .get();
+          dates.push(date as [string, string]);
+        });
+      const timeSchedule = ObjectTyped.fromEntries(
+        Object.values(SEMESTER).map(
+          (semester, index) => [semester, { start: new Date(dates[index][0]), end: new Date(dates[index][1]) }] as const
+        )
+      );
 
-    let currentYear = {
-      value: "",
-      label: "",
-    };
-    const optionsEls = $("body main .f-subjects .inp select#year option");
-    optionsEls.each((_, element) => {
-      if ($(element).attr("selected") !== undefined) {
-        currentYear = {
-          value: $(element).attr("value") as string,
-          label: $(element).text().trim(),
-        };
-      }
-    });
-    currentYear.value && this._timeSchedule.set(currentYear.value, timeSchedule);
-    return timeSchedule;
-  };
+      let currentYear = {
+        value: "",
+        label: "",
+      };
+      const optionsEls = $("body main .f-subjects .inp select#year option");
+      optionsEls.each((_, element) => {
+        if ($(element).attr("selected") !== undefined) {
+          currentYear = {
+            value: $(element).attr("value") as string,
+            label: $(element).text().trim(),
+          };
+        }
+      });
+      return timeSchedule;
+    },
+    { name: "getTimeSchedule", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
+  );
 
   public async getStudyPrograms(
     config?: StudyApiTypes.getStudyProgramsConfig
@@ -223,11 +221,11 @@ export class StudyApi {
             const name = $(element).children("td").first().children("a").text().trim();
             const url = $(element).children("td").first().children("a").attr("href")!;
             const id = url.match(/\/course\/(\d+)/)?.[1] ?? "";
-            const credits = $(element).children("td").eq(1).text().trim();
+            // const credits = $(element).children("td").eq(1).text().trim();
             const obligationText = $(element).children("td").eq(2).text().trim();
-            const completion = $(element).children("td").eq(3).text().trim();
-            const faculty = $(element).children("td").last().text().trim();
-            const note = $(element).children("td").first().children("sup").length > 0;
+            // const completion = $(element).children("td").eq(3).text().trim();
+            // const faculty = $(element).children("td").last().text().trim();
+            // const note = $(element).children("td").first().children("sup").length > 0;
             let obligation: OBLIGATION = OBLIGATION.ELECTIVE;
             if (obligationText.includes(locales.course.obligation.compulsoryElective)) {
               obligation = OBLIGATION.COMPULSORY_ELECTIVE;
@@ -247,7 +245,17 @@ export class StudyApi {
               }
             }
 
-            return { abbreviation, name, url, credits, obligation, completion, faculty, note, id };
+            return {
+              abbreviation,
+              name,
+              url,
+              // credits,
+              obligation,
+              // completion,
+              // faculty,
+              // note,
+              id,
+            };
           })
           .get();
       });

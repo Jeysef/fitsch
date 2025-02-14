@@ -77,15 +77,15 @@ interface StudyOverview {
 
 interface StudyOverviewCourse extends StudyProgramBase {}
 interface StudyCourse extends StudyOverviewCourse {
-  credits: string;
+  // credits: string;
   obligation: OBLIGATION;
-  /**
-   * type of completion
-   * @example Ex, Cr+Ex
-   */
-  completion: string;
-  faculty: string;
-  note: boolean;
+  // /**
+  //  * type of completion
+  //  * @example Ex, Cr+Ex
+  //  */
+  // completion: string;
+  // faculty: string;
+  // note: boolean;
 }
 type GradeStudyCourses = Record<SEMESTER, StudyCourse[]>;
 type ProgramStudyCourses = Record<GradeKey, GradeStudyCourses & StudyProgramBase>;
