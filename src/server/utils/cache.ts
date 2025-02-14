@@ -161,6 +161,6 @@ export function cachedFunction<T, ArgsT extends unknown[] = any[]>(
   return defineCachedFunction(fn, opts);
 }
 
-function getKey(...args: unknown[]) {
+export function getKey(...args: unknown[]) {
   return args.length > 0 ? hash(args, {}) : "";
 }
