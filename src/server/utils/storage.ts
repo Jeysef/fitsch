@@ -21,7 +21,7 @@ export function useStorage<T extends StorageValue = StorageValue>(base = ""): St
   if (!globalThis.cachePlugin) {
     // mocked storage
     console.warn("globalThis.cachePlugin is not defined");
-    createStorage({
+    return createStorage({
       driver: memory({}),
     });
   }
