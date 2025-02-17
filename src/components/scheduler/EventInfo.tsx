@@ -7,7 +7,7 @@ import Link from "lucide-solid/icons/link";
 import MapPin from "lucide-solid/icons/map-pin";
 import Trash2 from "lucide-solid/icons/trash-2";
 import Users from "lucide-solid/icons/users";
-import { Show, type JSX, type ParentComponent } from "solid-js";
+import { Show, type ParentComponent } from "solid-js";
 import type { ScheduleEventData } from "~/components/scheduler/event/types";
 import Text from "~/components/typography/text";
 import { Badge } from "~/components/ui/badge";
@@ -22,10 +22,8 @@ interface EventPopupProps {
 
 const EventPopup: ParentComponent<EventPopupProps> = (props) => {
   const { t } = useI18n();
-  const {
-    event: { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks },
-    courseDetail,
-  } = props.eventData;
+  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.eventData.event;
+  const courseDetail = props.eventData.courseDetail;
 
   return (
     <Popover flip placement="left-start">
@@ -46,7 +44,9 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
           <div>
             <Button variant="ghost" size="sm" class="text-sm space-x-2" onClick={props.onHide}>
               <Trash2 class="h-4 w-4" />
-              <Text variant="smallText">{t("course.detail.popover.hide")}</Text>
+              <Text variant="smallText">
+                {props.eventData.event.hidden ? t("course.detail.popover.unhide") : t("course.detail.popover.hide")}
+              </Text>
             </Button>
           </div>
 

@@ -24,6 +24,7 @@ export default {
         info: "Informace",
         detail: "Detail",
         hide: "Skrýt",
+        unhide: "Odkrýt",
       },
       customAction: {
         edit: "Upravit událost",

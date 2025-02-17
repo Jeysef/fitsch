@@ -25,6 +25,7 @@ export default {
         info: "Information",
         detail: "Detail",
         hide: "Hide",
+        unhide: "Unhide",
       },
       customAction: {
         edit: "Edit event",
