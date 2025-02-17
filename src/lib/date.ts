@@ -19,6 +19,7 @@
  */
 export function getWeekNumber(d: Date): number {
   if (!(d instanceof Date)) {
+    // biome-ignore lint/style/noParameterAssign: it's fine
     d = new Date(d);
   }
   // Copy date so don't modify original
