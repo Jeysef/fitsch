@@ -37,7 +37,7 @@ export class StudyApi {
         console.log("error fetching", url, error);
         throw new Error(`Failed to fetch from ${urlBase}`);
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`Failed to fetch from ${urlBase}`)), 5000)),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`fetch from ${urlBase} timed out.`)), 6000)),
     ]);
   }
 
