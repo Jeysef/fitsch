@@ -1,7 +1,7 @@
 import { Tooltip } from "@kobalte/core/tooltip";
 import { flatMap, reduce } from "lodash-es";
 import Link from "lucide-solid/icons/link";
-import { For, Show, Suspense, createEffect, createMemo, type JSXElement } from "solid-js";
+import { For, Show, Suspense, createMemo, type JSXElement } from "solid-js";
 import type { StrictExtract } from "ts-essentials";
 import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
@@ -282,7 +282,7 @@ export function SemesterSelect() {
             <RadioGroupItem value={semester} class="flex items-center gap-2">
               <RadioGroupItemInput />
               <RadioGroupItemControl as="button" type="button" />
-              <RadioGroupItemLabel class={typographyVariants({ class: "!mt-0 text-sm" })}>
+              <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
                 {t(`menu.semester.data.${semester}`)}
               </RadioGroupItemLabel>
               <SelectedHiddenCourses semester={semester} />

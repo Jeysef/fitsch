@@ -1,5 +1,4 @@
 import { trackStore } from "@solid-primitives/deep";
-import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { useAction } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
@@ -16,7 +15,6 @@ import {
   createMemo,
   createRenderEffect,
   createResource,
-  createSignal,
   createUniqueId,
   on,
   startTransition,
@@ -35,10 +33,10 @@ import {
   YearSelect,
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
+import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
 import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
 import type { SchedulerStore } from "~/components/scheduler/store";
 import { Button } from "~/components/ui/button";
-import Loader from "~/components/ui/loader";
 import { type tType, useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
@@ -46,6 +44,7 @@ import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOver
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
+import { LoadingState } from "./MenuSkeletons";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -66,20 +65,7 @@ export const getData = () => {
   return data;
 };
 
-const monthCookie = cookieStorage.withOptions({
-  expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-});
-
 // Default values for persistent data and form
-const emptyPersistentValue: { [K in keyof Required<NavigationSchema>]: undefined } = {
-  year: undefined,
-  semester: undefined,
-  grade: undefined,
-  degree: undefined,
-  program: undefined,
-  ...mapValues(OBLIGATION, () => undefined),
-};
-
 const defaultFormValues = {
   semester: SEMESTER.WINTER,
   degree: DEGREE.BACHELOR,
@@ -88,24 +74,6 @@ const defaultFormValues = {
   [OBLIGATION.COMPULSORY_ELECTIVE]: [],
   [OBLIGATION.ELECTIVE]: [],
 };
-
-// ----- Custom Hooks -----
-function usePersistentGroupData() {
-  const [persistentGroupData, setPersistentGroupData] = makePersisted(
-    createSignal<{ [K in keyof Required<NavigationSchema>]: NavigationSchema[K] | undefined }>(emptyPersistentValue),
-    { name: "groupData", storage: monthCookie }
-  );
-
-  return { persistentGroupData, setPersistentGroupData };
-}
-
-function useSubmittedCourses() {
-  const [submittedCourses, setSubmittedCourses] = makePersisted(
-    createSignal<Record<OBLIGATION, string[]>>(mapValues(OBLIGATION, () => [])),
-    { name: "submittedCourses", storage: monthCookie }
-  );
-  return { submittedCourses, setSubmittedCourses };
-}
 
 function useLoadCourses(
   submit: (data: GetStudyCoursesDetailsFunctionConfig) => ReturnType<typeof getStudyCoursesDetailsAction>,
@@ -132,35 +100,29 @@ function useLoadCourses(
 }
 
 export default function Wrapper() {
-  const { persistentGroupData } = usePersistentGroupData();
-  const locale = useI18n().locale;
-  const initialConfig: DataProviderTypes.getStudyOverviewConfig = {
-    language: locale(),
-    year: persistentGroupData()?.year?.value,
-    degree: persistentGroupData()?.degree,
-    program: persistentGroupData()?.program,
-  };
-  const resource = createResource(initialConfig, getStudyOverviewResource, { deferStream: true });
+  const { initialConfigSignal } = useLocalMenuData();
+  const resource = createResource(initialConfigSignal(), getStudyOverviewResource, { deferStream: false });
 
   return (
-    <div class="w-44 space-y-2">
-      {/* in future replace with skeleton or deferStream on resource */}
-      <ErrorBoundary
-        fallback={(error, reset) => (
-          <ErrorFallback
-            error={error}
-            reset={async () => {
-              await resource[1].refetch();
-              reset();
-            }}
-          />
-        )}
-      >
-        <Suspense fallback={<Loader />}>
-          <Content resource={resource} />
-        </Suspense>
-      </ErrorBoundary>
-    </div>
+    <>
+      <div class="w-44 min-h-full">
+        <ErrorBoundary
+          fallback={(error, reset) => (
+            <ErrorFallback
+              error={error}
+              reset={async () => {
+                await resource[1].refetch();
+                reset();
+              }}
+            />
+          )}
+        >
+          <Suspense fallback={<LoadingState />}>
+            <Content resource={resource} />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+    </>
   );
 }
 
@@ -172,8 +134,7 @@ function Content({
     DataProviderTypes.getStudyOverviewConfig
   >;
 }) {
-  const { persistentGroupData, setPersistentGroupData } = usePersistentGroupData();
-  const { submittedCourses, setSubmittedCourses } = useSubmittedCourses();
+  const { persistentGroupData, setPersistentGroupData, setSubmittedCourses, submittedCourses } = useLocalMenuData();
   const { store } = useScheduler();
   const data = resource[0];
   const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
@@ -211,7 +172,7 @@ function Content({
   }
   const dataValues = resolvedData?.values;
   if (!dataValues) {
-    if (data.state === "refreshing") return <Loader />;
+    if (data.state === "refreshing") return <LoadingState />;
     return <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>;
   }
 
