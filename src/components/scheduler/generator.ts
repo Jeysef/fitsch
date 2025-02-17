@@ -4,7 +4,7 @@ import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { isCustomEventData } from "~/components/scheduler/event/Event";
-import type { Event, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
+import type { Event, EventData, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { Course } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
@@ -62,6 +62,10 @@ export function SchedulerGenerator() {
 
   const storeDayData = createMemo(() => Object.values(store.data));
 
+  // if returning false, the event will be filtered out
+  const filterEvent = (eventData: EventData): eventData is ScheduleEventData =>
+    !isCustomEventData(eventData) && eventData.event.hidden !== true;
+
   // precalculate type counts,... using solid primitives
   // in the form: `<courseId>-<eventType>`
   const courseTypeCounts = createMemo(() => {
@@ -69,7 +73,7 @@ export function SchedulerGenerator() {
     for (const day of storeDayData()) {
       for (const dayEvent of day.events) {
         const event = dayEvent.eventData;
-        if (isCustomEventData(event)) continue;
+        if (!filterEvent(event)) continue;
         const courseDetailId = event.courseDetail.id;
         const key = `${courseDetailId}-${event.event.type}`;
         counts.set(key, (counts.get(key) || 0) + 1);
@@ -84,7 +88,7 @@ export function SchedulerGenerator() {
   const orderedEvents = createMemo(() => {
     return storeDayData()
       .flatMap((day) => day.events)
-      .filter((dayEvent) => !isCustomEventData(dayEvent.eventData))
+      .filter((dayEvent) => filterEvent(dayEvent.eventData))
       .map((dayEvent) => {
         const eventData = dayEvent.eventData as ScheduleEventData;
         return {
@@ -156,6 +160,10 @@ export function SchedulerGenerator() {
             break;
           }
           const le = linkedEventData.event;
+          if (!filterEvent(linkedEventData)) {
+            canAddAllLinks = false;
+            break;
+          }
           if (hasTimeOverlap(le, state.selectedEvents.values())) {
             canAddAllLinks = false;
             break;
