@@ -32,6 +32,7 @@ const eventBaseSchema = z.object({
   timeSpan: timespanSchema,
   info: z.string(),
   checked: z.boolean(),
+  hidden: z.boolean().optional(),
 });
 
 export const customEventSchema = eventBaseSchema.extend({

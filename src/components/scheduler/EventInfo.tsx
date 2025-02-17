@@ -5,14 +5,22 @@ import Clock from "lucide-solid/icons/clock";
 import Info from "lucide-solid/icons/info";
 import Link from "lucide-solid/icons/link";
 import MapPin from "lucide-solid/icons/map-pin";
+import Trash2 from "lucide-solid/icons/trash-2";
 import Users from "lucide-solid/icons/users";
-import { Show, type JSX } from "solid-js";
+import { Show, type JSX, type ParentComponent } from "solid-js";
 import type { ScheduleEventData } from "~/components/scheduler/event/types";
+import Text from "~/components/typography/text";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useI18n } from "~/i18n";
 
-const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element }) => {
+interface EventPopupProps {
+  eventData: ScheduleEventData;
+  onHide: () => void;
+}
+
+const EventPopup: ParentComponent<EventPopupProps> = (props) => {
   const { t } = useI18n();
   const {
     event: { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks },
@@ -34,6 +42,14 @@ const EventPopup = (props: { eventData: ScheduleEventData; children: JSX.Element
 
         {/* Content */}
         <div class="space-y-4">
+          {/* hide button */}
+          <div>
+            <Button variant="ghost" size="sm" class="text-sm space-x-2" onClick={props.onHide}>
+              <Trash2 class="h-4 w-4" />
+              <Text variant="smallText">{t("course.detail.popover.hide")}</Text>
+            </Button>
+          </div>
+
           {/* Time Information */}
           <div class="flex items-start space-x-2">
             <Clock class="h-4 w-4 mt-1 text-muted-foreground" />

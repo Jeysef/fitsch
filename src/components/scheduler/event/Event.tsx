@@ -15,6 +15,7 @@ import ScheduleEventComponent from "~/components/scheduler/event/ScheduleEvent";
 import type { CustomEvent, CustomEventData, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import type { SchedulerStore } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
+import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 
@@ -48,7 +49,8 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
   });
 
   return (
-    <div
+    <Collapsible
+      open={!event.hidden}
       data-id={event.id}
       style={{ "background-color": color() }}
       on:dblclick={() => {
@@ -62,12 +64,16 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         "text-colored-event-foreground",
         "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
+        // if hidden, make the event more transparent
+        event.hidden && "opacity-50 h-auto",
         rest.class
       )}
     >
       <div class="flex items-center w-full ">{local.header}</div>
-      <div class="w-full *:w-full">{local.children}</div>
-    </div>
+      <CollapsibleContent>
+        <div class="w-full *:w-full">{local.children}</div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 

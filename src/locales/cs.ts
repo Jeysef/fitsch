@@ -23,6 +23,7 @@ export default {
         computed: "Vypočteno",
         info: "Informace",
         detail: "Detail",
+        hide: "Skrýt",
       },
       customAction: {
         edit: "Upravit událost",

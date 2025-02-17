@@ -47,7 +47,12 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
       }}
       header={
         <>
-          <EventPopup eventData={eventData}>
+          <EventPopup
+            eventData={eventData}
+            onHide={() => {
+              event.hidden = event.hidden === undefined ? true : !event.hidden;
+            }}
+          >
             <Info size={"1em"} />
           </EventPopup>
           <EventTitle title={eventData.courseDetail.abbreviation} />

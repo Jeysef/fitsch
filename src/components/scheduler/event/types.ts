@@ -11,6 +11,8 @@ export interface EventBase {
   info: string;
   /** @default false */
   checked: boolean;
+  /** @default false (undefined) */
+  hidden?: boolean;
 }
 
 export interface CustomEvent extends EventBase {

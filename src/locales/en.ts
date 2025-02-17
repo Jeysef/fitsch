@@ -24,6 +24,7 @@ export default {
         computed: "Computed",
         info: "Information",
         detail: "Detail",
+        hide: "Hide",
       },
       customAction: {
         edit: "Edit event",
