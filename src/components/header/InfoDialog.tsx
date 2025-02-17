@@ -147,10 +147,8 @@ export default function AppInfo() {
           </div>
           <Alert variant="destructive">
             <TriangleAlert />
-            <AlertTitle>Opakování</AlertTitle>
-            <AlertDescription>
-              Neručím za správnost dat ani za fungování programu. Data si vždy ověřte na stránkách školy.
-            </AlertDescription>
+            <AlertTitle>{t("info.appInfo.liabilityWarning.title")}</AlertTitle>
+            <AlertDescription innerHTML={t("info.appInfo.liabilityWarning.description")} />
           </Alert>
         </div>
       </DialogContent>

@@ -218,9 +218,9 @@ export default {
       },
     },
     fitInfo: {
-      title: "Úvod do rozvrhů na FITu",
+      title: "Introduction to scheduling at FIT",
       description:
-        "O registracích rozvrhů se všechno dozvíte na Start@FITu. Demonstraci najdete taky v <a target='_blank' rel='noreferrer noopener' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>tomhle videu</a>.",
+        "You can learn all about schedule registrations at Start@FIT. You can also find a demonstration in <a target='_blank' rel='noreferrer noopener' href='https://www.youtube.com/watch?v=BY0KzPEw7qc&list=PLjMy008M-9Q5ig8LKhU8_Jyt3CyLvd3hn&index=8'>this video</a>.",
       content: {
         schedule: {
           title: "Schedule",
