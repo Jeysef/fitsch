@@ -18,6 +18,9 @@
  * link: https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php/6117889#6117889
  */
 export function getWeekNumber(d: Date): number {
+  if (!(d instanceof Date)) {
+    d = new Date(d);
+  }
   // Copy date so don't modify original
   const newDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   // Set to nearest Thursday: current date + 4 - current day number
