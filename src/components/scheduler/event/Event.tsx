@@ -51,7 +51,12 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
     <div
       data-id={event.id}
       style={{ "background-color": color() }}
-      on:dblclick={() => local.handleCheck()}
+      on:dblclick={() => {
+        if (!(typeof window !== "undefined" && "ontouchstart" in window)) local.handleCheck();
+      }}
+      on:click={() => {
+        if (typeof window !== "undefined" && "ontouchstart" in window) local.handleCheck();
+      }}
       {...rest}
       class={cn(
         "text-colored-event-foreground",
