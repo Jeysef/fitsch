@@ -1,12 +1,13 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, createMemo } from "solid-js";
-import TimeSpanPage from "~/components/homepage/TimeSpan";
+import { For, Suspense, createMemo, lazy } from "solid-js";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { useMenuOpened } from "~/providers/MenuOpenedProvider";
 import { useScheduler } from "~/providers/SchedulerProvider";
+
+const TimeSpanPage = lazy(() => import("./TimeSpan"));
 
 const tabs = {
   workSchedule: "workSchedule",
@@ -104,7 +105,9 @@ export default function Home() {
         as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
-        <TimeSpanPage store={storeProxy} />
+        <Suspense>
+          <TimeSpanPage store={storeProxy} />
+        </Suspense>
       </TabsContent>
     </Tabs>
   );
