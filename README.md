@@ -2,25 +2,12 @@
 
 Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
 
-## Creating a project
-
-```bash
-# create a new project in the current directory
-npm init solid@latest
-
-# create a new project in my-app
-npm init solid@latest my-app
-```
-
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
 ## Building
@@ -95,3 +82,14 @@ their course timespan makes no sense,
     weekly 1 2 hour & 1 1 hour lectures 13 weeks \
     = (3 * 50) * 13 /60 = 32.5 ✗\
     WTF
+
+## Conteinerization
+
+### Docker
+
+Build the image and run it:
+
+```bash
+docker build -t fitsch .
+docker run -p 3000:3000 fitsch
+```
