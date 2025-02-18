@@ -131,6 +131,7 @@ export default function AppInfo() {
         variant="ghost"
         size="icon"
         class="hover:bg-muted-foreground text-inherit hover:text-inherit"
+        name="info-dialog-trigger"
       >
         <Lightbulb color="currentColor" class="text-inherit" />
       </DialogTrigger>

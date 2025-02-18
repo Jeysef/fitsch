@@ -53,7 +53,7 @@ function GenerateScheduleAction() {
           {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.next")}
         </Button>
         <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-          <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)}>
+          <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)} name="generate-schedule-tooltip">
             <CircleAlert class="w-4 h-4 text-amber-400" />
           </TooltipTrigger>
           <TooltipContent>{t("menu.actions.generate.warning")}</TooltipContent>

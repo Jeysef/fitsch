@@ -85,7 +85,7 @@ export function DegreeSelect() {
         {(degree) => (
           <RadioGroupItem value={degree} class="flex items-center gap-2">
             <RadioGroupItemInput />
-            <RadioGroupItemControl as="button" type="button" />
+            <RadioGroupItemControl class="cursor-pointer" />
             <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
               {t(`menu.degree.data.${degree}`)}
             </RadioGroupItemLabel>
@@ -121,7 +121,7 @@ export function ProgramSelect() {
   const RadioItem = (program: StudyProgramBase) => (
     <RadioGroupItem value={program.id} class="flex items-center gap-2">
       <RadioGroupItemInput />
-      <RadioGroupItemControl as="button" type="button" />
+      <RadioGroupItemControl class="cursor-pointer" />
       <ProgramRadioLabel program={program} />
     </RadioGroupItem>
   );
@@ -200,7 +200,7 @@ export function GradeSelect() {
           return (
             <RadioGroupItem value={grade.key} class="flex items-center gap-2 relative">
               <RadioGroupItemInput class="bottom-0" />
-              <RadioGroupItemControl as="button" type="button" />
+              <RadioGroupItemControl class="cursor-pointer" />
               <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>{grade.label}</RadioGroupItemLabel>
               <SelectedHiddenCourses grade={grade} />
             </RadioGroupItem>
@@ -281,7 +281,7 @@ export function SemesterSelect() {
           return (
             <RadioGroupItem value={semester} class="flex items-center gap-2">
               <RadioGroupItemInput />
-              <RadioGroupItemControl as="button" type="button" />
+              <RadioGroupItemControl class="cursor-pointer" />
               <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
                 {t(`menu.semester.data.${semester}`)}
               </RadioGroupItemLabel>
