@@ -13,7 +13,6 @@ const studyOverviewMaxStaleCacheAge = 60 * 60 * 2; // 2 hours
 export const getStudyOverview = defineCachedFunction(
   async (config: DataProviderTypes.getStudyOverviewConfig) => {
     "use server";
-    console.log("fetching getStudyOverview");
     const language = config.language;
     const languageProvider = new LanguageProvider(language);
     const studyApi = new StudyApi(languageProvider, fromURL);
