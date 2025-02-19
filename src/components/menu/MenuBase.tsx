@@ -1,3 +1,4 @@
+import { makeTimer } from "@solid-primitives/timer";
 import MenuIcon from "lucide-solid/icons/menu";
 import X from "lucide-solid/icons/x";
 import { createSignal } from "solid-js";
@@ -16,14 +17,12 @@ export default function Menu() {
    * Not the best solution probably, but for low timeout, it works pretty reliably.
    */
   const toggleNavigation = (openend: boolean) => {
-    openend
-      ? setMenuHidden(false)
-      : setTimeout(() => {
-          setMenuHidden(true);
-        }, 150);
-    setTimeout(() => {
-      setOpened(openend);
-    }, 5);
+    if (openend) {
+      setMenuHidden(false);
+    } else {
+      makeTimer(() => setMenuHidden(true), 150, setTimeout);
+    }
+    makeTimer(() => setOpened(openend), 5, setTimeout);
   };
 
   return (
