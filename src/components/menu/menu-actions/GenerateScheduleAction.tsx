@@ -1,5 +1,6 @@
+import { createTimer } from "@solid-primitives/timer";
 import CircleAlert from "lucide-solid/icons/circle-alert";
-import { createSignal, type Setter } from "solid-js";
+import { createSignal } from "solid-js";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
 import { SchedulerGenerator } from "~/components/scheduler/generator";
 import { Button } from "~/components/ui/button";
@@ -9,34 +10,16 @@ import { useI18n } from "~/i18n";
 function GenerateScheduleAction() {
   const { t } = useI18n();
   const [tooltipOpen, setTooltipOpen] = createSignal(false);
-  const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
 
-  const openTooltip = () => {
-    setTooltipOpen(true);
-    startTooltipTimer();
-  };
+  createTimer(
+    () => {
+      if (tooltipOpen()) setTooltipOpen(false);
+    },
+    () => (tooltipOpen() ? 3000 : false),
+    setTimeout
+  );
 
-  const closeTooltip = () => {
-    setTooltipOpen(false);
-    const timer = tooltipTimer();
-    if (timer) clearTimeout(timer);
-  };
-
-  const startTooltipTimer = () => {
-    const existingTimer = tooltipTimer();
-    if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
-    const timer = setTimeout(() => setTooltipOpen(false), 3000);
-    setTooltipTimer(timer);
-  };
-
-  const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
-    let val = value;
-    if (typeof value === "function") val = value(tooltipOpen());
-    if (val) openTooltip();
-    else closeTooltip();
-  };
+  const handleTooltip = () => setTooltipOpen((p) => !p);
 
   const generator = SchedulerGenerator();
   return (
@@ -53,7 +36,7 @@ function GenerateScheduleAction() {
           {generator.isGenerating() ? t("menu.actions.generate.generating") : t("menu.actions.generate.next")}
         </Button>
         <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-          <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)} name="generate-schedule-tooltip">
+          <TooltipTrigger type="button" on:click={handleTooltip} name="generate-schedule-tooltip">
             <CircleAlert class="w-4 h-4 text-amber-400" />
           </TooltipTrigger>
           <TooltipContent>{t("menu.actions.generate.warning")}</TooltipContent>

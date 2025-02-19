@@ -1,7 +1,8 @@
+import { createTimer } from "@solid-primitives/timer";
 import { useSearchParams } from "@solidjs/router";
 import { toPng } from "html-to-image";
 import CircleAlert from "lucide-solid/icons/circle-alert";
-import { batch, createSignal, type Setter } from "solid-js";
+import { batch, createSignal } from "solid-js";
 import { getFileName } from "~/components/menu/menu-actions/utils";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
 import { scheduleRef } from "~/components/scheduler";
@@ -44,34 +45,16 @@ const ScheduleScreenshot = () => {
   };
 
   const [tooltipOpen, setTooltipOpen] = createSignal(false);
-  const [tooltipTimer, setTooltipTimer] = createSignal<NodeJS.Timeout>();
 
-  const openTooltip = () => {
-    setTooltipOpen(true);
-    startTooltipTimer();
-  };
+  createTimer(
+    () => {
+      if (tooltipOpen()) setTooltipOpen(false);
+    },
+    () => (tooltipOpen() ? 3000 : false),
+    setTimeout
+  );
 
-  const closeTooltip = () => {
-    setTooltipOpen(false);
-    const timer = tooltipTimer();
-    if (timer) clearTimeout(timer);
-  };
-
-  const startTooltipTimer = () => {
-    const existingTimer = tooltipTimer();
-    if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
-    const timer = setTimeout(() => setTooltipOpen(false), 3000);
-    setTooltipTimer(timer);
-  };
-
-  const handleTooltip = (value: Parameters<Setter<boolean>>[number]) => {
-    let val = value;
-    if (typeof value === "function") val = value(tooltipOpen());
-    if (val) openTooltip();
-    else closeTooltip();
-  };
+  const handleTooltip = () => setTooltipOpen((p) => !p);
 
   return (
     <ItemText as="div">
@@ -86,7 +69,7 @@ const ScheduleScreenshot = () => {
         {t("menu.actions.saveImage.title")}
       </Button>
       <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-        <TooltipTrigger type="button" on:click={() => handleTooltip((p) => !p)} name="save-screenshot-tooltip">
+        <TooltipTrigger type="button" on:click={handleTooltip} name="save-screenshot-tooltip">
           <CircleAlert class="w-4 h-4 text-amber-400" />
         </TooltipTrigger>
         <TooltipContent>{t("menu.actions.saveImage.info")}</TooltipContent>
