@@ -1,4 +1,5 @@
 import { css } from "@emotion/css";
+import { createDateNow } from "@solid-primitives/date";
 import { compact, difference, flatMap, flow, merge, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
@@ -13,6 +14,7 @@ import { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DayData } from "~/components/scheduler/types";
 import Text from "~/components/typography/text";
 import { hoverColors } from "~/config/colors";
+import { end, start } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
@@ -82,7 +84,7 @@ function SchedulerGrid() {
   );
 
   const InnerComponent = createMemo(() => (
-    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit] overflow-hidden">
       <Corner />
       <Heading />
       <Days />
@@ -110,8 +112,28 @@ function SchedulerGrid() {
 
 function Heading() {
   const store = useStore();
+  const [now] = createDateNow(1000);
+  const offset = createMemo(() => {
+    const nowDate = now();
+    const nowSeconds = nowDate.getHours() * 3600 + nowDate.getMinutes() * 60 + nowDate.getSeconds();
+    const startSeconds = start.hour * 3600 + start.minute * 60;
+    const endSeconds = end.hour * 3600 + end.minute * 60;
+    const offset = nowSeconds - startSeconds;
+    console.log("🚀 ~ offset ~ offset:", offset);
+    return Math.min(Math.max((offset / (endSeconds - startSeconds)) * 100, 0), 100);
+  });
+
+  const hidden = createMemo(() => offset() === 0 || offset() === 100);
+
+  const [indicatorHeight, setIndicatorHeight] = createSignal("100%");
   return (
-    <div class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono">
+    <div
+      class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono"
+      on:click={(e) => {
+        if (window.getSelection()?.toString()) return;
+        setIndicatorHeight((h) => (h === "100%" ? "999999px" : "100%"));
+      }}
+    >
       <For each={store.settings.columns}>
         {(column) => (
           <Text
@@ -127,6 +149,10 @@ function Heading() {
           </Text>
         )}
       </For>
+      <div
+        class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
+        style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
+      />
     </div>
   );
 }
