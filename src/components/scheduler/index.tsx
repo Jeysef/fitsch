@@ -119,7 +119,6 @@ function Heading() {
     const startSeconds = start.hour * 3600 + start.minute * 60;
     const endSeconds = end.hour * 3600 + end.minute * 60;
     const offset = nowSeconds - startSeconds;
-    console.log("🚀 ~ offset ~ offset:", offset);
     return Math.min(Math.max((offset / (endSeconds - startSeconds)) * 100, 0), 100);
   });
 
