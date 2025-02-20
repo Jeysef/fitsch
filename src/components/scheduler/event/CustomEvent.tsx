@@ -30,7 +30,7 @@ export default function CustomEventComponent(props: CustomEventProps) {
   };
 
   const ActionsMenu = () => (
-    <DropdownMenu placement="bottom" open={dropdownMenuOpen()} onOpenChange={setDropdownMenuOpen}>
+    <DropdownMenu flip placement="bottom" open={dropdownMenuOpen()} onOpenChange={setDropdownMenuOpen}>
       <DropdownMenuTrigger>
         <CircleEllipsis size={"1em"} />
       </DropdownMenuTrigger>
