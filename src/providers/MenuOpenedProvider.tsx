@@ -11,9 +11,7 @@ const MenuOpenedContext = createContext<MenuOpenedContextType>();
 export function MenuOpenedProvider(props: ParentProps) {
   const [opened, setOpened] = makePersisted(createSignal(true), {
     name: "menuOpened",
-    storage: cookieStorage.withOptions({
-      sameSite: "Strict",
-    }),
+    storage: cookieStorage.withOptions(),
   });
 
   const value = {
