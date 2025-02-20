@@ -118,9 +118,6 @@ importers:
       solid-sonner:
         specifier: ^0.2.8
         version: 0.2.8(solid-js@1.9.4)
-      solid-spring:
-        specifier: ^0.0.7
-        version: 0.0.7(solid-js@1.9.4)
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
@@ -3523,11 +3520,6 @@ packages:
     resolution: {integrity: sha512-EQ2EIznvHHpAmkYh2CTu0AdCgmPJRJWLGFRWygE8j+vMEfvIV2wotHU5qgWzqzVTG1SODGsay2Lwq6ENWx/rPA==}
     peerDependencies:
       solid-js: ^1.6.0
-
-  solid-spring@0.0.7:
-    resolution: {integrity: sha512-/sP/z4nvXYSHH557IRPKN+H33OrnshT89mOlFynMqxbHGKxReut0xTkGrdWysp+mLR7DlqX+vqNJBY4PPtwgyg==}
-    peerDependencies:
-      solid-js: ^1.3.13
 
   solid-use@0.9.0:
     resolution: {integrity: sha512-8TGwB4m3qQ7qKo8Lg0pi/ZyyGVmQIjC4sPyxRCH7VPds0BzSsT734PhP3jhR6zMJxoYHM+uoivjq0XdpzXeOJg==}
@@ -7612,10 +7604,6 @@ snapshots:
       - supports-color
 
   solid-sonner@0.2.8(solid-js@1.9.4):
-    dependencies:
-      solid-js: 1.9.4
-
-  solid-spring@0.0.7(solid-js@1.9.4):
     dependencies:
       solid-js: 1.9.4
 

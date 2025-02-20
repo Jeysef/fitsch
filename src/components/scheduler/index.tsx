@@ -1,11 +1,10 @@
 import { css } from "@emotion/css";
 import { createDateNow } from "@solid-primitives/date";
-import { compact, difference, flatMap, flow, merge, values } from "lodash-es";
+import { compact, difference, flatMap, flow, values } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
 import { isServer } from "solid-js/web";
-import { animated, createSpring } from "solid-spring";
 import type { StrictExtract } from "ts-essentials";
 import EventComponent, { isCustomEventData } from "~/components/scheduler/event/Event";
 import type { ScheduleEvent } from "~/components/scheduler/event/types";
@@ -49,15 +48,7 @@ function SchedulerGrid() {
   const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 70 : 100);
   const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
-  const styles = createSpring(() => ({
-    "--scheduler-scale": `${scale()}%`,
-    "touch-action": touchAction(),
-    config: {
-      tension: 500,
-      friction: 43,
-      precision: 0.05,
-    },
-  }));
+  // const setScale: typeof _setScale = (num) => requestAnimationFrame(() => _setScale(num));
 
   const bind = usePinch(
     ({ offset: [s], first, last, type }) => {
@@ -77,8 +68,7 @@ function SchedulerGrid() {
     },
     {
       scaleBounds: { min: 40, max: 150 },
-      rubberband: true,
-      // pointer: { touch: true },
+      preventDefault: true,
       eventOptions: { passive: true },
     }
   );
@@ -94,19 +84,20 @@ function SchedulerGrid() {
   ));
 
   return (
-    <animated.div
+    <div
       ref={setScheduleRef}
       class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out bg-background"
       {...bind()}
-      style={merge(styles(), {
+      style={{
+        "--scheduler-scale": `${scale()}%`,
+        "touch-action": touchAction(),
         "font-size": "var(--scheduler-scale, 100%)",
         "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 10rem))`,
         "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
-      })}
+      }}
     >
-      {/* @ts-ignore */}
       <InnerComponent />
-    </animated.div>
+    </div>
   );
 }
 
