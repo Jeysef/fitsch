@@ -1,6 +1,5 @@
 import { map, mapValues, reduce } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import type { StrictOmit } from "ts-essentials";
 import type { StoreJson } from "~/components/menu/storeJsonValidator";
 import type { CustomEvent, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import { hasOverlap, Time, TimeSpan } from "~/components/scheduler/time";
@@ -12,11 +11,11 @@ import type {
   ISchedulerSettings,
   LectureMetrics,
 } from "~/components/scheduler/types";
+import { percentage } from "~/lib/utils";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type {
   LinkedLectureData,
   MCourseLecture,
-  MgetStudyCourseDetailsReturn,
   MgetStudyCourseDetailsReturnNotStale,
 } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
@@ -195,33 +194,23 @@ export class SchedulerStore implements StoreJson {
   }
 
   get data(): Data {
-    const fillCustomEvent = (event: CustomEvent) => {
-      // TODO: think about automatically infering dayData using getters
-      const dayEvent: DayEvent = {
-        ...getDayEventData(this.settings.columns, event.timeSpan),
-        eventData: { event },
-      };
-      return dayEvent;
-    };
-
     // First, initialize data with custom events
     const dataWithCustom = this.getEmptyData();
     for (const event of this.customEvents) {
-      const dayEvent = fillCustomEvent(event);
+      const dayEvent = new DayEventObject(this.settings.columns, event.timeSpan).withEventData({
+        event,
+      });
       dataWithCustom[event.day].events.push(dayEvent);
     }
 
     // Then add course events
     for (const course of this.courses) {
       for (const event of course.data) {
-        const dayEvent: DayEvent = {
-          ...getDayEventData(this.settings.columns, event.timeSpan),
-          eventData: {
-            event,
-            courseDetail: course.detail,
-            metrics: course.metrics[event.type],
-          },
-        };
+        const dayEvent = new DayEventObject(this.settings.columns, event.timeSpan).withEventData({
+          event,
+          courseDetail: course.detail,
+          metrics: course.metrics[event.type],
+        });
         dataWithCustom[event.day].events.push(dayEvent);
       }
     }
@@ -249,18 +238,6 @@ export function getEventColumn(event: TimeSpan, columns: IScheduleColumn[]) {
     if (colEnd === -1) colEnd = columns.length - 1;
   }
   return { colStart, colEnd };
-}
-
-export const columnDuration = (columns: IScheduleColumn[], colStart: number, colEnd: number) =>
-  new TimeSpan(columns[colStart].duration.start, columns[colEnd].duration.end);
-
-export function getDayEventData(columns: IScheduleColumn[], timeSpan: TimeSpan): StrictOmit<DayEvent, "eventData"> {
-  const { colStart, colEnd } = getEventColumn(timeSpan, columns);
-  const colDuration = columnDuration(columns, colStart, colEnd);
-  const paddingStart = (new TimeSpan(columns[colStart].duration.start, timeSpan.start).minutes * 100) / colDuration.minutes;
-  const paddingEnd = (new TimeSpan(timeSpan.end, columns[colEnd].duration.end).minutes * 100) / colDuration.minutes;
-  // row is set later
-  return { colStart, colEnd, paddingStart, paddingEnd, row: 1 };
 }
 
 function createNewCourse(
@@ -297,4 +274,37 @@ function createNewCourse(
     // event is created clientside in proveder, assigning to it is safe
     data: map(data, (event) => Object.assign(event, { checked: false }) satisfies ScheduleEvent),
   };
+}
+
+export class DayEventObject {
+  public readonly row: number;
+  public readonly colStart: number;
+  public readonly colEnd: number;
+  public readonly paddingStart: number;
+  public readonly paddingEnd: number;
+  public eventData: EventData | undefined;
+
+  constructor(
+    public readonly columns: IScheduleColumn[],
+    public readonly timeSpan: TimeSpan
+    // public readonly eventData: EventData
+    // public readonly eventData: EventData
+  ) {
+    const eventColumn = getEventColumn(timeSpan, columns);
+    const startColumnStart = columns[eventColumn.colStart].duration.start;
+    const endColumnEnd = columns[eventColumn.colEnd].duration.end;
+    const colDurationMin = new TimeSpan(startColumnStart, endColumnEnd).minutes;
+
+    const paddingStart = percentage(new TimeSpan(startColumnStart, timeSpan.start).minutes, colDurationMin);
+    const paddingEnd = percentage(new TimeSpan(timeSpan.end, endColumnEnd).minutes, colDurationMin);
+    this.row = 1;
+    this.colStart = eventColumn.colStart;
+    this.colEnd = eventColumn.colEnd;
+    this.paddingStart = paddingStart;
+    this.paddingEnd = paddingEnd;
+  }
+
+  public withEventData(eventData: EventData): DayEventObject & { eventData: EventData } {
+    return Object.assign(this, { eventData });
+  }
 }

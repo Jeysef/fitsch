@@ -8,7 +8,7 @@ import { isServer } from "solid-js/web";
 import type { StrictExtract } from "ts-essentials";
 import EventComponent, { isCustomEventData } from "~/components/scheduler/event/Event";
 import type { ScheduleEvent } from "~/components/scheduler/event/types";
-import { type SchedulerStore, getDayEventData } from "~/components/scheduler/store";
+import { DayEventObject, type SchedulerStore } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DayData } from "~/components/scheduler/types";
 import Text from "~/components/typography/text";
@@ -258,7 +258,7 @@ function LaunchHighlight() {
     };
     const timeSpan = new TimeSpan(new Time(convertTime(time.start)), new Time(convertTime(time.end)));
     const row = store.settings.rows.findIndex((row) => row.day === day) + 1;
-    const data = getDayEventData(store.settings.columns, timeSpan);
+    const data = new DayEventObject(store.settings.columns, timeSpan);
     return (
       <div
         style={{

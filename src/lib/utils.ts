@@ -1,5 +1,6 @@
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
+import { divide, multiply, round } from "lodash-es";
 import { twMerge } from "tailwind-merge";
 
 export const cn = (...classLists: ClassValue[]) => twMerge(clsx(classLists));
@@ -13,4 +14,8 @@ export function valueToEnumValue<T extends EnumType>(value: string, anEnum: T): 
     throw new Error(`Value ${value} is not a valid enum value`);
   }
   return enumValue;
+}
+
+export function percentage(part: number, total: number, decimals = 2) {
+  return round(multiply(divide(part, total), 100), decimals);
 }
