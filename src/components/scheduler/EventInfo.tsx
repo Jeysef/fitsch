@@ -42,9 +42,9 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
         <div class="space-y-4">
           {/* hide button */}
           <div>
-            <Button variant="ghost" size="sm" class="text-sm space-x-2" onClick={props.onHide}>
+            <Button variant="ghost" size="sm" class="text-sm space-x-2 -ml-3" onClick={props.onHide}>
               <Trash2 class="h-4 w-4" />
-              <Text variant="smallText">
+              <Text variant="smallText" class="text-destructive">
                 {props.eventData.event.hidden ? t("course.detail.popover.unhide") : t("course.detail.popover.hide")}
               </Text>
             </Button>
