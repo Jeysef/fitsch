@@ -231,8 +231,6 @@ export class DayEventObject {
   constructor(
     public readonly columns: IScheduleColumn[],
     public readonly timeSpan: TimeSpan
-    // public readonly eventData: EventData
-    // public readonly eventData: EventData
   ) {
     const eventColumn = getEventColumn(timeSpan, columns);
     const startColumnStart = columns[eventColumn.colStart].duration.start;
