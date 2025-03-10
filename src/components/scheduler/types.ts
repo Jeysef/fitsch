@@ -1,4 +1,5 @@
 import type { DayEvent, ScheduleEvent } from "~/components/scheduler/event/types";
+import type { DayDataObject } from "~/components/scheduler/store";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { CourseDetail } from "~/server/scraper/types";
@@ -10,7 +11,7 @@ export interface DayData {
   events: DayEvent[];
 }
 
-export type Data = Record<DAY, DayData>;
+export type Data = Record<DAY, DayDataObject>;
 export type CourseData = ScheduleEvent[];
 
 export type IScheduleRow = { [key in DAY]: number } & { length: number };

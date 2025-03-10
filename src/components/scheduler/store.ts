@@ -47,72 +47,15 @@ export class SchedulerStore implements StoreJson {
     this.customEvents = [];
   }
 
-  private getEventTypePriority(type: LECTURE_TYPE | "CUSTOM"): number {
-    // sorted so that 0 is the highest priority
-    switch (type) {
-      case LECTURE_TYPE.LECTURE:
-        return 0;
-      case LECTURE_TYPE.SEMINAR:
-        return 1;
-      case LECTURE_TYPE.EXERCISE:
-        return 2;
-      case LECTURE_TYPE.LABORATORY:
-        return 3;
-      default:
-        return 4; // For any other types
-    }
-  }
-
   public getDayRow = (day: DAY): number => this.settings.rows[day];
 
   getEmptyData(): Data {
-    return mapValues(DAY, (day) => ({ dayRow: this.getDayRow(day), dayRows: 1, events: [] }));
+    return mapValues(DAY, (day) => new DayDataObject(this).new(day));
   }
-
-  private findAvailableRow(pivotEvent: EventData, precedingEvents: DayEvent[]): number {
-    const occupiedRows = new Set<number>();
-
-    // Find all rows that are occupied by overlapping events
-    for (const dayEvent of precedingEvents) {
-      if (hasOverlap(pivotEvent.event.timeSpan, dayEvent.eventData.event.timeSpan)) {
-        occupiedRows.add(dayEvent.row);
-      }
-    }
-
-    // Find the first available row starting from 1
-    let row = 1;
-    while (occupiedRows.has(row)) {
-      row++;
-    }
-
-    return row;
-  }
-
-  private sortDayData = (data: DayData) => {
-    const { events } = data;
-    events.sort(
-      (a, b) => this.getEventTypePriority(a.eventData.event.type) - this.getEventTypePriority(b.eventData.event.type)
-    );
-
-    // /** using dayRows to mutate the data.dayRows only once */
-    // let dayRows = 1
-    // Assign rows based on the new order
-    data.dayRows = 1;
-    events.reduce<DayEvent[]>((acc, event) => {
-      const row = this.findAvailableRow(event.eventData, acc);
-      data.dayRows = Math.max(data.dayRows, row);
-      event.row = row;
-      acc.push(event);
-      return acc;
-    }, []);
-
-    // data.dayRows = dayRows
-    return data;
-  };
 
   private sortData = (data: Data) => {
     for (const [day, dayData] of ObjectTyped.entries(data)) {
-      data[day] = this.sortDayData(dayData);
+      data[day] = dayData.sort;
     }
     return data;
   };
@@ -123,9 +66,9 @@ export class SchedulerStore implements StoreJson {
 
   private cloneData(data: Data, filterEvents?: (event: DayEvent) => unknown): Data {
     return mapValues(data, (dayData) => {
-      const { dayRow, events } = dayData;
-      const filteredEvents = filterEvents ? events.filter(filterEvents) : events;
-      return { dayRow, dayRows: 1, events: filteredEvents.map((event) => ({ ...event, row: 1 })) };
+      const { events } = dayData;
+      const filteredEvents = (filterEvents ? events.filter(filterEvents) : events).map((event) => ({ ...event, row: 1 }));
+      return dayData.clone(filteredEvents);
     });
   }
 
@@ -307,5 +250,73 @@ export class DayEventObject {
 
   public withEventData(eventData: EventData): DayEventObject & { eventData: EventData } {
     return Object.assign(this, { eventData });
+  }
+}
+
+export class DayDataObject implements DayData {
+  public readonly dayRow: number;
+  public dayRows: number;
+  public events: DayEvent[];
+  constructor(private readonly store: SchedulerStore) {
+    this.dayRow = -1;
+    this.dayRows = 1;
+    this.events = [];
+  }
+
+  public new(day: DAY) {
+    return Object.assign(this, { dayRow: this.store.getDayRow(day) });
+  }
+
+  public clone(events: DayEvent[]) {
+    return Object.assign(new DayDataObject(this.store), { events, dayRow: this.dayRow });
+  }
+
+  private getEventTypePriority(type: LECTURE_TYPE | "CUSTOM"): number {
+    const priorityMap: Record<LECTURE_TYPE | "CUSTOM", number> = {
+      [LECTURE_TYPE.LECTURE]: 0,
+      [LECTURE_TYPE.SEMINAR]: 1,
+      [LECTURE_TYPE.EXERCISE]: 2,
+      [LECTURE_TYPE.LABORATORY]: 3,
+      [LECTURE_TYPE.EXAM]: 4,
+      CUSTOM: 4,
+    };
+    return priorityMap[type] ?? 4;
+  }
+
+  private findAvailableRow(pivotEvent: EventData, precedingEvents: DayEvent[]): number {
+    const occupiedRows = new Set<number>();
+
+    // Find all rows that are occupied by overlapping events
+    for (const dayEvent of precedingEvents) {
+      if (hasOverlap(pivotEvent.event.timeSpan, dayEvent.eventData.event.timeSpan)) {
+        occupiedRows.add(dayEvent.row);
+      }
+    }
+
+    // Find the first available row starting from 1
+    let row = 1;
+    while (occupiedRows.has(row)) {
+      row++;
+    }
+
+    return row;
+  }
+
+  get sort() {
+    this.events.sort(
+      (a, b) => this.getEventTypePriority(a.eventData.event.type) - this.getEventTypePriority(b.eventData.event.type)
+    );
+
+    // Assign rows based on the new order
+    this.dayRows = 1;
+    this.events.reduce<DayEvent[]>((acc, event) => {
+      const row = this.findAvailableRow(event.eventData, acc);
+      this.dayRows = Math.max(this.dayRows, row);
+      event.row = row;
+      acc.push(event);
+      return acc;
+    }, []);
+
+    return this;
   }
 }
