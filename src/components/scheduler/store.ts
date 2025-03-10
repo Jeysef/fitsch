@@ -230,49 +230,6 @@ export class SchedulerStore implements StoreJson {
     const sortedData = this.sortData(dataWithCustom);
 
     return sortedData;
-
-    // return chain(this.getEmptyData())
-    //   .tap((data) => {
-    //     reduce(
-    //       this.customEvents,
-    //       (acc, event) => {
-    //         acc[event.day].events.push(fillCustomEvent(event));
-    //         return acc;
-    //       },
-    //       data
-    //     );
-    //   })
-    //   .thru(
-    //     flow(
-    //       (data) =>
-    //         // for each course
-    //         reduce(
-    //           this.courses,
-    //           (acc, course) =>
-    //             // and each event in the course
-    //             reduce(
-    //               course.data,
-    //               (acc, event) => {
-    //                 // add the event to data
-    //                 acc[event.day].events.push({
-    //                   ...getDayEventData(this.settings.columns, event.timeSpan),
-    //                   eventData: {
-    //                     event,
-    //                     courseDetail: course.detail,
-    //                     metrics: course.metrics[event.type],
-    //                   },
-    //                 });
-    //                 return acc;
-    //               },
-    //               acc
-    //             ),
-    //           data
-    //         ),
-    //       // then sort the data
-    //       this.sortData
-    //     )
-    //   )
-    //   .value();
   }
 }
 
