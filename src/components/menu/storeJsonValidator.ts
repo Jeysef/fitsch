@@ -113,11 +113,25 @@ const settingsSchema = z.object({
       duration: timespanSchema,
     })
   ),
-  rows: z.array(
-    z.object({
-      day: z.nativeEnum(DAY),
-    })
-  ),
+  rows: z
+    .union([
+      // New format
+      RecordOf(DAY, z.number()).and(z.object({ length: z.number() })),
+      // Legacy format
+      z.array(
+        z.object({
+          day: z.nativeEnum(DAY),
+        })
+      ),
+    ])
+    .transform((val) => {
+      if (Array.isArray(val)) {
+        // Transform legacy format
+        const transformed = Object.fromEntries(Object.values(DAY).map((day, index) => [day, index + 1]));
+        return { ...transformed, length: Object.values(DAY).length };
+      }
+      return val;
+    }),
 });
 
 const schema = z.object({

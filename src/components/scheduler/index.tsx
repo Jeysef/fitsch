@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 import { createDateNow } from "@solid-primitives/date";
-import { compact, difference, flatMap, flow, values } from "lodash-es";
+import { compact, difference, flatMap, flow, values, without } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
 import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
@@ -17,6 +17,7 @@ import { end, start } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { launchDayTime } from "~/server/scraper/constants";
+import type { DAY } from "~/server/scraper/enums";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
 
 export interface WorkScheduleProps {
@@ -152,8 +153,8 @@ function Days() {
   const store = useStore();
   return (
     <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
-      <For each={store.settings.rows}>
-        {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day.day}`)}</span>}
+      <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
+        {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
       </For>
     </div>
   );
@@ -257,7 +258,7 @@ function LaunchHighlight() {
       return { hour, minute };
     };
     const timeSpan = new TimeSpan(new Time(convertTime(time.start)), new Time(convertTime(time.end)));
-    const row = store.settings.rows.findIndex((row) => row.day === day) + 1;
+    const row = store.getDayRow(day);
     const data = new DayEventObject(store.settings.columns, timeSpan);
     return (
       <div

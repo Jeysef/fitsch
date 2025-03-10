@@ -13,9 +13,7 @@ export interface DayData {
 export type Data = Record<DAY, DayData>;
 export type CourseData = ScheduleEvent[];
 
-export interface IScheduleRow {
-  day: DAY;
-}
+export type IScheduleRow = { [key in DAY]: number } & { length: number };
 export interface IScheduleColumn {
   title: string;
   duration: TimeSpan;
@@ -32,7 +30,7 @@ interface IScheduleDimensions {
 export interface ISchedulerSettings {
   blockDimensions?: Partial<IScheduleDimensions>;
   columns: IScheduleColumn[];
-  rows: IScheduleRow[];
+  rows: IScheduleRow;
 }
 export interface ICreateColumns {
   start: Time;

@@ -8,6 +8,7 @@ import type {
   Data,
   DayData,
   IScheduleColumn,
+  IScheduleRow,
   ISchedulerSettings,
   LectureMetrics,
 } from "~/components/scheduler/types";
@@ -29,7 +30,7 @@ const defaultSettings: ISchedulerSettings = {
     height: "auto",
   },
   columns: [],
-  rows: [],
+  rows: {} as IScheduleRow,
 };
 
 export class SchedulerStore implements StoreJson {
@@ -62,10 +63,10 @@ export class SchedulerStore implements StoreJson {
     }
   }
 
+  public getDayRow = (day: DAY): number => this.settings.rows[day];
+
   getEmptyData(): Data {
-    // TODO: lookup table
-    const getDayRow = (day: DAY): number => this.settings.rows.findIndex((row) => row.day === day) + 1;
-    return mapValues(DAY, (day) => ({ dayRow: getDayRow(day), dayRows: 1, events: [] }));
+    return mapValues(DAY, (day) => ({ dayRow: this.getDayRow(day), dayRows: 1, events: [] }));
   }
 
   private findAvailableRow(pivotEvent: EventData, precedingEvents: DayEvent[]): number {

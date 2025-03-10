@@ -1,7 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
-import { merge } from "lodash-es";
+import { merge, range, zipObject } from "lodash-es";
 import {
   batch,
   createComputed,
@@ -64,7 +64,7 @@ export function SchedulerProvider(props: ParentProps) {
   const formatTime = (start: Time, end: Time) =>
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
   const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
-  const rows: IScheduleRow[] = days.map((day) => ({ day }));
+  const rows = zipObject(days, range(1, days.length + 1)) as IScheduleRow;
   const columns = createColumns({
     start,
     step,
