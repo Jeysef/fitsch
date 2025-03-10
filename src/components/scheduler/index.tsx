@@ -75,7 +75,7 @@ function SchedulerGrid() {
   );
 
   const InnerComponent = createMemo(() => (
-    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit] overflow-hidden">
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
       <Corner />
       <Heading />
       <Days />
@@ -106,7 +106,7 @@ function Heading() {
   const store = useStore();
   const [now] = createDateNow(1000);
   const offset = createMemo(() => {
-    const nowDate = now();
+    const nowDate = new Date(now().getTime() - 8 * 60 * 60 * 1000);
     const nowSeconds = nowDate.getHours() * 3600 + nowDate.getMinutes() * 60 + nowDate.getSeconds();
     const startSeconds = start.hour * 3600 + start.minute * 60;
     const endSeconds = end.hour * 3600 + end.minute * 60;
@@ -122,7 +122,7 @@ function Heading() {
       class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono"
       on:click={(e) => {
         if (window.getSelection()?.toString()) return;
-        setIndicatorHeight((h) => (h === "100%" ? "999999px" : "100%"));
+        setIndicatorHeight((h) => (h === "100%" ? "100vh" : "100%"));
       }}
     >
       <For each={store.settings.columns}>
