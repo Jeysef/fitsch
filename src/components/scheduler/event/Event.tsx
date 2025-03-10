@@ -70,7 +70,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
       )}
     >
       <div class="flex items-center w-full ">{local.header}</div>
-      <CollapsibleContent>
+      <CollapsibleContent class="w-full">
         <div class="w-full *:w-full">{local.children}</div>
       </CollapsibleContent>
     </Collapsible>
