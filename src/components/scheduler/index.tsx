@@ -153,7 +153,7 @@ function SchedulerGridInner() {
 
   const hidden = createMemo(() => offset() === 0 || offset() === 100);
 
-  const [indicatorHeight, setIndicatorHeight] = createSignal("100%");
+  const [indicatorSize, setIndicatorSize] = createSignal<string | null>("100%");
   return (
     <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
       <Corner />
@@ -168,7 +168,13 @@ function SchedulerGridInner() {
                 )}
               </For>
             </TopXAxisHeader>
-            <LeftYAxisHeader>
+            <LeftYAxisHeader
+              ref={createElementHeightRef(isHorizontalLayout)}
+              on:click={() => {
+                if (window.getSelection()?.toString()) return;
+                setIndicatorSize((h) => (h === "100%" ? null : "100%"));
+              }}
+            >
               <For each={store.settings.columns}>
                 {(column) => (
                   <Text
@@ -185,8 +191,11 @@ function SchedulerGridInner() {
                 )}
               </For>
               <div
-                class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
-                style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
+                class={cn("bg-red-500/30 h-px absolute !border-none", { hidden: hidden() })}
+                style={{
+                  "margin-top": `calc(${offset()} * var(--element-height) / 100)`,
+                  width: indicatorSize() ?? "100vw",
+                }}
               />
             </LeftYAxisHeader>
           </>
@@ -195,7 +204,7 @@ function SchedulerGridInner() {
         <TopXAxisHeader
           on:click={() => {
             if (window.getSelection()?.toString()) return;
-            setIndicatorHeight((h) => (h === "100%" ? "100vh" : "100%"));
+            setIndicatorSize((h) => (h === "100%" ? null : "100%"));
           }}
         >
           <For each={store.settings.columns}>
@@ -215,7 +224,7 @@ function SchedulerGridInner() {
           </For>
           <div
             class={cn("bg-red-500/30 w-px absolute !border-none", { hidden: hidden() })}
-            style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
+            style={{ "margin-left": `${offset()}%`, height: indicatorSize() ?? "100vh" }}
           />
         </TopXAxisHeader>
         <LeftYAxisHeader>
