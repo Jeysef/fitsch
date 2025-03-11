@@ -143,7 +143,7 @@ function SchedulerGridInner() {
   const [isHorizontalLayout] = useLayout();
   const [now] = createDateNow(1000);
   const offset = createMemo(() => {
-    const nowDate = new Date(now().getTime() - 8 * 60 * 60 * 1000);
+    const nowDate = now();
     const nowSeconds = nowDate.getHours() * 3600 + nowDate.getMinutes() * 60 + nowDate.getSeconds();
     const startSeconds = start.hour * 3600 + start.minute * 60;
     const endSeconds = end.hour * 3600 + end.minute * 60;
@@ -214,7 +214,7 @@ function SchedulerGridInner() {
             )}
           </For>
           <div
-            class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
+            class={cn("bg-red-500/30 w-px absolute !border-none", { hidden: hidden() })}
             style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
           />
         </TopXAxisHeader>
