@@ -19,7 +19,10 @@ export default function Header() {
           />
           <path fill="#e4002b" d="M67 32H53a5.9 5.9 0 0 0-6 5.7V69h-9V24H13v-9h25v9h29v8zM0 80h80V0H0v80z" />
         </svg>
-        <h1 class=" text-2xl font-bold ml-2">Scheduler</h1>
+        <h1 class="text-2xl font-bold ml-2">
+          <span class="md:hidden">Sch.</span>
+          <span class="hidden md:inline">Scheduler</span>
+        </h1>
       </div>
       <div class="flex gap-x-4">
         <div class="hidden md:block">
