@@ -180,7 +180,7 @@ function SchedulerGridInner() {
                       "!border-x first:border-l-transparent border-r-transparent"
                     )}
                   >
-                    {column.title}
+                    {column.title.split("\u00A0")[0]}
                   </Text>
                 )}
               </For>
