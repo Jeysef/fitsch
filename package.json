@@ -74,8 +74,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "solid-gesture": "patches/solid-gesture.patch",
-      "solid-forms@0.5.2": "patches/solid-forms@0.5.2.patch"
+      "solid-forms@0.5.2": "patches/solid-forms@0.5.2.patch",
+      "solid-gesture": "patches/solid-gesture.patch"
     }
   }
 }

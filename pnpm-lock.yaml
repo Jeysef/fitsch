@@ -9,7 +9,7 @@ patchedDependencies:
     hash: sswuktrvrdcfm2gjuhtjw4ngwm
     path: patches/solid-forms@0.5.2.patch
   solid-gesture:
-    hash: qngen3cgh66noeb7s3xpmhegdy
+    hash: ml4v3s5vjvslbhd7e2hqvdhmiu
     path: patches/solid-gesture.patch
 
 importers:
@@ -111,7 +111,7 @@ importers:
         version: 0.5.2(patch_hash=sswuktrvrdcfm2gjuhtjw4ngwm)(solid-js@1.9.5)
       solid-gesture:
         specifier: ^0.0.3
-        version: 0.0.3(patch_hash=qngen3cgh66noeb7s3xpmhegdy)(solid-js@1.9.5)
+        version: 0.0.3(patch_hash=ml4v3s5vjvslbhd7e2hqvdhmiu)(solid-js@1.9.5)
       solid-js:
         specifier: ^1.9.4
         version: 1.9.5
@@ -7773,7 +7773,7 @@ snapshots:
       fast-deep-equal: 3.1.3
       solid-js: 1.9.5
 
-  solid-gesture@0.0.3(patch_hash=qngen3cgh66noeb7s3xpmhegdy)(solid-js@1.9.5):
+  solid-gesture@0.0.3(patch_hash=ml4v3s5vjvslbhd7e2hqvdhmiu)(solid-js@1.9.5):
     dependencies:
       '@use-gesture/core': 10.3.1
       solid-js: 1.9.5
