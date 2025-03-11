@@ -1,17 +1,33 @@
 import { css } from "@emotion/css";
 import { createDateNow } from "@solid-primitives/date";
+import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { compact, difference, flatMap, flow, values, without } from "lodash-es";
+import Columns4 from "lucide-solid/icons/columns-4";
+import Rows4 from "lucide-solid/icons/rows-4";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
-import { For, Index, createContext, createMemo, createSignal, useContext } from "solid-js";
+import {
+  For,
+  Index,
+  Show,
+  createContext,
+  createMemo,
+  createSignal,
+  useContext,
+  type FlowProps,
+  type JSX,
+  type Signal,
+} from "solid-js";
 import { isServer } from "solid-js/web";
 import type { StrictExtract } from "ts-essentials";
+import { createElementHeightRef } from "~/components/heightMeasurer";
 import EventComponent, { isCustomEventData } from "~/components/scheduler/event/Event";
 import type { ScheduleEvent } from "~/components/scheduler/event/types";
 import { DayEventObject, type SchedulerStore } from "~/components/scheduler/store";
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DayData } from "~/components/scheduler/types";
 import Text from "~/components/typography/text";
+import { Button } from "~/components/ui/button";
 import { hoverColors } from "~/config/colors";
 import { end, start } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
@@ -25,6 +41,7 @@ export interface WorkScheduleProps {
 }
 
 const SchedulerStoreContext = createContext<SchedulerStore>();
+const LayoutContext = createContext<Signal<boolean>>();
 // export const scheduleRef: HTMLDivElement | null = null; // Reference to the schedule container
 export const [scheduleRef, setScheduleRef] = createSignal<HTMLDivElement | null>(null);
 
@@ -36,16 +53,40 @@ function useStore() {
   return value;
 }
 
+function useLayout() {
+  const value = useContext(LayoutContext);
+  if (value === undefined) {
+    throw new Error("useLayout must be used within a LayoutContext.Provider");
+  }
+  return value;
+}
+
 export default function Scheduler(props: WorkScheduleProps) {
+  const [isHorizontalLayout, setIsHorizontalLayout] = makePersisted(createSignal(true), {
+    name: "schedulerLayout",
+    deserialize: (value) => value === "horizontal",
+    serialize: (value) => (value ? "horizontal" : "vertical"),
+    storage: cookieStorage,
+  });
   return (
     <SchedulerStoreContext.Provider value={props.store}>
-      <SchedulerGrid />
+      <LayoutContext.Provider value={[isHorizontalLayout, setIsHorizontalLayout]}>
+        <SchedulerGrid />
+        <div class="absolute right-0 top-0 h-14 flex items-center justify-start w-20">
+          <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="outline">
+            <Show when={isHorizontalLayout()} fallback={<Columns4 />}>
+              <Rows4 />
+            </Show>
+          </Button>
+        </div>
+      </LayoutContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }
 
 function SchedulerGrid() {
   const store = useStore();
+  const [isHorizontalLayout] = useLayout();
   const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 70 : 100);
   const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
@@ -74,16 +115,6 @@ function SchedulerGrid() {
     }
   );
 
-  const InnerComponent = createMemo(() => (
-    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
-      <Corner />
-      <Heading />
-      <Days />
-      <Week />
-      <ColumnLines />
-    </div>
-  ));
-
   return (
     <div
       ref={setScheduleRef}
@@ -93,17 +124,23 @@ function SchedulerGrid() {
         "--scheduler-scale": `${scale()}%`,
         "touch-action": touchAction(),
         "font-size": "var(--scheduler-scale, 100%)",
-        "grid-template-columns": `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 10rem))`,
-        "grid-template-rows": `auto repeat(${store.settings.rows.length}, auto)`,
+        "grid-template-columns": isHorizontalLayout()
+          ? `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 10rem))`
+          : `max-content repeat(${store.settings.rows.length}, 1fr )`,
+        "grid-template-rows": isHorizontalLayout()
+          ? `auto repeat(${store.settings.rows.length}, auto)`
+          : `auto repeat(${store.settings.columns.length}, calc(5em))`,
       }}
     >
-      <InnerComponent />
+      <SchedulerGridInner />
     </div>
   );
 }
 
-function Heading() {
+function SchedulerGridInner() {
   const store = useStore();
+  const t = useI18n().t;
+  const [isHorizontalLayout] = useLayout();
   const [now] = createDateNow(1000);
   const offset = createMemo(() => {
     const nowDate = new Date(now().getTime() - 8 * 60 * 60 * 1000);
@@ -118,45 +155,96 @@ function Heading() {
 
   const [indicatorHeight, setIndicatorHeight] = createSignal("100%");
   return (
-    <div
-      class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background font-mono"
-      on:click={(e) => {
-        if (window.getSelection()?.toString()) return;
-        setIndicatorHeight((h) => (h === "100%" ? "100vh" : "100%"));
-      }}
-    >
-      <For each={store.settings.columns}>
-        {(column) => (
-          <Text
-            em
-            class={cn(
-              "[text-align-last:right] em:p-1 font-mono",
-              "em:text-sm font-medium leading-none !mt-0",
-              "md:em:text-base md:font-normal",
-              "border-x first:border-l-transparent border-r-transparent"
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
+      <Corner />
+      <Show
+        when={isHorizontalLayout()}
+        fallback={
+          <>
+            <TopXAxisHeader>
+              <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
+                {(day) => (
+                  <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>
+                )}
+              </For>
+            </TopXAxisHeader>
+            <LeftYAxisHeader>
+              <For each={store.settings.columns}>
+                {(column) => (
+                  <Text
+                    em
+                    class={cn(
+                      "[text-align-last:right] em:p-1 font-mono",
+                      "em:text-sm font-medium leading-none !mt-0",
+                      "md:em:text-base md:font-normal font-mono",
+                      "!border-x first:border-l-transparent border-r-transparent"
+                    )}
+                  >
+                    {column.title}
+                  </Text>
+                )}
+              </For>
+              <div
+                class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
+                style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
+              />
+            </LeftYAxisHeader>
+          </>
+        }
+      >
+        <TopXAxisHeader
+          on:click={() => {
+            if (window.getSelection()?.toString()) return;
+            setIndicatorHeight((h) => (h === "100%" ? "100vh" : "100%"));
+          }}
+        >
+          <For each={store.settings.columns}>
+            {(column) => (
+              <Text
+                em
+                class={cn(
+                  "[text-align-last:right] em:p-1 font-mono",
+                  "em:text-sm font-medium leading-none !mt-0",
+                  "md:em:text-base md:font-normal font-mono",
+                  "!border-x first:border-l-transparent border-r-transparent"
+                )}
+              >
+                {column.title}
+              </Text>
             )}
-          >
-            {column.title}
-          </Text>
-        )}
-      </For>
-      <div
-        class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
-        style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
-      />
+          </For>
+          <div
+            class={cn("bg-red-500/30 w-px absolute", { hidden: hidden() })}
+            style={{ "margin-left": `${offset()}%`, height: indicatorHeight() }}
+          />
+        </TopXAxisHeader>
+        <LeftYAxisHeader>
+          <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
+            {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
+          </For>
+        </LeftYAxisHeader>
+      </Show>
+      <Week />
+      <ColumnLines />
     </div>
   );
 }
 
-function Days() {
-  const t = useI18n().t;
-  const store = useStore();
+function TopXAxisHeader(props: FlowProps<JSX.HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y">
-      <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
-        {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
-      </For>
-    </div>
+    <div
+      class="grid grid-cols-subgrid row-span-1 col-[2/-1] outline-1 sticky top-px outline outline-border z-20 bg-background divide-x"
+      {...props}
+    />
+  );
+}
+
+function LeftYAxisHeader(props: FlowProps<JSX.HTMLAttributes<HTMLDivElement>>) {
+  return (
+    <div
+      class="grid grid-rows-subgrid row-[2/-1] col-span-1 border-r sticky left-0 z-10 bg-background divide-y"
+      {...props}
+    />
   );
 }
 
@@ -171,6 +259,7 @@ const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: st
 
 function Week() {
   const store = useStore();
+  const [isHorizontalLayout] = useLayout();
   const storeData = createMemo(() => values(store.data || store.getEmptyData()));
   const createLinkedHighlightClass = (
     property: StrictExtract<keyof ScheduleEvent, "linked" | "strongLinked">,
@@ -213,21 +302,37 @@ function Week() {
       <Index each={storeData()}>
         {(data) => (
           <div
-            class="schedule-row grid grid-cols-subgrid col-span-full em:py-2 em:gap-y-4 border-t [font-size:inherit]"
+            class={cn("schedule-row grid border-t [font-size:inherit]", {
+              "em:py-2 em:gap-y-4": isHorizontalLayout(),
+              "em:px-2 em:gap-x-4": !isHorizontalLayout(),
+            })}
             style={{
-              "grid-row": `${data().dayRow} / span 1`,
-              "grid-template-rows": `repeat(${data().dayRows}, minmax(0, auto))`,
+              "grid-row": isHorizontalLayout() ? `${data().dayRow} / span 1` : "1 / -1",
+              "grid-column": isHorizontalLayout() ? "1 / -1" : `${data().dayRow} / span 1`,
+              "grid-template-rows": isHorizontalLayout() ? `repeat(${data().dayRows}, minmax(0, auto))` : "subgrid",
+              "grid-template-columns": isHorizontalLayout() ? "subgrid" : `repeat(${data().dayRows}, minmax(8em, auto))`,
             }}
           >
             <For each={data().events}>
               {(event) => (
                 <div
                   style={{
-                    "grid-row": `${event.row} / span 1`,
-                    "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`,
-                    "padding-inline-start": `${event.paddingStart}%`,
-                    "padding-inline-end": `${event.paddingEnd}%`,
+                    "grid-row": isHorizontalLayout()
+                      ? `${event.row} / span 1`
+                      : `${event.colStart + 1} / ${event.colEnd + 2}`,
+                    "grid-column": isHorizontalLayout()
+                      ? `${event.colStart + 1} / ${event.colEnd + 2}`
+                      : `${event.row} / span 1`,
+                    "padding-inline-start": isHorizontalLayout() ? `${event.paddingStart}%` : "unset",
+                    "padding-inline-end": isHorizontalLayout() ? `${event.paddingEnd}%` : "unset",
+                    "padding-block-start": isHorizontalLayout()
+                      ? "unset"
+                      : `calc(${event.paddingStart} * var(--element-height, 0) / 100)`,
+                    "padding-block-end": isHorizontalLayout()
+                      ? "unset"
+                      : `calc(${event.paddingEnd} * var(--element-height, 0) / 100)`,
                   }}
+                  ref={createElementHeightRef(isHorizontalLayout)}
                 >
                   <EventComponent event={event} store={store} />
                 </div>
@@ -251,6 +356,7 @@ function ColumnLines() {
 
 function LaunchHighlight() {
   const store = useStore();
+  const [isHorizontalLayout] = useLayout();
   // semi transparent block to represent time of launch
   return ObjectTyped.entries(launchDayTime).map(([day, time]) => {
     const convertTime = (time: string) => {
@@ -263,12 +369,17 @@ function LaunchHighlight() {
     return (
       <div
         style={{
-          "grid-row": `${row} / span 1`,
-          "grid-column": `${data.colStart + 1} / ${data.colEnd + 2}`,
-          "margin-inline-start": `${data.paddingStart}%`,
-          "margin-inline-end": `${data.paddingEnd}%`,
+          "grid-row": isHorizontalLayout() ? `${row} / span 1` : `${data.colStart + 1} / ${data.colEnd + 2}`,
+          "grid-column": isHorizontalLayout() ? `${data.colStart + 1} / ${data.colEnd + 2}` : `${row} / span 1`,
+          "margin-inline-start": isHorizontalLayout() ? `${data.paddingStart}%` : "unset",
+          "margin-inline-end": isHorizontalLayout() ? `${data.paddingEnd}%` : "unset",
+          "margin-block-start": isHorizontalLayout()
+            ? "unset"
+            : `calc(${data.paddingStart} * var(--element-height, 0) / 100)`,
+          "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${data.paddingEnd} * var(--element-height, 0) / 100)`,
         }}
         class="bg-fuchsia-300 bg-opacity-10 -z-20"
+        ref={createElementHeightRef(isHorizontalLayout)}
       />
     );
   });
