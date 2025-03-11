@@ -71,11 +71,5 @@
     "playwright": "^1.50.1",
     "ts-essentials": "^10.0.4",
     "typescript": "^5.7.3"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "solid-gesture": "patches/solid-gesture.patch",
-      "solid-forms": "patches/solid-forms.patch"
-    }
   }
 }
