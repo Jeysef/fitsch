@@ -1,0 +1,25 @@
+diff --git a/dist/core/index.common.js b/dist/core/index.common.js
+index d72a62323d6654af795a0262a3b14d320210160d..c0430295b7d46883f2201620e9c4cd19d33ef5ea 100644
+--- a/dist/core/index.common.js
++++ b/dist/core/index.common.js
+@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
+ 
+ var store = require('solid-js/store');
+ var solidJs = require('solid-js');
+-var _isEqual = require('fast-deep-equal/es6');
++_isEqual = require('deep-equal');
+ 
+ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+ 
+diff --git a/dist/core/index.module.js b/dist/core/index.module.js
+index d1d9a7c717be9d2b0d16d0c29f302fdd16f3f4aa..10589b79de99644b32093cf7b6c830f405c0c24c 100644
+--- a/dist/core/index.module.js
++++ b/dist/core/index.module.js
+@@ -1,6 +1,6 @@
+ import { produce, createStore } from 'solid-js/store';
+ import { getOwner, runWithOwner, createSignal, createMemo, createComputed, on, batch } from 'solid-js';
+-import _isEqual from 'fast-deep-equal/es6';
++import _isEqual from 'deep-equal';
+ 
+ function ownKeys(object, enumerableOnly) {
+   var keys = Object.keys(object);
