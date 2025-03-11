@@ -2,8 +2,7 @@ import { css } from "@emotion/css";
 import { createDateNow } from "@solid-primitives/date";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { compact, difference, flatMap, flow, values, without } from "lodash-es";
-import Columns4 from "lucide-solid/icons/columns-4";
-import Rows4 from "lucide-solid/icons/rows-4";
+import TableProperties from "lucide-solid/icons/table-properties";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
 import {
@@ -72,13 +71,6 @@ export default function Scheduler(props: WorkScheduleProps) {
     <SchedulerStoreContext.Provider value={props.store}>
       <LayoutContext.Provider value={[isHorizontalLayout, setIsHorizontalLayout]}>
         <SchedulerGrid />
-        <div class="absolute right-0 top-0 h-14 flex items-center justify-start w-20">
-          <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="outline">
-            <Show when={isHorizontalLayout()} fallback={<Columns4 />}>
-              <Rows4 />
-            </Show>
-          </Button>
-        </div>
       </LayoutContext.Provider>
     </SchedulerStoreContext.Provider>
   );
@@ -395,7 +387,17 @@ function LaunchHighlight() {
 }
 
 function Corner() {
+  const [isHorizontalLayout, setIsHorizontalLayout] = useLayout();
   return (
-    <div class="row-span-1 col-span-1 left-0  sticky top-px z-30 bg-background font-mono outline-border outline outline-1 mr-px" />
+    <div class="row-span-1 col-span-1 left-0  sticky top-px z-30 bg-background font-mono outline-border outline outline-1 mr-px flex justify-center items-center">
+      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full">
+        <TableProperties
+          class={cn("transition-transform ease-linear", {
+            "rotate-180": isHorizontalLayout(),
+            "rotate-[270deg]": !isHorizontalLayout(),
+          })}
+        />
+      </Button>
+    </div>
   );
 }
