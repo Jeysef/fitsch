@@ -361,11 +361,7 @@ function LaunchHighlight() {
   const [isHorizontalLayout] = useLayout();
   // semi transparent block to represent time of launch
   return ObjectTyped.entries(launchDayTime).map(([day, time]) => {
-    const convertTime = (time: string) => {
-      const [hour, minute] = time.split(":").map(Number);
-      return { hour, minute };
-    };
-    const timeSpan = new TimeSpan(new Time(convertTime(time.start)), new Time(convertTime(time.end)));
+    const timeSpan = new TimeSpan(Time.fromString(time.start), Time.fromString(time.end));
     const row = store.getDayRow(day);
     const data = new DayEventObject(store.settings.columns, timeSpan);
     return (
