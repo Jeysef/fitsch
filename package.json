@@ -64,6 +64,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@types/deep-equal": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
     "nitropack": "^2.10.4",
@@ -77,6 +78,7 @@
       "solid-forms": "patches/solid-forms.patch"
     },
     "onlyBuiltDependencies": [
+      "@biomejs/biome",
       "@parcel/watcher",
       "esbuild"
     ]
