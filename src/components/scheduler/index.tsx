@@ -348,9 +348,10 @@ function Week() {
 
 function ColumnLines() {
   const store = useStore();
+  const [isHorizontalLayout] = useLayout();
   return (
-    <div class="grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed">
-      <For each={store.settings.columns}>{() => <div />}</For>
+    <div class={cn("grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed", {"divide-solid": !isHorizontalLayout()})}>
+      <For each={isHorizontalLayout()? store.settings.columns : Array(store.settings.rows.length)}>{() => <div class="col-span-1 row-span-full" />}</For>
     </div>
   );
 }
@@ -390,9 +391,9 @@ function Corner() {
   const [isHorizontalLayout, setIsHorizontalLayout] = useLayout();
   return (
     <div class="row-span-1 col-span-1 left-0  sticky top-px z-30 bg-background font-mono outline-border outline outline-1 mr-px flex justify-center items-center">
-      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full">
+      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full p-1">
         <TableProperties
-          class={cn("transition-transform ease-linear", {
+          class={cn("transition-transform ease-linear em:w-5 md:em:w-7 aspect-square", {
             "rotate-180": isHorizontalLayout(),
             "rotate-[270deg]": !isHorizontalLayout(),
           })}
