@@ -11,7 +11,7 @@ import type {
   StudySpecialization,
 } from "~/server/scraper/types";
 import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
-import { defineCachedFunction } from "~/server/utils/cache";
+// import { defineCachedFunction } from "~/server/utils/cache";
 import { type DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER } from "./enums";
 
 export class StudyApi {
@@ -44,7 +44,7 @@ export class StudyApi {
   /**
    * I strongly recommend passing the year parameter, when passed data may be returned from cache
    */
-  private getTimeSchedule = defineCachedFunction(
+  private getTimeSchedule = // defineCachedFunction(
     async (
       config: StudyApiTypes.getStudyTimeScheduleConfig = { year: null }
     ): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
@@ -90,9 +90,10 @@ export class StudyApi {
         }
       });
       return timeSchedule;
-    },
-    { name: "getTimeSchedule", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
-  );
+    }
+  //   ,
+  //   { name: "getTimeSchedule", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
+  // );
 
   public async getStudyPrograms(
     config?: StudyApiTypes.getStudyProgramsConfig
@@ -337,8 +338,8 @@ export class StudyApi {
           rowBgColor && rowBgColor in courseTypeBasedOnColor
             ? courseTypeBasedOnColor[rowBgColor as keyof typeof courseTypeBasedOnColor]
             : (ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, type]) =>
-                _type.includes(type)
-              )?.[0] as LECTURE_TYPE);
+              _type.includes(type)
+            )?.[0] as LECTURE_TYPE);
 
         const hasNote = _type.includes("*)");
         const normalizedDay = ObjectTyped.entries(languageSet.course.detail.day).find(
