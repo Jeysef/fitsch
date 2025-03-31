@@ -317,22 +317,21 @@ function Week() {
             <For each={data().events}>
               {(event) => (
                 <div
-                  style={{
-                    "grid-row": isHorizontalLayout()
-                      ? `${event.row} / span 1`
-                      : `${event.colStart + 1} / ${event.colEnd + 2}`,
-                    "grid-column": isHorizontalLayout()
-                      ? `${event.colStart + 1} / ${event.colEnd + 2}`
-                      : `${event.row} / span 1`,
-                    "padding-inline-start": isHorizontalLayout() ? `${event.paddingStart}%` : "unset",
-                    "padding-inline-end": isHorizontalLayout() ? `${event.paddingEnd}%` : "unset",
-                    "padding-block-start": isHorizontalLayout()
-                      ? "unset"
-                      : `calc(${event.paddingStart} * var(--element-height, 0) / 100)`,
-                    "padding-block-end": isHorizontalLayout()
-                      ? "unset"
-                      : `calc(${event.paddingEnd} * var(--element-height, 0) / 100)`,
-                  }}
+                  style={
+                    isHorizontalLayout()
+                      ? {
+                          "grid-row": `${event.row} / span 1`,
+                          "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`,
+                          "padding-inline-start": `${event.paddingStart}%`,
+                          "padding-inline-end": `${event.paddingEnd}%`,
+                        }
+                      : {
+                          "grid-column": `${event.row} / span 1`,
+                          "grid-row": `${event.colStart + 1} / ${event.colEnd + 2}`,
+                          "padding-block-start": `calc(${event.paddingStart} * var(--element-height, 0) / 100)`,
+                          "padding-block-end": `calc(${event.paddingEnd} * var(--element-height, 0) / 100)`,
+                        }
+                  }
                   ref={createElementHeightRef(isHorizontalLayout)}
                 >
                   <EventComponent event={event} store={store} />
