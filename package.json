@@ -2,7 +2,7 @@
   "name": "fitsch",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev --host",
+    "dev": "vinxi dev",
     "build": "vinxi build",
     "build-netlify": "vinxi build --preset netlify",
     "start": "vinxi start",
