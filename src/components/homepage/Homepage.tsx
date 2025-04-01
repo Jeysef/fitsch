@@ -6,6 +6,8 @@ import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { useMenuOpened } from "~/providers/MenuOpenedProvider";
 import { useScheduler } from "~/providers/SchedulerProvider";
+import { Button } from "../ui/button";
+import MenuIcon from "lucide-solid/icons/menu";
 
 const TimeSpanPage = lazy(() => import("./TimeSpan"));
 
@@ -22,7 +24,7 @@ export default function Home() {
   const { t, locale } = useI18n();
   const { store } = useScheduler();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
-  const { opened } = useMenuOpened();
+  const { opened, toggleNavigation } = useMenuOpened();
 
   const checkedDataMemo = createMemo(() => store.checkedData);
   const data = createMemo(() => store.data);
@@ -65,27 +67,36 @@ export default function Home() {
 
   return (
     <Tabs as="nav" value={tab()} onChange={setTab} class="items-center h-full w-full overflow-auto flex flex-col">
-      <TabsList
-        class={cn(
-          "h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto justify-start z-0 transition-[margin,max-width]",
-          {
-            "-ml-16 max-w-[calc(100%+64px)]": opened(),
-          }
-        )}
-      >
-        <div class="w-14 -left-2 h-full box-content bg-background shrink-0 z-20 sticky" />
-        <div class="flex gap-x-4 h-full items-center">
-          <For each={Object.values(tabs)}>
-            {(value) => (
-              <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
-                {t(`scheduler.tabs.${value}`)}
-              </TabsTrigger>
-            )}
-          </For>
-        </div>
-        <TabsIndicator variant="underline" data-lang={locale()} />
-        {/* data-lang for rerendering */}
-      </TabsList>
+      <div class="flex items-center justify-between w-full h-14 bg-background sticky top-0 z-10 px-4">
+        <Button
+          variant="default"
+          size="icon"
+          aria-label="navigation opener"
+          class={cn("sticky left-0 shrink-0 z-10 ", { "w-0": opened() })}
+          onClick={() => toggleNavigation(true)}
+          name="open-menu"
+        >
+          <MenuIcon />
+        </Button>
+        <TabsList
+          class={cn(
+            "h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center",
+          )}
+        >
+          <div class="flex gap-x-4 h-full items-center">
+            <For each={Object.values(tabs)}>
+              {(value) => (
+                <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
+                  {t(`scheduler.tabs.${value}`)}
+                </TabsTrigger>
+              )}
+            </For>
+          </div>
+          <TabsIndicator variant="underline" data-lang={locale()} />
+          {/* data-lang for rerendering */}
+        </TabsList>
+        <div />
+      </div>
       <TabsContent
         value={tabs.workSchedule}
         as="main"
