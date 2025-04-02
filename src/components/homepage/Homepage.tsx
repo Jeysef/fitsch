@@ -80,10 +80,9 @@ export default function Home() {
         </Button>
         <TabsList
           class={cn(
-            "h-14 max-w-full w-auto bg-background flex-shrink-0 overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center",
+            "h-14 max-w-full w-auto bg-background flex-shrink overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center",
           )}
         >
-          <div class="flex gap-x-4 h-full items-center">
             <For each={Object.values(tabs)}>
               {(value) => (
                 <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
@@ -91,7 +90,6 @@ export default function Home() {
                 </TabsTrigger>
               )}
             </For>
-          </div>
           <TabsIndicator variant="underline" data-lang={locale()} />
           {/* data-lang for rerendering */}
         </TabsList>
