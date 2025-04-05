@@ -79,7 +79,7 @@ export default function Scheduler(props: WorkScheduleProps) {
 function SchedulerGrid() {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
-  const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 70 : 100);
+  const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 50 : 100);
   const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
   // const setScale: typeof _setScale = (num) => requestAnimationFrame(() => _setScale(num));
@@ -110,14 +110,15 @@ function SchedulerGrid() {
   return (
     <div
       ref={setScheduleRef}
-      class="relative grid overflow-auto max-h-full h-auto w-full justify-start zoom-container transition-[font-size] ease-in-out bg-background"
+      class="relative grid overflow-auto max-h-full h-auto w-auto zoom-container transition-[font-size] ease-in-out bg-background"
       {...bind()}
       style={{
+        "justify-content": "safe center",
         "--scheduler-scale": `${scale()}%`,
         "touch-action": touchAction(),
         "font-size": "var(--scheduler-scale, 100%)",
         "grid-template-columns": isHorizontalLayout()
-          ? `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 10rem))`
+          ? `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 6rem))`
           : `max-content repeat(${store.settings.rows.length}, 1fr )`,
         "grid-template-rows": isHorizontalLayout()
           ? `auto repeat(${store.settings.rows.length}, auto)`
