@@ -112,7 +112,7 @@ const settingsSchema = z.object({
       title: z.string(),
       duration: timespanSchema,
     })
-  ),
+  ).optional(),
   rows: z
     .union([
       // New format
@@ -131,7 +131,7 @@ const settingsSchema = z.object({
         return { ...transformed, length: Object.values(DAY).length };
       }
       return val;
-    }),
+    }).optional(),
 });
 
 const schema = z.object({

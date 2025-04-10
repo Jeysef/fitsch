@@ -75,7 +75,7 @@ export function SchedulerProvider(props: ParentProps) {
 
   const serialize = (store: SchedulerStore) => {
     return JSON.stringify({
-      settings: store.settings,
+      settings: { blockDimensions: store.settings.blockDimensions },
       courses: store.courses,
       customEvents: store.customEvents,
     });
@@ -116,7 +116,11 @@ export function SchedulerProvider(props: ParentProps) {
   const recreateStore = (plainStore: PlainStore) => modifyMutable(store, reconcile(merge(store, plainStore)));
 
   onMount(() => {
-    recreateStore(persistedStore());
+    const plain = persistedStore();
+    // Make the columns and rows adhere to emptyStore
+    plain.settings.columns = columns;
+    plain.settings.rows = rows;
+    recreateStore(plain);
   });
 
   // --- update on data from server
