@@ -1,15 +1,19 @@
 import { trackStore } from "@solid-primitives/deep";
-import { useAction } from "@solidjs/router";
+import { action, useAction } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
 import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
 import {
   type Accessor,
   ErrorBoundary,
-  type JSX,
+  type InitializedResourceReturn,
+  Match,
   type ResourceReturn,
+  Show,
   Suspense,
+  Switch,
   batch,
+  createComputed,
   createContext,
   createEffect,
   createMemo,
@@ -43,7 +47,7 @@ import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
-import { type FunctionReturn, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
+import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { LoadingState } from "./MenuSkeletons";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
@@ -83,7 +87,7 @@ function useLoadCourses(
   const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
     if (!data.courses.length && !data.staleCoursesId?.length) {
       store.clearCourses();
-      return;
+      return Promise.resolve();
     }
     const submission = submit(data).then((result) => {
       if (isErrorReturn(result)) throw new Error(result.errorMessage);
@@ -94,6 +98,7 @@ function useLoadCourses(
       success: t("menu.toast.generate.success"),
       error: t("menu.toast.generate.error"),
     });
+    return submission;
   };
 
   return loadCourses;
@@ -118,7 +123,9 @@ export default function Wrapper() {
           )}
         >
           <Suspense fallback={<LoadingState />}>
-            <Content resource={resource} />
+            <ContentDataValidator resource={resource}>
+              {Content}
+            </ContentDataValidator>
           </Suspense>
         </ErrorBoundary>
       </div>
@@ -126,13 +133,63 @@ export default function Wrapper() {
   );
 }
 
-function Content({
-  resource,
-}: {
+interface ContentDataValidatorProps {
   resource: ResourceReturn<
     FunctionReturn<DataProviderTypes.getStudyOverviewReturn>,
     DataProviderTypes.getStudyOverviewConfig
   >;
+  children: typeof Content;
+}
+
+function ContentDataValidator(props: ContentDataValidatorProps) {
+  const resource = props.resource;
+  const [data, { refetch }] = resource;
+  const Children = props.children;
+  const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
+    DataProviderTypes.getStudyOverviewReturn | undefined
+  >;
+  return (
+    <Switch
+      fallback={
+        <Show when={data.state !== "pending"} fallback={<LoadingState />}>
+          <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>
+        </Show>
+      }
+    >
+      <Match when={data.state === "ready" || data.state === "refreshing"}>
+        <Children
+          resource={
+            resource as InitializedResourceReturn<
+              DataProviderTypes.getStudyOverviewReturn,
+              DataProviderTypes.getStudyOverviewConfig
+            >
+          }
+        />
+      </Match>
+      <Match when={isErrorReturn(cData())}>
+        <Button
+          onClick={async () => {
+            const res = await refetch();
+            if (res && isErrorReturn(res)) {
+              toast.error(res.errorMessage);
+            }
+          }}
+          disabled={data.state === "refreshing"}
+          class="h-auto flex-col"
+        >
+          {(data.latest as FunctionReturnError).errorMessage}
+          <span class="h-[2ch]" />
+          Click to reload menu
+        </Button>
+      </Match>
+    </Switch>
+  );
+}
+
+function Content({
+  resource,
+}: {
+  resource: InitializedResourceReturn<DataProviderTypes.getStudyOverviewReturn, DataProviderTypes.getStudyOverviewConfig>;
 }) {
   const { persistentGroupData, setPersistentGroupData, setSubmittedCourses, submittedCourses } = useLocalMenuData();
   const { store } = useScheduler();
@@ -146,36 +203,6 @@ function Content({
 
   const loadCourses = useLoadCourses(submit, t, store);
 
-  // ----- Error Handling -----
-  const resolvedData = data();
-  if (isErrorReturn(resolvedData)) {
-    // wait for toast to initialize
-    setTimeout(() => {
-      toast.error(resolvedData.errorMessage);
-    }, 1000);
-    return (
-      <Button
-        onClick={async () => {
-          const res = await refetch();
-          if (res && isErrorReturn(res)) {
-            toast.error(res.errorMessage);
-          }
-        }}
-        disabled={data.state === "refreshing"}
-        class="h-auto flex-col"
-      >
-        {resolvedData.errorMessage}
-        <span class="h-[2ch]" />
-        Click to reload menu
-      </Button>
-    );
-  }
-  const dataValues = resolvedData?.values;
-  if (!dataValues) {
-    if (data.state === "refreshing") return <LoadingState />;
-    return <Button onClick={() => window.location.reload()}>Unexpected situation, click to reload</Button>;
-  }
-
   // ----- Helpers for Data Submission -----
   const getDataToRefetch = () => {
     const c = group.controls;
@@ -187,19 +214,29 @@ function Content({
     } satisfies DataProviderTypes.getStudyOverviewConfig;
   };
 
-  const getDataToSubmit = (makeStale = true) => {
-    const c = group.controls;
-    const currentCoursesId = makeStale ? store.courses.map((c) => c.detail.id) : [];
-    const selectedCourses = flatMap(OBLIGATION, (type) => c[type].value);
-    const staleCoursesId = currentCoursesId.filter((id) => selectedCourses.includes(id));
-    const courses = selectedCourses.filter((id) => !staleCoursesId.includes(id));
+  const getDataToSubmit = (makeStale = true): GetStudyCoursesDetailsFunctionConfig => {
+    const controls = group.controls;
+    const selectedCourseIds = flatMap(OBLIGATION, (type) => controls[type].value);
+
+    // Split selected courses into stale and new arrays in one pass
+    const staleCourseIds: string[] = [];
+    const newCourseIds: string[] = [];
+
+    for (const id of selectedCourseIds) {
+      if (makeStale && store.courses.some((c) => c.detail.id === id)) {
+      staleCourseIds.push(id);
+      } else {
+      newCourseIds.push(id);
+      }
+    }
+
     return {
       language: locale(),
-      year: c.year.value.value,
-      semester: c.semester.value,
-      courses,
-      staleCoursesId,
-    } satisfies GetStudyCoursesDetailsFunctionConfig;
+      year: controls.year.value.value,
+      semester: controls.semester.value,
+      courses: newCourseIds,
+      staleCoursesId: staleCourseIds,
+    };
   };
 
   // ----- Update Language Effect -----
@@ -242,9 +279,9 @@ function Content({
   const submittedObligation = mapValues(submittedCourses(), (courses) => courses.length > 0 && courses);
 
   const values: FormGroupValues = {
-    year: dataValues.year,
-    degree: dataValues.degree,
-    program: dataValues.program?.id ?? persistentGroupData()?.program,
+    year: data().values.year,
+    degree: data().values.degree,
+    program: data().values.program?.id ?? persistentGroupData()?.program,
     grade: persistentGroupData()?.grade ?? defaultFormValues.grade,
     semester: persistentGroupData()?.semester ?? defaultFormValues.semester,
     ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultFormValues[type]),
@@ -265,12 +302,30 @@ function Content({
 
   const group: FormGroup = createFormGroup(formGroupControls);
 
+  // ----- Update Group Data Effect -----
+  createComputed(
+    on(cData, (resolved, _, firstEffect) => {
+      if (firstEffect) return false;
+      if (isServer) return true;
+      if (data.state === "ready" && !isErrorReturn(resolved) && resolved?.values) {
+        const values = {
+          program: resolved.values.program?.id ?? group.controls.program.value,
+        };
+        // Because program can be changed from the response of resource
+        if (values.program !== group.controls.program.value) {
+          group.controls.program.setValue(values.program);
+        }
+      }
+      return false;
+    }),
+    true
+  );
+
   // // TODO: find something better
   createEffect(
     on(
       () => trackStore(group),
       (data) => {
-        console.log("🚀 ~ setPersistentGroupData:");
         setPersistentGroupData(data.rawValue);
       }
     )
@@ -284,8 +339,10 @@ function Content({
 
   /** refetch data */
   createRenderEffect(
-    on(getFetchableData, (_, __, firstEffect) => {
+    on(getFetchableData, (data, __, firstEffect) => {
       if (firstEffect) return false;
+      if (isServer) return true;
+      if (data.year === cData()?.values.year.value && data.program === cData()?.values.program?.id) return false;
       void refetch(getDataToRefetch());
       return false;
     }),
@@ -308,31 +365,50 @@ function Content({
     true
   );
 
-  /** Check changed degree grade */
+  // /** Check changed degree grade */
+  // // This effect automatically selects a program when the degree changes
+  // // If there is only one program available for the selected degree (and it has no specializations),
+  // // it will automatically select that program
   createRenderEffect(
     on(
-      () => group.controls.degree.value,
+      () => group.controls.degree.value, // Watch for changes to the selected degree
       (degree, prevDegree) => {
+        // Skip if degree hasn't changed
         if (degree && degree === prevDegree) return false;
+
+        // Get available programs for this degree from the data
         const dataProgram = cData()?.data.programs[degree];
-        if (!dataProgram || dataProgram.flatMap((e) => [e, ...e.specializations]).length !== 1) return;
+
+        // 1. Check if data exists and contains exactly one program
+        if (!dataProgram || dataProgram.length !== 1) return;
+
+        // 2. Check if that single program has any specializations
+        //    (We only auto-select if there are NO specializations, meaning truly only one choice)
+        if (dataProgram[0].specializations && dataProgram[0].specializations.length > 0) return;
+
+        // At this point, we know there's exactly one program with zero specializations
         const programId = dataProgram[0].id;
-        if (programId !== group.controls.program.value) group.controls.program.setValue(programId);
+
+        // If the current program selection is different, update it
+        if (programId !== group.controls.program.value) {
+          group.controls.program.setValue(programId);
+        }
       }
     )
   );
 
   // ----- Submission Handler -----
-  const onSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> | undefined = (e) => {
-    e.preventDefault();
+  const onAction = action(async () => {
     group.markSubmitted(true);
     const dataToSubmit = getDataToSubmit();
-    loadCourses(dataToSubmit);
-    setSubmittedCourses(mapValues(OBLIGATION, (type) => group.controls[type].value));
-  };
+    loadCourses(dataToSubmit)?.then(() => {
+      setSubmittedCourses(mapValues(OBLIGATION, (type) => group.controls[type].value));
+    });
+  }, "menu-submit-action");
 
   return (
-    <form onSubmit={onSubmit}>
+    // <Show when={isErrorReturn(data()) || !data()?.dataValues} fallback={<FallbackComponent />}>
+    <form method="post" action={onAction}>
       <GroupContext.Provider value={group}>
         <DataContext.Provider value={cData}>
           <YearSelect />
@@ -351,6 +427,7 @@ function Content({
         <SubmitButton />
       </GroupContext.Provider>
     </form>
+    // </Show>
   );
 }
 
