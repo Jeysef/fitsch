@@ -18,6 +18,23 @@ import { LECTURE_TYPE } from "~/server/scraper/enums";
 export default function InfoDialogContent() {
   const { t } = useI18n();
 
+  // Thanks block component reused in two places
+  const ThanksBlock = () => (
+    <>
+      <Heading variant="h4" class="mt-8">
+        {t("info.appInfo.thanks.title")}
+      </Heading>
+      <Text>{t("info.appInfo.thanks.description")}</Text>
+      <div class="flex-1" />
+      <span class="space-x-2">
+        <Text class="text-muted-foreground text-xs inline-block">
+          {t("info.appInfo.createdBy.title")}
+        </Text>
+        <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
+      </span>
+    </>
+  );
+
   const LeftCol = () => {
     const subjectColors = ObjectTyped.entries(subjectTypeColors).filter(([type]) => type !== LECTURE_TYPE.EXAM);
     return (
@@ -27,7 +44,7 @@ export default function InfoDialogContent() {
         <Heading variant="h4" class="mt-8">
           {t("info.appInfo.colors.title")}
         </Heading>
-        <Text variant={"smallText"} class="inline">
+        <Text variant="smallText" class="inline">
           {t("info.appInfo.colors.description")}
         </Text>
         <div class="mt-6 list-none flex flex-wrap gap-1">
@@ -46,7 +63,6 @@ export default function InfoDialogContent() {
           {t("info.appInfo.weekParity.title")}
         </Heading>
         <Text>{t("info.appInfo.weekParity.description")}</Text>
-
         <div class="mt-6 list-none flex flex-wrap gap-1">
           <For each={ObjectTyped.entries(parityColors)}>
             {([parity, color]) => (
@@ -84,15 +100,9 @@ export default function InfoDialogContent() {
             </For>
           </List>
         </Text>
-        <Heading variant="h4" class="mt-8">
-          {t("info.appInfo.thanks.title")}
-        </Heading>
-        <Text>{t("info.appInfo.thanks.description")}</Text>
-        <div class="flex-1" />
-        <span class="space-x-2">
-          <Text class="text-muted-foreground text-xs inline-block">{t("info.appInfo.createdBy.title")}</Text>
-          <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
-        </span>
+        <div class="hidden md:block mt-auto">
+          <ThanksBlock />
+        </div>
       </div>
     );
   };
@@ -122,6 +132,7 @@ export default function InfoDialogContent() {
       </div>
     );
   };
+
   return (
     <DialogContent class="max-w-screen-lg">
       <DialogHeader class="relative space-y-0">
@@ -130,9 +141,16 @@ export default function InfoDialogContent() {
       </DialogHeader>
       <InstallButton class="sm:hidden" />
       <div class="max-h-[calc(100svh-10rem)] overflow-auto space-y-2">
-        <div class="flex flex-col md:grid md:grid-cols-2 gap-x-6 px-3 ">
-          <LeftCol />
-          <RightCol />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 px-3">
+          <div class="md:flex md:flex-col">
+            <LeftCol />
+          </div>
+          <div>
+            <RightCol />
+          </div>
+        </div>
+        <div class="md:hidden px-3">
+          <ThanksBlock />
         </div>
         <Alert variant="destructive">
           <TriangleAlert />
