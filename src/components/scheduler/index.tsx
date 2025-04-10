@@ -148,8 +148,10 @@ function SchedulerGridInner() {
 
   const [indicatorSize, setIndicatorSize] = createSignal<string | null>("100%");
 
-  const IsVerticalLayout = createMemo(() => (
-    <>
+  return (
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
+      <Corner />
+      <Show when={isHorizontalLayout()} fallback={<>
       <TopXAxisHeader>
         <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
           {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
@@ -186,11 +188,8 @@ function SchedulerGridInner() {
           }}
         />
       </LeftYAxisHeader>
-    </>
-  ));
-
-  const IsHorizontalLayout = createMemo(() => (
-    <>
+    </>}>
+      <>
       <TopXAxisHeader
         on:click={() => {
           if (window.getSelection()?.toString()) return;
@@ -224,13 +223,6 @@ function SchedulerGridInner() {
         </For>
       </LeftYAxisHeader>
     </>
-  ));
-
-  return (
-    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
-      <Corner />
-      <Show when={isHorizontalLayout()} fallback={<IsVerticalLayout />}>
-      <IsHorizontalLayout />
       </Show>
       <Week />
       <ColumnLines />
@@ -305,10 +297,6 @@ function Week() {
         linkedHighlightClass(),
         strongLinkedHighlightClass()
       )}
-      // style={{
-      //   "grid-row": isHorizontalLayout() ? "2 / -1" : "3 / -1",
-      //   "grid-column": isHorizontalLayout() ? "3 / -1" : "2 / -1",
-      // }}
     >
       <LaunchHighlight />
       <Index each={storeData()}>
