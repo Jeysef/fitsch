@@ -118,11 +118,11 @@ function SchedulerGrid() {
         "touch-action": touchAction(),
         "font-size": "var(--scheduler-scale, 100%)",
         "grid-template-columns": isHorizontalLayout()
-          ? `max-content repeat(${store.settings.columns.length}, minmax(5.6em, 6rem))`
+          ? `max-content 7px repeat(${store.settings.columns.length}, minmax(5.6em, 6rem))`
           : `max-content repeat(${store.settings.rows.length}, 1fr )`,
         "grid-template-rows": isHorizontalLayout()
           ? `auto repeat(${store.settings.rows.length}, auto)`
-          : `auto repeat(${store.settings.columns.length}, calc(5em))`,
+          : `auto  7px repeat(${store.settings.columns.length}, calc(5em))`,
       }}
     >
       <SchedulerGridInner />
@@ -147,84 +147,90 @@ function SchedulerGridInner() {
   const hidden = createMemo(() => offset() === 0 || offset() === 100);
 
   const [indicatorSize, setIndicatorSize] = createSignal<string | null>("100%");
+
+  const IsVerticalLayout = createMemo(() => (
+    <>
+      <TopXAxisHeader>
+        <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
+          {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
+        </For>
+      </TopXAxisHeader>
+      <LeftYAxisHeader
+        ref={createElementHeightRef(isHorizontalLayout)}
+        on:click={() => {
+          if (window.getSelection()?.toString()) return;
+          setIndicatorSize((h) => (h === "100%" ? null : "100%"));
+        }}
+      >
+        <p class="!border-x first:border-l-transparent border-r-transparent" />
+        <For each={store.settings.columns}>
+          {(column) => (
+            <Text
+              em
+              class={cn(
+                "[text-align-last:right] em:p-1 font-mono",
+                "em:text-sm font-medium leading-none !mt-0",
+                "md:em:text-base md:font-normal font-mono",
+                "!border-x first:border-l-transparent border-r-transparent"
+              )}
+            >
+              {column.title.split("\u00A0")[0]}
+            </Text>
+          )}
+        </For>
+        <div
+          class={cn("bg-red-500/30 h-px absolute !border-none", { hidden: hidden() })}
+          style={{
+            "margin-top": `calc(${offset()} * var(--element-height) / 100)`,
+            width: indicatorSize() ?? "100vw",
+          }}
+        />
+      </LeftYAxisHeader>
+    </>
+  ));
+
+  const IsHorizontalLayout = createMemo(() => (
+    <>
+      <TopXAxisHeader
+        on:click={() => {
+          if (window.getSelection()?.toString()) return;
+          setIndicatorSize((h) => (h === "100%" ? null : "100%"));
+        }}
+      >
+        <p class="!border-x first:border-l-transparent border-r-transparent" />
+        <For each={store.settings.columns}>
+          {(column) => (
+            <Text
+              em
+              class={cn(
+                "[text-align-last:right] em:p-1 font-mono",
+                "em:text-sm font-medium leading-none !mt-0",
+                "md:em:text-base md:font-normal font-mono",
+                "!border-x first:border-l-transparent border-r-transparent"
+              )}
+            >
+              {column.title}
+            </Text>
+          )}
+        </For>
+        <div
+          class={cn("bg-red-500/30 w-px absolute !border-none", { hidden: hidden() })}
+          style={{ "margin-left": `${offset()}%`, height: indicatorSize() ?? "100vh" }}
+        />
+      </TopXAxisHeader>
+      <LeftYAxisHeader>
+        <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
+          {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
+        </For>
+      </LeftYAxisHeader>
+    </>
+  ));
+
   return (
     <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
       <Corner />
-      <Show
-        when={isHorizontalLayout()}
-        fallback={
-          <>
-            <TopXAxisHeader>
-              <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
-                {(day) => (
-                  <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>
-                )}
-              </For>
-            </TopXAxisHeader>
-            <LeftYAxisHeader
-              ref={createElementHeightRef(isHorizontalLayout)}
-              on:click={() => {
-                if (window.getSelection()?.toString()) return;
-                setIndicatorSize((h) => (h === "100%" ? null : "100%"));
-              }}
-            >
-              <For each={store.settings.columns}>
-                {(column) => (
-                  <Text
-                    em
-                    class={cn(
-                      "[text-align-last:right] em:p-1 font-mono",
-                      "em:text-sm font-medium leading-none !mt-0",
-                      "md:em:text-base md:font-normal font-mono",
-                      "!border-x first:border-l-transparent border-r-transparent"
-                    )}
-                  >
-                    {column.title.split("\u00A0")[0]}
-                  </Text>
-                )}
-              </For>
-              <div
-                class={cn("bg-red-500/30 h-px absolute !border-none", { hidden: hidden() })}
-                style={{
-                  "margin-top": `calc(${offset()} * var(--element-height) / 100)`,
-                  width: indicatorSize() ?? "100vw",
-                }}
-              />
-            </LeftYAxisHeader>
-          </>
-        }
-      >
-        <TopXAxisHeader
-          on:click={() => {
-            if (window.getSelection()?.toString()) return;
-            setIndicatorSize((h) => (h === "100%" ? null : "100%"));
-          }}
-        >
-          <For each={store.settings.columns}>
-            {(column) => (
-              <Text
-                em
-                class={cn(
-                  "[text-align-last:right] em:p-1 font-mono",
-                  "em:text-sm font-medium leading-none !mt-0",
-                  "md:em:text-base md:font-normal font-mono",
-                  "!border-x first:border-l-transparent border-r-transparent"
-                )}
-              >
-                {column.title}
-              </Text>
-            )}
-          </For>
-          <div
-            class={cn("bg-red-500/30 w-px absolute !border-none", { hidden: hidden() })}
-            style={{ "margin-left": `${offset()}%`, height: indicatorSize() ?? "100vh" }}
-          />
-        </TopXAxisHeader>
-        <LeftYAxisHeader>
-          <For each={without(ObjectTyped.keys(store.settings.rows), "length") as DAY[]}>
-            {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
-          </For>
-        </LeftYAxisHeader>
+      <Show when={isHorizontalLayout()} fallback={<IsVerticalLayout />}>
+      <IsHorizontalLayout />
       </Show>
       <Week />
       <ColumnLines />
@@ -299,6 +305,10 @@ function Week() {
         linkedHighlightClass(),
         strongLinkedHighlightClass()
       )}
+      // style={{
+      //   "grid-row": isHorizontalLayout() ? "2 / -1" : "3 / -1",
+      //   "grid-column": isHorizontalLayout() ? "3 / -1" : "2 / -1",
+      // }}
     >
       <LaunchHighlight />
       <Index each={storeData()}>
@@ -322,13 +332,13 @@ function Week() {
                     isHorizontalLayout()
                       ? {
                           "grid-row": `${event.row} / span 1`,
-                          "grid-column": `${event.colStart + 1} / ${event.colEnd + 2}`,
+                          "grid-column": `${event.colStart + 2} / ${event.colEnd + 3}`,
                           "padding-inline-start": `${event.paddingStart}%`,
                           "padding-inline-end": `${event.paddingEnd}%`,
                         }
                       : {
                           "grid-column": `${event.row} / span 1`,
-                          "grid-row": `${event.colStart + 1} / ${event.colEnd + 2}`,
+                          "grid-row": `${event.colStart + 2} / ${event.colEnd + 3}`,
                           "padding-block-start": `calc(${event.paddingStart} * var(--element-height, 0) / 100)`,
                           "padding-block-end": `calc(${event.paddingEnd} * var(--element-height, 0) / 100)`,
                         }
@@ -350,8 +360,14 @@ function ColumnLines() {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
   return (
-    <div class={cn("grid grid-cols-subgrid row-start-2 -row-end-1 col-[2/-1] select-none -z-30 divide-x divide-dashed", {"divide-solid": !isHorizontalLayout()})}>
-      <For each={isHorizontalLayout()? store.settings.columns : Array(store.settings.rows.length)}>{() => <div class="col-span-1 row-span-full" />}</For>
+    <div
+      class={cn("grid grid-cols-subgrid row-start-2 -row-end-1 col-[3/-1] select-none -z-30 divide-x divide-dashed", {
+        "divide-solid": !isHorizontalLayout(),
+      })}
+    >
+      <For each={isHorizontalLayout() ? store.settings.columns : Array(store.settings.rows.length)}>
+        {() => <div class="col-span-1 row-span-full" />}
+      </For>
     </div>
   );
 }
