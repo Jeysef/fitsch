@@ -62,7 +62,7 @@ export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
 
   const formatTime = (start: Time, end: Time) =>
-    `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}\u00A0- ${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
+    `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}–${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
   const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
   const rows = { ...zipObject(days, range(1, days.length + 1)), length: days.length } as IScheduleRow;
   const columns = createColumns({
