@@ -82,7 +82,7 @@ function useLoadCourses(
 ) {
   const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
     if (!data.courses.length && !data.staleCoursesId?.length) {
-      store.courses = [];
+      store.clearCourses();
       return;
     }
     const submission = submit(data).then((result) => {

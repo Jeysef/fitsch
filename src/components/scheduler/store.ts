@@ -35,7 +35,7 @@ const defaultSettings: ISchedulerSettings = {
 
 export class SchedulerStore implements StoreJson {
   private static readonly defaultSettings: ISchedulerSettings = defaultSettings;
-  public settings: ISchedulerSettings;
+  public readonly settings: ISchedulerSettings;
   public courses: Course[];
   public customEvents: CustomEvent[];
   constructor(
@@ -90,9 +90,13 @@ export class SchedulerStore implements StoreJson {
     return this.getEventData(data)?.event;
   }
 
+  public clearCourses() {
+    this.courses = [];
+  }
+
   set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     if (courses.length === 0) {
-      this.courses = [];
+      this.clearCourses();
       return;
     }
     const coursesData = courses.reduce((acc, newCourse) => {
