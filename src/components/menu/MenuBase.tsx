@@ -20,6 +20,10 @@ export default function Menu() {
           hidden: menuHidden(),
         }
       )}
+      style={{
+        "box-shadow": "0px 0px 1px gray",
+      }}
+      aria-hidden={!opened()}
     >
       <Button
         variant="ghost"
