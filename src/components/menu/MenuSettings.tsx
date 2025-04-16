@@ -1,15 +1,12 @@
-import { useIsMobile } from "~/lib/hooks";
 import AppInfo from "../header/InfoDialog";
 import { LanguageSwitcher } from "../header/LanguageSwitcher";
 import ModeToggle from "../modeToggle";
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuItem } from "../ui/sidebar";
-import { Show } from "solid-js";
 import InstallButton from "../ui/InstallButton";
 
 export function Settings() {
-  const isMobile = useIsMobile();
   return (
-    <Show when={isMobile()}>
+    <div class="block md:hidden">
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
@@ -30,6 +27,6 @@ export function Settings() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-    </Show>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Show } from "solid-js";
 import Content from "~/components/menu/MenuContent";
 import { MenuLocalDataProvider } from "~/components/menu/MenuLocalDataProvider";
 import {
@@ -6,14 +5,11 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "../ui/sidebar";
-import { useIsMobile } from "~/lib/hooks";
 
 export default function Menu() {
-  const isMobile = useIsMobile();
   return (
     <Sidebar class="top-[--header-height] !h-[calc(100svh-var(--header-height))]">
-      <Show when={isMobile()}>
-        <SidebarHeader>
+        <SidebarHeader class="block md:hidden">
           <div class="flex items-center justify-between w-full">
             <div class="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 80" height={24}>
@@ -32,7 +28,6 @@ export default function Menu() {
             <SidebarTrigger />
           </div>
         </SidebarHeader>
-      </Show>
       <MenuLocalDataProvider>
         <Content />
       </MenuLocalDataProvider>
