@@ -4,10 +4,9 @@ import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
-import { useMenuOpened } from "~/providers/MenuOpenedProvider";
 import { useScheduler } from "~/providers/SchedulerProvider";
-import { Button } from "../ui/button";
-import MenuIcon from "lucide-solid/icons/menu";
+import { SidebarTrigger } from "../ui/sidebar";
+import { Separator } from "../ui/separator";
 
 const TimeSpanPage = lazy(() => import("./TimeSpan"));
 
@@ -24,7 +23,7 @@ export default function Home() {
   const { t, locale } = useI18n();
   const { store } = useScheduler();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
-  const { opened, toggleNavigation } = useMenuOpened();
+  // const { opened, toggleNavigation } = useMenuOpened();
 
   const checkedDataMemo = createMemo(() => store.checkedData);
   const data = createMemo(() => store.data);
@@ -66,23 +65,18 @@ export default function Home() {
   const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
 
   return (
-    <Tabs as="nav" value={tab()} onChange={setTab} class="items-center h-full w-full overflow-auto flex flex-col">
-      <div class="flex items-center justify-between w-full h-14 bg-background sticky top-0 z-10 px-4">
-        <Button
-          variant="default"
-          size="icon"
-          aria-label="navigation opener"
-          class={cn("sticky left-0 shrink-0 z-10 ", { "w-0": opened() })}
-          onClick={() => toggleNavigation(true)}
-          name="open-menu"
-        >
-          <MenuIcon />
-        </Button>
-        <TabsList
-          class={cn(
-            "h-14 max-w-full w-auto bg-background flex-shrink overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center",
-          )}
-        >
+    <Tabs value={tab()} onChange={setTab} class="content">
+      {/* <div class="flex items-center justify-between w-full h-14 bg-background sticky top-0 z-10 px-4"> */}
+        <div class="flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between">
+          <div class="flex h-16 shrink-0 items-center gap-2 -ml-1">
+            <SidebarTrigger />
+            <Separator orientation="vertical" class="mr-2 !h-4" />
+          </div>
+          <TabsList
+            class={cn(
+              "h-14 max-w-full w-auto bg-background flex-shrink overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center"
+            )}
+          >
             <For each={Object.values(tabs)}>
               {(value) => (
                 <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
@@ -90,28 +84,27 @@ export default function Home() {
                 </TabsTrigger>
               )}
             </For>
-          <TabsIndicator variant="underline" data-lang={locale()} />
-          {/* data-lang for rerendering */}
-        </TabsList>
-        <div />
-      </div>
+            <TabsIndicator variant="underline" data-lang={locale()} />
+            {/* data-lang for rerendering */}
+          </TabsList>
+          <div />
+        </div>
+        {/* <div /> */}
+      {/* </div> */}
       <TabsContent
         value={tabs.workSchedule}
-        as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background"
       >
         <Scheduler store={storeProxy} />
       </TabsContent>
       <TabsContent
         value={tabs.resultSchedule}
-        as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background"
       >
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent
         value={tabs.timeSpan}
-        as="main"
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
         <Suspense>

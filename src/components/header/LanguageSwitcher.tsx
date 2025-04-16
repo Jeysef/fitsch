@@ -1,4 +1,4 @@
-import { createMemo, Show } from "solid-js";
+import { createMemo } from "solid-js";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { LANGUAGE } from "~/enums";
 import { locales, useI18n } from "~/i18n";
@@ -42,20 +42,20 @@ export function LanguageSwitcher() {
       )}
     >
       <SelectTrigger class="border-muted-foreground">
-        <SelectValue<Options>>{({ selectedOption }) => <SelectItemContent {...selectedOption()} hidden />}</SelectValue>
+        <SelectValue<Options>>{({ selectedOption }) => <SelectItemContent {...selectedOption()} />}</SelectValue>
       </SelectTrigger>
       <SelectContent />
     </Select>
   );
 }
 
-function SelectItemContent(props: { label: string; flag: string; value: LANGUAGE; hidden?: boolean }) {
+function SelectItemContent(props: { label: string; flag: string; value: LANGUAGE }) {
   return (
     <div class="flex items-center gap-2 text-inherit">
       <span>
         <img src={props.flag} alt={`${props.value} flag`} class="w-4" />
       </span>
-      <span class={cn("text-xs sm:text-sm", { "hidden md:inline": props.hidden })}>{props.label}</span>
+      <span class={cn("text-xs sm:text-sm")}>{props.label}</span>
     </div>
   );
 }

@@ -5,11 +5,10 @@ import InstallButton from "~/components/ui/InstallButton";
 
 export default function Header() {
   return (
-    <header class="w-full flex *:h-12 *:items-center bg-zinc-800 pr-6 justify-between text-zinc-50 flex-wrap gap-y-1">
-      <div class="flex relative">
+    <header class="flex sticky top-0 z-50 w-full items-center border-b bg-background">
+      <div class="flex h-[--header-height] w-full items-center gap-2 px-4">
         <svg xmlns="http://www.w3.org/2000/svg" id="icon-logo-fit" viewBox="0 0 196 80" height={40} $ServerOnly>
           <title>VUT FIT Logo</title>
-          {/* numbers changed for overlaping on small size */}
           <rect fill="#fff" width="77" height="100%" /> {/* 80 - 3 */}
           <rect fill="#fff" width="110" height="100%" x="86" /> {/* 83 + 3 */}
           <path
@@ -20,17 +19,16 @@ export default function Header() {
           <path fill="#e4002b" d="M67 32H53a5.9 5.9 0 0 0-6 5.7V69h-9V24H13v-9h25v9h29v8zM0 80h80V0H0v80z" />
         </svg>
         <h1 class="text-2xl font-bold ml-2">
-          <span class="md:hidden">Sch.</span>
-          <span class="hidden md:inline">Scheduler</span>
+          <span class="inline">Scheduler</span>
         </h1>
-      </div>
-      <div class="flex gap-x-4 justify-end grow">
-        <div class="hidden md:block">
+
+        <div class="ml-auto" />
+        <div class="hidden md:flex gap-2 items-center">
           <InstallButton />
+          <LanguageSwitcher />
+          <ModeToggle />
+          <AppInfo />
         </div>
-        <LanguageSwitcher />
-        <ModeToggle />
-        <AppInfo />
       </div>
     </header>
   );

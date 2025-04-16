@@ -24,6 +24,8 @@ import { useI18n } from "~/i18n";
 import { OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
 import { asMerge } from "~/utils/asMerge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import ChevronRight from "lucide-solid/icons/chevron-right";
 
 const SelectedCountIndicator = (count: number) => {
   return (
@@ -339,37 +341,46 @@ export function CoursesSelect() {
         !!group.controls.grade.value &&
         data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][props.obligation]
     );
-    const Subsection = () => <SubSectionHeading>{t(`menu.courses.${props.obligation}`)}</SubSectionHeading>;
+    const Subsection = () => (
+      <CollapsibleTrigger class="flex" as={SubSectionHeading}>
+        {t(`menu.courses.${props.obligation}`)}
+        <ChevronRight class="ml-auto transition-transform group-data-[expanded]/collapsible:rotate-90" />
+      </CollapsibleTrigger>
+    );
 
     return (
-      <>
-        {props.alwaysShowHEading && <Subsection />}
+      <Collapsible defaultOpen class="group/collapsible">
+        <Show when={props.alwaysShowHEading}>
+          <Subsection />
+        </Show>
         <Show when={courses()} keyed fallback={props.alwaysShowHEading ? <Fallback /> : null}>
           {(courses) => (
             <>
               <Show when={!props.alwaysShowHEading} fallback={null}>
                 <Subsection />
               </Show>
-              <Show when={props.preChild} keyed>
-                {(render) => render(courses)}
-              </Show>
-              <For each={courses}>
-                {(course) => (
-                  <Checkbox
-                    class="flex items-center cursor-pointer"
-                    value={course.id}
-                    checked={group.controls[props.obligation].value.includes(course.id)}
-                    onChange={(checked) => handleChange(checked, props.obligation, course.id)}
-                  >
-                    <CheckboxControl />
-                    <CourseCheckboxLabel course={course} />
-                  </Checkbox>
-                )}
-              </For>
+              <CollapsibleContent>
+                <Show when={props.preChild} keyed>
+                  {(render) => render(courses)}
+                </Show>
+                <For each={courses}>
+                  {(course) => (
+                    <Checkbox
+                      class="flex items-center cursor-pointer"
+                      value={course.id}
+                      checked={group.controls[props.obligation].value.includes(course.id)}
+                      onChange={(checked) => handleChange(checked, props.obligation, course.id)}
+                    >
+                      <CheckboxControl />
+                      <CourseCheckboxLabel course={course} />
+                    </Checkbox>
+                  )}
+                </For>
+              </CollapsibleContent>
             </>
           )}
         </Show>
-      </>
+      </Collapsible>
     );
   };
 
@@ -409,8 +420,8 @@ export function CoursesSelect() {
 export function SubmitButton() {
   const { t } = useI18n();
   return (
-    <Button class="w-full !mt-8 sticky bottom-0" type="submit">
-      {t("menu.load")}
-    </Button>
+      <Button class="w-full" type="submit">
+        {t("menu.load")}
+      </Button>
   );
 }

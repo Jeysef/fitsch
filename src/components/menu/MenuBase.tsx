@@ -1,42 +1,41 @@
-import { makeTimer } from "@solid-primitives/timer";
-import MenuIcon from "lucide-solid/icons/menu";
-import X from "lucide-solid/icons/x";
-import { createSignal } from "solid-js";
+import { Show } from "solid-js";
 import Content from "~/components/menu/MenuContent";
 import { MenuLocalDataProvider } from "~/components/menu/MenuLocalDataProvider";
-import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
-import { useMenuOpened } from "~/providers/MenuOpenedProvider";
+import {
+  Sidebar,
+  SidebarHeader,
+  SidebarTrigger,
+} from "../ui/sidebar";
+import { useIsMobile } from "~/lib/hooks";
 
 export default function Menu() {
-  const { opened, menuHidden, toggleNavigation } = useMenuOpened();
-
+  const isMobile = useIsMobile();
   return (
-    <aside
-      class={cn(
-        "flex flex-col h-full overflow-auto w-64 bg-background relative p-4 -ml-0 transition-[margin] flex-shrink-0 z-10",
-        {
-          "-ml-64": !opened(),
-          hidden: menuHidden(),
-        }
-      )}
-      style={{
-        "box-shadow": "0px 0px 1px gray",
-      }}
-      aria-hidden={!opened()}
-    >
-      <Button
-        variant="ghost"
-        size={null}
-        class="sticky right-0 top-0 -mt-6 w-max self-end rounded-sm opacity-70 ring-offset-background transition-[opacity,box-shadow] hover:opacity-100 focus:outline-none focus:ring-[1.5px] focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
-        onClick={() => toggleNavigation(false)}
-        name="close-menu"
-      >
-        <X />
-      </Button>
+    <Sidebar class="top-[--header-height] !h-[calc(100svh-var(--header-height))]">
+      <Show when={isMobile()}>
+        <SidebarHeader>
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 80" height={24}>
+                <title>VUT FIT Logo</title>
+                <rect fill="#fff" width="77" height="100%" /> {/* 80 - 3 */}
+                <rect fill="#fff" width="110" height="100%" x="86" /> {/* 83 + 3 */}
+                <path
+                  fill="#00a9e0"
+                  fill-rule="evenodd"
+                  d="M83 80h113V0H83v80zm68.807-59.903h29.12v5.824h-11.2v33.376h-6.721V25.921h-11.199v-5.824zm-15.68 39.2h6.72v-39.2h-6.72v39.2zm-32.759-39.2h22.96v5.824h-16.24v10.752h15.12v5.824h-15.12v16.8h-6.72v-39.2z"
+                />
+                <path fill="#e4002b" d="M67 32H53a5.9 5.9 0 0 0-6 5.7V69h-9V24H13v-9h25v9h29v8zM0 80h80V0H0v80z" />
+              </svg>
+              <span class="inline">Scheduler</span>
+            </div>
+            <SidebarTrigger />
+          </div>
+        </SidebarHeader>
+      </Show>
       <MenuLocalDataProvider>
         <Content />
       </MenuLocalDataProvider>
-    </aside>
+    </Sidebar>
   );
 }

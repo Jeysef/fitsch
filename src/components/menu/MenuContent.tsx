@@ -49,6 +49,8 @@ import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/act
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { LoadingState } from "./MenuSkeletons";
+import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
+import { Settings } from "./MenuSettings";
 
 type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -110,25 +112,21 @@ export default function Wrapper() {
 
   return (
     <>
-      <div class="w-44 min-h-full">
-        <ErrorBoundary
-          fallback={(error, reset) => (
-            <ErrorFallback
-              error={error}
-              reset={async () => {
-                await resource[1].refetch();
-                reset();
-              }}
-            />
-          )}
-        >
-          <Suspense fallback={<LoadingState />}>
-            <ContentDataValidator resource={resource}>
-              {Content}
-            </ContentDataValidator>
-          </Suspense>
-        </ErrorBoundary>
-      </div>
+      <ErrorBoundary
+        fallback={(error, reset) => (
+          <ErrorFallback
+            error={error}
+            reset={async () => {
+              await resource[1].refetch();
+              reset();
+            }}
+          />
+        )}
+      >
+        <Suspense fallback={<LoadingState />}>
+          <ContentDataValidator resource={resource}>{Content}</ContentDataValidator>
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 }
@@ -224,9 +222,9 @@ function Content({
 
     for (const id of selectedCourseIds) {
       if (makeStale && store.courses.some((c) => c.detail.id === id)) {
-      staleCourseIds.push(id);
+        staleCourseIds.push(id);
       } else {
-      newCourseIds.push(id);
+        newCourseIds.push(id);
       }
     }
 
@@ -407,27 +405,34 @@ function Content({
   }, "menu-submit-action");
 
   return (
-    // <Show when={isErrorReturn(data()) || !data()?.dataValues} fallback={<FallbackComponent />}>
-    <form method="post" action={onAction}>
+    <form method="post" action={onAction} class="contents">
       <GroupContext.Provider value={group}>
-        <DataContext.Provider value={cData}>
-          <YearSelect />
-          {/* semester up top coz it dosn't change much */}
-          <SemesterSelect />
-          <DegreeSelect />
-          <ProgramSelect />
-        </DataContext.Provider>
-        <DataContext.Provider value={data as Accessor<DataProviderTypes.getStudyOverviewReturn | undefined>}>
-          <GradeSelect />
-          <Suspense>
-            <CoursesSelect />
-          </Suspense>
-        </DataContext.Provider>
-        <Actions />
-        <SubmitButton />
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarMenu>
+              <DataContext.Provider value={cData}>
+                <YearSelect />
+                {/* semester up top coz it dosn't change much */}
+                <SemesterSelect />
+                <DegreeSelect />
+                <ProgramSelect />
+              </DataContext.Provider>
+              <DataContext.Provider value={data as Accessor<DataProviderTypes.getStudyOverviewReturn | undefined>}>
+                <GradeSelect />
+                <Suspense>
+                  <CoursesSelect />
+                </Suspense>
+              </DataContext.Provider>
+            </SidebarMenu>
+          </SidebarGroup>
+          <Actions />
+          <Settings />
+        </SidebarContent>
+        <SidebarFooter>
+          <SubmitButton />
+        </SidebarFooter>
       </GroupContext.Provider>
     </form>
-    // </Show>
   );
 }
 
