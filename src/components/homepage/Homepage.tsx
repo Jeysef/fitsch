@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Separator } from "../ui/separator";
+import { ObjectTyped } from "object-typed";
 
 const TimeSpanPage = lazy(() => import("./TimeSpan"));
 
@@ -62,6 +63,14 @@ export default function Home() {
     setSearchParams({ tab: tabValue }, { replace: true });
   };
 
+  const areAllCoursesSelected = createMemo(() => {
+    return storeProxy.courses.every((course, idx) => {
+      return ObjectTyped.entries(course.metrics).every(
+        ([type, { weeklyLectures }]) => storeProxy.selected[idx]?.[type] === weeklyLectures
+      );
+    });
+  });
+
   const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
 
   return (
@@ -79,7 +88,16 @@ export default function Home() {
           >
             <For each={Object.values(tabs)}>
               {(value) => (
-                <TabsTrigger class="w-auto whitespace-break-spaces" value={value}>
+                <TabsTrigger
+                  class={cn(
+                  "w-auto whitespace-break-spaces",
+                  value === tabs.timeSpan &&
+                    (areAllCoursesSelected()
+                    ? "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-green-500 after:self-start"
+                    : "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-red-500 after:self-start")
+                  )}
+                  value={value}
+                >
                   {t(`scheduler.tabs.${value}`)}
                 </TabsTrigger>
               )}
