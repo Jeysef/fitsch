@@ -28,7 +28,7 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <Suspense>
-            <ColorModeScript initialColorMode="dark" storageKey="kb-color-mode" />
+            <ColorModeScript initialColorMode="light" storageKey="kb-color-mode" />
             <MultiProvider values={providers}>
               <Layout>
                 <Suspense>{props.children}</Suspense>
