@@ -23,10 +23,12 @@ export function importJSON(props: ImportJSONProps) {
   input.multiple = false;
   input.accept = ".json";
   input.setAttribute("style", "visibility:hidden");
-  input.click();
   input.onchange = async () => {
     const file = input.files?.[0];
-    if (!file) return;
+    if (!file) {
+      input.remove();
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       try {
@@ -34,10 +36,16 @@ export function importJSON(props: ImportJSONProps) {
       } catch (e) {
         onError ? onError(e) : console.error(e);
       }
+      input.remove(); // Remove input after processing
+    };
+    reader.onerror = (e) => {
+      onError ? onError(e) : console.error(e);
+      input.remove();
     };
     reader.readAsText(file);
   };
-  input.remove();
+  document.body.appendChild(input); // Ensure input is in DOM for some browsers
+  input.click();
 }
 
 const JSON_MIME_TYPE = "text/json;charset=utf-8";
