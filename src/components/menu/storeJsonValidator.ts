@@ -60,9 +60,9 @@ const scheduleEventSchema = eventBaseSchema.extend({
   room: z.string(),
   lectureGroup: z.array(z.string()),
   groups: z.string(),
-  note: z.string().nullable(),
+  note: z.never(),
   capacity: z.string(),
-  lecturesCount: z.number().or(z.literal(false)),
+  lecturesCount: z.number(),
   strongLinked: z.array(linkedLectureDataSchema),
   linked: z.array(linkedLectureDataSchema),
 });
@@ -73,9 +73,9 @@ const coursesSchema = z.array(
       abbreviation: z.string(),
       name: z.string(),
       link: z.string(),
+      id: z.string(),
       timeSpan: courseTimeSpan,
       timeSpanText: z.array(z.string()),
-      id: z.string(),
     }),
     data: z.array(scheduleEventSchema),
     metrics: RecordOf(LECTURE_TYPE, z.object({ weeks: z.number(), weeklyLectures: z.number() }).optional()).transform(
@@ -84,58 +84,10 @@ const coursesSchema = z.array(
   })
 );
 
-const settingsSchema = z.object({
-  blockDimensions: z
-    .object({
-      width: z
-        .union([
-          z.string(),
-          z.object({
-            min: z.union([z.string(), z.literal("auto")]),
-            max: z.union([z.string(), z.literal("auto")]),
-          }),
-        ])
-        .optional(),
-      height: z
-        .union([
-          z.string(),
-          z.object({
-            min: z.union([z.string(), z.literal("auto")]),
-            max: z.union([z.string(), z.literal("auto")]),
-          }),
-        ])
-        .optional(),
-    })
-    .optional(),
-  columns: z.array(
-    z.object({
-      title: z.string(),
-      duration: timespanSchema,
-    })
-  ).optional(),
-  rows: z
-    .union([
-      // New format
-      RecordOf(DAY, z.number()).and(z.object({ length: z.number() })),
-      // Legacy format
-      z.array(
-        z.object({
-          day: z.nativeEnum(DAY),
-        })
-      ),
-    ])
-    .transform((val) => {
-      if (Array.isArray(val)) {
-        // Transform legacy format
-        const transformed = Object.fromEntries(Object.values(DAY).map((day, index) => [day, index + 1]));
-        return { ...transformed, length: Object.values(DAY).length };
-      }
-      return val;
-    }).optional(),
-});
+// no need to load the settings for now, will be added in recreateStore
 
 const schema = z.object({
-  settings: settingsSchema,
+  // settings: settingsSchema,
   courses: coursesSchema,
   customEvents: customEventsSchema,
 });

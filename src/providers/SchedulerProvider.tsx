@@ -29,7 +29,7 @@ import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/act
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 
 // some classes are already revived by ClassRegistry
-export type PlainStore = Pick<SchedulerStore, "settings" | "courses">;
+export type PlainStore = Pick<SchedulerStore, "courses">;
 
 interface SchedulerContextType {
   store: SchedulerStore;
@@ -111,15 +111,12 @@ export function SchedulerProvider(props: ParentProps) {
     deserialize,
     serialize,
   });
-
+  
   // must be merged to carry over the functions
   const recreateStore = (plainStore: PlainStore) => modifyMutable(store, reconcile(merge(store, plainStore)));
 
   onMount(() => {
     const plain = persistedStore();
-    // Make the columns and rows adhere to emptyStore
-    plain.settings.columns = columns;
-    plain.settings.rows = rows;
     recreateStore(plain);
   });
 
