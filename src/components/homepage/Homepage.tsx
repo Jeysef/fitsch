@@ -1,5 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, Suspense, createMemo, lazy } from "solid-js";
+import { For, Suspense, createMemo } from "solid-js";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
@@ -8,8 +8,9 @@ import { useScheduler } from "~/providers/SchedulerProvider";
 import { SidebarTrigger } from "../ui/sidebar";
 import { Separator } from "../ui/separator";
 import { ObjectTyped } from "object-typed";
+import TimeSpan from "./TimeSpan";
+import { isServer } from "solid-js/web";
 
-const TimeSpanPage = lazy(() => import("./TimeSpan"));
 
 const tabs = {
   workSchedule: "workSchedule",
@@ -91,7 +92,7 @@ export default function Home() {
                 <TabsTrigger
                   class={cn(
                   "w-auto whitespace-break-spaces",
-                  value === tabs.timeSpan &&
+                  value === tabs.timeSpan && !isServer &&
                     (areAllCoursesSelected()
                     ? "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-green-500 after:self-start"
                     : "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-red-500 after:self-start")
@@ -126,7 +127,7 @@ export default function Home() {
         class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4"
       >
         <Suspense>
-          <TimeSpanPage store={storeProxy} />
+          <TimeSpan store={storeProxy} />
         </Suspense>
       </TabsContent>
     </Tabs>
