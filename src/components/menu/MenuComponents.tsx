@@ -342,7 +342,7 @@ export function CoursesSelect() {
         data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][props.obligation]
     );
     const Subsection = () => (
-      <CollapsibleTrigger class="flex" as={SubSectionHeading}>
+      <CollapsibleTrigger class="flex pl-2" as={SubSectionHeading}>
         {t(`menu.courses.${props.obligation}`)}
         <ChevronRight class="ml-auto transition-transform group-data-[expanded]/collapsible:rotate-90" />
       </CollapsibleTrigger>
@@ -359,7 +359,7 @@ export function CoursesSelect() {
               <Show when={!props.alwaysShowHEading} fallback={null}>
                 <Subsection />
               </Show>
-              <CollapsibleContent>
+              <CollapsibleContent class="pl-2">
                 <Show when={props.preChild} keyed>
                   {(render) => render(courses)}
                 </Show>
@@ -408,7 +408,7 @@ export function CoursesSelect() {
   return (
     <Show when={group.controls.degree.value === data()?.values.degree}>
       <SectionHeading>{t("menu.courses.title")}</SectionHeading>
-      <section class="ml-2">
+      <section>
         <SectionRender obligation={OBLIGATION.COMPULSORY} alwaysShowHEading preChild={CheckAll(OBLIGATION.COMPULSORY)} />
         <SectionRender obligation={OBLIGATION.COMPULSORY_ELECTIVE} />
         <SectionRender obligation={OBLIGATION.ELECTIVE} />
