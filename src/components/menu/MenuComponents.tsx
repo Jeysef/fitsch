@@ -62,7 +62,7 @@ export function YearSelect() {
           {(state) => state.selectedOption()?.label}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent />
+      <SelectContent class="max-h-56 overflow-y-auto" />
     </Select>
   );
 }
