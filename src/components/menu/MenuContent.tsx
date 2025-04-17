@@ -154,7 +154,7 @@ function ContentDataValidator(props: ContentDataValidatorProps) {
         </Show>
       }
     >
-      <Match when={data.state === "ready" || data.state === "refreshing"}>
+      <Match when={(data.state === "ready" || data.state === "refreshing") && cData()?.values}>
         <Children
           resource={
             resource as InitializedResourceReturn<
