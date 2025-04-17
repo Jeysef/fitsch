@@ -366,7 +366,7 @@ export function CoursesSelect() {
                 <For each={courses}>
                   {(course) => (
                     <Checkbox
-                      class="flex items-center cursor-pointer"
+                      class="flex items-center"
                       value={course.id}
                       checked={group.controls[props.obligation].value.includes(course.id)}
                       onChange={(checked) => handleChange(checked, props.obligation, course.id)}
