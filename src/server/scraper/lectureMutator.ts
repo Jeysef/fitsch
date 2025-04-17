@@ -84,7 +84,7 @@ function idCourse(course: DataProviderTypes.getStudyCourseDetailsReturn): IdCour
 }
 
 // TODO: implement
-function idLecture(lecture: APICourseLecture) {
+function idLecture(_lecture: APICourseLecture) {
   return uuidv4();
 }
 
@@ -110,7 +110,7 @@ function filterData(data: IDdCourseLecture[]) {
     [K in keyof IDdCourseLecture]: K extends "type"
       ? (typeof lecturesWithoutExam)[number]
       : K extends "note"
-        ? never
+        ? null
         : K extends "day"
           ? DAY
           : K extends "lecturesCount"
