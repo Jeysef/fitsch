@@ -28,18 +28,27 @@ export class StudyApi {
     return await this.languageProvider.languageSet;
   };
 
-  private fetchDocument(url: string) {
+  // Improved fetchDocument: uses AbortController for timeout and avoids disturbing/locking the response
+  private async fetchDocument(url: string) {
     const urlBase = new URL(url).origin;
     console.log("fetching document:", url);
-    return Promise.race([
-      this.fetcher(url, {
-        requestOptions: { method: "GET", throwOnError: true },
-      }).catch((error) => {
-        console.log("error fetching", url, error);
-        return Promise.reject(`Failed to fetch from ${urlBase}`);
-      }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(`fetch from ${urlBase} timed out.`), 6000)),
-    ]);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    try {
+      // Pass the signal to the fetcher (cheerio.fromURL supports requestOptions.signal)
+      const $ = await this.fetcher(url, {
+        requestOptions: { method: "GET", throwOnError: true, signal: controller.signal },
+      });
+      return $;
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        throw new Error(`fetch from ${urlBase} timed out.`);
+      }
+      console.log("error fetching", url, error);
+      throw new Error(`Failed to fetch from ${urlBase}: ${error.message || error}`);
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 
   /**
