@@ -92,7 +92,7 @@ function useLoadCourses(
       return Promise.resolve();
     }
     const submission = submit(data).then((result) => {
-      if (isErrorReturn(result)) throw new Error(result.errorMessage);
+      if (isErrorReturn(result)) throw Promise.reject(result.errorMessage);
       return result;
     });
     toast.promise(submission, {
