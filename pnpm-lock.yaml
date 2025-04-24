@@ -63,7 +63,7 @@ importers:
         version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.1
-        version: 1.1.3(@testing-library/jest-dom@6.6.3)(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+        version: 1.1.3(@testing-library/jest-dom@6.6.3)(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
       '@solidjs/testing-library':
         specifier: ^0.8.10
         version: 0.8.10(@solidjs/router@0.15.3(solid-js@1.9.5))(solid-js@1.9.5)
@@ -142,12 +142,15 @@ importers:
       type-fest:
         specifier: ^4.35.0
         version: 4.37.0
+      unstorage:
+        specifier: ^1.15.0
+        version: 1.15.0(@netlify/blobs@8.2.0)(db0@0.3.1)(ioredis@5.6.0)
       uuid:
         specifier: ^11.0.5
         version: 11.1.0
       vinxi:
         specifier: ^0.5.3
-        version: 0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
+        version: 0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
       vite:
         specifier: ^6.1.0
         version: 6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)
@@ -164,6 +167,9 @@ importers:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
+      '@netlify/blobs':
+        specifier: ^8.2.0
+        version: 8.2.0
       '@types/deep-equal':
         specifier: ^1.0.4
         version: 1.0.4
@@ -172,7 +178,7 @@ importers:
         version: 4.17.12
       nitropack:
         specifier: ^2.10.4
-        version: 2.11.6(typescript@5.8.2)
+        version: 2.11.6(@netlify/blobs@8.2.0)(typescript@5.8.2)
       playwright:
         specifier: ^1.50.1
         version: 1.51.0
@@ -1058,6 +1064,10 @@ packages:
     resolution: {integrity: sha512-llMXd39jtP0HpQLVI37Bf1m2ADlEb35GYSh1SDSLsBhR+5iCxiNGlT31yqbNtVHygHAtMy6dWFERpU2JgufhPg==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@netlify/blobs@8.2.0':
+    resolution: {integrity: sha512-9djLZHBKsoKk8XCgwWSEPK9QnT8qqxEQGuYh48gFIcNLvpBKkLnHbDZuyUxmNemCfDz7h0HnMXgSPnnUVgARhg==}
+    engines: {node: ^14.16.0 || >=16.0.0}
 
   '@netlify/functions@3.0.0':
     resolution: {integrity: sha512-XXf9mNw4+fkxUzukDpJtzc32bl1+YlXZwEhc5ZgMcTbJPLpgRLDs5WWSPJ4eY/Mv1ZFvtxmMwmfgoQYVt68Qog==}
@@ -4993,6 +5003,8 @@ snapshots:
       - encoding
       - supports-color
 
+  '@netlify/blobs@8.2.0': {}
+
   '@netlify/functions@3.0.0':
     dependencies:
       '@netlify/serverless-functions-api': 1.30.1
@@ -5408,11 +5420,11 @@ snapshots:
     dependencies:
       solid-js: 1.9.5
 
-  '@solidjs/start@1.1.3(@testing-library/jest-dom@6.6.3)(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)':
+  '@solidjs/start@1.1.3(@testing-library/jest-dom@6.6.3)(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)':
     dependencies:
       '@tanstack/server-functions-plugin': 1.114.12(@types/node@22.13.10)(babel-plugin-macros@3.1.0)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)
-      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
-      '@vinxi/server-components': 0.5.0(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
+      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
+      '@vinxi/server-components': 0.5.0(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
       defu: 6.1.4
       error-stack-parser: 2.1.4
       html-to-image: 1.11.13
@@ -5423,7 +5435,7 @@ snapshots:
       source-map-js: 1.2.1
       terracotta: 1.0.6(solid-js@1.9.5)
       tinyglobby: 0.2.12
-      vinxi: 0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
+      vinxi: 0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
       vite-plugin-solid: 2.11.6(@testing-library/jest-dom@6.6.3)(solid-js@1.9.5)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0))
     transitivePeerDependencies:
       - '@testing-library/jest-dom'
@@ -5640,7 +5652,7 @@ snapshots:
       consola: 3.4.0
       defu: 6.1.4
       get-port-please: 3.1.2
-      h3: 1.13.0
+      h3: 1.15.1
       http-shutdown: 1.2.2
       jiti: 1.21.7
       mlly: 1.7.4
@@ -5651,7 +5663,7 @@ snapshots:
       untun: 0.1.3
       uqr: 0.1.2
 
-  '@vinxi/plugin-directives@0.5.0(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))':
+  '@vinxi/plugin-directives@0.5.0(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))':
     dependencies:
       '@babel/parser': 7.26.9
       acorn: 8.14.1
@@ -5662,18 +5674,18 @@ snapshots:
       magicast: 0.2.11
       recast: 0.23.11
       tslib: 2.8.1
-      vinxi: 0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
+      vinxi: 0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
 
-  '@vinxi/server-components@0.5.0(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))':
+  '@vinxi/server-components@0.5.0(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))':
     dependencies:
-      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
+      '@vinxi/plugin-directives': 0.5.0(vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0))
       acorn: 8.14.1
       acorn-loose: 8.4.0
       acorn-typescript: 1.4.13(acorn@8.14.1)
       astring: 1.9.0
       magicast: 0.2.11
       recast: 0.23.11
-      vinxi: 0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
+      vinxi: 0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0)
 
   '@vitest/expect@2.1.9':
     dependencies:
@@ -7166,7 +7178,7 @@ snapshots:
 
   nanoid@3.3.9: {}
 
-  nitropack@2.11.6(typescript@5.8.2):
+  nitropack@2.11.6(@netlify/blobs@8.2.0)(typescript@5.8.2):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 3.0.0
@@ -7237,7 +7249,7 @@ snapshots:
       unenv: 2.0.0-rc.14
       unimport: 4.1.2
       unplugin-utils: 0.2.4
-      unstorage: 1.15.0(db0@0.3.1)(ioredis@5.6.0)
+      unstorage: 1.15.0(@netlify/blobs@8.2.0)(db0@0.3.1)(ioredis@5.6.0)
       untyped: 2.0.0
       unwasm: 0.3.9
       youch: 4.1.0-beta.6
@@ -8197,7 +8209,7 @@ snapshots:
       acorn: 8.14.1
       webpack-virtual-modules: 0.6.2
 
-  unstorage@1.15.0(db0@0.3.1)(ioredis@5.6.0):
+  unstorage@1.15.0(@netlify/blobs@8.2.0)(db0@0.3.1)(ioredis@5.6.0):
     dependencies:
       anymatch: 3.1.3
       chokidar: 4.0.3
@@ -8208,6 +8220,7 @@ snapshots:
       ofetch: 1.4.1
       ufo: 1.5.4
     optionalDependencies:
+      '@netlify/blobs': 8.2.0
       db0: 0.3.1
       ioredis: 5.6.0
 
@@ -8262,7 +8275,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vinxi@0.5.3(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0):
+  vinxi@0.5.3(@netlify/blobs@8.2.0)(@types/node@22.13.10)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.2)(yaml@2.7.0):
     dependencies:
       '@babel/core': 7.26.9
       '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.9)
@@ -8284,7 +8297,7 @@ snapshots:
       hookable: 5.5.3
       http-proxy: 1.18.1
       micromatch: 4.0.8
-      nitropack: 2.11.6(typescript@5.8.2)
+      nitropack: 2.11.6(@netlify/blobs@8.2.0)(typescript@5.8.2)
       node-fetch-native: 1.6.6
       path-to-regexp: 6.3.0
       pathe: 1.1.2
@@ -8295,7 +8308,7 @@ snapshots:
       ufo: 1.5.4
       unctx: 2.4.1
       unenv: 1.10.0
-      unstorage: 1.15.0(db0@0.3.1)(ioredis@5.6.0)
+      unstorage: 1.15.0(@netlify/blobs@8.2.0)(db0@0.3.1)(ioredis@5.6.0)
       vite: 6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)
       zod: 3.24.2
     transitivePeerDependencies:

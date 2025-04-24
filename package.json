@@ -56,6 +56,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tinycolor2": "^1.6.0",
     "type-fest": "^4.35.0",
+    "unstorage": "^1.15.0",
     "uuid": "^11.0.5",
     "vinxi": "^0.5.3",
     "vite": "^6.1.0",
@@ -68,6 +69,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@netlify/blobs": "^8.2.0",
     "@types/deep-equal": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
     "nitropack": "^2.10.4",
