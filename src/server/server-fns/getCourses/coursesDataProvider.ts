@@ -9,6 +9,7 @@ export class CoursesDataProvider {
     config: DataProviderTypes.getStudyCoursesDetailsConfig
   ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
     const coursesDetails = await this.studyApi.getStudyCoursesDetails(config);
+    console.log("🚀 ~ CoursesDataProvider ~ coursesDetails:", coursesDetails)
     const data = MutateLectureData(coursesDetails, config.mutatorConfig ?? {});
     return data;
   }
