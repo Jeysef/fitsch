@@ -7,6 +7,7 @@ import type { customEventSchema } from "~/components/menu/storeJsonValidator";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { useI18n } from "~/i18n";
+import Loader from "../ui/loader";
 
 const Form = lazy(() => import("./CustomEventFormContent"));
 
@@ -42,7 +43,7 @@ export default function EventForm<T extends ValidComponent = "button">(
           <DialogTitle>
             {local.isEdit ? t("menu.actions.addCustomEvent.form.edit") : t("menu.actions.addCustomEvent.title")}
           </DialogTitle>
-          <Suspense>
+          <Suspense fallback={<Loader  class="h-52"/>}>
             <Form setOpen={setOpen} {...local} />
           </Suspense>
         </DialogHeader>
