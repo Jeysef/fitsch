@@ -13,7 +13,6 @@ export async function getStudyCoursesDetails(
   const studyApi = new StudyApi(languageProvider, fromURL);
   const dataProvider = new CoursesDataProvider(studyApi);
   const d = await dataProvider.getStudyCoursesDetails(rest);
-  console.log("🚀 ~ d:", d)
   const staleCoursesData = config.staleCoursesId?.map((id) => ({ detail: { id }, isStale: true }) as const);
   return d.concat(staleCoursesData ?? []);
 }
