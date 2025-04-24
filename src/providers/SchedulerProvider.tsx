@@ -129,7 +129,6 @@ export function SchedulerProvider(props: ParentProps) {
         if (!result) return;
         console.log("🚀 ~ SchedulerProvider ~ result:", result);
         if (isErrorReturn(result)) {
-          toast.error(result.errorMessage);
           return;
         }
         const revivedData = JSON.parse(
