@@ -36,9 +36,9 @@ export class StudyApi {
         requestOptions: { method: "GET", throwOnError: true },
       }).catch((error) => {
         console.log("error fetching", url, error);
-        throw new Error(`Failed to fetch from ${urlBase}`);
+        return Promise.reject(`Failed to fetch from ${urlBase}`);
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`fetch from ${urlBase} timed out.`)), 6000)),
+      new Promise<never>((_, reject) => setTimeout(() => reject(`fetch from ${urlBase} timed out.`), 6000)),
     ]);
   }
 
@@ -77,17 +77,9 @@ export class StudyApi {
         )
       );
 
-      let currentYear = {
-        value: "",
-        label: "",
-      };
       const optionsEls = $("body main .f-subjects .inp select#year option");
       optionsEls.each((_, element) => {
         if ($(element).attr("selected") !== undefined) {
-          currentYear = {
-            value: $(element).attr("value") as string,
-            label: $(element).text().trim(),
-          };
         }
       });
       return timeSchedule;
