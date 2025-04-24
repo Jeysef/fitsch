@@ -30,6 +30,7 @@ export class StudyApi {
 
   private fetchDocument(url: string) {
     const urlBase = new URL(url).origin;
+    console.log("fetching document:", url);
     return Promise.race([
       this.fetcher(url, {
         requestOptions: { method: "GET", throwOnError: true },
@@ -125,7 +126,7 @@ export class StudyApi {
           const specialization: StudySpecialization[] = [];
           $(element)
             .find(".b-programme .c-branches ul.c-branches__list li.c-branches__item")
-            .each((ind, element) => {
+            .each((_ind, element) => {
               const titleEl = $(element).find(".b-branch .b-branch__title");
               const abbreviation = titleEl.children(".tag.tag--fit").first().text().trim();
               const name = titleEl.children("a").text().trim();
