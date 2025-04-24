@@ -95,92 +95,95 @@ export class StudyApi {
     { name: "getTimeSchedule", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
   );
 
-  public async getStudyPrograms(
-    config?: StudyApiTypes.getStudyProgramsConfig
-  ): Promise<StudyApiTypes.getStudyProgramsReturn> {
-    const { degree, year } = config ?? { degree: null, year: null };
-    const urlTypeDegrees = {
-      [DEGREE.BACHELOR]: "B",
-      [DEGREE.MASTER]: "N",
-      [DEGREE.DOCTORAL]: "D",
-    };
+  public getStudyPrograms = defineCachedFunction(
+    async (
+      config?: StudyApiTypes.getStudyProgramsConfig
+    ): Promise<StudyApiTypes.getStudyProgramsReturn> => {
+      const { degree, year } = config ?? { degree: null, year: null };
+      const urlTypeDegrees = {
+        [DEGREE.BACHELOR]: "B",
+        [DEGREE.MASTER]: "N",
+        [DEGREE.DOCTORAL]: "D",
+      };
 
-    const elementIdDegrees = {
-      bc: DEGREE.BACHELOR,
-      mgr: DEGREE.MASTER,
-      dr: DEGREE.DOCTORAL,
-    };
-    const degreeQuery = degree ? `degree=${urlTypeDegrees[degree]}` : "";
-    const yearQuery = year ? `year=${year}` : "";
-    const queryStr = [degreeQuery, yearQuery].filter(Boolean).join("&");
+      const elementIdDegrees = {
+        bc: DEGREE.BACHELOR,
+        mgr: DEGREE.MASTER,
+        dr: DEGREE.DOCTORAL,
+      };
+      const degreeQuery = degree ? `degree=${urlTypeDegrees[degree]}` : "";
+      const yearQuery = year ? `year=${year}` : "";
+      const queryStr = [degreeQuery, yearQuery].filter(Boolean).join("&");
 
-    const programsUrl = `${this.baseUrl}programs/${this.urlLanguage}${queryStr ? `?${queryStr}` : ""}`;
-    const $ = await this.fetchDocument(programsUrl);
+      const programsUrl = `${this.baseUrl}programs/${this.urlLanguage}${queryStr ? `?${queryStr}` : ""}`;
+      const $ = await this.fetchDocument(programsUrl);
 
-    const programs: StudyPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, {}]));
-    $("body main .c-programs").each((_, element) => {
-      const studyDegree = elementIdDegrees[$(element).attr("id") as keyof typeof elementIdDegrees];
-      $(element)
-        .find(".c-programmes__list li.c-programmes__item")
-        .each((_, element) => {
-          const specialization: StudySpecialization[] = [];
-          $(element)
-            .find(".b-programme .c-branches ul.c-branches__list li.c-branches__item")
-            .each((_ind, element) => {
-              const titleEl = $(element).find(".b-branch .b-branch__title");
-              const abbreviation = titleEl.children(".tag.tag--fit").first().text().trim();
-              const name = titleEl.children("a").text().trim();
-              const url = titleEl.children("a").attr("href")!;
-              const id = createStudyId(url);
+      const programs: StudyPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, {}]));
+      $("body main .c-programs").each((_, element) => {
+        const studyDegree = elementIdDegrees[$(element).attr("id") as keyof typeof elementIdDegrees];
+        $(element)
+          .find(".c-programmes__list li.c-programmes__item")
+          .each((_, element) => {
+            const specialization: StudySpecialization[] = [];
+            $(element)
+              .find(".b-programme .c-branches ul.c-branches__list li.c-branches__item")
+              .each((_ind, element) => {
+                const titleEl = $(element).find(".b-branch .b-branch__title");
+                const abbreviation = titleEl.children(".tag.tag--fit").first().text().trim();
+                const name = titleEl.children("a").text().trim();
+                const url = titleEl.children("a").attr("href")!;
+                const id = createStudyId(url);
 
-              if (abbreviation && name && url) {
-                specialization.push({ abbreviation, name, url, id });
-              }
-            });
+                if (abbreviation && name && url) {
+                  specialization.push({ abbreviation, name, url, id });
+                }
+              });
 
-          const nameElement = $(element).find(".b-programme a.b-programme__link");
-          const name = nameElement.text().trim();
-          const url = nameElement.attr("href")!;
-          const id = createStudyId(url);
-          const isEnglish = $(element).find("span").is('[class="tag tag--xs"]');
-          const abbreviation = $(element).find(".b-programme__link").next(".tag").first().text().trim();
-          const attendanceType = $(element).find(".b-programme .b-branch__meta .b-branch__meta-item").last().text().trim();
+            const nameElement = $(element).find(".b-programme a.b-programme__link");
+            const name = nameElement.text().trim();
+            const url = nameElement.attr("href")!;
+            const id = createStudyId(url);
+            const isEnglish = $(element).find("span").is('[class="tag tag--xs"]');
+            const abbreviation = $(element).find(".b-programme__link").next(".tag").first().text().trim();
+            const attendanceType = $(element).find(".b-programme .b-branch__meta .b-branch__meta-item").last().text().trim();
 
-          if (name && url) {
-            programs[studyDegree][id] = {
-              name,
-              url,
-              isEnglish,
-              specializations: specialization,
-              attendanceType,
-              abbreviation,
-              id,
+            if (name && url) {
+              programs[studyDegree][id] = {
+                name,
+                url,
+                isEnglish,
+                specializations: specialization,
+                attendanceType,
+                abbreviation,
+                id,
+              };
+            }
+          });
+      });
+
+      let currentYear = {
+        value: "",
+        label: "",
+      };
+      const optionsEls = $("body main .f-subjects .inp select#year option");
+      const years = optionsEls
+        .map((_, element) => {
+          if ($(element).attr("selected") !== undefined) {
+            currentYear = {
+              value: $(element).attr("value") as string,
+              label: $(element).text().trim(),
             };
           }
-        });
-    });
+          const value = $(element).attr("value") as string;
+          const label = $(element).text().trim();
+          return { value, label };
+        })
+        .get();
 
-    let currentYear = {
-      value: "",
-      label: "",
-    };
-    const optionsEls = $("body main .f-subjects .inp select#year option");
-    const years = optionsEls
-      .map((_, element) => {
-        if ($(element).attr("selected") !== undefined) {
-          currentYear = {
-            value: $(element).attr("value") as string,
-            label: $(element).text().trim(),
-          };
-        }
-        const value = $(element).attr("value") as string;
-        const label = $(element).text().trim();
-        return { value, label };
-      })
-      .get();
-
-    return { programs, years, currentYear };
-  }
+      return { programs, years, currentYear };
+    },
+    { name: "getStudyPrograms", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
+  );
 
   public async getStudyProgramCourses(config: StudyApiTypes.getStudyProgramCoursesConfig): Promise<ProgramStudyCourses> {
     const locales = await this.getLanguageSet();
