@@ -10,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
+import download from "downloadjs";
 
 const ScheduleScreenshot = () => {
   const { locale, t } = useI18n();
@@ -28,13 +29,10 @@ const ScheduleScreenshot = () => {
             style: { maxHeight: "unset" },
             height: scheduleRefVal.scrollHeight,
             width: scheduleRefVal.scrollWidth,
+            skipFonts: true, // TODO: remove once html-to-image gets patched (c.f. https://github.com/bubkoo/html-to-image/issues/508)?
           }); // Convert HTML to PNG
-          const a = document.createElement("a");
-          a.href = dataUrl;
           const filename = getFileName({ locale, store });
-          a.download = `${filename}-${searchParams.tab}.png`;
-          a.click();
-          a.remove();
+          download(dataUrl, `${filename}-${searchParams.tab}.png`); // Download the image
         } catch (error) {
           console.error("Failed to capture screenshot:", error);
         } finally {

@@ -1,3 +1,5 @@
+import download from "downloadjs";
+
 interface ImportJSONProps {
   /**
    * @param data The imported JSON string.
@@ -56,16 +58,5 @@ export function exportJSON<T>(props: ExportJSONProps<T>) {
   const blob = new Blob([plainObj], {
     type: JSON_MIME_TYPE,
   });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  try {
-    a.setAttribute("style", "visibility:hidden");
-    a.href = url;
-    a.download = `${filename}.json`;
-    a.click();
-  } finally {
-    // Cleanup
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
+  download(blob, `${filename}.json`, JSON_MIME_TYPE);
 }
