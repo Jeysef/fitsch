@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:22-alpine AS builder
+FROM node:23-alpine AS builder
 WORKDIR /app
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
@@ -13,7 +13,7 @@ RUN pnpm run build
 RUN mv .vinxi .output
 
 # Stage 2: Production
-FROM node:22-alpine AS runner
+FROM node:23-alpine AS runner
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
