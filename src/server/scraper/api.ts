@@ -14,6 +14,9 @@ import { createStudyId, parseWeek, removeSpaces } from "~/server/scraper/utils";
 import { defineCachedFunction } from "~/server/utils/cache";
 import { type DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER } from "./enums";
 
+const cacheMaxAge = 60 * 60 * 24 * 30; // 30 days
+const cacheStaleMaxAge = 60 * 60 * 24 * 30; // 30 days
+
 export class StudyApi {
   private readonly baseUrl = "https://www.fit.vut.cz/study/";
   private readonly urlLanguage: string;
@@ -93,7 +96,7 @@ export class StudyApi {
       });
       return timeSchedule;
     },
-    { name: "getTimeSchedule", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
+    { name: "getTimeSchedule", maxAge: cacheMaxAge, staleMaxAge: cacheStaleMaxAge, swr: false }
   );
 
   public getStudyPrograms = defineCachedFunction(
@@ -183,7 +186,7 @@ export class StudyApi {
 
       return { programs, years, currentYear };
     },
-    { name: "getStudyPrograms", maxAge: 60 * 60 * 24 * 30, staleMaxAge: 60 * 60 * 24 * 30, swr: false }
+    { name: "getStudyPrograms", maxAge: cacheMaxAge, staleMaxAge: cacheStaleMaxAge, swr: false }
   );
 
   public async getStudyProgramCourses(config: StudyApiTypes.getStudyProgramCoursesConfig): Promise<ProgramStudyCourses> {
@@ -281,9 +284,9 @@ export class StudyApi {
     return { data, semesterTimeSchedule };
   }
 
-  private async getStudyCourseDetails(
+  private getStudyCourseDetails = defineCachedFunction( async (
     config: StudyApiTypes.getStudyCourseDetailsConfig
-  ): Promise<StudyApiTypes.getStudyCourseDetailsReturn> {
+  ): Promise<StudyApiTypes.getStudyCourseDetailsReturn> => {
     const { courseId, languageSet, semesterTimeSchedule } = config;
     const courseUrl = `${this.baseUrl}course/${courseId}/${this.urlLanguage}`;
     const $ = await this.fetchDocument(courseUrl);
@@ -377,5 +380,6 @@ export class StudyApi {
     };
 
     return { data, detail };
-  }
+  }, { name: "getStudyCourseDetails", maxAge: cacheMaxAge, staleMaxAge: cacheStaleMaxAge, swr: false }
+  );
 }
