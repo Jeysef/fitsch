@@ -2,9 +2,10 @@
 FROM node:23-alpine AS builder
 WORKDIR /app
 # Install dependencies
+RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
-RUN npm install -g pnpm && pnpm install
+RUN pnpm install
 # Copy remaining source code
 COPY . .
 # Build the app (adjust the build script if different)
@@ -15,9 +16,10 @@ RUN mv .vinxi .output
 # Stage 2: Production
 FROM node:23-alpine AS runner
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
-RUN npm install -g pnpm && pnpm install --prod
+RUN pnpm install --prod
 # Copy the build output from the builder stage
 COPY --from=builder /app/.output ./.output
 # Expose the port (adjust if needed)
