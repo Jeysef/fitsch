@@ -75,7 +75,7 @@ export default function Home() {
   const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
 
   return (
-    <Tabs value={tab()} onChange={setTab} class="content">
+    <Tabs value={tab()} onChange={setTab} class="contents">
       {/* <div class="flex items-center justify-between w-full h-14 bg-background sticky top-0 z-10 px-4"> */}
         <div class="flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between">
           <div class="flex h-16 shrink-0 items-center gap-2 -ml-1">
