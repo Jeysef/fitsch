@@ -1,62 +1,165 @@
-# SolidStart
-
-Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-```
-
-## Building
-
-Solid apps are built with _presets_, which optimise your project for deployment to different environments.
-
-By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different preset, add it to the `devDependencies` in `package.json` and specify in your `app.config.js`.
-
-## This project was created with the [Solid CLI](https://solid-cli.netlify.app)
-
-## Testing
-
-Tests are written with `vitest`, `@solidjs/testing-library` and `@testing-library/jest-dom` to extend expect with some helpful custom matchers.
-
-To run them, simply start:
-
-```sh
-npm test
-```
-
-
 # Fit Scheduler (FITSCH)
+
+<!-- [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) -->
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6e19d936-ec8c-42b8-bd4a-22043d76a170/deploy-status)](https://app.netlify.com/sites/fitsch/deploys)
+[![Website](https://img.shields.io/website?down_color=red&down_message=offline&up_color=green&up_message=online&url=https%3A%2F%2Ffitsch.netlify.app)](https://fitsch.netlify.app)
+
+A scheduler web application for planning VUT FIT lectures, built with SolidStart and TypeScript.
 
 ## Abstract
 
-This is a student's project to enhance students's experience with selecting their study programmes (programs), replace the current version and nevertheless important make me learn programming by building new Projects
+This is a student's project aimed at enhancing the experience for VUT FIT students when selecting study programs and planning their lecture schedules. It intends to potentially replace the current system and serve as a learning project.
 
-# For future mainteinters
+## Features
 
-In this project I am using specific naming so I want to explain:
+<!-- Add a brief list of key features if known, e.g., -->
+*   Browse courses by year, semester, degree, program, and grade.
+*   Select courses and view potential schedules.
+*   Visualize lecture timespans.
+*   Save and load selected courses locally.
+*   (Add more features as they are implemented)
 
-- **program**: programme in british english {Bachelor, Magister, Doctorat}
-- **study overview** ordered by importance:
-  - year: Rok {2024, ...}
-  - degree: titul {Bakalář, magistr, doktor}
-  - program: Studijní program {BIT, MIT, DIT} i specializace(field) {NADE, NBIO, ...}
-  - grade: Ročník studia {1, 2, ...}
-  - semester: Semestr {Zimní, Letní}
-  - course: Předmět {IDM, IZP, ...}
-  - lecture: Použito v širším slova smyslu {přednáška, cvičení, laboratoř, ...}
+## Project Architecture
 
-  **in Menu**, ordered as in the previous scheduler for better orientation:
-  - year
-  - semester
-  - degree
-  - program
-  - grade
-  - course
+This application is built using the [SolidStart](https://start.solidjs.com) framework, leveraging the reactivity and performance of [SolidJS](https://www.solidjs.com/).
 
+*   **Frontend:** The user interface is built entirely with SolidJS components, styled using Tailwind CSS and UI component libraries like Kobalte (`@kobalte/core`).
+*   **State Management:** SolidJS's built-in primitives (Signals, Memos, Effects) are used for managing local component state. For global or shared state, SolidJS Context API and custom providers (e.g., `SchedulerProvider`, `InstallationProvider` found in `src/providers/`) are employed. Local storage is used for persistence (`@solid-primitives/storage`).
+*   **Routing:** Handled by `@solidjs/router` using a file-based routing system defined in `src/routes/`.
+*   **Server Interaction:** The application fetches study data, likely through server functions or API routes defined within SolidStart (potentially in `src/server/` or `src/routes/api/`). Caching mechanisms (`src/plugins/cache.ts`) are used to optimize data fetching.
+*   **Build & Development:** Vite serves as the underlying build tool, configured via `vinxi` (SolidStart's meta-framework layer).
+
+## Core Concepts
+
+*   **Study Overview:** The application organizes course data based on a hierarchy: Year > Semester > Degree > Program > Grade > Course > Lecture. This structure is central to browsing and selecting courses.
+*   **Scheduling Logic:** too complex to explain <!-- TODO :document--->
+*   **Persistence:** User selections and potentially settings are saved to the browser's Local Storage for persistence across sessions. Data validation (using Zod) is applied when loading saved data.
+*   **Internationalization (i18n):** The project uses `@solid-primitives/i18n` for handling multiple languages (evident from `src/locales/` and `I18nProvider`).
+
+## Directory Structure (`src/`)
+
+*   `components/`: Reusable UI components (e.g., layout, buttons, dialogs).
+*   `config/`: Application configuration files (e.g., color definitions).
+*   `lib/`: Utility functions or shared logic not specific to components or routes.
+*   `locales/`: Translation files for internationalization.
+*   `packages/`: Contains local packages or modules (e.g., `solid-color`).
+*   `plugins/`: Custom plugins, like the server-side cache plugin.
+*   `providers/`: SolidJS Context providers for managing global state or shared functionality.
+*   `routes/`: Defines the application's pages and API endpoints using file-based routing.
+*   `server/`: Server-specific logic, potentially including API handlers or server functions.
+*   `tests/`: Unit and integration tests using Vitest.
+*   `utils/`: General utility functions.
+
+## Getting Started
+
+### Prerequisites
+
+*   Node.js (>= v18 recommended, see `engines` in `package.json`)
+*   pnpm (Install via `npm install -g pnpm`)
+
+### Installation & Development
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/Jeysef/fitsch.git
+    cd fitsch
+    ```
+2.  Install dependencies:
+    ```bash
+    pnpm install
+    ```
+3.  Start the development server:
+    ```bash
+    pnpm run dev
+    ```
+    The application will be available at `http://localhost:3000`.
+
+## Building for Production
+
+Solid apps are built with _presets_, which optimize your project for deployment to different environments.
+
+*   **Node.js Server:**
+    ```bash
+    pnpm run build
+    pnpm start
+    ```
+*   **Netlify:** (Preset configured in `package.json`)
+    ```bash
+    pnpm run build-netlify
+    # Deploy the generated .netlify directory
+    ```
+
+## Testing
+
+Tests are written with `vitest`, `@solidjs/testing-library`, and `@testing-library/jest-dom`.
+
+*   Run tests once:
+    ```bash
+    pnpm test
+    ```
+*   Run tests in watch mode:
+    ```bash
+    pnpm test-watch
+    ```
+*   Run tests with UI:
+    ```bash
+    pnpm test-ui
+    ```
+*   Run tests with coverage (requires `@vitest/coverage-v8`):
+    ```bash
+    # Install coverage dependency if needed: pnpm add -D @vitest/coverage-v8
+    pnpm test --coverage
+    ```
+
+## Linting & Formatting
+
+This project uses [Biome](https://biomejs.dev/) for linting and formatting.
+
+*   Check for issues:
+    ```bash
+    pnpm run "lint&format"
+    ```
+*   Apply formatting:
+    ```bash
+    pnpm run format
+    ```
+*   Apply safe fixes:
+    ```bash
+    pnpm run "lint&format" --apply
+    ```
+
+## Containerization (Docker)
+
+Build the Docker image and run the container:
+
+```bash
+docker build -t fitsch .
+docker run -p 3000:3000 fitsch
+```
+
+## For Future Maintainers
+
+### Naming Conventions
+
+In this project, specific naming conventions are used:
+
+*   **program**: Corresponds to 'programme' in British English (e.g., Bachelor, Master, Doctorate).
+*   **study overview**: Refers to the hierarchical structure used for filtering courses, ordered by importance:
+    *   year: Rok (e.g., 2024)
+    *   degree: Titul (e.g., Bakalář, Magistr, Doktor)
+    *   program: Studijní program (e.g., BIT, MIT, DIT) including specializations (e.g., NADE, NBIO)
+    *   grade: Ročník studia (e.g., 1, 2)
+    *   semester: Semestr (e.g., Zimní, Letní)
+    *   course: Předmět (e.g., IDM, IZP)
+    *   lecture: Used broadly for different types of classes (e.g., lecture, exercise, lab).
+
+    **In the Menu**, the order follows the previous scheduler for familiarity:
+    *   year
+    *   semester
+    *   degree
+    *   program
+    *   grade
+    *   course
 
 ### Notes
 
@@ -83,13 +186,11 @@ their course timespan makes no sense,
     = (3 * 50) * 13 /60 = 32.5 ✗\
     WTF
 
-## Conteinerization
+## Contributing
 
-### Docker
+Contributions are welcome! Please read the `CONTRIBUTING.md` file for guidelines on how to contribute.
 
-Build the image and run it:
+## License
 
-```bash
-docker build -t fitsch .
-docker run -p 3000:3000 fitsch
-```
+This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for details.
+
