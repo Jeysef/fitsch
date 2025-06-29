@@ -1,6 +1,4 @@
 // @refresh reload
-import courierPrimeUrl from "@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2";
-import geistSansUrl from "@fontsource/geist-sans/files/geist-sans-latin-400-normal.woff2";
 import { StartServer, createHandler } from "@solidjs/start/server";
 
 export default createHandler(() => (
@@ -22,9 +20,6 @@ export default createHandler(() => (
           <meta name="msapplication-TileColor" content="#ffffff" />
           <meta name="msapplication-TileImage" content="/ms-icon-620x620.png" />
           <meta name="theme-color" content="#ffffff" />
-          {/* preload fonts */}
-          <link rel="preload" href={courierPrimeUrl} as="font" type="font/woff2" crossorigin="anonymous" />
-          <link rel="preload" href={geistSansUrl} as="font" type="font/woff2" crossorigin="anonymous" />
           {assets}
         </head>
         <body

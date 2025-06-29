@@ -1,3 +1,6 @@
+@import "@fontsource/courier-prime";
+@import "@fontsource/geist-sans";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
