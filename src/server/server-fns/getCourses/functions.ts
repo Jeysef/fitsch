@@ -1,8 +1,8 @@
-import { fromURL } from "cheerio";
 import { StudyApi } from "~/server/scraper/api";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
 import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
 import { CoursesDataProvider } from "~/server/server-fns/getCourses/coursesDataProvider";
+import { fromURL } from "~/server/utils/fetcher";
 
 export async function getStudyCoursesDetails(
   config: GetStudyCoursesDetailsFunctionConfig

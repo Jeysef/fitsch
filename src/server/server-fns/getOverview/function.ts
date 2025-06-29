@@ -1,10 +1,10 @@
-import { fromURL } from "cheerio";
 import { StudyApi } from "~/server/scraper/api";
 import { LanguageProvider } from "~/server/scraper/languageProvider";
 import type { DataProviderTypes } from "~/server/scraper/types";
 import { OverviewDataProvider } from "~/server/server-fns/getOverview/OverviewDataProvider";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { defineCachedFunction, getKey } from "~/server/utils/cache";
+import { fromURL } from "~/server/utils/fetcher";
 import { useStorage } from "~/server/utils/storage";
 
 const studyOverviewMaxCacheAge = 30 * 60; // 30 minutes
