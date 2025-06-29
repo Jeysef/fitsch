@@ -10,14 +10,12 @@ import { type CheerioAPI, load, type CheerioRequestOptions } from 'cheerio';
  */
 export async function fromURL(
   url: string | URL,
-  options: CheerioRequestOptions | undefined = {}
+  options: CheerioRequestOptions | undefined = {},
+  retries = 2
 ): Promise<CheerioAPI> {
   const urlString = typeof url === 'string' ? url : url.toString();
-  
-  // Extract request options and cheerio options
   const { requestOptions = {}, ...cheerioOptions } = options;
-  
-  // Default fetch options
+
   const fetchOptions = {
     method: 'GET',
     headers: {
@@ -28,19 +26,27 @@ export async function fromURL(
     ...requestOptions,
   };
 
-  // Use native fetch (available in Node 18+) or node-fetch
-  const response = await fetch(urlString, fetchOptions);
-  
-  // By default, non-2xx responses are rejected (like Cheerio's behavior)
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(urlString, fetchOptions);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const html = await response.text();
+      return load(html, { xml: false, ...cheerioOptions });
+      
+    } catch (error: any) {
+      console.log(`Attempt ${attempt} failed:`, error.message);
+      
+      if (attempt === retries) {
+        throw error;
+      }
+      
+      // Wait before retry (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, 2 ** attempt * 500));
+    }
   }
-  
-  const html = await response.text();
-  
-  // Load with Cheerio using provided options
-  return load(html, {
-    xml: false,
-    ...cheerioOptions,
-  });
+  throw new Error(`Failed to fetch ${urlString} after ${retries} attempts`);
 }
