@@ -5,7 +5,7 @@ import CircleAlert from "lucide-solid/icons/circle-alert";
 import { batch, createSignal } from "solid-js";
 import { getFileName } from "~/components/menu/menu-actions/utils";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
-import { scheduleRef } from "~/components/scheduler";
+import { scheduleRef } from "~/components/scheduler/Scheduler";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
