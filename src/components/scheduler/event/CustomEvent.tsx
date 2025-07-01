@@ -14,12 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useI18n } from "~/i18n";
+import { useStore } from "../Scheduler";
 
 export interface CustomEventProps extends EventProps {}
 
 export default function CustomEventComponent(props: CustomEventProps) {
   const { t } = useI18n();
-  const store = props.store;
+  const store = useStore();
   const event = props.event.eventData.event as CustomEvent;
   const [dropdownMenuOpen, setDropdownMenuOpen] = createSignal(false);
 

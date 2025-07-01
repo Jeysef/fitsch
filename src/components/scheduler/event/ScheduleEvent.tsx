@@ -6,6 +6,7 @@ import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { WEEK_PARITY } from "~/server/scraper/enums";
+import { useStore } from "../Scheduler";
 
 export interface ScheduleEventProps extends EventProps {}
 
@@ -17,10 +18,11 @@ function formatWeeks(weeks: string | number[]) {
 }
 
 export default function ScheduleEventComponent(props: ScheduleEventProps) {
+  const store = useStore();
   const eventData = props.event.eventData as ScheduleEventData;
   const event = eventData.event as ScheduleEvent;
 
-  const strongLinked = event.strongLinked.map((data) => props.store.getEvent(data));
+  const strongLinked = event.strongLinked.map((data) => store.getEvent(data));
 
   const handleCheck = (checked?: boolean) => {
     batch(() => {

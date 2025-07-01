@@ -13,14 +13,12 @@ import type { StrictOmit } from "ts-essentials";
 import CustomEventComponent from "~/components/scheduler/event/CustomEvent";
 import ScheduleEventComponent from "~/components/scheduler/event/ScheduleEvent";
 import type { CustomEvent, CustomEventData, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
-import type { SchedulerStore } from "~/components/scheduler/store";
 import Text from "~/components/typography/text";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 
 export interface EventProps {
-  store: SchedulerStore;
   event: DayEvent;
 }
 
@@ -38,21 +36,23 @@ interface EventWrapperProps extends EventProps, StrictOmit<ComponentProps<"div">
   class?: ClassValue;
 }
 export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
-  const [local, rest] = splitProps(props, ["event", "store", "handleCheck", "header", "children"]);
+  const [local, rest] = splitProps(props, ["event", "handleCheck", "header", "children"]);
   const event = local.event.eventData.event;
 
   const color = createMemo(() => {
     if (event.type === "CUSTOM") {
-      return event.color;
+      return subjectTypeColors.EXAM;
     }
     return subjectTypeColors[event.type];
   });
+
 
   return (
     <Collapsible
       open={!event.hidden}
       data-id={event.id}
-      style={{ "background-color": color() }}
+      // style={{ "background-color": `color-mix(in oklch, ${color()} 60%, white)`, "border": `2px solid ${color()}` }}
+      style={{"background-color": color().bg, "border": `2px solid ${color().border}` }}
       on:dblclick={() => {
         if (!(typeof window !== "undefined" && "ontouchstart" in window)) local.handleCheck();
       }}
@@ -90,10 +90,10 @@ export default function EventComponent(props: EventProps) {
   return (
     <Switch>
       <Match when={isCustomEventData(event.eventData)}>
-        <CustomEventComponent event={event} store={props.store} />
+        <CustomEventComponent event={event} />
       </Match>
       <Match when={!isCustomEventData(event.eventData)}>
-        <ScheduleEventComponent event={event} store={props.store} />
+        <ScheduleEventComponent event={event} />
       </Match>
     </Switch>
   );
