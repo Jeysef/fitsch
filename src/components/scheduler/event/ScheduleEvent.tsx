@@ -44,11 +44,12 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
       handleCheck={handleCheck}
       {...props}
       class={{
-        "border-parityEven border-dashed border-2": isEven,
-        "border-parityOdd border-dashed border-2": isOdd,
+        "!border-parityEven !border-dashed": isEven,
+        "!border-parityOdd !border-dashed": isOdd,
       }}
       header={
         <>
+          <EventTitle title={eventData.courseDetail.abbreviation} />
           <EventPopup
             eventData={eventData}
             onHide={() => {
@@ -57,27 +58,22 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
           >
             <Info size={"1em"} />
           </EventPopup>
-          <EventTitle title={eventData.courseDetail.abbreviation} />
-          <Checkbox checked={event.checked} onChange={handleCheck}>
-            <CheckboxControl class="em:size-4 text-colored-event-foreground light *:light" />
-          </Checkbox>
         </>
       }
     >
-      <>
-        <Text em variant="smallText" class="block text-colored-event-foreground">
-          {event.room}
-        </Text>
-        <Text em variant="smallText" class="wm:text-xxs hidden md:block text-colored-event-foreground">
-          ​
-        </Text>
-        <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground">
-          {formatWeeks(event.weeks.weeks)}
-        </Text>
-        <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground">
-          {event.info}
-        </Text>
-      </>
+      <Text em variant="smallText" class="em:text-xxs truncate block text-colored-event-foreground contrast-[.25]">
+        {event.room}
+      </Text>
+      <div class="em:h-2">​</div>
+      <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground">
+        {formatWeeks(event.weeks.weeks)}
+      </Text>
+      <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground">
+        {event.info}
+      </Text>
+      <Checkbox checked={event.checked} onChange={handleCheck} class="flex justify-center grow items-end">
+        <CheckboxControl class="em:size-4 text-colored-event-foreground light *:light" />
+      </Checkbox>
     </EventWrapper>
   );
 }

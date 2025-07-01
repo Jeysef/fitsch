@@ -14,6 +14,7 @@ import CustomEventComponent from "~/components/scheduler/event/CustomEvent";
 import ScheduleEventComponent from "~/components/scheduler/event/ScheduleEvent";
 import type { CustomEvent, CustomEventData, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import Text from "~/components/typography/text";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
@@ -24,7 +25,7 @@ export interface EventProps {
 
 export const EventTitle: VoidComponent<{ title: string }> = (props) => {
   return (
-    <Text em variant="largeText" class="text-colored-event-foreground w-full truncate em:text-base md:em:text-lg">
+    <Text em variant={null} class="text-colored-event-foreground w-full truncate em:text-sm md:em:text-base">
       {props.title}
     </Text>
   );
@@ -46,13 +47,10 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
     return subjectTypeColors[event.type];
   });
 
-
   return (
-    <Collapsible
-      open={!event.hidden}
+    <Card
       data-id={event.id}
-      // style={{ "background-color": `color-mix(in oklch, ${color()} 60%, white)`, "border": `2px solid ${color()}` }}
-      style={{"background-color": color().bg, "border": `2px solid ${color().border}` }}
+      style={{ "background-color": color().bg, border: `2px solid ${color().border}` }}
       on:dblclick={() => {
         if (!(typeof window !== "undefined" && "ontouchstart" in window)) local.handleCheck();
       }}
@@ -61,19 +59,25 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
       }}
       {...rest}
       class={cn(
-        "text-colored-event-foreground",
-        "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
+        "event", // needed for linked outline
+        "flex flex-col h-full hover:shadow-md transition-shadow overflow-auto",
+        // "text-colored-event-foreground",
+        // "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
         "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
         // if hidden, make the event more transparent
         event.hidden && "opacity-50 h-auto",
         rest.class
       )}
     >
-      <div class="flex items-center w-full ">{local.header}</div>
-      <CollapsibleContent class="w-full">
-        <div class="w-full *:w-full">{local.children}</div>
-      </CollapsibleContent>
-    </Collapsible>
+      <Collapsible 
+        open={!event.hidden}
+      >
+        <CardHeader class="flex-row w-full p-3">{local.header}</CardHeader>
+        <CollapsibleContent class="w-full p-3 pt-0 grow flex flex-col -mt-3" as={CardContent}>
+          {local.children}
+        </CollapsibleContent>
+      </Collapsible>
+    </Card>
   );
 };
 

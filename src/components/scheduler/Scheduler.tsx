@@ -21,12 +21,11 @@ import { ObjectTyped } from "object-typed";
 import { DAY } from "~/server/scraper/enums";
 import { Time, TimeSpan } from "./time";
 import { createElementHeightRef } from "../heightMeasurer";
-import type { DayEvent, ScheduleEvent } from "./event/types";
+import type { DayEvent, EventData, ScheduleEvent } from "./event/types";
 import type { StrictExtract } from "ts-essentials";
 import { compact, difference, flatMap, flow, values } from "lodash-es";
 import { isCustomEventData } from "./event/Event";
 import { css } from "@emotion/css";
-import type { DayData } from "./types";
 import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
 import { hoverColors } from "~/config/colors";
 
@@ -153,24 +152,23 @@ export function Week(props: FlowProps) {
   ) =>
     createMemo(() =>
       flow(
-        (data: DayData[]) => flatMap(data, (e) => e.events),
-        (events) =>
+        (eventData: EventData[]) =>
           flatMap(
-            events,
-            (event) =>
-              !isCustomEventData(event.eventData) &&
+            eventData,
+            (eventData) =>
+              !isCustomEventData(eventData) &&
               createLinkedCss(
-                event.eventData.event.id,
+                eventData.event.id,
                 property === "linked"
-                  ? difference(event.eventData.event.linked, event.eventData.event.strongLinked)
-                  : event.eventData.event.strongLinked,
+                  ? difference(eventData.event.linked, eventData.event.strongLinked)
+                  : eventData.event.strongLinked,
                 color
               )
           ),
         compact,
         (links) => links.join("\n"),
         css
-      )(storeData())
+      )(storeData().flatMap((e) => e.events.map((event) => event.eventData)))
     );
 
   // Usage:
