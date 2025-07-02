@@ -61,17 +61,17 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
         </>
       }
     >
-      <Text em variant="smallText" class="em:text-xxs truncate block text-colored-event-foreground contrast-[.25]">
+      <Text em variant="smallText" class="em:text-xxs truncate block text-colored-event-foreground contrast-[.25] shrink-0">
         {event.room}
       </Text>
-      <div class="em:h-2">​</div>
-      <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground">
+      <div class="em:h-2 shrink-0">​</div>
+      <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground shrink-0">
         {formatWeeks(event.weeks.weeks)}
       </Text>
-      <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground">
+      <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground shrink-0">
         {event.info}
       </Text>
-      <Checkbox checked={event.checked} onChange={handleCheck} class="flex justify-center grow items-end">
+      <Checkbox checked={event.checked} onChange={handleCheck} class="flex justify-center grow items-end shrink-0">
         <CheckboxControl class="em:size-4 text-colored-event-foreground light *:light" />
       </Checkbox>
     </EventWrapper>

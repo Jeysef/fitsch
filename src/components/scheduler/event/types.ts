@@ -13,6 +13,8 @@ export interface EventBase {
   checked: boolean;
   /** @default false (undefined) */
   hidden?: boolean;
+  /** @default false (undefined) */
+  collapsed?: boolean;
 }
 
 export interface CustomEvent extends EventBase {

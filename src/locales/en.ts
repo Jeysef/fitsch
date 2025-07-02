@@ -139,6 +139,10 @@ export default {
       resultSchedule: "Result schedule",
       timeSpan: "Time spans",
     },
+    tabActions: {
+      collapseAll: "Collapse all",
+      expandAll: "Expand all",
+    },
     timeSpan: {
       empty: "No course selected",
       hoursAWeek: "Number of lecture hours per week:",

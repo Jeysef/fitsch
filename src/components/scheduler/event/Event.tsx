@@ -69,11 +69,11 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         rest.class
       )}
     >
-      <Collapsible 
-        open={!event.hidden}
+      <Collapsible
+        open={!(event.collapsed ||event.hidden)}
       >
         <CardHeader class="flex-row w-full p-3">{local.header}</CardHeader>
-        <CollapsibleContent class="w-full p-3 pt-0 grow flex flex-col -mt-3" as={CardContent}>
+        <CollapsibleContent class={"w-full p-3 pt-0 grow flex flex-col -mt-3"} as={CardContent}>
           {local.children}
         </CollapsibleContent>
       </Collapsible>

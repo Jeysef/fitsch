@@ -137,6 +137,10 @@ export default {
       resultSchedule: "Výsledný rozvrh",
       timeSpan: "Rozsahy",
     },
+    tabActions: {
+      collapseAll: "Sbalit vše",
+      expandAll: "Rozbalit vše",
+    },
     timeSpan: {
       empty: "Není zvolen žádný předmět",
       hoursAWeek: "Počet hodin lekce týdně:",
