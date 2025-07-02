@@ -120,7 +120,7 @@ export default function Home() {
           <TabsIndicator variant="underline" data-lang={locale()} />
           {/* data-lang for rerendering */}
         </TabsList>
-        <div class="flex h-16 shrink-0 items-center gap-2 -mr-1">
+        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", {"*:hidden": tab() === tabs.timeSpan})}>
           <Separator orientation="vertical" class="mr-2 !h-4" />
           <Button variant="outline" on:click={() => collapseAll(setIsAllCollapsed((p) => !p))} class="h-8">
             {(isAllCollapsed() ? t("scheduler.tabActions.expandAll") : t("scheduler.tabActions.collapseAll"))
