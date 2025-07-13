@@ -1,9 +1,8 @@
 import type { StrictOmit } from "ts-essentials";
 import type { TimeSpan } from "~/components/scheduler/time";
-import type { LANGUAGE } from "~/enums";
+import type { FACULTY, LANGUAGE } from "~/enums";
 import type { gradeAll } from "~/server/scraper/constants";
 import type { DAY, DEGREE, LECTURE_TYPE, OBLIGATION, SEMESTER, WEEK_PARITY } from "~/server/scraper/enums";
-import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { LectureMutatorConfig, MgetStudyCourseDetailsReturn } from "~/server/scraper/lectureMutator";
 
 /**
@@ -132,6 +131,7 @@ interface CourseDetail {
 
 interface GetStudyCoursesDetailsFunctionConfig extends DataProviderTypes.getStudyCoursesDetailsConfig {
   language: LANGUAGE;
+  faculty: FACULTY
 }
 
 type SemesterTimeSchedule = { start: Date; end: Date };
@@ -157,7 +157,6 @@ export namespace StudyApiTypes {
 
   export interface getStudyCourseDetailsConfig {
     courseId: string;
-    languageSet: LanguageSetDictionary;
     semesterTimeSchedule: SemesterTimeSchedule;
   }
 
@@ -182,6 +181,7 @@ export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
     language: LANGUAGE;
     program?: StudyProgramBase["id"];
+    faculty?: FACULTY
   }
   export interface getStudyOverviewReturn extends StudyOverview {}
 

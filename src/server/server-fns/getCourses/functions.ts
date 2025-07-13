@@ -1,18 +1,17 @@
-import { StudyApi } from "~/server/scraper/api";
-import { LanguageProvider } from "~/server/scraper/languageProvider";
+import { FACULTY } from "~/enums";
+import { createAppServices } from "~/server/scraper/services";
 import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
-import { CoursesDataProvider } from "~/server/server-fns/getCourses/coursesDataProvider";
-import { fromURL } from "~/server/utils/fetcher";
 
 export async function getStudyCoursesDetails(
   config: GetStudyCoursesDetailsFunctionConfig
 ): Promise<DataProviderTypes.getStudyCoursesDetailsReturn> {
   "use server";
-  const { language, ...rest } = config;
-  const languageProvider = new LanguageProvider(language);
-  const studyApi = new StudyApi(languageProvider, fromURL);
-  const dataProvider = new CoursesDataProvider(studyApi);
-  const d = await dataProvider.getStudyCoursesDetails(rest);
+  const { coursesProvider } = await createAppServices({
+    language: config.language,
+    faculty: config.faculty ?? FACULTY.FIT,
+  });
+
+  const d = await coursesProvider.getStudyCoursesDetails(config);
   const staleCoursesData = config.staleCoursesId?.map((id) => ({ detail: { id }, isStale: true }) as const);
   return d.concat(staleCoursesData ?? []);
 }
