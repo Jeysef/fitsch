@@ -12,15 +12,8 @@ import TimeSpan from "./TimeSpan";
 import { isServer } from "solid-js/web";
 import { Button } from "../ui/button";
 import { useIsMobile } from "~/lib/hooks";
+import { tabs, type Tab } from "./tab";
 
-const tabs = {
-  workSchedule: "workSchedule",
-  resultSchedule: "resultSchedule",
-  timeSpan: "timeSpan",
-} as const;
-
-type TabValues = (typeof tabs)[keyof typeof tabs];
-type Tab = { tab: TabValues };
 
 export default function Home() {
   const { t, locale } = useI18n();

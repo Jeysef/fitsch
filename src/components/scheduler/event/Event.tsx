@@ -1,3 +1,4 @@
+import { useSearchParams } from "@solidjs/router";
 import type { ClassValue } from "clsx";
 import {
   createMemo,
@@ -10,6 +11,7 @@ import {
   type VoidComponent,
 } from "solid-js";
 import type { StrictOmit } from "ts-essentials";
+import type { Tab } from "~/components/homepage/tab";
 import CustomEventComponent from "~/components/scheduler/event/CustomEvent";
 import ScheduleEventComponent from "~/components/scheduler/event/ScheduleEvent";
 import type { CustomEvent, CustomEventData, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
@@ -39,14 +41,15 @@ interface EventWrapperProps extends EventProps, StrictOmit<ComponentProps<"div">
 export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
   const [local, rest] = splitProps(props, ["event", "handleCheck", "header", "children"]);
   const event = local.event.eventData.event;
+  const [searchParams] = useSearchParams<Tab>();
 
   const color = createMemo(() => {
     if (event.type === "CUSTOM") {
       const lightBg = `hsl(from ${event.color} h s 90%)` as const;
       return {
         bg: lightBg,
-        border: event.color
-      } as const
+        border: event.color,
+      } as const;
     }
     return subjectTypeColors[event.type];
   });
@@ -73,10 +76,11 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         rest.class
       )}
     >
-      <Collapsible
-        open={!(event.collapsed ||event.hidden)}
-      >
-        <CardHeader class="flex-row w-full p-3">{local.header}</CardHeader>
+      <Collapsible open={!(event.collapsed || event.hidden)} class="group data-[expanded]:visible">
+        <CardHeader class="flex-row w-full p-3 relative space-y-0">
+          {event.checked && searchParams.tab !== "resultSchedule" && <div class={"absolute top-0 left-0 bottom-0 w-1 bg-green-500  group-data-[expanded]:hidden"} />}
+          {local.header}
+        </CardHeader>
         <CollapsibleContent class={"w-full p-3 pt-0 grow flex flex-col -mt-3"} as={CardContent}>
           {local.children}
         </CollapsibleContent>
