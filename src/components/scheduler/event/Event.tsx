@@ -42,11 +42,11 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
 
   const color = createMemo(() => {
     if (event.type === "CUSTOM") {
-      const lightBg = `hsl(from ${event.color} h s 90%)`;
+      const lightBg = `hsl(from ${event.color} h s 90%)` as const;
       return {
         bg: lightBg,
         border: event.color
-      }
+      } as const
     }
     return subjectTypeColors[event.type];
   });
