@@ -1,5 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, Suspense, batch, createMemo, createSignal } from "solid-js";
+import { For, Suspense, batch, createMemo, createSignal, startTransition } from "solid-js";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
@@ -13,7 +13,6 @@ import { isServer } from "solid-js/web";
 import { Button } from "../ui/button";
 import { useIsMobile } from "~/lib/hooks";
 import { tabs, type Tab } from "./tab";
-
 
 export default function Home() {
   const { t, locale } = useI18n();
@@ -68,13 +67,17 @@ export default function Home() {
   });
 
   const collapseAll = (expand = false) =>
-    batch(() => {
-      for (const dayEvent of Object.values(storeProxy.data)) {
-        for (const event of dayEvent.events) {
-          event.eventData.event.collapsed = expand;
-        }
-      }
-    });
+    setTimeout(() => {
+      startTransition(() => {
+        batch(() => {
+          for (const dayEvent of Object.values(storeProxy.data)) {
+            for (const event of dayEvent.events) {
+              event.eventData.event.collapsed = expand;
+            }
+          }
+        });
+      });
+    }, 20);
 
   const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
 
@@ -113,7 +116,7 @@ export default function Home() {
           <TabsIndicator variant="underline" data-lang={locale()} />
           {/* data-lang for rerendering */}
         </TabsList>
-        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", {"*:hidden": tab() === tabs.timeSpan})}>
+        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", { "*:hidden": tab() === tabs.timeSpan })}>
           <Separator orientation="vertical" class="mr-2 !h-4" />
           <Button variant="outline" on:click={() => collapseAll(setIsAllCollapsed((p) => !p))} class="h-8">
             {(isAllCollapsed() ? t("scheduler.tabActions.expandAll") : t("scheduler.tabActions.collapseAll"))
