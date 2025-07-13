@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
-import { isCustomEventData } from "~/components/scheduler/event/Event";
+import { isCustomEvent, isCustomEventData } from "~/components/scheduler/event/Event";
 import type { Event, EventData, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
 import { hasOverlap, type TimeSpan } from "~/components/scheduler/time";
 import type { Course } from "~/components/scheduler/types";
@@ -50,6 +50,26 @@ function hashCode(str: string): number {
     hash |= 0; // Convert to 32-bit integer
   }
   return hash;
+}
+
+/**
+ * Determines if two events are allowed to overlap based on specific rules.
+ * Currently, it allows overlaps if both events have differing week parities (ODD vs. EVEN).
+ * @returns {boolean} True if the overlap is permissible, false otherwise.
+ */
+function isAllowedOverlap(eventA: Event, eventB: Event): boolean {
+  // Only ScheduleEvents can have parity rules.
+  if (isCustomEvent(eventA) || isCustomEvent(eventB)) {
+    return false;
+  }
+
+  const parityA = eventA.weeks?.parity;
+  const parityB = eventB.weeks?.parity;
+
+  // Check if both have a defined parity and if they are different.
+  const paritiesDiffer = parityA && parityB && parityA !== parityB;
+
+  return paritiesDiffer || false;
 }
 
 export function SchedulerGenerator() {
@@ -104,7 +124,13 @@ export function SchedulerGenerator() {
   function hasTimeOverlap(event: ScheduleEvent, events: Iterable<Event>): boolean {
     const eventSpan = event.timeSpan;
     for (const selected of [...events, ...selectedCustomEvents()]) {
-      if (selected.id !== event.id && selected.day === event.day && hasOverlap(selected.timeSpan, eventSpan)) {
+      if (selected.id === event.id) continue; // An event cannot overlap with itself.
+      if (selected.day !== event.day) continue; // Events on different days cannot overlap.
+
+      if (hasOverlap(selected.timeSpan, eventSpan)) {
+        if (isAllowedOverlap(event, selected)) {
+          continue;
+        }
         return true;
       }
     }
