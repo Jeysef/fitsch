@@ -6,12 +6,13 @@
     "build": "vinxi build",
     "build-netlify": "vinxi build --preset netlify",
     "start": "vinxi start",
-    "lint": "biome lint",
-    "format": "biome format",
-    "lint&format": "biome check",
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix .",
+    "prettier": "prettier --write .",
     "test": "vitest run",
     "test-watch": "vitest",
-    "test-ui": "vitest --ui"
+    "test-ui": "vitest --ui",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/css": "^11.13.5",
@@ -40,6 +41,7 @@
     "clsx": "^2.1.1",
     "deep-equal": "^2.2.3",
     "downloadjs": "^1.4.7",
+    "eslint-config-prettier": "^10.1.8",
     "html-to-image": "^1.11.13",
     "jsdom": "^26.1.0",
     "lodash-es": "^4.17.21",
@@ -70,14 +72,20 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@eslint/js": "^9.33.0",
     "@netlify/blobs": "^8.2.0",
     "@types/deep-equal": "^1.0.4",
     "@types/downloadjs": "^1.4.6",
     "@types/lodash-es": "^4.17.12",
+    "eslint": "^9.33.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "nitropack": "^2.11.13",
     "playwright": "^1.53.1",
+    "prettier": "3.6.2",
     "ts-essentials": "^10.1.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.39.1"
   },
   "pnpm": {
     "patchedDependencies": {
