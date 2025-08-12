@@ -277,11 +277,3 @@ export default {
     },
   },
 };
-
-/*
-studyPlan
-course.detail.timeSpan.title
-course.detail.timeSpan.data
-course.detail.day
-course.detail.weeks.EVEN
-*/
