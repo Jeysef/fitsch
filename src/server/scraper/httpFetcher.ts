@@ -4,15 +4,15 @@ export class HttpFetcher {
   constructor(private readonly fetcher: typeof fromURL) {}
 
   public async getDocument(url: string) {
-    console.log("fetching document:", url);
+    console.debug("fetching document:", url);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 6000);
 
     try {
-      // Pass the signal to the fetcher
       const $ = await this.fetcher(url, {
-        requestOptions: { method: "GET", throwOnError: true, signal: controller.signal },
+        requestOptions: { method: "GET", signal: controller.signal, maxRedirections: 1 },
       });
+      console.debug("fetching document:", url, "OK");
       return $;
     } catch (error: any) {
       if (error.name === "AbortError") {
