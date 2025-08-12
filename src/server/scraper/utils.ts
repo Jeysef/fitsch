@@ -80,23 +80,28 @@ export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
 export const conjunctConjunctableRooms = (roomsInput: string[]): string => {
   const processRooms = (roomsInput: string[]): string[] => {
     const result: string[] = [];
-    let remainingRooms = [...roomsInput];
+    const remainingRooms = new Set(roomsInput);
 
     for (const room of conjunctableRooms) {
       if (Array.isArray(room)) {
-        const presentRooms = room.filter((r) => remainingRooms.includes(r));
+        const presentRooms = room.filter((room) => remainingRooms.has(room));
         if (presentRooms.length > 1) {
           const base = presentRooms[0];
-          const rest = presentRooms.slice(1).map((r) => r.slice(-1));
-          result.push(`${base}+${rest.join(",")}`);
-          remainingRooms = remainingRooms.filter((r) => !presentRooms.includes(r));
+          const rest = presentRooms
+            .slice(1)
+            .map((r) => r.slice(-1))
+            .join(",");
+          result.push(`${base}+${rest}`);
+          presentRooms.forEach((r) => remainingRooms.delete(r));
         }
       } else {
-        if (remainingRooms.includes(room.main)) {
-          const streamedPresent = room.streamed.filter((r) => remainingRooms.includes(r));
+        if (remainingRooms.has(room.main)) {
+          const streamedPresent = room.streamed.filter((room) => remainingRooms.has(room));
           if (streamedPresent.length > 0) {
-            result.push(`${room.main}+${streamedPresent.map((r) => r.slice(-1)).join(",")}`);
-            remainingRooms = remainingRooms.filter((r) => r !== room.main && !streamedPresent.includes(r));
+            const rest = streamedPresent.map((r) => r.slice(-1)).join(",");
+            result.push(`${room.main}+${rest}`);
+            remainingRooms.delete(room.main);
+            streamedPresent.forEach((r) => remainingRooms.delete(r));
           }
         }
       }
