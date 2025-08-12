@@ -26,6 +26,7 @@ export default tseslint.config(
     ".DS_Store",
     "Thumbs.db",
     "src/paraglide/",
+    "tailwind.config.cjs",
   ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
