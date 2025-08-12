@@ -2,3 +2,4 @@ src/paraglide/
 src/lang/core.tsx
 src/packages/
 pnpm-lock.yaml
+"**/*.cjs",

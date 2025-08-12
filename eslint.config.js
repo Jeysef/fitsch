@@ -26,7 +26,7 @@ export default tseslint.config(
     ".DS_Store",
     "Thumbs.db",
     "src/paraglide/",
-    "tailwind.config.cjs",
+    "**/*.cjs",
   ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -48,5 +48,5 @@ export default tseslint.config(
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
     },
-  },
+  }
 );
