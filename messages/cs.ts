@@ -32,10 +32,6 @@ export default {
       },
     },
   },
-  studyPlan: {
-    "Lessons in the winter semester": "Výuka v zimním semestru",
-    "Lessons in the summer semester": "Výuka v letním semestru",
-  },
   menu: {
     year: {
       title: "Rok",

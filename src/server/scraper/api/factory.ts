@@ -1,31 +1,26 @@
-// file: ~/server/scraper/api/factory.ts
-
-import type { IStudyApi } from "./interface";
-import { VutFitApi } from "./vutFitApi"; // Assuming this is the FIT-specific API
-// import { FektApi } from './fektApi'; // You would create this for another faculty
-
-import type { HttpFetcher } from "../httpFetcher";
-import type { LanguageSetDictionary } from "../languageProvider";
 import { FACULTY, type LANGUAGE } from "~/enums";
-import { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
+import type { HttpFetcher } from "../httpFetcher";
+import { LanguageProvider } from "../languageProvider";
 import { CourseDetailParser } from "../parsers/course/vutFitCourseParser";
 import { ProgramCoursesParser } from "../parsers/programCourses/vutFitProgramCoursesParser";
+import { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
 import { TimeScheduleParser } from "../parsers/timeSchedule/vutFitTimeScheduleParser";
+import type { IStudyApi } from "./interface";
+import { VutFitApi } from "./vutFitApi";
 
 export class ApiFactory {
-  constructor(
-    private readonly httpFetcher: HttpFetcher,
-    private readonly langSet: LanguageSetDictionary
-  ) {}
+  constructor(private readonly httpFetcher: HttpFetcher) {}
 
-  public create(faculty: FACULTY, language: LANGUAGE): IStudyApi {
+  public async create(faculty: FACULTY, language: LANGUAGE): Promise<IStudyApi> {
     switch (faculty) {
       case FACULTY.FIT: {
+        const languageProvider = await LanguageProvider.create(language);
+        const langSet = languageProvider.languageSet;
         // Create all the parsers needed specifically for the FIT faculty
         const programsParser = new ProgramsParser();
-        const courseDetailsParser = new CourseDetailParser(this.langSet);
-        const programCourseParser = new ProgramCoursesParser(this.langSet);
-        const timeScheduleParser = new TimeScheduleParser(this.langSet);
+        const courseDetailsParser = new CourseDetailParser(langSet);
+        const programCourseParser = new ProgramCoursesParser(langSet);
+        const timeScheduleParser = new TimeScheduleParser(langSet);
 
         // Create and return the FIT-specific API implementation
         return new VutFitApi(

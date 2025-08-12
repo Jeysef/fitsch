@@ -1,5 +1,6 @@
 import { FACULTY } from "~/enums";
-import { createAppServices } from "~/server/scraper/services";
+import { OverviewDataProvider } from "~/server/scraper/dataProviders/overviewDataProvider";
+import { createStudyApi } from "~/server/scraper/services";
 import type { DataProviderTypes } from "~/server/scraper/types";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { defineCachedFunction, getKey } from "~/server/utils/cache";
@@ -11,10 +12,12 @@ const studyOverviewMaxStaleCacheAge = 60 * 60 * 2; // 2 hours
 export const getStudyOverview = defineCachedFunction(
   async (config: DataProviderTypes.getStudyOverviewConfig) => {
     "use server";
-    const { overviewProvider } = await createAppServices({
+    const { studyApi } = await createStudyApi({
       language: config.language,
       faculty: config.faculty ?? FACULTY.FIT,
     });
+
+    const overviewProvider = new OverviewDataProvider(studyApi);
 
     const overview = await overviewProvider.getStudyOverview(config, config.language);
     return overview;

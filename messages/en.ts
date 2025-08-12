@@ -33,10 +33,6 @@ export default {
       },
     },
   },
-  studyPlan: {
-    "Lessons in the winter semester": "Lessons in the winter semester",
-    "Lessons in the summer semester": "Lessons in the summer semester",
-  },
   menu: {
     year: {
       title: "Year",
