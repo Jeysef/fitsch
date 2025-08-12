@@ -22,7 +22,7 @@ export function Settings() {
               <LanguageSwitcher />
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <InstallButton  class="w-full"/>
+              <InstallButton class="w-full" />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>

@@ -27,9 +27,7 @@ export default function InfoDialogContent() {
       <Text>{t("info.appInfo.thanks.description")}</Text>
       <div class="flex-1" />
       <span class="space-x-2">
-        <Text class="text-muted-foreground text-xs inline-block">
-          {t("info.appInfo.createdBy.title")}
-        </Text>
+        <Text class="text-muted-foreground text-xs inline-block">{t("info.appInfo.createdBy.title")}</Text>
         <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
       </span>
     </>
@@ -52,7 +50,7 @@ export default function InfoDialogContent() {
             {([type, color]) => (
               <div
                 class={cn("px-4 py-2 rounded border text-colored-event-foreground")}
-                style={{ "background-color": color }}
+                style={{ "background-color": color.bg }}
               >
                 {t(`scheduler.timeSpan.type.${type}`)}
               </div>

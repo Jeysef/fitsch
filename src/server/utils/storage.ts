@@ -26,8 +26,6 @@ export function useStorage<T extends StorageValue = StorageValue>(base = ""): St
     });
   }
   return (base
-    ? // @ts-ignore
-      prefixStorage(globalThis.cachePlugin.storage, base)
-    : // @ts-ignore
-      globalThis.cachePlugin.storage) as unknown as Storage<T>;
+    ? prefixStorage(globalThis.cachePlugin.storage, base)
+    : globalThis.cachePlugin.storage) as unknown as Storage<T>;
 }

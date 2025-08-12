@@ -59,7 +59,7 @@ const contributorBase = css`
   transition: all 0.2s ease;
   text-decoration: none;
   gap: 0.125rem;
-  
+
   .at-symbol {
     display: inline-block;
     opacity: 0;
@@ -79,28 +79,18 @@ const contributorStyle = css`
   transform: scale(0.95);
 
   &:hover {
-    transform: scale(1.0);
-    background: linear-gradient(
-      90deg,
-      #3b82f6 0%,
-      #8b5cf6 50%,
-      #3b82f6 100%
-    );
+    transform: scale(1);
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #3b82f6 100%);
     background-size: 200% auto;
     animation: ${shimmer} 3s linear infinite;
     color: white;
   }
 
   &:hover::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      45deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.2) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
     animation: ${pattern} 1.5s linear infinite;
     pointer-events: none;
   }

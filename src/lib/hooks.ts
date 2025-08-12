@@ -9,14 +9,14 @@ import { useWindowSize } from "solidjs-use";
  * @remarks
  * Uses `solidjs-use`'s `useWindowSize` to track window width reactively.
  * The initial width is set to 1080 pixels.
- * 
+ *
  * @warning
  * do not use in render
  */
 export function useIsMobile() {
-    const { width } = useWindowSize({
-      initialWidth: 1080,
-    });
-    const isMobile = createMemo(() => width() < 768);
-    return isMobile;
-  }
+  const { width } = useWindowSize({
+    initialWidth: 1080,
+  });
+  const isMobile = createMemo(() => width() < 768);
+  return isMobile;
+}

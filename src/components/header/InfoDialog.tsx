@@ -8,12 +8,7 @@ export default function AppInfo() {
 
   return (
     <Dialog>
-      <DialogTrigger
-        as={Button}
-        variant="ghost"
-        size="icon"
-        name="info-dialog-trigger"
-      >
+      <DialogTrigger as={Button} variant="ghost" size="icon" name="info-dialog-trigger">
         <Lightbulb color="currentColor" class="text-inherit" />
       </DialogTrigger>
       <Suspense>

@@ -27,6 +27,7 @@ export default tseslint.config(
     "Thumbs.db",
     "src/paraglide/",
     "**/*.cjs",
+    "src/packages/",
   ]),
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -47,6 +48,8 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
+      "no-irregular-whitespace": "warn",
+      "@typescript-eslint/no-namespace": "off",
     },
   }
 );

@@ -36,7 +36,7 @@ export function I18nProvider(props: FlowProps) {
 
   const dict = createMemo(() => i18n.flatten(dictionaries[locale()]));
   const t: i18n.Translator<Dictionary> = (path, ...args) =>
-    i18n.translator(dict, i18n.resolveTemplate)(path, ...args) ?? (() => path) as any;
+    i18n.translator(dict, i18n.resolveTemplate)(path, ...args) ?? ((() => path) as any);
 
   return (
     <I18nContext.Provider

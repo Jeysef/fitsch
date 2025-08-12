@@ -420,8 +420,8 @@ export function CoursesSelect() {
 export function SubmitButton() {
   const { t } = useI18n();
   return (
-      <Button class="w-full" type="submit">
-        {t("menu.load")}
-      </Button>
+    <Button class="w-full" type="submit">
+      {t("menu.load")}
+    </Button>
   );
 }

@@ -203,7 +203,7 @@ export default function Form(props: FormProps) {
           </SelectTrigger>
           <Select.ErrorMessage>
             <For each={Object.entries(form.controls.day.errors ?? {})}>
-              {([key, value]) => <Text class="text-destructive text-xs">{value}</Text>}
+              {([_, value]) => <Text class="text-destructive text-xs">{value}</Text>}
             </For>
           </Select.ErrorMessage>
           <SelectContent class="max-h-96 overflow-auto" />

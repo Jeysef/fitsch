@@ -36,12 +36,12 @@ export function importJSON(props: ImportJSONProps) {
       try {
         onImport(reader.result as string);
       } catch (e) {
-        onError ? onError(e) : console.error(e);
+        (onError || console.error)(e);
       }
       input.remove(); // Remove input after processing
     };
     reader.onerror = (e) => {
-      onError ? onError(e) : console.error(e);
+      (onError || console.error)(e);
       input.remove();
     };
     reader.readAsText(file);

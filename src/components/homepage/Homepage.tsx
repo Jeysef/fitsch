@@ -1,18 +1,18 @@
 import { useSearchParams } from "@solidjs/router";
+import { ObjectTyped } from "object-typed";
 import { For, Suspense, batch, createMemo, createSignal, startTransition } from "solid-js";
+import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
+import { useIsMobile } from "~/lib/hooks";
 import { cn } from "~/lib/utils";
 import { useScheduler } from "~/providers/SchedulerProvider";
-import { SidebarTrigger } from "../ui/sidebar";
-import { Separator } from "../ui/separator";
-import { ObjectTyped } from "object-typed";
-import TimeSpan from "./TimeSpan";
-import { isServer } from "solid-js/web";
 import { Button } from "../ui/button";
-import { useIsMobile } from "~/lib/hooks";
+import { Separator } from "../ui/separator";
+import { SidebarTrigger } from "../ui/sidebar";
 import { tabs, type Tab } from "./tab";
+import TimeSpan from "./TimeSpan";
 
 export default function Home() {
   const { t, locale } = useI18n();
@@ -28,12 +28,12 @@ export default function Home() {
     get(store, prop) {
       if (prop === "data") return data();
       // Forward all other property access to original store
-      // @ts-ignore
+      // @ts-expect-error prop is a string
       return store[prop];
     },
     set(store, prop, value) {
       // Forward all property sets to original store
-      // @ts-ignore
+      // @ts-expect-error prop is a string
       store[prop] = value;
       return true;
     },
@@ -43,12 +43,12 @@ export default function Home() {
     get(store, prop) {
       if (prop === "data") return checkedDataMemo();
       // Forward all other property access to original store
-      // @ts-ignore
+      // @ts-expect-error prop is a string
       return store[prop];
     },
     set(store, prop, value) {
       // Forward all property sets to original store
-      // @ts-ignore
+      // @ts-expect-error prop is a string
       store[prop] = value;
       return true;
     },

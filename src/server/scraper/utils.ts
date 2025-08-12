@@ -16,7 +16,7 @@ export function constructGradeLabel(grade: string, programAbbreviation: string):
 
 export function createStudyId(url: string): StudyId {
   // This regex will match any path segment followed by a number
-  const regex = /\/([^\/]+)\/(\d+)/;
+  const regex = /\/([^/]+)\/(\d+)/;
   const match = url?.match(regex);
 
   if (match) {

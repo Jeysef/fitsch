@@ -43,7 +43,7 @@ export default function EventForm<T extends ValidComponent = "button">(
           <DialogTitle>
             {local.isEdit ? t("menu.actions.addCustomEvent.form.edit") : t("menu.actions.addCustomEvent.title")}
           </DialogTitle>
-          <Suspense fallback={<Loader  class="h-52"/>}>
+          <Suspense fallback={<Loader class="h-52" />}>
             <Form setOpen={setOpen} {...local} />
           </Suspense>
         </DialogHeader>

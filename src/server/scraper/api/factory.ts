@@ -1,16 +1,16 @@
 // file: ~/server/scraper/api/factory.ts
 
-import type { IStudyApi } from './interface';
-import { VutFitApi } from './vutFitApi'; // Assuming this is the FIT-specific API
+import type { IStudyApi } from "./interface";
+import { VutFitApi } from "./vutFitApi"; // Assuming this is the FIT-specific API
 // import { FektApi } from './fektApi'; // You would create this for another faculty
 
-import type { HttpFetcher } from '../httpFetcher';
-import type { LanguageSetDictionary } from '../languageProvider';
-import { FACULTY, type LANGUAGE } from '~/enums';
-import { ProgramsParser } from '../parsers/programs/vutFitProgramsParser';
-import { CourseDetailParser } from '../parsers/course/vutFitCourseParser';
-import { ProgramCoursesParser } from '../parsers/programCourses/vutFitProgramCoursesParser';
-import { TimeScheduleParser } from '../parsers/timeSchedule/vutFitTimeScheduleParser';
+import type { HttpFetcher } from "../httpFetcher";
+import type { LanguageSetDictionary } from "../languageProvider";
+import { FACULTY, type LANGUAGE } from "~/enums";
+import { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
+import { CourseDetailParser } from "../parsers/course/vutFitCourseParser";
+import { ProgramCoursesParser } from "../parsers/programCourses/vutFitProgramCoursesParser";
+import { TimeScheduleParser } from "../parsers/timeSchedule/vutFitTimeScheduleParser";
 
 export class ApiFactory {
   constructor(
@@ -34,7 +34,7 @@ export class ApiFactory {
           programsParser,
           courseDetailsParser,
           timeScheduleParser,
-          programCourseParser,
+          programCourseParser
         );
       }
 

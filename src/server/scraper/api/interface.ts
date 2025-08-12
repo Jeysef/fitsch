@@ -9,5 +9,5 @@ export interface IStudyApi {
     config: StudyApiTypes.getStudyCoursesDetailsConfig
   ) => Promise<StudyApiTypes.getStudyCoursesDetailsReturn>;
   getTimeSchedule: (config: StudyApiTypes.getStudyTimeScheduleConfig) => Promise<StudyApiTypes.getStudyTimeScheduleReturn>;
-  getStudyProgramCourses : (config: StudyApiTypes.getStudyProgramCoursesConfig) => Promise<ProgramStudyCourses>
+  getStudyProgramCourses: (config: StudyApiTypes.getStudyProgramCoursesConfig) => Promise<ProgramStudyCourses>;
 }

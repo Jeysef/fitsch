@@ -1,4 +1,4 @@
-import colors from 'tailwindcss/colors';
+import colors from "tailwindcss/colors";
 import { LECTURE_TYPE, WEEK_PARITY } from "../server/scraper/enums";
 
 /**
@@ -13,11 +13,11 @@ import { LECTURE_TYPE, WEEK_PARITY } from "../server/scraper/enums";
 // };
 
 export const subjectTypeColors = {
-  [LECTURE_TYPE.LECTURE]: {bg: colors.green[100], border: colors.green[300]},
-  [LECTURE_TYPE.EXERCISE]: {bg: colors.yellow[100], border: colors.yellow[300]},
-  [LECTURE_TYPE.SEMINAR]: {bg: colors.blue[100], border: colors.blue[300]},
-  [LECTURE_TYPE.LABORATORY]: {bg: colors.amber[100], border: colors.amber[300]},
-  [LECTURE_TYPE.EXAM]: {bg: colors.red[100], border: colors.red[300]},
+  [LECTURE_TYPE.LECTURE]: { bg: colors.green[100], border: colors.green[300] },
+  [LECTURE_TYPE.EXERCISE]: { bg: colors.yellow[100], border: colors.yellow[300] },
+  [LECTURE_TYPE.SEMINAR]: { bg: colors.blue[100], border: colors.blue[300] },
+  [LECTURE_TYPE.LABORATORY]: { bg: colors.amber[100], border: colors.amber[300] },
+  [LECTURE_TYPE.EXAM]: { bg: colors.red[100], border: colors.red[300] },
 } as const;
 
 export const hoverColors = {

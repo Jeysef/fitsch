@@ -14,13 +14,7 @@ import "./app.css";
 import { MultiProvider } from "@solid-primitives/context";
 
 export default function App() {
-  const providers = [
-    MetaProvider,
-    I18nProvider,
-    InstallationProvider,
-    SchedulerProvider,
-    ColorModeProvider,
-  ];
+  const providers = [MetaProvider, I18nProvider, InstallationProvider, SchedulerProvider, ColorModeProvider];
   return (
     <Router
       root={(props) => (

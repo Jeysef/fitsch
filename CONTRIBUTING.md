@@ -6,9 +6,9 @@ Thank you for considering contributing to FITSCH! We welcome contributions from 
 
 There are several ways you can contribute:
 
-*   **Reporting Bugs:** If you find a bug, please open an issue on the GitHub repository. Include detailed steps to reproduce the bug, the expected behavior, and the actual behavior. Include screenshots if helpful.
-*   **Suggesting Enhancements:** If you have an idea for a new feature or an improvement to an existing one, please open an issue to discuss it. Describe the feature or enhancement and why you think it would be valuable.
-*   **Submitting Pull Requests:** If you want to contribute code, please follow the steps below.
+- **Reporting Bugs:** If you find a bug, please open an issue on the GitHub repository. Include detailed steps to reproduce the bug, the expected behavior, and the actual behavior. Include screenshots if helpful.
+- **Suggesting Enhancements:** If you have an idea for a new feature or an improvement to an existing one, please open an issue to discuss it. Describe the feature or enhancement and why you think it would be valuable.
+- **Submitting Pull Requests:** If you want to contribute code, please follow the steps below.
 
 ## Development Setup
 
@@ -29,28 +29,31 @@ There are several ways you can contribute:
 
 ## Coding Standards
 
-*   **Language:** Please write code in TypeScript.
-*   **Formatting & Linting:** This project uses [Biome](https://biomejs.dev/) for code formatting and linting. Please ensure your code adheres to the project's style guidelines by running the checks before committing.
-    ```bash
-    # Check for issues
-    pnpm run "lint&format"
+- **Language:** Please write code in TypeScript.
+- **Formatting & Linting:** This project uses [Biome](https://biomejs.dev/) for code formatting and linting. Please ensure your code adheres to the project's style guidelines by running the checks before committing.
 
-    # Apply formatting
-    pnpm run format
-    ```
-    Configure your editor to use Biome for automatic formatting if possible.
-*   **Commit Messages:** Please write clear and concise commit messages describing the changes made.
+  ```bash
+  # Check for issues
+  pnpm run "lint&format"
+
+  # Apply formatting
+  pnpm run format
+  ```
+
+  Configure your editor to use Biome for automatic formatting if possible.
+
+- **Commit Messages:** Please write clear and concise commit messages describing the changes made.
 
 ## Testing
 
 Please ensure that any new code includes relevant tests using [Vitest](https://vitest.dev/).
 
-*   Run tests to ensure your changes pass:
-    ```bash
-    pnpm test
-    ```
-*   If adding new features, add corresponding tests.
-*   If fixing a bug, add a test that reproduces the bug and verifies the fix.
+- Run tests to ensure your changes pass:
+  ```bash
+  pnpm test
+  ```
+- If adding new features, add corresponding tests.
+- If fixing a bug, add a test that reproduces the bug and verifies the fix.
 
 ## Submitting Pull Requests
 

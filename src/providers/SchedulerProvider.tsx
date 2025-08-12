@@ -127,10 +127,10 @@ export function SchedulerProvider(props: ParentProps) {
       // Return the successfully validated and revived store data
       return validatedStoreResult.data as SchedulerStore;
     } catch (error) {
-        // Handle potential JSON parsing errors
-        console.error("Failed to deserialize scheduler store:", error);
-        // Optionally show a toast or return the empty store
-        return store;
+      // Handle potential JSON parsing errors
+      console.error("Failed to deserialize scheduler store:", error);
+      // Optionally show a toast or return the empty store
+      return store;
     }
   };
 

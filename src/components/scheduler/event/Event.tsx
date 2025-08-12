@@ -78,7 +78,9 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
     >
       <Collapsible open={!(event.collapsed || event.hidden)} class="group data-[expanded]:visible">
         <CardHeader class="flex-row w-full p-3 relative space-y-0">
-          {event.checked && searchParams.tab !== "resultSchedule" && <div class={"absolute top-0 left-0 bottom-0 w-1 bg-green-500  group-data-[expanded]:hidden"} />}
+          {event.checked && searchParams.tab !== "resultSchedule" && (
+            <div class={"absolute top-0 left-0 bottom-0 w-1 bg-green-500  group-data-[expanded]:hidden"} />
+          )}
           {local.header}
         </CardHeader>
         <CollapsibleContent class={"w-full p-3 pt-0 grow flex flex-col -mt-3"} as={CardContent}>

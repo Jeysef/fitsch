@@ -65,7 +65,11 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
         {event.room}
       </Text>
       <div class="em:h-2 shrink-0">​</div>
-      <Text em variant="smallText" class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground shrink-0">
+      <Text
+        em
+        variant="smallText"
+        class="em:text-xxs block text-ellipsis line-clamp-2 text-colored-event-foreground shrink-0"
+      >
         {formatWeeks(event.weeks.weeks)}
       </Text>
       <Text em variant="smallText" class="truncate block w-full text-colored-event-foreground shrink-0">

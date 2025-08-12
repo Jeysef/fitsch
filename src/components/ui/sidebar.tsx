@@ -54,7 +54,6 @@ function useSidebar() {
   return ctx;
 }
 
-
 // Provider
 function SidebarProvider(props: {
   defaultOpen?: boolean;
@@ -117,7 +116,7 @@ function Sidebar(props: {
   const side = props.side ?? "left";
   const variant = props.variant ?? "sidebar";
   const collapsible = props.collapsible ?? "offcanvas";
-  const resolved = children(() => props.children)
+  const resolved = children(() => props.children);
   return (
     <Show
       when={collapsible !== "none"}
@@ -195,7 +194,7 @@ function SidebarTrigger(props: { class?: string } & Omit<Parameters<typeof Butto
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      class={cn("h-7 w-7", local.class)}  
+      class={cn("h-7 w-7", local.class)}
       onClick={(e) => {
         local.onClick?.(e);
         toggleSidebar();

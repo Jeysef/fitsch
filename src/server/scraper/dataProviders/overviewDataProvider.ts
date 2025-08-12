@@ -14,12 +14,11 @@ import { constructGradeLabel } from "~/server/scraper/utils";
 import type { IStudyApi } from "../api/interface";
 
 export class OverviewDataProvider {
-  constructor(
-    private readonly studyApi: IStudyApi,
-  ) {}
+  constructor(private readonly studyApi: IStudyApi) {}
 
   public async getStudyOverview(
-    config: DataProviderTypes.getStudyOverviewConfig, language: LANGUAGE
+    config: DataProviderTypes.getStudyOverviewConfig,
+    language: LANGUAGE
   ): Promise<DataProviderTypes.getStudyOverviewReturn> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config);
     const isEnglish = language === LANGUAGE.ENGLISH;

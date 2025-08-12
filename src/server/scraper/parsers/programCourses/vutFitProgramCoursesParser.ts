@@ -4,15 +4,14 @@ import { OBLIGATION, SEMESTER } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
 import { createStudyId } from "../../utils";
 
-
 interface ProgramCoursesParserOptions {
-  programUrl: string
+  programUrl: string;
 }
 
 export class ProgramCoursesParser {
   constructor(private readonly langSet: LanguageSetDictionary) {}
   public parse($: CheerioAPI, options: ProgramCoursesParserOptions): ProgramStudyCourses {
-    const {programUrl} = options
+    const { programUrl } = options;
     const abbreviation = $("main .b-detail .b-detail__summary strong").first().text().trim();
     const name = $("h1.b-detail__title").text().trim();
 

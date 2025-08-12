@@ -131,7 +131,7 @@ interface CourseDetail {
 
 interface GetStudyCoursesDetailsFunctionConfig extends DataProviderTypes.getStudyCoursesDetailsConfig {
   language: LANGUAGE;
-  faculty: FACULTY
+  faculty: FACULTY;
 }
 
 type SemesterTimeSchedule = { start: Date; end: Date };
@@ -181,7 +181,7 @@ export namespace DataProviderTypes {
   export interface getStudyOverviewConfig extends StudyApiTypes.getStudyProgramsConfig {
     language: LANGUAGE;
     program?: StudyProgramBase["id"];
-    faculty?: FACULTY
+    faculty?: FACULTY;
   }
   export interface getStudyOverviewReturn extends StudyOverview {}
 

@@ -4,5 +4,5 @@ export enum LANGUAGE {
 }
 
 export enum FACULTY {
-  FIT = "FIT"
+  FIT = "FIT",
 }

@@ -187,9 +187,7 @@ export function Week(props: FlowProps) {
   );
 }
 
-export function Days(props: {
-  children: (data: Accessor<DayDataObject>) => JSX.Element;
-}) {
+export function Days(props: { children: (data: Accessor<DayDataObject>) => JSX.Element }) {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
   const storeData = createMemo(() => values(store.data || store.getEmptyData()));

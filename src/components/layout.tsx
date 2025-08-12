@@ -7,13 +7,11 @@ export default function Layout(props: FlowProps) {
   return (
     <div class="[--header-height:calc(theme(spacing.14))]">
       <SidebarProvider class="flex flex-col" defaultOpen>
-      <Header />
-      <div class="flex flex-1">
-        <AppSidebar />
-        <SidebarInset class="h-[calc(100svh-var(--header-height))] overflow-auto">
-          {props.children}
-        </SidebarInset>
-      </div>
+        <Header />
+        <div class="flex flex-1">
+          <AppSidebar />
+          <SidebarInset class="h-[calc(100svh-var(--header-height))] overflow-auto">{props.children}</SidebarInset>
+        </div>
       </SidebarProvider>
     </div>
   );

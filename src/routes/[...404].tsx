@@ -12,9 +12,7 @@ export default function NotFound() {
     <main class="text-center mx-auto text-gray-700 p-4 flex flex-col items-center justify-center min-h-screen">
       <Title>404 - Page Not Found</Title>
       <HttpStatusCode code={404} />
-      <h1 class="text-7xl text-sky-700 font-extrabold uppercase my-8 tracking-widest drop-shadow-lg">
-        404
-      </h1>
+      <h1 class="text-7xl text-sky-700 font-extrabold uppercase my-8 tracking-widest drop-shadow-lg">404</h1>
       <h2 class="text-2xl font-semibold mb-4">Oops! This page doesn't exist.</h2>
       <p class="mb-8 text-lg">
         The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
