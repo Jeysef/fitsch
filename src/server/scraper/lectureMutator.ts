@@ -296,7 +296,7 @@ export async function MutateLectureData(
   // Define the processing pipeline for a single course
   const processCourse = flow(
     addLectureIds,
-    (course: IdCourseReturn) => ({
+    (course) => ({
       ...course,
       data: filterValidLectures(course.data),
     }),
