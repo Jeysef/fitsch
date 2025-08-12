@@ -1,6 +1,6 @@
-import { flow, isEqual, isString, union, uniq, cloneDeep } from "lodash-es";
+import { createHash } from "crypto";
+import { cloneDeep, flow, isEqual, isString, union, uniq } from "lodash-es";
 import type { StrictOmit } from "ts-essentials";
-import { v4 as uuidv4 } from "uuid";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import { conjunctableRooms } from "~/config/rooms";
 import { days } from "~/config/scheduler";
@@ -47,7 +47,54 @@ export type MgetStudyCourseDetailsReturn = MgetStudyCourseDetailsReturnStale | M
 
 // --- PURE HELPER FUNCTIONS ---
 
-const idLecture = (_lecture: APICourseLecture): string => uuidv4();
+/**
+ * Creates a stable, deterministic ID for a lecture based on its core properties
+ * and the course it belongs to. This is the recommended approach.
+ *
+ * It correctly handles complex nested objects and ignores mutable metadata
+ * like `calculated` to ensure the ID is stable.
+ *
+ * @param courseId The unique identifier for the course this lecture belongs to.
+ * @param lecture The lecture object from the API.
+ * @returns A SHA-256 hash representing the unique ID for this lecture instance.
+ */
+const createDeterministicLectureId = (courseId: string, lecture: APICourseLecture): string => {
+  // 1. Create a canonical representation of the complex `weeks` object.
+  // This is a crucial step to handle its structure correctly.
+  const canonicalWeeks = {
+    // If weeks is an array, sort it to ensure order doesn't matter.
+    // Otherwise, use the string value as-is.
+    weeks: Array.isArray(lecture.weeks.weeks)
+      ? [...lecture.weeks.weeks].sort((a, b) => a - b) // Sort numbers numerically
+      : lecture.weeks.weeks,
+    parity: lecture.weeks.parity,
+    // CRITICAL: We explicitly OMIT the `calculated` property. It's mutable
+    // metadata, not part of the lecture's identity. Including it would
+    // break determinism.
+  };
+
+  // 2. Select all properties that uniquely identify this lecture instance.
+  // This now includes the `courseId`.
+  const identifyingProperties = {
+    courseId, // The context of the course is essential for uniqueness.
+    day: lecture.day,
+    type: lecture.type,
+    timeSpan: lecture.timeSpan,
+    groups: lecture.groups,
+    weeks: canonicalWeeks, // Use our clean, canonical version.
+    lectureGroup: [...lecture.lectureGroup].sort(), // Sort arrays for consistency.
+  };
+
+  // 3. Stringify the canonical object. Sorting the keys ensures a consistent
+  //    string output regardless of how the object was constructed.
+  const lectureString = JSON.stringify(identifyingProperties, Object.keys(identifyingProperties).sort());
+
+  // 4. Hash the string to create a short, unique, and fixed-length ID.
+  return createHash("sha256").update(lectureString).digest("hex");
+};
+
+// If you must use the original function name:
+const idLecture = createDeterministicLectureId;
 
 const isSameTimeLecture = (
   lecture1: { day: DAY; timeSpan: TimeSpan },
@@ -96,7 +143,7 @@ const addLectureIds = (course: DataProviderTypes.getStudyCourseDetailsReturn): I
     (lecture) =>
       ({
         ...lecture,
-        id: idLecture(lecture),
+        id: idLecture(course.detail.id, lecture),
         lecturesCount: getLectureLectures(lecture, course.detail)!,
       }) satisfies IDdCourseLecture
   ),
