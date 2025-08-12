@@ -1,19 +1,36 @@
 import { conjunctableRooms } from "~/config/rooms";
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
-import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { APICourseLecture, CourseDetail, StudyId } from "~/server/scraper/types";
 import { WEEK_PARITY } from "./enums";
 
+/**
+ * Removes all whitespace characters from a string.
+ * @param text The input string.
+ * @returns The string with all whitespace characters removed.
+ * @example "sdsd\n\n           ds" => "sdsd ds"
+ */
 export function removeSpaces(text: string): string {
-  // "sdsd\n\n           ds" => "sdsd ds"
   return text.replaceAll("\n", "").replace(/\s+/g, " ").trim();
 }
 
+/**
+ * Constructs a label for a grade and program abbreviation.
+ * @param grade The grade abbreviation. number or ALL.
+ * @param programAbbreviation
+ * @returns The label string.
+ * @example "1", "NBIO" => "1NBIO", "ALL", "NBIO" => "ALL-NBIO"
+ */
 export function constructGradeLabel(grade: string, programAbbreviation: string): string {
   return grade === gradeAll ? `${grade}-${programAbbreviation}` : `${grade}${programAbbreviation}`;
 }
 
+/**
+ * Creates a study ID from a URL.
+ * @param url The URL of program or field.
+ * @returns The study ID.
+ * @example "https://www.fit.vut.cz/study/program/9229/.cs" => "program-9229", "https://www.fit.vut.cz/study/field/17280/.cs" => "field-17280"
+ */
 export function createStudyId(url: string): StudyId {
   // This regex will match any path segment followed by a number
   const regex = /\/([^/]+)\/(\d+)/;
@@ -29,48 +46,27 @@ export function createStudyId(url: string): StudyId {
   return url;
 }
 
-export function getWeekParityFromName(week: string, languageSet: LanguageSetDictionary) {
-  if (week.includes(languageSet.course.detail.weeks.EVEN)) return WEEK_PARITY.EVEN;
-  if (week.includes(languageSet.course.detail.weeks.ODD)) return WEEK_PARITY.ODD;
-  return null;
-}
-
-export function parseWeek(week: string, semesterStart: Date, languageSet: LanguageSetDictionary) {
-  // '1., 2., 3., 4., 5., 6. výuky' => [1, 2, 3, 4, 5, 6]
-  if (week.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
-    const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
-    return {
-      weeks: [weekNum],
-      parity: getParityOfWeeks([weekNum], semesterStart),
-    };
-  }
-  // const parsedWeek = week.replace("výuky", "").
-  //use regex to get the week numbers
-  const parsedWeek = week.match(/\d+/g) ?? week;
-  // if is array of numbers, return the array
-  if (Array.isArray(parsedWeek)) {
-    const numberized = parsedWeek.map(Number);
-    return {
-      weeks: numberized,
-      parity: getParityOfWeeks(numberized, semesterStart),
-    };
-  }
-  return {
-    weeks: week,
-    parity: getWeekParityFromName(week, languageSet),
-  };
-}
-
 function getWeekDiff(date: Date, fromDate: Date) {
   return getWeekNumber(date) - getWeekNumber(fromDate);
 }
 
+/**
+ * Calculates the week number from the start of the semester.
+ * @param date The date to calculate the week number for.
+ * @param startDate The start date of the semester.
+ */
 export function getWeekFromSemesterStart(date: Date, startDate: Date) {
   return getWeekDiff(date, startDate) + 1;
 }
 
+/**
+ * Calculates the parity of the weeks based on the start of the semester.
+ * @param weeks An array of week numbers.
+ * @param semesterStartDate The start date of the semester.
+ * @returns The parity of the weeks. Null if the weeks are not even or odd.
+ * @example [1,3,5,7] > check if the week is odd or even > is odd > check against the start of the semester > return even
+ */
 export function getParityOfWeeks(weeks: number[], semesterStartDate: Date) {
-  // [1,3,5,7] > check if the week is odd or even > check against the start of the semester > return odd or even or weeks
   const odd = weeks.every((week) => week % 2 === 1);
   const even = weeks.every((week) => week % 2 === 0);
   if (odd === even) return null;

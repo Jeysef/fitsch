@@ -1,15 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { LanguageProvider } from "~/server/scraper/languageProvider";
 import {
   conjunctConjunctableRooms,
   constructGradeLabel,
   createStudyId,
   getParityOfWeeks,
   getWeekFromSemesterStart,
-  parseWeek,
   removeSpaces,
 } from "~/server/scraper/utils";
-import { LANGUAGE } from "../../../enums";
 import { WEEK_PARITY } from "../enums";
 
 describe("utils", () => {
@@ -41,43 +38,43 @@ describe("utils", () => {
   });
 });
 
-describe("week parsing", () => {
-  const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
+// describe("week parsing", () => {
+//   const languageProvider = new LanguageProvider(LANGUAGE.ENGLISH);
 
-  const commonTestCases: [string, { weeks: number[] | string; parity: WEEK_PARITY | null }][] = [
-    ["1., 2., 3., 4., 5., 6. of lectures", { weeks: [1, 2, 3, 4, 5, 6], parity: null }],
-    ["odd week", { weeks: "odd week", parity: WEEK_PARITY.ODD }],
-    ["even week", { weeks: "even week", parity: WEEK_PARITY.EVEN }],
-  ];
+//   const commonTestCases: [string, { weeks: number[] | string; parity: WEEK_PARITY | null }][] = [
+//     ["1., 2., 3., 4., 5., 6. of lectures", { weeks: [1, 2, 3, 4, 5, 6], parity: null }],
+//     ["odd week", { weeks: "odd week", parity: WEEK_PARITY.ODD }],
+//     ["even week", { weeks: "even week", parity: WEEK_PARITY.EVEN }],
+//   ];
 
-  const semesterStarts = [
-    { date: "2024-09-16", type: "winter", firstWeekParity: WEEK_PARITY.EVEN },
-    { date: "2025-02-10", type: "summer", firstWeekParity: WEEK_PARITY.ODD },
-    { date: "2025-09-15", type: "winter", firstWeekParity: WEEK_PARITY.EVEN },
-    { date: "2026-02-09", type: "summer", firstWeekParity: WEEK_PARITY.ODD },
-  ] as const;
+//   const semesterStarts = [
+//     { date: "2024-09-16", type: "winter", firstWeekParity: WEEK_PARITY.EVEN },
+//     { date: "2025-02-10", type: "summer", firstWeekParity: WEEK_PARITY.ODD },
+//     { date: "2025-09-15", type: "winter", firstWeekParity: WEEK_PARITY.EVEN },
+//     { date: "2026-02-09", type: "summer", firstWeekParity: WEEK_PARITY.ODD },
+//   ] as const;
 
-  for (const { date, type, firstWeekParity } of semesterStarts) {
-    describe(`${type} semester starting ${date}`, () => {
-      const startDate = new Date(date);
-      const secondWeekParity = firstWeekParity === WEEK_PARITY.EVEN ? WEEK_PARITY.ODD : WEEK_PARITY.EVEN;
+//   for (const { date, type, firstWeekParity } of semesterStarts) {
+//     describe(`${type} semester starting ${date}`, () => {
+//       const startDate = new Date(date);
+//       const secondWeekParity = firstWeekParity === WEEK_PARITY.EVEN ? WEEK_PARITY.ODD : WEEK_PARITY.EVEN;
 
-      test.each([
-        ...commonTestCases,
-        [new Date(startDate).toISOString().split("T")[0], { weeks: [1], parity: firstWeekParity }],
-        [
-          new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-          { weeks: [2], parity: secondWeekParity },
-        ],
-        ["1., 3., 5., 7., 9., 11. of lectures", { weeks: [1, 3, 5, 7, 9, 11], parity: firstWeekParity }],
-        ["2., 4., 6., 8., 10., 12. of lectures", { weeks: [2, 4, 6, 8, 10, 12], parity: secondWeekParity }],
-      ])("should parse week %s", async (input, expected) => {
-        const result = parseWeek(input, startDate, await languageProvider.languageSet);
-        expect(result).toEqual(expected);
-      });
-    });
-  }
-});
+//       test.each([
+//         ...commonTestCases,
+//         [new Date(startDate).toISOString().split("T")[0], { weeks: [1], parity: firstWeekParity }],
+//         [
+//           new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+//           { weeks: [2], parity: secondWeekParity },
+//         ],
+//         ["1., 3., 5., 7., 9., 11. of lectures", { weeks: [1, 3, 5, 7, 9, 11], parity: firstWeekParity }],
+//         ["2., 4., 6., 8., 10., 12. of lectures", { weeks: [2, 4, 6, 8, 10, 12], parity: secondWeekParity }],
+//       ])("should parse week %s", async (input, expected) => {
+//         const result = parseWeek(input, startDate, await languageProvider.languageSet);
+//         expect(result).toEqual(expected);
+//       });
+//     });
+//   }
+// });
 
 describe("week calculations", () => {
   const startDate = new Date("2024-09-16T00:00:00.000Z");

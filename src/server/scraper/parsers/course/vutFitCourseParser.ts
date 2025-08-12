@@ -1,11 +1,11 @@
 import type { CheerioAPI } from "cheerio";
-import type { SemesterTimeSchedule, StudyApiTypes } from "../../types";
 import { ObjectTyped } from "object-typed";
-import { LECTURE_TYPE, type DAY } from "../../enums";
-import { valueToEnumValue } from "~/lib/utils";
-import type { LanguageSetDictionary } from "../../languageProvider";
-import { parseWeek, removeSpaces } from "../../utils";
 import { Time, TimeSpan } from "~/components/scheduler/time";
+import { valueToEnumValue } from "~/lib/utils";
+import { LECTURE_TYPE, WEEK_PARITY, type DAY } from "../../enums";
+import type { LanguageSetDictionary } from "../../languageProvider";
+import type { SemesterTimeSchedule, StudyApiTypes } from "../../types";
+import { getParityOfWeeks, getWeekFromSemesterStart, removeSpaces } from "../../utils";
 
 interface CourseDetailParserOptions {
   courseUrl: string;
@@ -80,7 +80,7 @@ export class CourseDetailParser {
           ([_, value]) => value === day
         )?.[0] as DAY;
         // parseWeek may return null, but we expect an event not to
-        const weeks = parseWeek(weeksText, semesterTimeSchedule.start, this.langSet);
+        const weeks = this.parseWeek(weeksText, semesterTimeSchedule.start, this.langSet);
 
         return {
           type,
@@ -107,5 +107,37 @@ export class CourseDetailParser {
     };
 
     return { data, detail };
+  }
+
+  private getWeekParityFromName(week: string, languageSet: LanguageSetDictionary) {
+    if (week.includes(languageSet.course.detail.weeks.EVEN)) return WEEK_PARITY.EVEN;
+    if (week.includes(languageSet.course.detail.weeks.ODD)) return WEEK_PARITY.ODD;
+    return null;
+  }
+
+  private parseWeek(week: string, semesterStart: Date, languageSet: LanguageSetDictionary) {
+    // '1., 2., 3., 4., 5., 6. výuky' => [1, 2, 3, 4, 5, 6]
+    if (week.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+      const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
+      return {
+        weeks: [weekNum],
+        parity: getParityOfWeeks([weekNum], semesterStart),
+      };
+    }
+    // const parsedWeek = week.replace("výuky", "").
+    //use regex to get the week numbers
+    const parsedWeek = week.match(/\d+/g) ?? week;
+    // if is array of numbers, return the array
+    if (Array.isArray(parsedWeek)) {
+      const numberized = parsedWeek.map(Number);
+      return {
+        weeks: numberized,
+        parity: getParityOfWeeks(numberized, semesterStart),
+      };
+    }
+    return {
+      weeks: week,
+      parity: this.getWeekParityFromName(week, languageSet),
+    };
   }
 }
