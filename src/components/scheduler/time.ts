@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { ClassRegistry } from "~/components/scheduler/classRegistry";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 
 type NoClassTypeType<T> = T extends Time | TimeSpan
   ? T
@@ -97,5 +97,5 @@ export function hasOverlap(a: TimeSpan, b: TimeSpan): boolean {
   return !(a.end.minutes <= b.start.minutes || a.start.minutes >= b.end.minutes);
 }
 
-ClassRegistry.register(Time.__type, Time);
-ClassRegistry.register(TimeSpan.__type, TimeSpan);
+ClassRegistry.register(Time);
+ClassRegistry.register(TimeSpan);

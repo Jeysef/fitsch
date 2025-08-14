@@ -97,5 +97,5 @@ export function hasOverlap(a: TimeSpan, b: TimeSpan): boolean {
   return !(a.end.minutes <= b.start.minutes || a.start.minutes >= b.end.minutes);
 }
 
-ClassRegistry.register(Time.__type, Time);
-ClassRegistry.register(TimeSpan.__type, TimeSpan);
+ClassRegistry.register(Time);
+ClassRegistry.register(TimeSpan);
