@@ -87,7 +87,7 @@ const createDeterministicLectureId = (courseId: string, lecture: APICourseLectur
 
   // 3. Stringify the canonical object. Sorting the keys ensures a consistent
   //    string output regardless of how the object was constructed.
-  const lectureString = JSON.stringify(identifyingProperties, Object.keys(identifyingProperties).sort());
+  const lectureString = JSON.stringify(identifyingProperties);
 
   // 4. Hash the string to create a short, unique, and fixed-length ID.
   return createHash("sha256").update(lectureString).digest("hex");
