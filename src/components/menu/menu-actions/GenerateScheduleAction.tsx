@@ -2,7 +2,7 @@ import { createTimer } from "@solid-primitives/timer";
 import CircleAlert from "lucide-solid/icons/circle-alert";
 import { createSignal } from "solid-js";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
-import { SchedulerGenerator } from "~/components/scheduler/generator";
+import { SchedulerGenerator } from "~/components/scheduler/generator/generator";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";

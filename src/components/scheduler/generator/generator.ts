@@ -3,8 +3,9 @@ import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
-import { isCustomEvent, isCustomEventData } from "~/components/scheduler/event/Event";
-import type { Event, EventData, ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
+import { isCustomEventData } from "~/components/scheduler/event/Event";
+import type { Event, EventData, ScheduleEventData } from "~/components/scheduler/event/types";
+import { getPerturbation, isAllowedOverlap } from "~/components/scheduler/generator/utils";
 import { hasOverlap } from "~/components/scheduler/time";
 import type { Course } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
@@ -25,31 +26,6 @@ const GENERATOR_CONFIG = {
   YIELD_INTERVAL: 100, // Yield to the main thread every N events processed
 } as const;
 
-// --- Pure Helper Functions ---
-
-function hashCode(str: string): number {
-  let hash = 0;
-  for (const char of str) {
-    hash = (hash << 5) - hash + char.charCodeAt(0);
-    hash |= 0;
-  }
-  return hash;
-}
-
-function getPerturbation(event: ScheduleEvent, attempt: number): number {
-  if (attempt === 0) return 0;
-  const seed = hashCode(`${event.id}_${attempt}`);
-  const random = (Math.sin(seed) + 1) / 2;
-  return (random - 0.5) * 1.0; // Range [-0.5, 0.5]
-}
-
-function isAllowedOverlap(eventA: Event, eventB: Event): boolean {
-  if (isCustomEvent(eventA) || isCustomEvent(eventB)) return false;
-  const { parity: parityA } = eventA.weeks;
-  const { parity: parityB } = eventB.weeks;
-  return !!(parityA && parityB && parityA !== parityB);
-}
-
 /**
  * Encapsulates the state and logic for a single schedule generation attempt.
  * This class is temporary and created for each run.
@@ -69,7 +45,9 @@ class SchedulerEngine {
     return this.selectedEvents.has(eventId);
   }
 
-  /** Checks if a single event can be placed without considering its links. */
+  /**
+   * Checks if a single event can be placed without considering its links.
+   */
   canPlacePrimaryEvent(eventData: ScheduleEventData): boolean {
     const { event, courseDetail, metrics } = eventData;
     const completed = this.completedHours[courseDetail.id][event.type] || 0;
@@ -197,7 +175,7 @@ export function SchedulerGenerator() {
 
   /**
    * For a given event, finds all linked events and checks if the entire group can be placed in the schedule.
-   * This is a pure function; it does not modify the engine.
+   * This function does not modify the engine.
    */
   function findViableLinkedGroup(
     primaryEventData: ScheduleEventData,
@@ -241,7 +219,7 @@ export function SchedulerGenerator() {
       }
 
       const { eventData } = eventsToTry[i];
-      if (engine.isEventSelected(eventData.event.id)) continue;
+      if (engine.isEventSelected(eventData.event.id)) continue; // Skip linked selected events
       if (!engine.canPlacePrimaryEvent(eventData)) continue;
 
       const linkedGroup = findViableLinkedGroup(eventData, engine);
