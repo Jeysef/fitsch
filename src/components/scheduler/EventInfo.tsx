@@ -22,7 +22,7 @@ interface EventPopupProps {
 
 const EventPopup: ParentComponent<EventPopupProps> = (props) => {
   const { t } = useI18n();
-  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.eventData.event;
+  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks, id } = props.eventData.event;
   const courseDetail = props.eventData.courseDetail;
 
   return (
@@ -137,6 +137,9 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
               <Link class="h-4 w-4" />
               <span>{t("course.detail.popover.detail")}</span>
             </a>
+          </Show>
+          <Show when={import.meta.env.DEV}>
+            <pre class="text-xxs">{id}</pre>
           </Show>
         </div>
       </PopoverContent>
