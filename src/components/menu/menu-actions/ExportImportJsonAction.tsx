@@ -4,9 +4,9 @@ import { exportJSON, importJSON } from "~/components/menu/ImportExport";
 import { getFileName } from "~/components/menu/menu-actions/utils";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
-import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { useScheduler } from "~/providers/SchedulerProvider";
 
 function ExportImportJsonAction() {

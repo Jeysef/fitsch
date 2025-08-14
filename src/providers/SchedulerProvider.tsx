@@ -16,12 +16,12 @@ import {
 import { createMutable, modifyMutable, reconcile } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
-import { ClassRegistry } from "~/components/scheduler/classRegistry";
 import { SchedulerStore } from "~/components/scheduler/store";
 import { TimeSpan, type Time } from "~/components/scheduler/time";
 import type { ICreateColumns, IScheduleColumn, IScheduleRow } from "~/components/scheduler/types";
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types";
