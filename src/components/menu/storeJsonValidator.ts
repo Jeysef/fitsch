@@ -74,14 +74,14 @@ const coursesSchema = z.array(
         abbreviation: z.string(),
         name: z.string(),
         link: z.string().optional(),
-        url: z.string().optional(),
+        url: z.string(),
         id: z.string(),
         timeSpan: courseTimeSpan,
         timeSpanText: z.array(z.string()),
       })
       .transform((detail) => {
         if (!detail.url) {
-          detail.url = detail.link;
+          detail.url = detail.link ?? "";
         }
         return detail;
       }),
