@@ -1,15 +1,17 @@
 import type { NitroApp } from "nitropack/types";
-import { createStorage, fsDriver, memoryDriver } from "vinxi/storage";
+import fsLiteDriver from "unstorage/drivers/fs-lite";
 import netlifyBlobsDriver from "unstorage/drivers/netlify-blobs";
+import { createStorage } from "vinxi/storage";
 
-export default async function CachePlugin(nitroApp: NitroApp) {
+export default function CachePlugin(nitroApp: NitroApp) {
   globalThis.cachePlugin = {
     storage: createStorage({
       driver: import.meta.env.DEV
-        ? await fsDriver({ base: ".nitro" }) // File system driver for development
-        : process.env.NETLIFY === "true"
-          ? await netlifyBlobsDriver({ name: "fitsch-cache" }) // Netlify Blobs driver
-          : await memoryDriver(), // Memory driver for other environments
+        ? fsLiteDriver({ base: ".nitro" }) // File system driver for development
+        : // ? nullDriver()
+          process.env.NETLIFY === "true"
+          ? netlifyBlobsDriver({ name: "fitsch-cache" }) // Netlify Blobs driver
+          : undefined, // Memory driver for other environments
     }),
     captureError: nitroApp.captureError,
   };
