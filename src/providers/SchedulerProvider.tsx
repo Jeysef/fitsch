@@ -23,8 +23,7 @@ import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
-import type { MCourseLecture } from "~/server/scraper/lectureMutator";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 
@@ -67,7 +66,7 @@ export function SchedulerProvider(props: ParentProps) {
     `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}–${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
 
   // Filter function to exclude certain lecture types (e.g., exams, notes) from the main schedule display
-  const filter = (event: MCourseLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
+  const filter = (event: LectureMutator.MutatedLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
 
   // Define the rows for the scheduler grid, mapping days to row numbers
   const rows = { ...zipObject(days, range(1, days.length + 1)), length: days.length } as IScheduleRow;
@@ -174,10 +173,7 @@ export function SchedulerProvider(props: ParentProps) {
 
         // Revive class instances from the fetched JSON data.
         // Necessary because server actions return plain JSON.
-        const revivedData = JSON.parse(
-          JSON.stringify(result),
-          ClassRegistry.reviver
-        ) as DataProviderTypes.getStudyCoursesDetailsReturn;
+        const revivedData = JSON.parse(JSON.stringify(result), ClassRegistry.reviver) as LectureMutator.Return;
 
         // Update the store with the new course data within a batch to optimize reactivity.
         batch(() => {

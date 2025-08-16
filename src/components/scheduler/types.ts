@@ -2,7 +2,7 @@ import type { DayEvent, ScheduleEvent } from "~/components/scheduler/event/types
 import type { DayDataObject } from "~/components/scheduler/store";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import type { CourseDetail } from "~/server/scraper/types";
+import type { CourseDetail } from "~/server/scraper/types/types";
 
 export interface DayData {
   dayRow: number;

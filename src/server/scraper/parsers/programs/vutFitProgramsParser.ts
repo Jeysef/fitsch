@@ -1,12 +1,13 @@
 import type { CheerioAPI } from "cheerio";
-import type { StudyApiTypes, StudyPrograms, StudySpecialization } from "../../types";
 import { ObjectTyped } from "object-typed";
+import type { StudyApiTypes } from "~/server/scraper/types/api.types";
+import type { OverviewPrograms } from "~/server/scraper/types/overview.types";
+import type { ProgramSpecializationOverview } from "~/server/scraper/types/program.types";
 import { DEGREE } from "../../enums";
-import { createStudyId } from "../../utils";
 
 export class ProgramsParser {
   public parse($: CheerioAPI): StudyApiTypes.getStudyProgramsReturn {
-    const programs: StudyPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, {}]));
+    const programs: OverviewPrograms = ObjectTyped.fromEntries(Object.values(DEGREE).map((id) => [id, []]));
     const elementIdDegrees = {
       bc: DEGREE.BACHELOR,
       mgr: DEGREE.MASTER,
@@ -18,7 +19,7 @@ export class ProgramsParser {
       $(element)
         .find(".c-programmes__list li.c-programmes__item")
         .each((_, element) => {
-          const specialization: StudySpecialization[] = [];
+          const specialization: ProgramSpecializationOverview[] = [];
           $(element)
             .find(".b-programme .c-branches ul.c-branches__list li.c-branches__item")
             .each((_ind, element) => {
@@ -26,31 +27,31 @@ export class ProgramsParser {
               const abbreviation = titleEl.children(".tag.tag--fit").first().text().trim();
               const name = titleEl.children("a").text().trim();
               const url = titleEl.children("a").attr("href")!;
-              const id = createStudyId(url);
+              // const id = createStudyId(url);
 
               if (abbreviation && name && url) {
-                specialization.push({ abbreviation, name, url, id });
+                specialization.push({ abbreviation, name, url });
               }
             });
 
           const nameElement = $(element).find(".b-programme a.b-programme__link");
           const name = nameElement.text().trim();
           const url = nameElement.attr("href")!;
-          const id = createStudyId(url);
+          // const id = createStudyId(url);
           const isEnglish = $(element).find("span").is('[class="tag tag--xs"]');
           const abbreviation = $(element).find(".b-programme__link").next(".tag").first().text().trim();
-          const attendanceType = $(element).find(".b-programme .b-branch__meta .b-branch__meta-item").last().text().trim();
+          // const attendanceType = $(element).find(".b-programme .b-branch__meta .b-branch__meta-item").last().text().trim();
 
           if (name && url) {
-            programs[studyDegree][id] = {
+            programs[studyDegree].push({
               name,
               url,
               isEnglish,
               specializations: specialization,
-              attendanceType,
+              // attendanceType,
               abbreviation,
-              id,
-            };
+              // id,
+            });
           }
         });
     });

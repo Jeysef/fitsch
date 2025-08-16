@@ -127,9 +127,9 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
           </Show>
 
           {/* Course Link */}
-          <Show when={courseDetail.link}>
+          <Show when={courseDetail.url}>
             <a
-              href={courseDetail.link}
+              href={courseDetail.url}
               target="_blank"
               rel="noopener noreferrer"
               class="flex items-center space-x-2 text-sm mt-2"

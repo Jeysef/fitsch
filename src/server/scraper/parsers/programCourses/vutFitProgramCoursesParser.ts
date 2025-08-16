@@ -1,21 +1,26 @@
 import type { CheerioAPI } from "cheerio";
-import type { GradeKey, ProgramStudyCourses } from "../../types";
+import type { ProgramCoursesParserOptions } from "~/server/scraper/parsers/programCourses/ProgramCoursesParser.types";
+import type { CourseOverview } from "~/server/scraper/types/course.types";
+import type { GradeKey } from "~/server/scraper/types/grade.types";
+import type { Program } from "~/server/scraper/types/program.types";
 import { OBLIGATION, SEMESTER } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
-import { createStudyId } from "../../utils";
-
-interface ProgramCoursesParserOptions {
-  programUrl: string;
-}
 
 export class ProgramCoursesParser {
   constructor(private readonly langSet: LanguageSetDictionary) {}
-  public parse($: CheerioAPI, options: ProgramCoursesParserOptions): ProgramStudyCourses {
+  public parse($: CheerioAPI, options: ProgramCoursesParserOptions): Program {
     const { programUrl } = options;
     const abbreviation = $("main .b-detail .b-detail__summary strong").first().text().trim();
     const name = $("h1.b-detail__title").text().trim();
 
-    const courses: ProgramStudyCourses = {};
+    const courses: Program = {
+      detail: {
+        name,
+        abbreviation,
+        url: programUrl,
+      },
+      data: {},
+    };
     let prevYear: GradeKey = "0"; // this key does not exist
     $("main")
       .has("#planh")
@@ -27,19 +32,15 @@ export class ProgramCoursesParser {
 
         const semester = prevYear === year ? SEMESTER.SUMMER : SEMESTER.WINTER;
         prevYear = year;
-        if (!courses[year]) {
-          courses[year] = {
+        if (!courses.data[year]) {
+          courses.data[year] = {
             [SEMESTER.WINTER]: [],
             [SEMESTER.SUMMER]: [],
-            name,
-            abbreviation,
-            id: createStudyId(programUrl),
-            url: programUrl,
           };
         }
 
         const rows = $(element).find("tbody tr");
-        courses[year][semester] = rows
+        courses.data[year][semester] = rows
           .map((_, element) => {
             const rowBgColor = $(element).css("background-color");
             const abbreviation = $(element).children("th").text().trim();
@@ -71,8 +72,8 @@ export class ProgramCoursesParser {
             }
 
             return {
-              abbreviation,
               name,
+              abbreviation,
               url,
               // credits,
               obligation,
@@ -80,7 +81,7 @@ export class ProgramCoursesParser {
               // faculty,
               // note,
               id,
-            };
+            } satisfies CourseOverview;
           })
           .get();
       });

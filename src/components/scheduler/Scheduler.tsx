@@ -26,7 +26,7 @@ import type { StrictExtract } from "ts-essentials";
 import { compact, difference, flatMap, flow, values } from "lodash-es";
 import { isCustomEventData } from "./event/Event";
 import { css } from "@emotion/css";
-import type { LinkedLectureData } from "~/server/scraper/lectureMutator";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { hoverColors } from "~/config/colors";
 
 // Constants
@@ -134,7 +134,7 @@ export function SchedulerGrid(props: FlowProps) {
   );
 }
 
-const createLinkedCss = (eventId: string, linked: LinkedLectureData[], color: string): string | null => {
+const createLinkedCss = (eventId: string, linked: LectureMutator.LinkedLectureData[], color: string): string | null => {
   if (!linked.length) return null;
   const wrapperCss = `&:has([data-id="${eventId}"]:hover)`;
   const linkedCss = linked

@@ -38,21 +38,23 @@ import {
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
-import { type NavigationSchema, type NavigationSchemaKey, navigationSchema } from "~/components/menu/schema";
+import { type MenuSchema, type MenuSchemaKey, menuSchema } from "~/components/menu/schema";
 import type { SchedulerStore } from "~/components/scheduler/store";
 import { Button } from "~/components/ui/button";
 import { type tType, useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
-import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig, StudyOverview } from "~/server/scraper/types";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
+import type { Overview } from "~/server/scraper/types/overview.types";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
+import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/server-fns/getCourses/getStudyCoursesDetails.types";
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
-import { LoadingState } from "./MenuSkeletons";
 import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
 import { Settings } from "./MenuSettings";
+import { LoadingState } from "./MenuSkeletons";
 
-type FormGroupValues = { [K in NavigationSchemaKey]: NavigationSchema[K] };
+type FormGroupValues = { [K in MenuSchemaKey]: MenuSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
 type FormGroup = IFormGroup<FormGroupControls, FormGroupValues>;
 
@@ -64,7 +66,7 @@ export const getGroup = () => {
   return group;
 };
 
-const DataContext = createContext<Accessor<StudyOverview | undefined>>();
+const DataContext = createContext<Accessor<Overview | undefined>>();
 export const getData = () => {
   const data = useContext(DataContext);
   if (!data) throw new Error("DataContext not found");
@@ -87,7 +89,7 @@ function useLoadCourses(
   store: SchedulerStore
 ) {
   const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
-    if (!data.courses.length && !data.staleCoursesId?.length) {
+    if (!data.courseIds.length) {
       store.clearCourses();
       return Promise.resolve();
     }
@@ -154,7 +156,7 @@ function ContentDataValidator(props: ContentDataValidatorProps) {
         </Show>
       }
     >
-      <Match when={(data.state === "ready" || data.state === "refreshing") && cData()?.values}>
+      <Match when={(data.state === "ready" || data.state === "refreshing") && cData()?.current}>
         <Children
           resource={
             resource as InitializedResourceReturn<
@@ -207,12 +209,13 @@ function Content({
     return {
       year: c.year.value?.value,
       language: locale(),
-      degree: c.degree.value,
-      program: c.program.value,
+      degree: c.degree?.value,
+      program: c.program?.value,
+      faculty: c.faculty.value,
     } satisfies DataProviderTypes.getStudyOverviewConfig;
   };
 
-  const getDataToSubmit = (makeStale = true): GetStudyCoursesDetailsFunctionConfig => {
+  const getDataToSubmit = (makeStale = false): GetStudyCoursesDetailsFunctionConfig => {
     const controls = group.controls;
     const selectedCourseIds = flatMap(OBLIGATION, (type) => controls[type].value);
 
@@ -232,8 +235,9 @@ function Content({
       language: locale(),
       year: controls.year.value.value,
       semester: controls.semester.value,
-      courses: newCourseIds,
-      staleCoursesId: staleCourseIds,
+      courseIds: newCourseIds,
+      faculty: controls.faculty.value,
+      // staleCoursesId: staleCourseIds,
     };
   };
 
@@ -241,7 +245,7 @@ function Content({
   createEffect(
     on(locale, (language, _, firstEffect) => {
       if (firstEffect) return false;
-      const dataLanguage = cData()?.values.language;
+      const dataLanguage = cData()?.current.language;
       if (!dataLanguage || dataLanguage === language) return false;
       const newData = startTransition(() => refetch(getDataToRefetch()));
       const toastId = createUniqueId();
@@ -264,22 +268,22 @@ function Content({
   );
 
   // ----- Form Setup -----
-  const validator: <K extends NavigationSchemaKey>(
+  const validator: <K extends MenuSchemaKey>(
     name: K,
-    value: NavigationSchema[K]
-  ) => ReturnType<ValidatorFn<NavigationSchema[K]>> = (name, value) => {
-    const returnType = navigationSchema
-      .pick({ [name]: true } as { [K in NavigationSchemaKey]: true })
-      .safeParse({ [name]: value });
+    value: FormGroupValues[K]
+  ) => ReturnType<ValidatorFn<FormGroupValues[K]>> = (name, value) => {
+    const returnType = menuSchema.pick({ [name]: true } as { [K in MenuSchemaKey]: true }).safeParse({ [name]: value });
     return returnType.error ? { error: returnType.error } : null;
   };
 
   const submittedObligation = mapValues(submittedCourses(), (courses) => courses.length > 0 && courses);
 
   const values: FormGroupValues = {
-    year: data().values.year,
-    degree: data().values.degree,
-    program: data().values.program?.id ?? persistentGroupData()?.program,
+    year: data().current.year,
+    degree: data().current.degree,
+    language: data().current.language,
+    faculty: data().current.faculty,
+    program: data().current.program ?? persistentGroupData()?.program,
     grade: persistentGroupData()?.grade ?? defaultFormValues.grade,
     semester: persistentGroupData()?.semester ?? defaultFormValues.semester,
     ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultFormValues[type]),
@@ -305,9 +309,9 @@ function Content({
     on(cData, (resolved, _, firstEffect) => {
       if (firstEffect) return false;
       if (isServer) return true;
-      if (data.state === "ready" && !isErrorReturn(resolved) && resolved?.values) {
+      if (data.state === "ready" && !isErrorReturn(resolved) && resolved?.current) {
         const values = {
-          program: resolved.values.program?.id ?? group.controls.program.value,
+          program: resolved.current.program ?? group.controls.program.value,
         };
         // Because program can be changed from the response of resource
         if (values.program !== group.controls.program.value) {
@@ -340,7 +344,7 @@ function Content({
     on(getFetchableData, (data, __, firstEffect) => {
       if (firstEffect) return false;
       if (isServer) return true;
-      if (data.year === cData()?.values.year.value && data.program === cData()?.values.program?.id) return false;
+      if (data.year === cData()?.current.year.value && data.program === cData()?.current.program) return false;
       void refetch(getDataToRefetch());
       return false;
     }),
@@ -373,6 +377,7 @@ function Content({
       (degree, prevDegree) => {
         // Skip if degree hasn't changed
         if (degree && degree === prevDegree) return false;
+        if (!degree) return;
 
         // Get available programs for this degree from the data
         const dataProgram = cData()?.data.programs[degree];
@@ -385,11 +390,11 @@ function Content({
         if (dataProgram[0].specializations && dataProgram[0].specializations.length > 0) return;
 
         // At this point, we know there's exactly one program with zero specializations
-        const programId = dataProgram[0].id;
+        const programUrl = dataProgram[0].url;
 
         // If the current program selection is different, update it
-        if (programId !== group.controls.program.value) {
-          group.controls.program.setValue(programId);
+        if (programUrl !== group.controls.program.value) {
+          group.controls.program.setValue(programUrl);
         }
       }
     )

@@ -9,12 +9,12 @@ import {
   type Setter,
   useContext,
 } from "solid-js";
-import type { NavigationSchema } from "~/components/menu/schema";
+import type { MenuSchema } from "~/components/menu/schema";
 import { useI18n } from "~/i18n";
 import { OBLIGATION } from "~/server/scraper/enums";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 
-type persistantGroupData = Partial<NavigationSchema>;
+type persistantGroupData = Partial<MenuSchema>;
 type SubmittedCourses = Record<OBLIGATION, string[]>;
 
 interface MenuDataContextType {
@@ -56,9 +56,10 @@ export function MenuLocalDataProvider(props: ParentProps) {
       ({
         language: locale(),
         year: persistentGroupData()?.year?.value,
+        faculty: persistentGroupData()?.faculty,
         degree: persistentGroupData()?.degree,
         program: persistentGroupData()?.program,
-      }) satisfies DataProviderTypes.getStudyOverviewConfig
+      }) as DataProviderTypes.getStudyOverviewConfig
   );
 
   const value: MenuDataContextType = {

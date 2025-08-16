@@ -1,94 +1,82 @@
-import { chain, mapValues } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { LANGUAGE } from "~/enums";
-import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
+import { FACULTY, LANGUAGE } from "~/enums";
+import { DEGREE, SEMESTER } from "~/server/scraper/enums";
+import type { GradeOverview } from "~/server/scraper/types/grade.types";
 import type {
-  DataProviderTypes,
-  StudyOverview,
-  StudyOverviewCourse,
-  StudyOverviewGrade,
-  StudyProgram,
-  StudyPrograms,
-} from "~/server/scraper/types";
+  Overview,
+  OverviewCurrent,
+  OverviewData,
+  OverviewPayload,
+  OverviewPrograms,
+} from "~/server/scraper/types/overview.types";
+import type { ProgramOverview } from "~/server/scraper/types/program.types";
 import { constructGradeLabel } from "~/server/scraper/utils";
 import type { IStudyApi } from "../api/interface";
 
 export class OverviewDataProvider {
   constructor(private readonly studyApi: IStudyApi) {}
 
-  public async getStudyOverview(
-    config: DataProviderTypes.getStudyOverviewConfig,
-    language: LANGUAGE
-  ): Promise<DataProviderTypes.getStudyOverviewReturn> {
+  public async getStudyOverview(config: OverviewPayload, language: LANGUAGE): Promise<Overview> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config);
+    // TODO: multiple languages
     const isEnglish = language === LANGUAGE.ENGLISH;
-    const values: StudyOverview["values"] = {
+    const filterLanguage = (programs: ProgramOverview[]) => {
+      return programs.filter((studyProgram) => studyProgram.isEnglish === isEnglish);
+    };
+    const current: OverviewCurrent = {
       language: language,
       year: currentYear,
       degree: config?.degree ?? DEGREE.BACHELOR,
+      faculty: FACULTY.FIT,
     };
 
-    let degreePrograms = studyPrograms[values.degree];
-    // filter language
-    const filterLanguage = (program: StudyPrograms[DEGREE]) =>
-      ObjectTyped.fromEntries(
-        Object.entries(program)
-          .filter(([, studyProgram]) => studyProgram.isEnglish === isEnglish)
-          .map(([id, program]) => [id, program] as const)
-      );
-
-    degreePrograms = filterLanguage(degreePrograms);
-    const programAndSpecializations = Object.values(degreePrograms).flatMap((program) => [
-      program,
-      ...program.specializations,
-    ]);
-    if (config?.program) {
-      values.program = programAndSpecializations.find(
-        (programOrSpecialization) => programOrSpecialization.id === config.program
-      );
-    }
-    if (!values.program && programAndSpecializations.length === 1) {
-      values.program = programAndSpecializations[0];
-    }
     // all programs foe each degree
-    const programs: Record<DEGREE, StudyProgram[]> = ObjectTyped.fromEntries(
+    const programs: OverviewPrograms = ObjectTyped.fromEntries(
       ObjectTyped.entries(studyPrograms).map(
         ([degree, programs]) => [degree, Object.values(filterLanguage(programs))] as const
       )
     );
 
-    const programData = values.program
-      ? await this.studyApi.getStudyProgramCourses({ programUrl: values.program.url })
-      : {};
+    const data: OverviewData = {
+      years,
+      semesters: Object.values(SEMESTER),
+      degrees: Object.values(DEGREE),
+      programs,
+      grades: null,
+      courses: null,
+    };
 
-    const grades = Object.entries(programData).map(
-      ([grade, data]) => ({ key: grade, label: constructGradeLabel(grade, data.abbreviation) }) as StudyOverviewGrade
-    );
-    const degrees = Object.values(DEGREE);
-    const semesters = Object.values(SEMESTER);
+    const degreePrograms = studyPrograms[current.degree!];
+    const filteredDegreePrograms = filterLanguage(degreePrograms);
+    const programAndSpecializations = filteredDegreePrograms.flatMap((program) => [program, ...program.specializations]);
+    if (config?.program) {
+      current.program = programAndSpecializations.find(
+        (programOrSpecialization) => programOrSpecialization.url === config.program
+      )?.url;
+    }
+    if (!current.program && programAndSpecializations.length === 1) {
+      current.program = programAndSpecializations[0].url;
+    }
 
-    const courses: DataProviderTypes.getStudyOverviewReturn["data"]["courses"] = mapValues(programData, (gradeData) =>
-      ObjectTyped.fromEntries(
-        semesters.map((semester) => [
-          semester,
-          chain(gradeData[semester])
-            .groupBy("obligation")
-            .defaults(mapValues(OBLIGATION, () => []))
-            .value() as Record<OBLIGATION, StudyOverviewCourse[]>,
-        ])
-      )
+    if (!current.program) {
+      return {
+        current,
+        data,
+      };
+    }
+
+    const programData = await this.studyApi.getStudyProgramCourses({ programUrl: current.program });
+
+    data.grades = ObjectTyped.keys(programData.data).map(
+      (grade) =>
+        ({ key: grade, label: constructGradeLabel(grade, programData.detail.abbreviation) }) satisfies GradeOverview
     );
+
+    data.courses = programData.data;
 
     return {
-      values,
-      data: {
-        years,
-        semesters,
-        degrees,
-        grades,
-        programs,
-        courses,
-      },
-    } satisfies StudyOverview;
+      current,
+      data,
+    };
   }
 }

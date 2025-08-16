@@ -47,7 +47,7 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
       <CardHeader class="bg-muted space-y-0 relative">
         <div class={`absolute top-0 left-0 bottom-0 w-1 ${getColor(isAllCourseSelected)} `} />
         <CardTitleLink
-          href={props.course.detail.link}
+          href={props.course.detail.url}
           class={cn(
             buttonVariants({ variant: "link" }),
             typographyVariants({ variant: "h4" }),

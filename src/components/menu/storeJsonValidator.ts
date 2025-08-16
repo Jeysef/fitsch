@@ -69,14 +69,22 @@ const scheduleEventSchema = eventBaseSchema.extend({
 
 const coursesSchema = z.array(
   z.object({
-    detail: z.object({
-      abbreviation: z.string(),
-      name: z.string(),
-      link: z.string(),
-      id: z.string(),
-      timeSpan: courseTimeSpan,
-      timeSpanText: z.array(z.string()),
-    }),
+    detail: z
+      .object({
+        abbreviation: z.string(),
+        name: z.string(),
+        link: z.string().optional(),
+        url: z.string().optional(),
+        id: z.string(),
+        timeSpan: courseTimeSpan,
+        timeSpanText: z.array(z.string()),
+      })
+      .transform((detail) => {
+        if (!detail.url) {
+          detail.url = detail.link;
+        }
+        return detail;
+      }),
     data: z.array(scheduleEventSchema),
     metrics: RecordOf(LECTURE_TYPE, z.object({ weeks: z.number(), weeklyLectures: z.number() }).optional()).transform(
       (val): Record<LECTURE_TYPE, LectureMetrics> => val as Record<LECTURE_TYPE, LectureMetrics>

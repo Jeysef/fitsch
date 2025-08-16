@@ -1,5 +1,5 @@
 import type { ResourceFetcher } from "solid-js";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import getOverview from "~/server/server-fns/getOverview";
 import type { FunctionReturn } from "~/server/server-fns/utils/errorHandeler";
 
@@ -7,7 +7,7 @@ export const getStudyOverviewResource: ResourceFetcher<
   DataProviderTypes.getStudyOverviewConfig,
   FunctionReturn<DataProviderTypes.getStudyOverviewReturn>,
   DataProviderTypes.getStudyOverviewConfig
-> = async (source, { value, refetching }) => {
+> = async (source, { refetching }) => {
   "use server";
   // Fetch the data and return a value.
   //`source` tells you the current value of the source signal;

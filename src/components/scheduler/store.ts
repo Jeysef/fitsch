@@ -14,12 +14,8 @@ import type {
 } from "~/components/scheduler/types";
 import { percentage } from "~/lib/utils";
 import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
-import type {
-  LinkedLectureData,
-  MCourseLecture,
-  MgetStudyCourseDetailsReturnNotStale,
-} from "~/server/scraper/lectureMutator";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 
 const defaultSettings: ISchedulerSettings = {
   blockDimensions: {
@@ -40,7 +36,7 @@ export class SchedulerStore implements StoreJson {
   public customEvents: CustomEvent[];
   constructor(
     settings: ISchedulerSettings,
-    private readonly eventFilter?: (event: MCourseLecture) => boolean
+    private readonly eventFilter?: (event: LectureMutator.MutatedLecture) => boolean
   ) {
     this.settings = { ...SchedulerStore.defaultSettings, ...settings };
     this.courses = [];
@@ -82,11 +78,11 @@ export class SchedulerStore implements StoreJson {
     this.customEvents.splice(eventIndex, 1);
   }
 
-  public getEventData(data: LinkedLectureData): EventData | undefined {
+  public getEventData(data: LectureMutator.LinkedLectureData): EventData | undefined {
     return this.data[data.day].events.find((event) => event.eventData.event.id === data.id)?.eventData;
   }
 
-  public getEvent(data: LinkedLectureData): ScheduleEvent | CustomEvent | undefined {
+  public getEvent(data: LectureMutator.LinkedLectureData): ScheduleEvent | CustomEvent | undefined {
     return this.getEventData(data)?.event;
   }
 
@@ -100,15 +96,15 @@ export class SchedulerStore implements StoreJson {
       return;
     }
     const coursesData = courses.reduce((acc, newCourse) => {
-      if (newCourse.isStale) {
-        const existingCourse = this.findExistingCourse(newCourse.detail.id);
-        if (existingCourse) acc.push(existingCourse);
-        return acc;
-      }
+      // if (newCourse.isStale) {
+      //   const existingCourse = this.findExistingCourse(newCourse.detail.id);
+      //   if (existingCourse) acc.push(existingCourse);
+      //   return acc;
+      // }
 
       const existingCourse = this.findExistingCourse(newCourse.detail.id);
       if (existingCourse) {
-        if (newCourse.detail.link && existingCourse.detail.link !== newCourse.detail.link) {
+        if (newCourse.detail.url && existingCourse.detail.url !== newCourse.detail.url) {
           existingCourse.detail = newCourse.detail;
         }
         acc.push(existingCourse);
@@ -189,8 +185,8 @@ export function getEventColumn(event: TimeSpan, columns: IScheduleColumn[]) {
 }
 
 function createNewCourse(
-  courseData: MgetStudyCourseDetailsReturnNotStale,
-  filter?: (event: MCourseLecture) => boolean
+  courseData: LectureMutator.MutatedCourse,
+  filter?: (event: LectureMutator.MutatedLecture) => boolean
 ): Course {
   const { data, detail: courseDetail } = courseData;
   const metrics = {} as Record<LECTURE_TYPE, LectureMetrics>;

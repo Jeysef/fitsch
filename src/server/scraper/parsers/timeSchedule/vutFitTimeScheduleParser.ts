@@ -1,10 +1,8 @@
-// file: ~/server/scraper/parsers/timeScheduleParser.ts
-
-import { ObjectTyped } from "object-typed";
 import type { CheerioAPI } from "cheerio";
+import { ObjectTyped } from "object-typed";
+import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { SEMESTER } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
-import type { StudyApiTypes } from "../../types";
 
 export class TimeScheduleParser {
   // It needs the language set to find the right elements

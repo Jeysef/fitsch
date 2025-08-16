@@ -1,0 +1,56 @@
+import type { TimeSpan } from "~/lib/time/time";
+import type { DAY, LECTURE_TYPE, OBLIGATION, WEEK_PARITY } from "~/server/scraper/enums";
+import type { url } from "~/server/scraper/types/types";
+
+interface CourseBase {
+  name: string;
+  abbreviation: string;
+  url: url;
+  id: string;
+}
+
+export interface CourseOverview extends CourseBase {
+  // credits: number;
+  obligation: OBLIGATION;
+  // completion: string;
+  // faculty: string;
+  // note: boolean;
+}
+
+export interface Course {
+  detail: CourseDetail;
+  data: Lecture[];
+}
+
+export interface CourseDetail extends CourseBase {
+  timeSpan: CourseTimeSpan;
+  timeSpanText: string[];
+}
+
+type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>;
+
+export interface Lecture {
+  day: DAY;
+  type: LECTURE_TYPE;
+  weeks: LectureWeeks;
+  room: string[];
+  timeSpan: TimeSpan;
+  capacity: string;
+  lectureGroup: string[];
+  groups: string;
+  info: string;
+  note: string | null;
+}
+
+type LectureWeeks = (
+  | {
+      weeks: number[];
+      parity: WEEK_PARITY | null;
+    }
+  | {
+      weeks: string;
+      parity: WEEK_PARITY | null;
+    }
+) & {
+  calculated?: boolean;
+};

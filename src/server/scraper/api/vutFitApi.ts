@@ -1,13 +1,13 @@
-import { defineCachedFunction } from "~/server/utils/cache";
-import type { HttpFetcher } from "../httpFetcher";
-import type { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
-import type { CourseDetailParser } from "../parsers/course/vutFitCourseParser";
-import type { IStudyApi } from "./interface";
 import type { LANGUAGE } from "~/enums";
+import type { StudyApiTypes } from "~/server/scraper/types/api.types";
+import { defineCachedFunction } from "~/server/utils/cache";
 import { DEGREE } from "../enums";
-import type { ProgramStudyCourses, StudyApiTypes } from "../types";
-import type { TimeScheduleParser } from "../parsers/timeSchedule/vutFitTimeScheduleParser";
+import type { HttpFetcher } from "../httpFetcher";
+import type { CourseDetailParser } from "../parsers/course/vutFitCourseParser";
 import type { ProgramCoursesParser } from "../parsers/programCourses/vutFitProgramCoursesParser";
+import type { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
+import type { TimeScheduleParser } from "../parsers/timeSchedule/vutFitTimeScheduleParser";
+import type { IStudyApi } from "./interface";
 
 const cacheMaxAge = 60 * 60 * 24 * 30;
 
@@ -26,8 +26,11 @@ export class VutFitApi implements IStudyApi {
     this.urlLanguage = `.${this.language}`;
   }
 
-  public getTimeSchedule = defineCachedFunction(
-    async (config: StudyApiTypes.getStudyTimeScheduleConfig): Promise<StudyApiTypes.getStudyTimeScheduleReturn> => {
+  public getTimeSchedule = defineCachedFunction<
+    StudyApiTypes.getStudyTimeScheduleReturn,
+    [StudyApiTypes.getStudyTimeScheduleConfig]
+  >(
+    async (config) => {
       const { year } = config;
       const calendarUrl = `${this.baseUrl}calendar/${year ? `${year}/` : ""}${this.urlLanguage}`;
       const $ = await this.httpFetcher.getDocument(calendarUrl);
@@ -39,8 +42,11 @@ export class VutFitApi implements IStudyApi {
   // --- PUBLIC METHODS ---
   // Note how simple the methods are now. Caching is applied at this level.
 
-  public getStudyPrograms = defineCachedFunction(
-    async (config: StudyApiTypes.getStudyProgramsConfig) => {
+  public getStudyPrograms = defineCachedFunction<
+    StudyApiTypes.getStudyProgramsReturn,
+    [StudyApiTypes.getStudyProgramsConfig]
+  >(
+    async (config) => {
       const programsUrl = this.buildProgramsUrl(config);
       const $ = await this.httpFetcher.getDocument(programsUrl);
       return this.programsParser.parse($);
@@ -48,8 +54,11 @@ export class VutFitApi implements IStudyApi {
     { name: "getStudyPrograms_vutFit", maxAge: cacheMaxAge }
   );
 
-  public getStudyCourseDetails = defineCachedFunction(
-    async (config: StudyApiTypes.getStudyCourseDetailsConfig) => {
+  public getStudyCourseDetails = defineCachedFunction<
+    StudyApiTypes.getStudyCourseDetailsReturn,
+    [StudyApiTypes.getStudyCourseDetailsConfig]
+  >(
+    async (config) => {
       const courseUrl = `${this.baseUrl}course/${config.courseId}/${this.urlLanguage}`;
       const $ = await this.httpFetcher.getDocument(courseUrl);
       return this.courseDetailParser.parse($, { ...config, courseUrl });
@@ -59,7 +68,7 @@ export class VutFitApi implements IStudyApi {
 
   public getStudyProgramCourses = async (
     config: StudyApiTypes.getStudyProgramCoursesConfig
-  ): Promise<ProgramStudyCourses> => {
+  ): Promise<StudyApiTypes.getStudyProgramCoursesReturn> => {
     const { programUrl } = config;
     const $ = await this.httpFetcher.getDocument(programUrl);
     return this.programCoursesParser.parse($, config);
@@ -83,11 +92,11 @@ export class VutFitApi implements IStudyApi {
   public async getStudyCoursesDetails(
     config: StudyApiTypes.getStudyCoursesDetailsConfig
   ): Promise<StudyApiTypes.getStudyCoursesDetailsReturn> {
-    const { courses, semester, year } = config;
+    const { courseIds, semester, year } = config;
     const timeSchedule = await this.getTimeSchedule({ year: year });
     const semesterTimeSchedule = timeSchedule[semester];
     const data = await Promise.all(
-      courses.map((courseId) => this.getStudyCourseDetails({ courseId, semesterTimeSchedule }))
+      courseIds.map((courseId) => this.getStudyCourseDetails({ courseId, semesterTimeSchedule }))
     );
     return { data, semesterTimeSchedule };
   }

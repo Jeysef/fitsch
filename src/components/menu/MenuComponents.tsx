@@ -1,11 +1,11 @@
 import { Tooltip } from "@kobalte/core/tooltip";
-import { flatMap, reduce } from "lodash-es";
+import ChevronRight from "lucide-solid/icons/chevron-right";
 import Link from "lucide-solid/icons/link";
 import { For, Show, Suspense, createMemo, type JSXElement } from "solid-js";
 import type { StrictExtract } from "ts-essentials";
 import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
-import type { NavigationSchemaKey } from "~/components/menu/schema";
+import type { MenuSchemaKey } from "~/components/menu/schema";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
@@ -22,10 +22,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
 import { OBLIGATION, SEMESTER } from "~/server/scraper/enums";
-import type { StudyOverviewCourse, StudyOverviewGrade, StudyOverviewYear, StudyProgramBase } from "~/server/scraper/types";
+import type { CourseOverview } from "~/server/scraper/types/course.types";
+import type { GradeOverview } from "~/server/scraper/types/grade.types";
+import type { ProgramOverviewBase } from "~/server/scraper/types/program.types";
+import type { OverviewYear } from "~/server/scraper/types/year.types";
 import { asMerge } from "~/utils/asMerge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-import ChevronRight from "lucide-solid/icons/chevron-right";
 
 const SelectedCountIndicator = (count: number) => {
   return (
@@ -58,9 +60,7 @@ export function YearSelect() {
     >
       <Select.Label as={SectionHeading}>{t("menu.year.title")}</Select.Label>
       <SelectTrigger>
-        <SelectValue<StudyOverviewYear, typeof ItemText> as={ItemText}>
-          {(state) => state.selectedOption()?.label}
-        </SelectValue>
+        <SelectValue<OverviewYear, typeof ItemText> as={ItemText}>{(state) => state.selectedOption()?.label}</SelectValue>
       </SelectTrigger>
       <SelectContent class="max-h-56 overflow-y-auto" />
     </Select>
@@ -103,7 +103,7 @@ export function ProgramSelect() {
   const data = getData();
   const { t } = useI18n();
 
-  const ProgramRadioLabel = (props: { program: StudyProgramBase }) => {
+  const ProgramRadioLabel = (props: { program: ProgramOverviewBase }) => {
     const program = props.program;
     return (
       <Tooltip placement="right" flip="top" gutter={12}>
@@ -120,8 +120,8 @@ export function ProgramSelect() {
     );
   };
 
-  const RadioItem = (program: StudyProgramBase) => (
-    <RadioGroupItem value={program.id} class="flex items-center gap-2">
+  const RadioItem = (program: ProgramOverviewBase) => (
+    <RadioGroupItem value={program.url} class="flex items-center gap-2">
       <RadioGroupItemInput />
       <RadioGroupItemControl class="cursor-pointer" />
       <ProgramRadioLabel program={program} />
@@ -145,7 +145,7 @@ export function ProgramSelect() {
         class="grid gap-x-2"
       >
         <RadioGroup.Label as={SectionHeading}>{t("menu.program.title")}</RadioGroup.Label>
-        <For each={data()?.data.programs[group.controls.degree.value]}>
+        <For each={data()?.data.programs[group.controls.degree.value!]}>
           {(program) => (
             <section class="ml-2">
               <Show when={program.specializations.length > 0} fallback={RadioItem(program)}>
@@ -175,17 +175,12 @@ export function GradeSelect() {
       return null;
     }
 
-    const SelectedHiddenCourses = ({ grade }: { grade: StudyOverviewGrade }) => {
+    const SelectedHiddenCourses = ({ grade }: { grade: GradeOverview }) => {
       const count = createMemo(() => {
-        const courses = ddata.courses[grade.key][group.controls.semester.value];
-        const selected = reduce(
-          courses,
-          (acc, courseType) =>
-            acc +
-            courseType.filter((course) => flatMap(OBLIGATION, (type) => group.controls[type].value).includes(course.id))
-              .length,
-          0
-        );
+        const courses = ddata.courses?.[grade.key][group.controls.semester.value] as CourseOverview[];
+        const selected = courses?.filter((course) =>
+          group.controls[OBLIGATION.COMPULSORY].value.includes(course.id)
+        ).length;
 
         return selected || null;
       });
@@ -225,7 +220,7 @@ export function GradeSelect() {
     >
       <RadioGroup.Label as={SectionHeading}>{t("menu.grade.title")}</RadioGroup.Label>
       <Suspense fallback={<Loader />}>
-        <Show when={group.controls.degree.value === data()?.values.degree} fallback={<Fallback />}>
+        <Show when={group.controls.degree.value === data()?.current.degree} fallback={<Fallback />}>
           <RenderContent />
         </Show>
       </Suspense>
@@ -242,20 +237,18 @@ export function SemesterSelect() {
 
   const SelectedHiddenCourses = ({ semester }: { semester: SEMESTER }) => {
     const ddata = data()?.data;
-    if (!ddata) {
+    if (!ddata || !ddata.grades || !ddata.courses) {
       return null;
     }
     const count = createMemo(() => {
+      if (!ddata.grades) return null;
+      const allCourses = ddata.courses;
+      if (!allCourses) return null;
       return ddata.grades.reduce((acc, grade) => {
-        const courses = ddata.courses[grade.key][semester];
-        const selected = reduce(
-          courses,
-          (acc, courseType) =>
-            acc +
-            courseType.filter((course) => flatMap(OBLIGATION, (type) => group.controls[type].value).includes(course.id))
-              .length,
-          0
-        );
+        const courses = allCourses[grade.key][semester];
+        const selected = courses?.filter((course) =>
+          group.controls[OBLIGATION.COMPULSORY].value.includes(course.id)
+        ).length;
         return acc + selected;
       }, 0);
     });
@@ -303,13 +296,13 @@ export function CoursesSelect() {
 
   const Fallback = () => <ItemText>{group.controls.grade.value ? "no courses to show" : "select grade to show"}</ItemText>;
 
-  const handleChange = (checked: boolean, type: StrictExtract<NavigationSchemaKey, OBLIGATION>, courseId: string) => {
+  const handleChange = (checked: boolean, type: StrictExtract<MenuSchemaKey, OBLIGATION>, courseId: string) => {
     group.controls[type].setValue(
       checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter((id) => id !== courseId)
     );
   };
 
-  const CourseCheckboxLabel = (props: { course: StudyOverviewCourse }) => {
+  const CourseCheckboxLabel = (props: { course: CourseOverview }) => {
     const course = props.course;
     return (
       <Tooltip placement="right" flip="top" gutter={12}>
@@ -334,12 +327,14 @@ export function CoursesSelect() {
   const SectionRender = (props: {
     obligation: OBLIGATION;
     alwaysShowHEading?: boolean;
-    preChild?: (courses: StudyOverviewCourse[]) => JSXElement;
+    preChild?: (courses: CourseOverview[]) => JSXElement;
   }) => {
     const courses = createMemo(
       () =>
         !!group.controls.grade.value &&
-        data()?.data.courses[group.controls.grade.value]?.[group.controls.semester.value][props.obligation]
+        data()?.data.courses?.[group.controls.grade.value]?.[group.controls.semester.value].filter(
+          (course) => course.obligation === props.obligation
+        )
     );
     const Subsection = () => (
       <CollapsibleTrigger class="flex pl-2" as={SubSectionHeading}>
@@ -385,7 +380,7 @@ export function CoursesSelect() {
   };
 
   const CheckAll = (obligation: OBLIGATION) => {
-    return (courses: StudyOverviewCourse[]) => (
+    return (courses: CourseOverview[]) => (
       <Checkbox
         class="flex items-center cursor-pointer"
         value={`all-${obligation}`}
@@ -406,7 +401,7 @@ export function CoursesSelect() {
   };
 
   return (
-    <Show when={group.controls.degree.value === data()?.values.degree}>
+    <Show when={group.controls.degree.value === data()?.current.degree}>
       <SectionHeading>{t("menu.courses.title")}</SectionHeading>
       <section>
         <SectionRender obligation={OBLIGATION.COMPULSORY} alwaysShowHEading preChild={CheckAll(OBLIGATION.COMPULSORY)} />

@@ -6,46 +6,45 @@ import { conjunctableRooms } from "~/config/rooms";
 import { days } from "~/config/scheduler";
 import { halfSemesterWeeks } from "~/server/scraper/constants";
 import { lecturesWithoutExam, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
-import type { APICourseLecture, CourseDetail, DataProviderTypes, StudyApiTypes } from "~/server/scraper/types";
+import type { StudyApiTypes } from "~/server/scraper/types/api.types";
+import type { CourseDetail, Lecture } from "~/server/scraper/types/course.types";
 import { conjunctConjunctableRooms, getLectureLectures, getWeekFromSemesterStart } from "~/server/scraper/utils";
 
-// --- TYPE DEFINITIONS (Unchanged) ---
-interface IDdCourseLectureBase {
-  id: string;
-  lecturesCount: number | false;
-}
-interface IDdCourseLecture extends IDdCourseLectureBase, APICourseLecture {}
-interface IdCourseReturn extends DataProviderTypes.getStudyCourseDetailsReturn {
-  data: IDdCourseLecture[];
-}
-export type FilteredCourseLecture = ReturnType<typeof filterValidLectures>[number];
-export interface LectureMutatorConfig {
-  fillWeeks?: boolean;
-}
-export interface LinkedLectureData {
-  id: string;
-  day: DAY;
-}
-interface ConjunctedLecture extends StrictOmit<FilteredCourseLecture, "room"> {
-  room: string;
-}
-interface linkedLecture extends ConjunctedLecture {
-  strongLinked: LinkedLectureData[];
-  linked: LinkedLectureData[];
-}
-export interface MCourseLecture extends linkedLecture {}
-export type MgetStudyCourseDetailsReturnStale = {
-  isStale: true;
-  detail: { id: string };
-};
-export type MgetStudyCourseDetailsReturnNotStale = {
-  isStale: undefined;
-  detail: CourseDetail;
-  data: MCourseLecture[];
-};
-export type MgetStudyCourseDetailsReturn = MgetStudyCourseDetailsReturnStale | MgetStudyCourseDetailsReturnNotStale;
+export namespace LectureMutator {
+  export interface Props extends StudyApiTypes.getStudyCoursesDetailsReturn {}
+  export type Return = MutatedCourse[];
 
-// --- PURE HELPER FUNCTIONS ---
+  export interface LectureWithId extends Lecture {
+    id: string;
+    lecturesCount: number | false;
+  }
+  export interface CourseWithId {
+    detail: CourseDetail;
+    data: (Lecture & LectureWithId)[];
+  }
+
+  export type FilteredCourseLecture = ReturnType<typeof filterValidLectures>[number];
+
+  export interface ConjunctedLecture extends StrictOmit<FilteredCourseLecture, "room"> {
+    room: string;
+  }
+
+  export interface LinkedLectureData {
+    id: string;
+    day: DAY;
+  }
+
+  export interface LinkedLecture extends ConjunctedLecture {
+    strongLinked: LinkedLectureData[];
+    linked: LinkedLectureData[];
+  }
+
+  export interface MutatedLecture extends LinkedLecture {}
+  export interface MutatedCourse {
+    detail: CourseDetail;
+    data: MutatedLecture[];
+  }
+}
 
 /**
  * Creates a stable, deterministic ID for a lecture based on its core properties
@@ -58,7 +57,7 @@ export type MgetStudyCourseDetailsReturn = MgetStudyCourseDetailsReturnStale | M
  * @param lecture The lecture object from the API.
  * @returns A SHA-256 hash representing the unique ID for this lecture instance.
  */
-const createDeterministicLectureId = (courseId: string, lecture: APICourseLecture): string => {
+const createDeterministicLectureId = (courseId: string | number, lecture: Lecture): string => {
   // 1. Create a canonical representation of the complex `weeks` object.
   // This is a crucial step to handle its structure correctly.
   const canonicalWeeks = {
@@ -116,8 +115,8 @@ const isAfterLecture = (
 };
 
 const isStronglyLinkable = (
-  lecture: ConjunctedLecture,
-  otherLecture: ConjunctedLecture,
+  lecture: LectureMutator.ConjunctedLecture,
+  otherLecture: LectureMutator.ConjunctedLecture,
   semesterWeeks: number
 ): boolean => {
   if (lecture.type !== otherLecture.type) return false;
@@ -128,7 +127,7 @@ const isStronglyLinkable = (
   return Math.round(combinedLecturesCount) === semesterWeeks;
 };
 
-const getLinkedData = (lectures: ConjunctedLecture[]): LinkedLectureData[] => {
+const getLinkedData = (lectures: LectureMutator.ConjunctedLecture[]): LectureMutator.LinkedLectureData[] => {
   return lectures.map((lecture) => ({ id: lecture.id, day: lecture.day }));
 };
 
@@ -137,28 +136,26 @@ const getLinkedData = (lectures: ConjunctedLecture[]): LinkedLectureData[] => {
 /**
  * Attaches a unique ID and lecture count to each lecture in a course.
  */
-const addLectureIds = (course: DataProviderTypes.getStudyCourseDetailsReturn): IdCourseReturn => ({
-  ...course,
-  data: course.data.map(
+const addLectureIds = (lectures: Lecture[], courseDetail: CourseDetail): LectureMutator.LectureWithId[] =>
+  lectures.map(
     (lecture) =>
       ({
         ...lecture,
-        id: idLecture(course.detail.id, lecture),
-        lecturesCount: getLectureLectures(lecture, course.detail)!,
-      }) satisfies IDdCourseLecture
-  ),
-});
+        id: idLecture(courseDetail.id, lecture),
+        lecturesCount: getLectureLectures(lecture, courseDetail)!,
+      }) satisfies LectureMutator.CourseWithId["data"][number]
+  );
 
 /**
  * Filters out lectures that are not relevant for scheduling.
  */
-const filterValidLectures = (data: IDdCourseLecture[]) => {
-  const isValid = (lecture: IDdCourseLecture) =>
+const filterValidLectures = (data: LectureMutator.LectureWithId[]) => {
+  const isValid = (lecture: LectureMutator.LectureWithId) =>
     lecturesWithoutExam.includes(lecture.type) && !lecture.note && days.includes(lecture.day) && lecture.lecturesCount;
 
   // The type assertion is complex but necessary to narrow down the types after filtering.
   return data.filter(isValid) as {
-    [K in keyof IDdCourseLecture]: K extends "type"
+    [K in keyof LectureMutator.LectureWithId]: K extends "type"
       ? (typeof lecturesWithoutExam)[number]
       : K extends "note"
         ? null
@@ -166,7 +163,7 @@ const filterValidLectures = (data: IDdCourseLecture[]) => {
           ? DAY
           : K extends "lecturesCount"
             ? number
-            : IDdCourseLecture[K];
+            : LectureMutator.LectureWithId[K];
   }[];
 };
 
@@ -174,10 +171,8 @@ const filterValidLectures = (data: IDdCourseLecture[]) => {
  * Fills in the specific week numbers for lectures that only have a parity (ODD/EVEN).
  */
 const fillMissingWeeks =
-  (semesterWeeks: number, fillWeeksEnabled?: boolean) =>
-  (data: FilteredCourseLecture[]): FilteredCourseLecture[] => {
-    if (fillWeeksEnabled === false) return data;
-
+  (semesterWeeks: number) =>
+  (data: LectureMutator.FilteredCourseLecture[]): LectureMutator.FilteredCourseLecture[] => {
     return data.map((lecture) => {
       if (Array.isArray(lecture.weeks.weeks) || !lecture.lecturesCount) return lecture;
 
@@ -207,7 +202,9 @@ const fillMissingWeeks =
 /**
  * Merges a group of conjunctable lectures into a single lecture object.
  */
-const mergeConjunctedLectures = (lecturesToMerge: FilteredCourseLecture[]): ConjunctedLecture => {
+const mergeConjunctedLectures = (
+  lecturesToMerge: LectureMutator.FilteredCourseLecture[]
+): LectureMutator.ConjunctedLecture => {
   if (lecturesToMerge.length === 1) {
     const singleLecture = lecturesToMerge[0];
     return {
@@ -248,8 +245,8 @@ const mergeConjunctedLectures = (lecturesToMerge: FilteredCourseLecture[]): Conj
  * Finds and merges lectures that occur at the same time and can be "conjuncted" into one.
  * This is a pure implementation of the original's complex, stateful logic.
  */
-const conjunctParallelLectures = (data: FilteredCourseLecture[]): ConjunctedLecture[] => {
-  const result: ConjunctedLecture[] = [];
+const conjunctParallelLectures = (data: LectureMutator.FilteredCourseLecture[]): LectureMutator.ConjunctedLecture[] => {
+  const result: LectureMutator.ConjunctedLecture[] = [];
   const consumedIndices = new Set<number>();
 
   for (let i = 0; i < data.length; i++) {
@@ -302,10 +299,10 @@ const conjunctParallelLectures = (data: FilteredCourseLecture[]): ConjunctedLect
  */
 const linkRelatedLectures =
   (semesterWeeks: number) =>
-  (data: ConjunctedLecture[]): linkedLecture[] => {
+  (data: LectureMutator.ConjunctedLecture[]): LectureMutator.LinkedLecture[] => {
     return data.map((lecture) => {
-      const strongLinked: ConjunctedLecture[] = [];
-      const linked: ConjunctedLecture[] = [];
+      const strongLinked: LectureMutator.ConjunctedLecture[] = [];
+      const linked: LectureMutator.ConjunctedLecture[] = [];
 
       if (/\d/.test(lecture.groups)) {
         for (const otherLecture of data) {
@@ -330,41 +327,27 @@ const linkRelatedLectures =
     });
   };
 
+const modifyData =
+  <D, DR, T>(modifier: (data: D[], detail: T) => DR[]) =>
+  <O extends { data: D[]; detail: T }>(obj: O) => ({
+    ...obj,
+    data: modifier(obj.data, obj.detail),
+  });
+
 /**
  * Main orchestrator that processes raw course data through a functional pipeline.
  */
-export async function MutateLectureData(
-  props: StudyApiTypes.getStudyCoursesDetailsReturn,
-  config: LectureMutatorConfig
-): Promise<MgetStudyCourseDetailsReturn[]> {
+export async function MutateLectureData(props: LectureMutator.Props): Promise<LectureMutator.Return> {
   const { data, semesterTimeSchedule } = props;
   const semesterWeeks = getWeekFromSemesterStart(semesterTimeSchedule.end, semesterTimeSchedule.start);
 
   // Define the processing pipeline for a single course
   const processCourse = flow(
-    addLectureIds,
-    (course) => ({
-      ...course,
-      data: filterValidLectures(course.data),
-    }),
-    (course) => ({
-      ...course,
-      data: fillMissingWeeks(semesterWeeks, config.fillWeeks)(course.data),
-    }),
-    (course) => ({
-      ...course,
-      data: conjunctParallelLectures(course.data),
-    }),
-    (course) => ({
-      ...course,
-      data: linkRelatedLectures(semesterWeeks)(course.data),
-    }),
-    // Final transformation to match the output type
-    (course): MgetStudyCourseDetailsReturnNotStale => ({
-      isStale: undefined,
-      detail: course.detail,
-      data: course.data satisfies MCourseLecture[], // Final data conforms to MCourseLecture
-    })
+    modifyData(addLectureIds),
+    modifyData(filterValidLectures),
+    modifyData(fillMissingWeeks(semesterWeeks)),
+    modifyData(conjunctParallelLectures),
+    modifyData(linkRelatedLectures(semesterWeeks))
   );
 
   // Apply the pipeline to each course

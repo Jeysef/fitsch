@@ -2,21 +2,16 @@ import type { CheerioAPI } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { Time, TimeSpan } from "~/components/scheduler/time";
 import { valueToEnumValue } from "~/lib/utils";
+import type { CourseDetailParserOptions } from "~/server/scraper/parsers/course/CourseDetailParser.types";
+import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { LECTURE_TYPE, WEEK_PARITY, type DAY } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
-import type { SemesterTimeSchedule, StudyApiTypes } from "../../types";
 import { getParityOfWeeks, getWeekFromSemesterStart, removeSpaces } from "../../utils";
-
-interface CourseDetailParserOptions {
-  courseUrl: string;
-  semesterTimeSchedule: SemesterTimeSchedule;
-  courseId: string;
-}
 
 export class CourseDetailParser {
   constructor(private readonly langSet: LanguageSetDictionary) {}
   public parse($: CheerioAPI, options: CourseDetailParserOptions): StudyApiTypes.getStudyCourseDetailsReturn {
-    const { courseUrl, semesterTimeSchedule, courseId } = options;
+    const { courseUrl: url, semesterTimeSchedule, courseId } = options;
     const courseTypeBasedOnColor = {
       // "#e8ffff": // exercise & seminar
       "#e0ffe0": LECTURE_TYPE.LECTURE,
@@ -26,7 +21,6 @@ export class CourseDetailParser {
 
     const abbreviation = $(".b-detail__annot .b-detail__annot-item").first().text().trim();
     const name = $("h1.b-detail__title").text().trim();
-    const link = courseUrl;
 
     const range = $("main div.b-detail__body div.grid__cell").filter((_, element) => {
       return $(element).find("p.b-detail__subtitle").text().trim().includes(this.langSet.course.detail.timeSpan.title);
@@ -100,7 +94,7 @@ export class CourseDetailParser {
     const detail: StudyApiTypes.getStudyCourseDetailsReturn["detail"] = {
       abbreviation,
       name,
-      link,
+      url,
       timeSpan,
       timeSpanText,
       id: courseId,

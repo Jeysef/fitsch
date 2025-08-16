@@ -1,18 +1,28 @@
-import type { enumUtil } from "node_modules/zod/lib/helpers/enumUtil";
-import { type ZodObject, type ZodTypeAny, z } from "zod";
+import type { enumUtil } from "node_modules/zod/dist/types/v3/helpers/enumUtil";
+import { z, type ZodObject, type ZodTypeAny } from "zod";
+import { FACULTY, LANGUAGE } from "~/enums";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
-import type { StudyOverview } from "~/server/scraper/types";
+import type { OverviewCurrent } from "~/server/scraper/types/overview.types";
 
-export const navigationSchema = z.object({
+export const menuCurrentSchema = z.object({
   year: z.object({ value: z.string(), label: z.string() }),
+  language: z.nativeEnum(LANGUAGE),
+  faculty: z.nativeEnum(FACULTY),
+  degree: z.nativeEnum(DEGREE).optional(),
+  program: z.string().optional(),
+});
+
+export const menuAdditionalSchema = z.object({
   semester: z.nativeEnum(SEMESTER),
   grade: z.string().optional(),
-  degree: z.nativeEnum(DEGREE),
-  program: z.string().optional(),
   [OBLIGATION.COMPULSORY]: z.array(z.string()),
   [OBLIGATION.COMPULSORY_ELECTIVE]: z.array(z.string()),
   [OBLIGATION.ELECTIVE]: z.array(z.string()),
-}) satisfies ZodObject<Record<Exclude<keyof StudyOverview["values"], "language">, ZodTypeAny>>;
+});
 
-export type NavigationSchema = z.infer<typeof navigationSchema>;
-export type NavigationSchemaKey = enumUtil.UnionToTupleString<keyof NavigationSchema>[number];
+export const menuSchema = menuCurrentSchema.merge(menuAdditionalSchema) satisfies ZodObject<
+  Record<Exclude<keyof OverviewCurrent, "language">, ZodTypeAny>
+>;
+
+export type MenuSchema = z.infer<typeof menuSchema>;
+export type MenuSchemaKey = enumUtil.UnionToTupleString<keyof MenuSchema>[number];

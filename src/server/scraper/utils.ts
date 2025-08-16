@@ -1,7 +1,7 @@
 import { conjunctableRooms } from "~/config/rooms";
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
-import type { APICourseLecture, CourseDetail, StudyId } from "~/server/scraper/types";
+import type { CourseDetail, Lecture, StudyId } from "~/server/scraper/types/types";
 import { WEEK_PARITY } from "./enums";
 
 /**
@@ -118,7 +118,7 @@ export const conjunctConjunctableRooms = (roomsInput: string[]): string => {
  * Problem n.1: In a week there may be more lectures with different lengths -> solved by concatenating the lectures elsewhere
  * Problem n.2: the calculation doesn't have to reflect what's written in the detail. Viz README.md
  */
-export function getLectureLectures(lecture: APICourseLecture, detail: CourseDetail) {
+export function getLectureLectures(lecture: Lecture, detail: CourseDetail) {
   const lectureTimeSpan = detail.timeSpan[lecture.type];
   if (lectureTimeSpan === undefined) return null;
   const duration = lecture.timeSpan.minutes;

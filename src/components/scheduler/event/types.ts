@@ -1,8 +1,8 @@
 import type { TimeSpan } from "~/components/scheduler/time";
 import type { LectureMetrics } from "~/components/scheduler/types";
 import type { DAY } from "~/server/scraper/enums";
-import type { MCourseLecture } from "~/server/scraper/lectureMutator";
-import type { CourseDetail } from "~/server/scraper/types";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import type { CourseDetail } from "~/server/scraper/types/types";
 
 export interface EventBase {
   id: string;
@@ -29,7 +29,7 @@ export interface CustomEventData {
   event: CustomEvent;
 }
 
-export interface ScheduleEvent extends EventBase, MCourseLecture {}
+export interface ScheduleEvent extends EventBase, LectureMutator.MutatedLecture {}
 
 export interface ScheduleEventData {
   event: ScheduleEvent;

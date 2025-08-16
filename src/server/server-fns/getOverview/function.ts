@@ -1,7 +1,7 @@
 import { FACULTY } from "~/enums";
 import { OverviewDataProvider } from "~/server/scraper/dataProviders/overviewDataProvider";
 import { createStudyApi } from "~/server/scraper/services";
-import type { DataProviderTypes } from "~/server/scraper/types";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { defineCachedFunction, getKey } from "~/server/utils/cache";
 import { useStorage } from "~/server/utils/storage";

@@ -1,7 +1,8 @@
 import { FACULTY } from "~/enums";
 import { CoursesDataProvider } from "~/server/scraper/dataProviders/coursesDataProvider";
 import { createStudyApi } from "~/server/scraper/services";
-import type { DataProviderTypes, GetStudyCoursesDetailsFunctionConfig } from "~/server/scraper/types";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
+import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/server-fns/getCourses/getStudyCoursesDetails.types";
 
 export async function getStudyCoursesDetails(
   config: GetStudyCoursesDetailsFunctionConfig
@@ -14,7 +15,6 @@ export async function getStudyCoursesDetails(
 
   const coursesProvider = new CoursesDataProvider(studyApi);
 
-  const d = await coursesProvider.getStudyCoursesDetails(config);
-  const staleCoursesData = config.staleCoursesId?.map((id) => ({ detail: { id }, isStale: true }) as const);
-  return d.concat(staleCoursesData ?? []);
+  const details = await coursesProvider.getStudyCoursesDetails(config);
+  return details;
 }
