@@ -39,7 +39,7 @@ export const LAUNCH_DAY_TIME = {
 };
 
 // Context
-const SchedulerStoreContext = createContext<SchedulerStore>();
+const SchedulerStoreContext = createContext<Accessor<SchedulerStore>>();
 const LayoutContext = createContext<Signal<boolean>>();
 
 export function useStore() {
@@ -68,7 +68,7 @@ export function SchedulerProvider(props: { store: SchedulerStore } & FlowProps) 
     storage: cookieStorage,
   });
   return (
-    <SchedulerStoreContext.Provider value={props.store}>
+    <SchedulerStoreContext.Provider value={() => props.store}>
       <LayoutContext.Provider value={[isHorizontalLayout, setIsHorizontalLayout]}>{props.children}</LayoutContext.Provider>
     </SchedulerStoreContext.Provider>
   );
@@ -114,11 +114,11 @@ export function Scheduler(props: FlowProps) {
         "touch-action": touchAction(),
         "font-size": "var(--scheduler-scale, 100%)",
         "grid-template-columns": isHorizontalLayout()
-          ? `max-content 7px repeat(${store.settings.columns.length}, minmax(5.6em, 6rem))`
-          : `max-content repeat(${store.settings.rows.length}, 1fr )`,
+          ? `max-content 7px repeat(${store().settings.columns.length}, minmax(5.6em, 6rem))`
+          : `max-content repeat(${store().settings.rows.length}, 1fr )`,
         "grid-template-rows": isHorizontalLayout()
-          ? `auto repeat(${store.settings.rows.length}, auto)`
-          : `auto  7px repeat(${store.settings.columns.length}, calc(5em))`,
+          ? `auto repeat(${store().settings.rows.length}, auto)`
+          : `auto  7px repeat(${store().settings.columns.length}, calc(5em))`,
       }}
     >
       {props.children}
@@ -145,7 +145,7 @@ const createLinkedCss = (eventId: string, linked: LectureMutator.LinkedLectureDa
 
 export function Week(props: FlowProps) {
   const store = useStore();
-  const storeData = createMemo(() => values(store.data || store.getEmptyData()));
+  const storeData = createMemo(() => values(store().data || store().getEmptyData()));
   const createLinkedHighlightClass = (
     property: StrictExtract<keyof ScheduleEvent, "linked" | "strongLinked">,
     color: string
@@ -190,7 +190,7 @@ export function Week(props: FlowProps) {
 export function Days(props: { children: (data: Accessor<DayDataObject>) => JSX.Element }) {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
-  const storeData = createMemo(() => values(store.data || store.getEmptyData()));
+  const storeData = createMemo(() => values(store().data || store().getEmptyData()));
   return (
     <Index each={storeData()}>
       {(data) => (
@@ -265,8 +265,8 @@ export function LaunchHighlight() {
   const [isHorizontalLayout] = useLayout();
   return ObjectTyped.entries(LAUNCH_DAY_TIME).map(([day, time]) => {
     const timeSpan = new TimeSpan(Time.fromString(time.start), Time.fromString(time.end));
-    const row = store.getDayRow(day);
-    const data = new DayEventObject(store.settings.columns, timeSpan);
+    const row = store().getDayRow(day);
+    const data = new DayEventObject(store().settings.columns, timeSpan);
     return (
       <div
         style={{
@@ -296,7 +296,7 @@ export function ColumnLines() {
         "col-[3/-1]": isHorizontalLayout(),
       })}
     >
-      <For each={isHorizontalLayout() ? store.settings.columns : Array(store.settings.rows.length)}>
+      <For each={isHorizontalLayout() ? store().settings.columns : Array(store().settings.rows.length)}>
         {() => <div class="col-span-1 row-span-full" />}
       </For>
     </div>
