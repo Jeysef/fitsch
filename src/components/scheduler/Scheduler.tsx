@@ -1,5 +1,4 @@
 import { css } from "@emotion/css";
-import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { compact, difference, flatMap, flow, values } from "lodash-es";
 import TableProperties from "lucide-solid/icons/table-properties";
 import { ObjectTyped } from "object-typed";
@@ -60,13 +59,8 @@ export function useLayout() {
 
 export const [scheduleRef, setScheduleRef] = createSignal<HTMLDivElement | null>(null);
 
-export function SchedulerProvider(props: { store: SchedulerStore } & FlowProps) {
-  const [isHorizontalLayout, setIsHorizontalLayout] = makePersisted(createSignal(true), {
-    name: "schedulerLayout",
-    deserialize: (value) => value === "horizontal",
-    serialize: (value) => (value ? "horizontal" : "vertical"),
-    storage: cookieStorage,
-  });
+export function SchedulerProvider(props: { store: SchedulerStore; layout: Signal<boolean> } & FlowProps) {
+  const [isHorizontalLayout, setIsHorizontalLayout] = props.layout;
   return (
     <SchedulerStoreContext.Provider value={() => props.store}>
       <LayoutContext.Provider value={[isHorizontalLayout, setIsHorizontalLayout]}>{props.children}</LayoutContext.Provider>

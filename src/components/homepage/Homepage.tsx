@@ -1,6 +1,6 @@
 import { useSearchParams } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, Suspense, batch, createMemo, createSignal, startTransition } from "solid-js";
+import { For, Show, Suspense, batch, createMemo, createSignal, startTransition } from "solid-js";
 import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -13,6 +13,7 @@ import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import { tabs, type Tab } from "./tab";
 import TimeSpan from "./TimeSpan";
+import type { includes } from "lodash-es";
 
 export default function Home() {
   const { t, locale } = useI18n();
@@ -129,12 +130,11 @@ export default function Home() {
       </div>
       {/* <div /> */}
       {/* </div> */}
-      <TabsContent value={tabs.workSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
-        <Scheduler store={storeProxy} />
-      </TabsContent>
-      <TabsContent value={tabs.resultSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
-        <Scheduler store={filteredStore} />
-      </TabsContent>
+      <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
+        <div class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
+          <Scheduler store={tab() === tabs.workSchedule ? storeProxy : filteredStore} />
+        </div>
+      </Show>
       <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
         <Suspense>
           <TimeSpan store={storeProxy} />

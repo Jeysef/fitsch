@@ -1,6 +1,7 @@
+import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import { without } from "lodash-es";
 import { ObjectTyped } from "object-typed";
-import { For, Show } from "solid-js";
+import { createMemo, createSignal, For, Show } from "solid-js";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import type { DAY } from "~/server/scraper/enums";
@@ -16,7 +17,6 @@ import {
   SchedulerGrid,
   SchedulerProvider,
   TopXAxisHeader,
-  useLayout,
   Week,
 } from "./Scheduler";
 import type { SchedulerStore } from "./store";
@@ -24,13 +24,20 @@ import type { SchedulerStore } from "./store";
 export default function SchedulerComp(props: { store: SchedulerStore }) {
   const t = useI18n().t;
 
-  const DayComp = () => (
+  const [isHorizontalLayout, setIsHorizontalLayout] = makePersisted(createSignal(true), {
+    name: "schedulerLayout",
+    deserialize: (value) => value === "horizontal",
+    serialize: (value) => (value ? "horizontal" : "vertical"),
+    storage: cookieStorage,
+  });
+
+  const DayComp = createMemo(() => (
     <For each={without(ObjectTyped.keys(props.store.settings.rows), "length") as DAY[]}>
       {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
     </For>
-  );
+  ));
 
-  const TimeComponent = () => (
+  const TimeComponent = createMemo(() => (
     <>
       <p class="" />
       <For each={props.store.settings.columns}>
@@ -49,28 +56,25 @@ export default function SchedulerComp(props: { store: SchedulerStore }) {
         )}
       </For>
     </>
-  );
+  ));
 
-  const AxisComponents = () => {
-    const [isHorizontalLayout] = useLayout();
-    return (
-      <>
-        <TopXAxisHeader>
-          <Show when={isHorizontalLayout()} fallback={<DayComp />}>
-            <TimeComponent />
-          </Show>
-        </TopXAxisHeader>
-        <LeftYAxisHeader>
-          <Show when={isHorizontalLayout()} fallback={<TimeComponent />}>
-            <DayComp />
-          </Show>
-        </LeftYAxisHeader>
-      </>
-    );
-  };
+  const AxisComponents = createMemo(() => (
+    <>
+      <TopXAxisHeader>
+        <Show when={isHorizontalLayout()} fallback={<DayComp />}>
+          <TimeComponent />
+        </Show>
+      </TopXAxisHeader>
+      <LeftYAxisHeader>
+        <Show when={isHorizontalLayout()} fallback={<TimeComponent />}>
+          <DayComp />
+        </Show>
+      </LeftYAxisHeader>
+    </>
+  ));
 
   return (
-    <SchedulerProvider store={props.store}>
+    <SchedulerProvider store={props.store} layout={[isHorizontalLayout, setIsHorizontalLayout]}>
       <Scheduler>
         <SchedulerGrid>
           <>
