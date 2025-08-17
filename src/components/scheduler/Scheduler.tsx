@@ -1,33 +1,33 @@
+import { css } from "@emotion/css";
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
-import { type DayDataObject, DayEventObject, type SchedulerStore } from "./store";
+import { compact, difference, flatMap, flow, values } from "lodash-es";
+import TableProperties from "lucide-solid/icons/table-properties";
+import { ObjectTyped } from "object-typed";
+import { usePinch } from "solid-gesture";
 import {
   createContext,
-  createSignal,
-  type FlowProps,
-  useContext,
-  type Signal,
-  For,
   createMemo,
+  createSignal,
+  For,
   Index,
+  useContext,
   type Accessor,
+  type FlowProps,
   type JSX,
+  type Signal,
 } from "solid-js";
 import { isServer } from "solid-js/web";
-import { usePinch } from "solid-gesture";
-import { Button } from "../ui/button";
-import TableProperties from "lucide-solid/icons/table-properties";
-import { cn } from "~/lib/utils";
-import { ObjectTyped } from "object-typed";
-import { DAY } from "~/server/scraper/enums";
-import { Time, TimeSpan } from "./time";
-import { createElementHeightRef } from "../heightMeasurer";
-import type { DayEvent, EventData, ScheduleEvent } from "./event/types";
 import type { StrictExtract } from "ts-essentials";
-import { compact, difference, flatMap, flow, values } from "lodash-es";
-import { isCustomEventData } from "./event/Event";
-import { css } from "@emotion/css";
-import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import { Button } from "~/components/ui/button";
 import { hoverColors } from "~/config/colors";
+import { cn } from "~/lib/utils";
+import { DAY } from "~/server/scraper/enums";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import { createElementHeightRef } from "../heightMeasurer";
+import { isCustomEventData } from "./event/Event";
+import type { DayEvent, EventData, ScheduleEvent } from "./event/types";
+import { DayEventObject, type DayDataObject, type SchedulerStore } from "./store";
+import { Time, TimeSpan } from "./time";
 
 // Constants
 export const LAUNCH_DAY_TIME = {
@@ -106,7 +106,7 @@ export function Scheduler(props: FlowProps) {
   return (
     <div
       ref={setScheduleRef}
-      class="relative grid overflow-auto max-h-full h-auto w-auto zoom-container transition-[font-size] ease-in-out bg-background"
+      class="relative grid overflow-auto max-h-full h-auto w-auto zoom-container transition-[font-size] ease-in-out bg-background border"
       {...bind()}
       style={{
         "justify-content": "safe center",
@@ -128,7 +128,7 @@ export function Scheduler(props: FlowProps) {
 
 export function SchedulerGrid(props: FlowProps) {
   return (
-    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full border inset-0 h-full w-full isolate [font-size:inherit]">
+    <div class="relative grid grid-rows-subgrid grid-cols-subgrid row-span-full col-span-full inset-0 h-full w-full isolate [font-size:inherit]">
       {props.children}
     </div>
   );
@@ -195,7 +195,7 @@ export function Days(props: { children: (data: Accessor<DayDataObject>) => JSX.E
     <Index each={storeData()}>
       {(data) => (
         <div
-          class={cn("schedule-row grid border-t [font-size:inherit]", {
+          class={cn("schedule-row grid [font-size:inherit]", {
             "em:py-2 em:gap-y-4": isHorizontalLayout(),
             "em:px-2 em:gap-x-4": !isHorizontalLayout(),
           })}
@@ -246,8 +246,8 @@ export function Events(props: { day: Accessor<DayDataObject>; children: (event: 
 export function Corner() {
   const [isHorizontalLayout, setIsHorizontalLayout] = useLayout();
   return (
-    <div class="row-span-1 col-span-1 left-0  sticky top-px z-30 bg-background font-mono outline-border outline mr-px flex justify-center items-center">
-      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full p-1">
+    <div class="row-span-1 col-span-1 left-0  sticky top-0 z-30 bg-background font-mono flex justify-center items-center border-r border-b">
+      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full p-1 rounded-none">
         <TableProperties
           class={cn("transition-transform ease-linear em:w-5 md:em:w-7 aspect-square", {
             "rotate-180": isHorizontalLayout(),
@@ -291,8 +291,9 @@ export function ColumnLines() {
   const [isHorizontalLayout] = useLayout();
   return (
     <div
-      class={cn("grid grid-cols-subgrid row-start-2 -row-end-1 col-[3/-1] select-none -z-30 divide-x divide-dashed", {
-        "divide-solid": !isHorizontalLayout(),
+      class={cn("grid grid-cols-subgrid row-start-2 -row-end-1 select-none -z-30 divide-x divide-dashed", {
+        "divide-solid col-[2/-1]": !isHorizontalLayout(),
+        "col-[3/-1]": isHorizontalLayout(),
       })}
     >
       <For each={isHorizontalLayout() ? store.settings.columns : Array(store.settings.rows.length)}>
@@ -305,7 +306,7 @@ export function ColumnLines() {
 export function TopXAxisHeader(props: FlowProps<JSX.HTMLAttributes<HTMLDivElement>>) {
   return (
     <div
-      class="grid grid-cols-subgrid row-span-1 col-[2/-1] sticky top-px outline outline-border z-20 bg-background divide-x"
+      class="grid grid-cols-subgrid row-span-1 col-[2/-1] sticky top-0 z-20 bg-background divide-x border-b"
       {...props}
     />
   );

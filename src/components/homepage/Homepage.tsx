@@ -129,10 +129,10 @@ export default function Home() {
       </div>
       {/* <div /> */}
       {/* </div> */}
-      <TabsContent value={tabs.workSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
+      <TabsContent value={tabs.workSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
         <Scheduler store={storeProxy} />
       </TabsContent>
-      <TabsContent value={tabs.resultSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background">
+      <TabsContent value={tabs.resultSchedule} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
         <Scheduler store={filteredStore} />
       </TabsContent>
       <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
