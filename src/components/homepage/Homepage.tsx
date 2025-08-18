@@ -130,7 +130,7 @@ export default function Home() {
       {/* <div /> */}
       {/* </div> */}
       <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
-        <div class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2">
+        <div class="w-auto max-w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2 mx-auto">
           <Scheduler store={tab() === tabs.workSchedule ? storeProxy : filteredStore} />
         </div>
       </Show>
