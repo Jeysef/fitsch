@@ -84,6 +84,7 @@ describe("week calculations", () => {
     [new Date("2024-09-24"), 2],
     [new Date("2024-10-01"), 3],
     [new Date("2024-10-08"), 4],
+    [new Date("2024-12-09"), 13],
   ])("should calculate week number from semester start for %s", (date, expected) => {
     const result = getWeekFromSemesterStart(date, startDate);
     expect(result).toBe(expected);
@@ -97,6 +98,16 @@ describe("week calculations", () => {
     [[2], WEEK_PARITY.ODD],
   ])("should determine parity for weeks %s", (weeks, expected) => {
     const result = getParityOfWeeks(weeks, startDate);
+    expect(result).toBe(expected);
+  });
+});
+
+describe("parity of event weeks", () => {
+  test.each([
+    [[3, 5, 7, 9, 11, 13], WEEK_PARITY.EVEN],
+    [[2, 4, 6, 8, 10, 12], WEEK_PARITY.ODD],
+  ])("should determine parity for event weeks %s", (weeks, expected) => {
+    const result = getParityOfWeeks(weeks, new Date("2024-09-16"));
     expect(result).toBe(expected);
   });
 });

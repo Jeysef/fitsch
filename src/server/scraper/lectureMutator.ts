@@ -170,7 +170,7 @@ const filterValidLectures = (data: LectureMutator.LectureWithId[]) => {
 /**
  * Fills in the specific week numbers for lectures that only have a parity (ODD/EVEN).
  */
-const fillMissingWeeks =
+export const fillMissingWeeks =
   (semesterWeeks: number) =>
   (data: LectureMutator.FilteredCourseLecture[]): LectureMutator.FilteredCourseLecture[] => {
     return data.map((lecture) => {
