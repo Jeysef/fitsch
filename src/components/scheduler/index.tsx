@@ -59,18 +59,26 @@ export default function SchedulerComp(props: { store: SchedulerStore }) {
   ));
 
   const AxisComponents = createMemo(() => (
-    <>
+    <Show
+      when={isHorizontalLayout()}
+      fallback={
+        <>
+          <TopXAxisHeader>
+            <DayComp />
+          </TopXAxisHeader>
+          <LeftYAxisHeader>
+            <TimeComponent />
+          </LeftYAxisHeader>
+        </>
+      }
+    >
       <TopXAxisHeader>
-        <Show when={isHorizontalLayout()} fallback={<DayComp />}>
-          <TimeComponent />
-        </Show>
+        <TimeComponent />
       </TopXAxisHeader>
       <LeftYAxisHeader>
-        <Show when={isHorizontalLayout()} fallback={<TimeComponent />}>
-          <DayComp />
-        </Show>
+        <DayComp />
       </LeftYAxisHeader>
-    </>
+    </Show>
   ));
 
   return (
