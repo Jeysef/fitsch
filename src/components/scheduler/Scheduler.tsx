@@ -100,7 +100,7 @@ export function Scheduler(props: FlowProps) {
   return (
     <div
       ref={setScheduleRef}
-      class="relative grid overflow-auto max-h-full h-auto w-auto zoom-container transition-[font-size] ease-in-out bg-background border"
+      class="relative grid overflow-auto max-h-full h-auto w-auto zoom-container transition-[font-size] ease-in-out bg-background border max-w-max"
       {...bind()}
       style={{
         "justify-content": "safe center",
