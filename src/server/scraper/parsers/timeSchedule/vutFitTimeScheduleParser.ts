@@ -9,25 +9,22 @@ export class TimeScheduleParser {
   constructor(private readonly langSet: LanguageSetDictionary) {}
 
   public parse($: CheerioAPI): StudyApiTypes.getStudyTimeScheduleReturn {
-    const dates: [string, string][] = [];
+    // const dates: [string, string][] = [];
+    console.log("🚀 ~ TimeScheduleParser ~ parse ~ this.langSet.studyPlan:", this.langSet.studyPlan);
 
-    $("main .grid .grid__cell")
-      .filter(":has(.c-schedule__subtitle)")
-      .each((_, element) => {
-        const date = $(element)
-          .find("ul.c-schedule__list li.c-schedule__item")
-          .filter((_, element) =>
-            // Use the injected langSet
-            Object.values(this.langSet.studyPlan).some((text) =>
-              $(element).find(".c-schedule__label").text().includes(text)
-            )
-          )
-          .children(".c-schedule__time")
+    const dates = $("main .grid .grid__cell:has(.c-schedule__subtitle) ul.c-schedule__list li.c-schedule__item")
+      .filter((_, element) => {
+        return Object.values(this.langSet.studyPlan).some((text) =>
+          $(element).find(".c-schedule__label").text().includes(text)
+        );
+      })
+      .toArray()
+      .map((element) =>
+        $(element)
           .find("time")
           .map((_, element) => $(element).attr("datetime"))
-          .get();
-        dates.push(date as [string, string]);
-      });
+          .toArray()
+      );
 
     const timeSchedule = ObjectTyped.fromEntries(
       Object.values(SEMESTER).map(
