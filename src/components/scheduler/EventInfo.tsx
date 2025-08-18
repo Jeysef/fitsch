@@ -22,7 +22,7 @@ interface EventPopupProps {
 
 const EventPopup: ParentComponent<EventPopupProps> = (props) => {
   const { t } = useI18n();
-  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks, id } = props.eventData.event;
+  const { timeSpan, room, type, capacity, lectureGroup, groups, info, note, weeks } = props.eventData.event;
   const courseDetail = props.eventData.courseDetail;
 
   return (
@@ -139,7 +139,16 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
             </a>
           </Show>
           <Show when={import.meta.env.DEV}>
-            <pre class="text-xxs">{id}</pre>
+            {/* copy event to clipboard */}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(JSON.stringify(props.eventData.event, null, 2));
+              }}
+            >
+              Copy Event
+            </Button>
           </Show>
         </div>
       </PopoverContent>
