@@ -10,9 +10,6 @@ export class TimeScheduleParser {
   constructor(private readonly langSet: LanguageSetDictionary) {}
 
   public parse($: CheerioAPI): StudyApiTypes.getStudyTimeScheduleReturn {
-    // const dates: [string, string][] = [];
-    console.log("🚀 ~ TimeScheduleParser ~ parse ~ this.langSet.studyPlan:", this.langSet.studyPlan);
-
     const dates = $("main .grid .grid__cell:has(.c-schedule__subtitle) ul.c-schedule__list li.c-schedule__item")
       .filter((_, element) => {
         return Object.values(this.langSet.studyPlan).some((textArray) =>
