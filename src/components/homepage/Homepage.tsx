@@ -13,7 +13,6 @@ import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import { tabs, type Tab } from "./tab";
 import TimeSpan from "./TimeSpan";
-import type { includes } from "lodash-es";
 
 export default function Home() {
   const { t, locale } = useI18n();
