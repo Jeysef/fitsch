@@ -1,6 +1,7 @@
 import type { CheerioAPI } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
+import { parseAsUtc } from "~/server/scraper/utils";
 import { SEMESTER } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
 
@@ -28,7 +29,7 @@ export class TimeScheduleParser {
 
     const timeSchedule = ObjectTyped.fromEntries(
       Object.values(SEMESTER).map(
-        (semester, index) => [semester, { start: new Date(dates[index][0]), end: new Date(dates[index][1]) }] as const
+        (semester, index) => [semester, { start: parseAsUtc(dates[index][0]), end: parseAsUtc(dates[index][1]) }] as const
       )
     );
     return timeSchedule;

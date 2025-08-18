@@ -132,3 +132,38 @@ export function getLectureLectures(lecture: Lecture, detail: CourseDetail) {
   // const lectureLectures = Math.floor(lectureTimeSpan * 60 / duration)
   return lectureLectures;
 }
+
+/**
+ * Creates a Date object from an ISO string, ensuring it's interpreted as UTC.
+ * If the string has no timezone offset ('Z', '+HH:mm', or '-HH:mm'),
+ * it appends 'Z' to force UTC interpretation.
+ * @param {string} dateString The ISO-like date string.
+ * @returns {Date} The parsed Date object.
+ */
+export function parseAsUtc(dateString: string): Date {
+  if (typeof dateString !== "string") {
+    throw new TypeError("Input must be a string.");
+  }
+
+  // Regex to check for a date-only format (YYYY-MM-DD)
+  const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+  // Regex to check for an existing timezone offset
+  const timezoneRegex = /Z|[+-]\d{2}(?::?\d{2})?$/;
+
+  if (dateOnlyRegex.test(dateString)) {
+    // It's a date-only string. Append the UTC time part to be explicit.
+    return new Date(dateString + "T00:00:00Z");
+  }
+
+  // It's a datetime string. Check if it already has a timezone.
+  if (timezoneRegex.test(dateString)) {
+    // It has a timezone, so we can trust the native parser.
+    return new Date(dateString);
+  }
+
+  // It's a datetime string without a timezone. Append 'Z' to treat as UTC.
+  // This also implicitly handles strings that have a 'T' but are invalid.
+  // new Date() will correctly return 'Invalid Date' for them.
+  return new Date(dateString + "Z");
+}
