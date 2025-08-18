@@ -39,7 +39,7 @@ export default {
     },
   },
   studyPlan: {
-    "Lessons in the winter semester": "Lessons in the winter semester",
-    "Lessons in the summer semester": "Lessons in the summer semester",
+    "Lessons in the winter semester": ["Lessons in the winter semester", "Winter Semester Teaching Period"],
+    "Lessons in the summer semester": ["Lessons in the summer semester", "Summer Semester Teaching Period"],
   },
 } satisfies typeof Schema;

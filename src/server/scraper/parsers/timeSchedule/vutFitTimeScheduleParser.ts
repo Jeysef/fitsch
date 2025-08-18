@@ -14,8 +14,8 @@ export class TimeScheduleParser {
 
     const dates = $("main .grid .grid__cell:has(.c-schedule__subtitle) ul.c-schedule__list li.c-schedule__item")
       .filter((_, element) => {
-        return Object.values(this.langSet.studyPlan).some((text) =>
-          $(element).find(".c-schedule__label").text().includes(text)
+        return Object.values(this.langSet.studyPlan).some((textArray) =>
+          textArray.some((text) => $(element).find(".c-schedule__label").text().includes(text))
         );
       })
       .toArray()

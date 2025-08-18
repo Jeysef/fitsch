@@ -38,7 +38,7 @@ export default {
     },
   },
   studyPlan: {
-    "Lessons in the winter semester": "Výuka v zimním semestru",
-    "Lessons in the summer semester": "Výuka v letním semestru",
+    "Lessons in the winter semester": ["Výuka v zimním semestru", "Období výuky v zimním semestru"],
+    "Lessons in the summer semester": ["Výuka v letním semestru", "Období výuky v letním semestru"],
   },
 };
