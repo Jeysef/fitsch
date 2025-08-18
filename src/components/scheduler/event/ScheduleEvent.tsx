@@ -22,7 +22,7 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
   const eventData = props.event.eventData as ScheduleEventData;
   const event = eventData.event as ScheduleEvent;
 
-  const strongLinked = event.strongLinked.map((data) => store.getEvent(data));
+  const strongLinked = event.strongLinked.map((data) => store().getEvent(data));
 
   const handleCheck = (checked?: boolean) => {
     batch(() => {

@@ -24,7 +24,7 @@ export default function CustomEventComponent(props: CustomEventProps) {
   const event = props.event.eventData.event as CustomEvent;
   const [dropdownMenuOpen, setDropdownMenuOpen] = createSignal(false);
 
-  const removeEvent = () => store.removeCustomEvent(event.id);
+  const removeEvent = () => store().removeCustomEvent(event.id);
 
   const handleCheck = (checked?: boolean) => {
     event.checked = checked ?? !event.checked;
