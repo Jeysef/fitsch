@@ -167,8 +167,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.0.7)(@vitest/ui@3.2.4)(jiti@2.4.2)(jsdom@26.1.0)(terser@5.43.1)(yaml@2.8.1)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^4.0.17
+        version: 4.0.17
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -4790,6 +4790,9 @@ packages:
 
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+
+  zod@4.0.17:
+    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -9793,5 +9796,7 @@ snapshots:
       readable-stream: 4.7.0
 
   zod@3.25.67: {}
+
+  zod@4.0.17: {}
 
   zwitch@2.0.4: {}

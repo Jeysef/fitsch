@@ -1,34 +1,20 @@
-import { z, type EnumLike } from "zod";
+import { z } from "zod";
 import { TimeSpan } from "~/components/scheduler/time";
 import type { LectureMetrics } from "~/components/scheduler/types";
 import { DAY, LECTURE_TYPE, WEEK_PARITY } from "~/server/scraper/enums";
-
-export const RecordOf = <T extends EnumLike, ZodValueType extends z.ZodTypeAny>(obj: T, zodValueType: ZodValueType) => {
-  type KeyType = T[keyof T];
-  const keys = Object.values(obj);
-  return z.object(
-    keys.reduce(
-      (agg, k) =>
-        Object.assign(agg, {
-          [k]: zodValueType,
-        }),
-      {} as Record<KeyType, ZodValueType>
-    )
-  );
-};
 
 const timespanSchema = z.instanceof(TimeSpan);
 
 const linkedLectureDataSchema = z.object({
   id: z.string(),
-  day: z.nativeEnum(DAY),
+  day: z.enum(DAY),
 });
 
-const courseTimeSpan = RecordOf(LECTURE_TYPE, z.number().optional());
+const courseTimeSpan = z.record(z.enum(LECTURE_TYPE), z.number().optional());
 
 const eventBaseSchema = z.object({
   id: z.string(),
-  day: z.nativeEnum(DAY),
+  day: z.enum(DAY),
   timeSpan: timespanSchema,
   info: z.string(),
   checked: z.boolean(),
@@ -44,16 +30,16 @@ export const customEventSchema = eventBaseSchema.extend({
 export const customEventsSchema = z.array(customEventSchema).optional();
 
 const scheduleEventSchema = eventBaseSchema.extend({
-  type: z.nativeEnum(LECTURE_TYPE),
+  type: z.enum(LECTURE_TYPE),
   weeks: z.union([
     z.object({
       weeks: z.array(z.number()),
-      parity: z.nativeEnum(WEEK_PARITY).nullable(),
+      parity: z.enum(WEEK_PARITY).nullable(),
       calculated: z.boolean().optional(),
     }),
     z.object({
       weeks: z.string(),
-      parity: z.nativeEnum(WEEK_PARITY).nullable(),
+      parity: z.enum(WEEK_PARITY).nullable(),
       calculated: z.boolean().optional(),
     }),
   ]),
@@ -74,8 +60,8 @@ const coursesSchema = z.array(
         abbreviation: z.string(),
         name: z.string(),
         /** @deprecated */
-        link: z.string().url().optional(),
-        url: z.string().url().optional(),
+        link: z.url().optional(),
+        url: z.url().optional(),
         id: z.string(),
         timeSpan: courseTimeSpan,
         timeSpanText: z.array(z.string()),
@@ -94,9 +80,9 @@ const coursesSchema = z.array(
         };
       }),
     data: z.array(scheduleEventSchema),
-    metrics: RecordOf(LECTURE_TYPE, z.object({ weeks: z.number(), weeklyLectures: z.number() }).optional()).transform(
-      (val): Record<LECTURE_TYPE, LectureMetrics> => val as Record<LECTURE_TYPE, LectureMetrics>
-    ),
+    metrics: z
+      .record(z.enum(LECTURE_TYPE), z.object({ weeks: z.number(), weeklyLectures: z.number() }).optional())
+      .transform((val): Record<LECTURE_TYPE, LectureMetrics> => val as Record<LECTURE_TYPE, LectureMetrics>),
   })
 );
 
