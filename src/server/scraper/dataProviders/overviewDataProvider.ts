@@ -18,7 +18,6 @@ export class OverviewDataProvider {
 
   public async getStudyOverview(config: OverviewPayload, language: LANGUAGE): Promise<Overview> {
     const { programs: studyPrograms, years, currentYear } = await this.studyApi.getStudyPrograms(config);
-    console.log("🚀 ~ OverviewDataProvider ~ getStudyOverview ~ studyPrograms:", studyPrograms);
     // TODO: multiple languages
     const isEnglish = language === LANGUAGE.ENGLISH;
     const filterLanguage = (programs: ProgramOverview[]) => {
