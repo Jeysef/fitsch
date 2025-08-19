@@ -73,17 +73,25 @@ const coursesSchema = z.array(
       .object({
         abbreviation: z.string(),
         name: z.string(),
-        link: z.string().optional(),
-        url: z.string(),
+        /** @deprecated */
+        link: z.string().url().optional(),
+        url: z.string().url().optional(),
         id: z.string(),
         timeSpan: courseTimeSpan,
         timeSpanText: z.array(z.string()),
       })
+      .refine((data) => data.url || data.link, {
+        message: "Either 'url' or the deprecated 'link' property must be provided.",
+        // Point the error to the 'url' field for better DX in forms etc.
+        path: ["coursesSchema", "detail", "url"],
+      })
       .transform((detail) => {
-        if (!detail.url) {
-          detail.url = detail.link ?? "";
-        }
-        return detail;
+        const finalUrl = detail.url ?? detail.link!;
+        const { link, ...rest } = detail;
+        return {
+          ...rest,
+          url: finalUrl,
+        };
       }),
     data: z.array(scheduleEventSchema),
     metrics: RecordOf(LECTURE_TYPE, z.object({ weeks: z.number(), weeklyLectures: z.number() }).optional()).transform(
