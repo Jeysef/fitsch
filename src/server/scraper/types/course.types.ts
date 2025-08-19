@@ -27,7 +27,7 @@ export interface CourseDetail extends CourseBase {
   timeSpanText: string[];
 }
 
-type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>;
+export type CourseTimeSpan = Partial<Record<LECTURE_TYPE, number>>;
 
 export interface Lecture {
   day: DAY;

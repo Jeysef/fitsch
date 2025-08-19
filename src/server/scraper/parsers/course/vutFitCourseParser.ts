@@ -1,9 +1,8 @@
 import type { CheerioAPI } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import { Time, TimeSpan } from "~/components/scheduler/time";
-import { valueToEnumValue } from "~/lib/utils";
 import type { CourseDetailParserOptions } from "~/server/scraper/parsers/course/CourseDetailParser.types";
-import { parseWeek } from "~/server/scraper/parsers/course/utils";
+import { parseCourseTimeSpan, parseWeek } from "~/server/scraper/parsers/course/utils";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { LECTURE_TYPE, type DAY } from "../../enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
@@ -32,13 +31,7 @@ export class CourseDetailParser {
       .map((_, element) => $(element).text().trim())
       .get();
 
-    const timeSpan = ObjectTyped.fromEntries(
-      ObjectTyped.entries(this.langSet.course.detail.timeSpan.data).map(([type, text]) => {
-        const hours = Number.parseInt(rangeText.find((rangeText) => rangeText.includes(text))?.split(" ")[0] ?? "0");
-        return [valueToEnumValue(type, LECTURE_TYPE), hours] as const;
-      })
-    );
-
+    const timeSpan = parseCourseTimeSpan(rangeText, this.langSet);
     const timeSpanText = rangeText;
 
     const noteText = $("main div.b-detail .b-detail__body .footnote").text().trim();

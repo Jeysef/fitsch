@@ -1,7 +1,7 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it, test } from "vitest";
 import { LANGUAGE } from "~/enums";
-import { WEEK_PARITY } from "~/server/scraper/enums";
-import { parseWeek } from "~/server/scraper/parsers/course/utils";
+import { LECTURE_TYPE, WEEK_PARITY } from "~/server/scraper/enums";
+import { parseCourseTimeSpan, parseWeek } from "~/server/scraper/parsers/course/utils";
 import { getLanguageSet } from "~/server/scraper/tests/mocks/languageSet.mock";
 
 describe("Course parser utils", () => {
@@ -36,5 +36,14 @@ describe("Course parser utils", () => {
   ])("parses week", (weeks, expected) => {
     const result = parseWeek(weeks, semesterStart, languageSet);
     expect(result).toEqual(expected);
+  });
+
+  it("should parseCourseTimeSpan", () => {
+    const timeSpan = ["26 hod. přednášky", "26 hod. cvičení"];
+    const result = parseCourseTimeSpan(timeSpan, languageSet);
+    expect(result).toEqual({
+      [LECTURE_TYPE.LECTURE]: 26,
+      [LECTURE_TYPE.EXERCISE]: 26,
+    });
   });
 });
