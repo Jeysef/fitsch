@@ -28,3 +28,6 @@ gitignore
 # System Files
 .DS_Store
 Thumbs.db
+
+# rollup-plugin-visualizer
+stats.html
