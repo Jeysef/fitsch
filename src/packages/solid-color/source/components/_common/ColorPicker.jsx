@@ -1,6 +1,6 @@
+import { debounce } from 'es-toolkit';
 import { createContext, createEffect, createMemo, createSignal, mergeProps, useContext, } from 'solid-js';
 import * as color from '../../helpers/color';
-import { debounce } from 'lodash-es';
 export const ColorPickerContext = createContext(undefined);
 export function ColorPickerProvider(_props) {
     const props = mergeProps({ defaultColor: { h: 250, s: 0.5, l: 0.2, a: 1 } }, _props);

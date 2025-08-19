@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash-es";
+import { uniqBy } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";

@@ -1,4 +1,4 @@
-import { map, mapValues, reduce } from "lodash-es";
+import { map, mapValues, reduce } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import type { StoreJson } from "~/components/menu/storeJsonValidator";
 import type { CustomEvent, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";

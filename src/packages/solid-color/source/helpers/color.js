@@ -1,4 +1,4 @@
-import { each } from 'lodash-es';
+import { each } from 'es-toolkit/compat';
 import tinycolor from 'tinycolor2';
 export const simpleCheckForValidColor = (data) => {
     const keysToCheck = ['r', 'g', 'b', 'a', 'h', 's', 'l', 'v'];

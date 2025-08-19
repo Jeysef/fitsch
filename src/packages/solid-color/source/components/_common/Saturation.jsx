@@ -1,4 +1,4 @@
-import { merge } from 'lodash-es';
+import { merge } from 'es-toolkit';
 import { createEffect, mergeProps } from 'solid-js';
 import { calculateChange } from '../../helpers/saturation';
 export function Saturation(_props) {

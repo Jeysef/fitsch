@@ -1,6 +1,6 @@
 import { trackStore } from "@solid-primitives/deep";
 import { action, useAction } from "@solidjs/router";
-import { flatMap, forEach, mapValues } from "lodash-es";
+import { flatMap, forEach, mapValues } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
 import {

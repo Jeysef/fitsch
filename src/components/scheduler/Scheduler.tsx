@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { compact, difference, flatMap, flow, values } from "lodash-es";
+import { compact, difference, flatMap, flow, values } from "es-toolkit/compat";
 import TableProperties from "lucide-solid/icons/table-properties";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";

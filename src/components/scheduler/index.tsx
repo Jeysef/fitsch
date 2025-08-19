@@ -1,5 +1,5 @@
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
-import { without } from "lodash-es";
+import { without } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { useI18n } from "~/i18n";

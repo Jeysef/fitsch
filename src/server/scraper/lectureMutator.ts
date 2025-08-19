@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { cloneDeep, flow, isEqual, isString, union, uniq } from "lodash-es";
+import { cloneDeep, flow, isEqual, isString, union, uniq } from "es-toolkit/compat";
 import type { StrictOmit } from "ts-essentials";
 import type { Time, TimeSpan } from "~/components/scheduler/time";
 import { conjunctableRooms } from "~/config/rooms";

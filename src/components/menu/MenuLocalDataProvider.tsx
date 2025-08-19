@@ -1,5 +1,5 @@
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
-import { mapValues } from "lodash-es";
+import { mapValues } from "es-toolkit/compat";
 import {
   type Accessor,
   createContext,

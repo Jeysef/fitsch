@@ -1,6 +1,6 @@
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
-import { divide, multiply, round } from "lodash-es";
+import { divide, multiply, round } from "es-toolkit/compat";
 import { twMerge } from "tailwind-merge";
 
 export const cn = (...classLists: ClassValue[]) => twMerge(clsx(classLists));
