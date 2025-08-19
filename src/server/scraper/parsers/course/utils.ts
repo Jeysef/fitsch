@@ -1,5 +1,6 @@
+import { compact } from "es-toolkit";
 import { ObjectTyped } from "object-typed";
-import { WEEK_PARITY, type LECTURE_TYPE } from "~/server/scraper/enums";
+import { WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { CourseTimeSpan } from "~/server/scraper/types/types";
 import { getParityOfWeeks, getWeekFromSemesterStart } from "~/server/scraper/utils";
@@ -38,19 +39,20 @@ export function parseWeek(week: string, semesterStart: Date, languageSet: Langua
 
 export function parseCourseTimeSpan(timeSpan: string[], languageSet: LanguageSetDictionary): CourseTimeSpan {
   return ObjectTyped.fromEntries(
-    timeSpan.map<[LECTURE_TYPE, number]>((timeSpan) => {
-      const [hoursText, ...typeText] = timeSpan.split(" ");
-      const hours = Number.parseInt(hoursText ?? "0");
-      const typeTextJoined = typeText.join(" ");
-      const type = ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, text]) =>
-        typeTextJoined.includes(text)
-      )?.[0];
-      if (!type) {
-        console.error(`Could not find type for time span ${timeSpan}`);
-        const typeText = (typeTextJoined.split(" ").at(-1) ?? "") as LECTURE_TYPE;
-        return [typeText, hours];
-      }
-      return [type, hours];
-    })
+    compact(
+      timeSpan.map((timeSpan) => {
+        const [hoursText, ...typeText] = timeSpan.split(" ");
+        const hours = Number.parseInt(hoursText ?? "0");
+        const typeTextJoined = typeText.join(" ");
+        const type = ObjectTyped.entries(languageSet.course.detail.timeSpan.data).find(([_, text]) =>
+          typeTextJoined.includes(text)
+        )?.[0];
+        if (!type) {
+          console.warn(`Could not find type for time span ${timeSpan}`);
+          return null;
+        }
+        return [type, hours];
+      })
+    )
   );
 }
