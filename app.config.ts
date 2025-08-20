@@ -6,6 +6,7 @@ export default defineConfig({
     plugins: [visualizer({ open: true, gzipSize: true, template: "sunburst" })],
   },
   server: {
+    compatibilityDate: "2025-08-20",
     plugins: ["./src/plugins/cache.ts"],
   },
 });
