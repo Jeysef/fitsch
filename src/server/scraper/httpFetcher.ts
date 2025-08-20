@@ -1,4 +1,4 @@
-import type { fromURL } from "cheerio";
+import type { fromURL } from "~/server/utils/fetcher";
 
 export class HttpFetcher {
   constructor(private readonly fetcher: typeof fromURL) {}

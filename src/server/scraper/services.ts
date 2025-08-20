@@ -1,5 +1,5 @@
-import { fromURL } from "cheerio";
 import type { FACULTY, LANGUAGE } from "~/enums";
+import { fromURL } from "~/server/utils/fetcher";
 import { ApiFactory } from "./api/factory";
 import { HttpFetcher } from "./httpFetcher";
 
