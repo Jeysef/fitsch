@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "build-netlify": "vinxi build --preset netlify",
+    "build-netlify": "vinxi build --preset netlify-edge",
     "start": "vinxi start",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
