@@ -4,7 +4,7 @@ import { StartServer, createHandler } from "@solidjs/start/server";
 export default createHandler(() => (
   <StartServer
     document={({ assets, children, scripts }) => (
-      <html lang="en">
+      <html lang="cs">
         <head>
           <meta charset="utf-8" />
           <title>FIT scheduler</title>
