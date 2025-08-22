@@ -13,6 +13,5 @@ export default defineConfig({
         proxy: "https://eu.i.posthog.com/**",
       },
     },
-    debug: true,
   },
 });
