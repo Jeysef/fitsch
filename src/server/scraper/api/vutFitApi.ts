@@ -81,9 +81,23 @@ export class VutFitApi implements IStudyApi {
       [DEGREE.DOCTORAL]: "D",
     };
 
+    /**
+     * Get current study year
+     * If the current month is before June, return the previous year
+     * Otherwise, return the current year
+     * example: 2023-06-01 -> 2022 (label will be 2022/2023)
+     */
+    const getYear = () => {
+      const now = new Date();
+      const defaultYear = now.getFullYear();
+      const month = now.getMonth();
+      if (month < 6) return defaultYear - 1;
+      return defaultYear;
+    };
+
     const { degree, year } = config;
     const degreeQuery = degree ? `degree=${urlTypeDegrees[degree]}` : "";
-    const yearQuery = year ? `year=${year}` : "";
+    const yearQuery = `year=${year ?? getYear()}`;
     const queryStr = [degreeQuery, yearQuery].filter(Boolean).join("&");
 
     return `${this.baseUrl}programs/${this.urlLanguage}${queryStr ? `?${queryStr}` : ""}`;
