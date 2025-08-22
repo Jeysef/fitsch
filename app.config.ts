@@ -8,5 +8,11 @@ export default defineConfig({
   server: {
     compatibilityDate: "2025-08-20",
     plugins: ["./src/plugins/cache.ts"],
+    routeRules: {
+      "/api/insights/**": {
+        proxy: "https://eu.i.posthog.com/**",
+      },
+    },
+    debug: true,
   },
 });

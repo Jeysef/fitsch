@@ -1,11 +1,12 @@
 import { useSearchParams } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, Show, Suspense, batch, createMemo, createSignal, startTransition } from "solid-js";
+import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, startTransition } from "solid-js";
 import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { useIsMobile } from "~/lib/hooks";
+import { usePostHog } from "~/lib/posthog";
 import { cn } from "~/lib/utils";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import { Button } from "../ui/button";
@@ -23,6 +24,7 @@ export default function Home() {
 
   const checkedDataMemo = createMemo(() => store.checkedData);
   const data = createMemo(() => store.data);
+  const posthog = usePostHog();
 
   const storeProxy = new Proxy(store, {
     get(store, prop) {
@@ -64,6 +66,10 @@ export default function Home() {
         ([type, { weeklyLectures }]) => storeProxy.selected[idx]?.[type] === weeklyLectures
       );
     });
+  });
+
+  createEffect(() => {
+    if (storeProxy.courses.length && areAllCoursesSelected()) posthog().capture("timespan-all-courses-selected");
   });
 
   const collapseAll = (expand = false) =>

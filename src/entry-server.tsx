@@ -1,5 +1,6 @@
 // @refresh reload
 import { StartServer, createHandler } from "@solidjs/start/server";
+import "~/env/server";
 
 export default createHandler(() => (
   <StartServer

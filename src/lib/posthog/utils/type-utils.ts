@@ -1,0 +1,14 @@
+// from a comment on http://dbj.org/dbj/?p=286
+// fails on only one very rare and deliberate custom object:
+// let bomb = { toString : undefined, valueOf: function(o) { return "function BOMBA!"; }};
+export const isFunction = function (f: any): f is (...args: any[]) => any {
+  return typeof f === "function";
+};
+
+export const isUndefined = function (x: unknown): x is undefined {
+  return x === void 0;
+};
+
+export const isNull = function (x: unknown): x is null {
+  return x === null;
+};

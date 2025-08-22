@@ -21,6 +21,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
+import { usePostHog } from "~/lib/posthog";
 import { OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
@@ -413,9 +414,16 @@ export function CoursesSelect() {
 }
 
 export function SubmitButton() {
+  const posthog = usePostHog();
   const { t } = useI18n();
+
+  const onClick = () => {
+    posthog().capture("menu-submit_clicked", {
+      button_name: "Get Started",
+    });
+  };
   return (
-    <Button class="w-full" type="submit">
+    <Button class="w-full" type="submit" onClick={onClick}>
       {t("menu.load")}
     </Button>
   );

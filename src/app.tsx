@@ -1,6 +1,7 @@
 // it may seem theese fonts flicker in dev mode, but they work fine in production
 // import "@fontsource/geist-mono";
 import { ColorModeProvider, ColorModeScript } from "@kobalte/core";
+import { MultiProvider } from "@solid-primitives/context";
 import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
@@ -9,16 +10,23 @@ import Layout from "~/components/layout";
 import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
 import { InstallationProvider } from "~/providers/InstallationProvider";
+import { PostHogProvider } from "~/providers/PosthogProvider";
 import { SchedulerProvider } from "~/providers/SchedulerProvider";
 import "./app.css";
-import { MultiProvider } from "@solid-primitives/context";
 
 export default function App() {
-  const providers = [MetaProvider, I18nProvider, InstallationProvider, SchedulerProvider, ColorModeProvider];
+  const providers = [
+    MetaProvider,
+    I18nProvider,
+    InstallationProvider,
+    PostHogProvider,
+    SchedulerProvider,
+    ColorModeProvider,
+  ];
   return (
     <Router
       root={(props) => (
-        <MetaProvider>
+        <>
           <Suspense>
             <ColorModeScript initialColorMode="light" storageKey="kb-color-mode" />
             <MultiProvider values={providers}>
@@ -28,7 +36,7 @@ export default function App() {
             </MultiProvider>
           </Suspense>
           <Toaster />
-        </MetaProvider>
+        </>
       )}
     >
       <FileRoutes />
