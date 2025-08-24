@@ -151,7 +151,10 @@ export function SchedulerProvider(props: ParentProps) {
   // On component mount, load the persisted state from local storage and merge it into the store.
   onMount(() => {
     const plain = persistedStore();
+    console.log("🚀 ~ SchedulerProvider ~ plain:", plain, "store:", store);
+    console.log("🚀 ~ recreateStore ~ merge(store, plainStore):", merge(store, plain));
     recreateStore(plain);
+    console.log("🚀 ~ SchedulerProvider ~ full store:", store.data);
   });
 
   // --- Handle updates when new course data is fetched from the server ---

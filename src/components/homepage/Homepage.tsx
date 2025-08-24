@@ -1,8 +1,9 @@
 import { useSearchParams } from "@solidjs/router";
 import { ObjectTyped } from "object-typed";
-import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, startTransition } from "solid-js";
+import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount, startTransition } from "solid-js";
 import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
+import SchedulerSkeleton from "~/components/scheduler/SchedulerSkeleton";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useI18n } from "~/i18n";
 import { useIsMobile } from "~/lib/hooks";
@@ -21,6 +22,13 @@ export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
   // const { opened, toggleNavigation } = useMenuOpened();
   const [isAllCollapsed, setIsAllCollapsed] = createSignal(false);
+  const [showSkeleton, setShowSkeleton] = createSignal(true);
+
+  // Hide skeleton after localStorage loads (simulate with onMount and a microtask)
+  onMount(() => {
+    // Wait for next tick to allow localStorage hydration
+    queueMicrotask(() => setShowSkeleton(false));
+  });
 
   const checkedDataMemo = createMemo(() => store.checkedData);
   const data = createMemo(() => store.data);
@@ -137,7 +145,12 @@ export default function Home() {
       {/* </div> */}
       <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
         <div class="w-auto max-w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2 mx-auto">
-          <Scheduler store={tab() === tabs.workSchedule ? storeProxy : filteredStore} />
+          <Show
+            when={showSkeleton()}
+            fallback={<Scheduler store={tab() === tabs.workSchedule ? storeProxy : filteredStore} />}
+          >
+            <SchedulerSkeleton store={storeProxy} />
+          </Show>
         </div>
       </Show>
       <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
