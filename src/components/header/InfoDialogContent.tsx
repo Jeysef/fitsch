@@ -1,3 +1,4 @@
+import ChevronsUpDown from "lucide-solid/icons/chevrons-up-down";
 import TriangleAlert from "lucide-solid/icons/triangle-alert";
 import { ObjectTyped } from "object-typed";
 import { For } from "solid-js";
@@ -6,7 +7,9 @@ import Heading from "~/components/typography/heading";
 import List from "~/components/typography/list";
 import Text from "~/components/typography/text";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { buttonVariants } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { Contributor } from "~/components/ui/contributor";
 import { DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import InstallButton from "~/components/ui/InstallButton";
@@ -14,13 +17,14 @@ import { parityColors, subjectTypeColors } from "~/config/colors";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
+import QrCode from "./QR-donate.png";
 
 export default function InfoDialogContent() {
   const { t } = useI18n();
 
   // Thanks block component reused in two places
   const ThanksBlock = () => (
-    <>
+    <div class="flex flex-col gap-4">
       <Heading variant="h4" class="mt-8">
         {t("info.appInfo.thanks.title")}
       </Heading>
@@ -30,7 +34,27 @@ export default function InfoDialogContent() {
         <Text class="text-muted-foreground text-xs inline-block">{t("info.appInfo.createdBy.title")}</Text>
         <Contributor name="Jeysef" href="https://github.com/Jeysef" class="w-max" />
       </span>
-    </>
+      <Collapsible>
+        <Card>
+          <CardHeader class="flex flex-row items-center justify-between gap-4 px-4 space-y-0">
+            <CollapsibleTrigger as={Button} variant="ghost" size={null} class="size-8 w-full">
+              <Heading variant="h4" class="">
+                Support the project
+              </Heading>
+              <ChevronsUpDown />
+              <span class="sr-only">Toggle</span>
+            </CollapsibleTrigger>
+          </CardHeader>
+          <CollapsibleContent class="flex flex-col gap-4">
+            <CardContent>
+              This app is made entirely by me. It's was in development for almost a year.
+              {/* donate 20kc qr code */}
+              <img src={QrCode} alt="qr code" class="max-h-60 aspect-square mx-auto" />
+            </CardContent>
+          </CollapsibleContent>
+        </Card>
+      </Collapsible>
+    </div>
   );
 
   const LeftCol = () => {
