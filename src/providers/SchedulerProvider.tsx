@@ -1,7 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
-import { merge, range, zipObject } from "es-toolkit/compat";
+import { merge, range, zipObject } from "es-toolkit";
 import {
   batch,
   createComputed,
