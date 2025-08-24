@@ -69,7 +69,7 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
         <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
         <div class="space-y-2">
           <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
-            <For each={ObjectTyped.entries(props.course.metrics)}>
+            <For each={ObjectTyped.entries(props.course.metrics).filter(([, value]) => value !== undefined)}>
               {([type, { weeks, weeklyLectures }]) => (
                 <>
                   <div class="flex items-center gap-2">

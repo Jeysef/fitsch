@@ -62,9 +62,9 @@ export default function Home() {
 
   const areAllCoursesSelected = createMemo(() => {
     return storeProxy.courses.every((course, idx) => {
-      return ObjectTyped.entries(course.metrics).every(
-        ([type, { weeklyLectures }]) => storeProxy.selected[idx]?.[type] === weeklyLectures
-      );
+      // Filter out entries where the value is undefined
+      const filteredMetrics = ObjectTyped.entries(course.metrics).filter(([, value]) => value !== undefined);
+      return filteredMetrics.map(([type, { weeklyLectures }]) => storeProxy.selected[idx]?.[type] === weeklyLectures);
     });
   });
 
