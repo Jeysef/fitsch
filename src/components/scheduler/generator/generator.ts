@@ -83,7 +83,8 @@ class SchedulerEngine {
   isComplete(): boolean {
     return this.allCourses.every((course) => {
       const courseHours = this.completedHours[course.detail.id];
-      return ObjectTyped.entries(course.metrics).every(([type, metrics]) => {
+      const filteredMetrics = ObjectTyped.entries(course.metrics).filter(([, value]) => value !== undefined);
+      return filteredMetrics.every(([type, metrics]) => {
         return (courseHours[type] || 0) === metrics.weeklyLectures;
       });
     });

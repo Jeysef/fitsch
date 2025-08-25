@@ -39,7 +39,8 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
   const { t } = useI18n();
 
   const getColor = (valid: boolean) => (valid ? "bg-green-500" : "bg-red-500");
-  const isAllCourseSelected = ObjectTyped.entries(props.course.metrics).every(
+  const filteredMetrics = ObjectTyped.entries(props.course.metrics).filter(([, value]) => value !== undefined);
+  const isAllCourseSelected = filteredMetrics.every(
     ([type, { weeklyLectures }]) => props.selected[type] === weeklyLectures
   );
   return (

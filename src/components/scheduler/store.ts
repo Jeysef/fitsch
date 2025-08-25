@@ -140,6 +140,7 @@ export class SchedulerStore implements StoreJson {
   get data(): Data {
     // First, initialize data with custom events
     const dataWithCustom = this.getEmptyData();
+    console.log("🚀 ~ SchedulerStore ~ dataWithCustom:", dataWithCustom);
     for (const event of this.customEvents) {
       const dayEvent = new DayEventObject(this.settings.columns, event.timeSpan).withEventData({
         event,
