@@ -1,6 +1,6 @@
 import { MutateLectureData } from "~/server/scraper/lectureMutator";
-import type { IStudyApi } from "../api/interface";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
+import type { IStudyApi } from "../api/interface";
 
 export class CoursesDataProvider {
   constructor(private readonly studyApi: IStudyApi) {}

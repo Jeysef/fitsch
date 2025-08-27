@@ -1,4 +1,5 @@
 import type { LANGUAGE } from "~/enums";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { defineCachedFunction } from "~/server/utils/cache";
 import { DEGREE } from "../enums";
@@ -63,7 +64,11 @@ export class VutFitApi implements IStudyApi {
       const $ = await this.httpFetcher.getDocument(courseUrl);
       return this.courseDetailParser.parse($, { ...config, courseUrl });
     },
-    { name: "getStudyCourseDetails_vutFit", maxAge: cacheMaxAge }
+    {
+      name: "getStudyCourseDetails_vutFit",
+      maxAge: cacheMaxAge,
+      transform: ({ value }) => ClassRegistry.transform(value),
+    }
   );
 
   public getStudyProgramCourses = async (

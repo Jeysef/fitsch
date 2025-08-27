@@ -39,7 +39,6 @@ import {
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
 import { type MenuSchema, type MenuSchemaKey, menuSchema } from "~/components/menu/schema";
-import type { SchedulerStore } from "~/components/scheduler/store";
 import { Button } from "~/components/ui/button";
 import { type tType, useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
@@ -50,6 +49,7 @@ import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/act
 import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/server-fns/getCourses/getStudyCoursesDetails.types";
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
+import type { SchedulerStore } from "~/store/store";
 import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
 import { Settings } from "./MenuSettings";
 import { LoadingState } from "./MenuSkeletons";

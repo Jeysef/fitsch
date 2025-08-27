@@ -38,4 +38,8 @@ export class ClassRegistry {
   static reviver(_key: string, value: unknown) {
     return ClassRegistry.fromJSON(value);
   }
+
+  static transform(value: unknown) {
+    return JSON.parse(JSON.stringify(value), ClassRegistry.reviver);
+  }
 }

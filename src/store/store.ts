@@ -29,7 +29,7 @@ export class SchedulerStore implements StoreJson {
 
   // ---- Courses ----
 
-  // public clearCourses = () => (this.courses.length = 0);
+  public clearCourses = () => (this.newCourses = []);
 
   public getCourse = (courseId: string) => this.courses.find((course) => course.detail.id === courseId);
 

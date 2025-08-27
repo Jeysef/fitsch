@@ -154,13 +154,11 @@ export function SchedulerProvider(props: ParentProps) {
         // Revive class instances from the fetched JSON data.
         // Necessary because server actions return plain JSON.
         const revivedData = JSON.parse(JSON.stringify(result), ClassRegistry.reviver) as LectureMutator.Return;
-        console.log("🚀 ~ SchedulerProvider ~ revivedData:", revivedData);
 
         // Update the store with the new course data within a batch to optimize reactivity.
         batch(() => {
           store.newCourses = revivedData;
         });
-        console.log("🚀 ~ SchedulerProvider ~ store.data:", store.data);
       }
     ),
     undefined,
