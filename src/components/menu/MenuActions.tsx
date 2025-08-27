@@ -1,13 +1,11 @@
-import ChevronDown from "lucide-solid/icons/chevron-down";
+import ChevronRight from "lucide-solid/icons/chevron-right";
 import AddCustomEventAction from "~/components/menu/menu-actions/AddCustomEventAction";
 import ExportImportJsonAction from "~/components/menu/menu-actions/ExportImportJsonAction";
-import GenerateScheduleAction from "~/components/menu/menu-actions/GenerateScheduleAction";
 import ScheduleScreenshot from "~/components/menu/menu-actions/SaveImageAction";
 import { SectionHeading } from "~/components/menu/MenuCommonComponents";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 import { useI18n } from "~/i18n";
 import { SidebarGroup } from "../ui/sidebar";
-import ChevronRight from "lucide-solid/icons/chevron-right";
 
 export function Actions() {
   const { t } = useI18n();
@@ -22,7 +20,7 @@ export function Actions() {
         <CollapsibleContent>
           <ScheduleScreenshot />
           <ExportImportJsonAction />
-          <GenerateScheduleAction />
+          {/* <GenerateScheduleAction /> */}
           <AddCustomEventAction />
         </CollapsibleContent>
       </SidebarGroup>

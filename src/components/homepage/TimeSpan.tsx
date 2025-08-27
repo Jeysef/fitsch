@@ -1,8 +1,5 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
-import { ObjectTyped } from "object-typed";
 import { createMemo, For, Index, Show } from "solid-js";
-import type { SchedulerStore } from "~/components/scheduler/store";
-import type { Course } from "~/components/scheduler/types";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
@@ -10,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitleLink } from "~
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
+import type { SchedulerStore } from "~/store/store";
+import type { Course } from "~/store/store.types";
 
 export interface TimeSpanProps {
   store: SchedulerStore;
@@ -22,31 +21,30 @@ export default function TimeSpan(props: TimeSpanProps) {
       {t("scheduler.timeSpan.empty")}
     </Text>
   );
-  const selected = createMemo(() => props.store.selected);
+  const coursesTimeSpan = createMemo(() => props.store.coursesTimeSpan);
   return (
     <div
       class="overflow-x-auto w-full px-4 grid grid-cols-[repeat(auto-fit,minmax(20rem,56rem))] gap-y-4 gap-x-8"
       style={{ "justify-content": "safe center" }}
     >
       <Index each={props.store.courses} fallback={fallback}>
-        {(course, index) => <TimeSpanCourse course={course()} selected={selected()[index]} />}
+        {(course) => <TimeSpanCourse course={course()} courseTimeSpan={coursesTimeSpan()[course().detail.id]} />}
       </Index>
     </div>
   );
 }
 
-function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, number> }) {
+function TimeSpanCourse(props: {
+  course: Course;
+  courseTimeSpan: { valid: boolean; courseData: Record<LECTURE_TYPE, number> };
+}) {
   const { t } = useI18n();
 
   const getColor = (valid: boolean) => (valid ? "bg-green-500" : "bg-red-500");
-  const filteredMetrics = ObjectTyped.entries(props.course.metrics).filter(([, value]) => value !== undefined);
-  const isAllCourseSelected = filteredMetrics.every(
-    ([type, { weeklyLectures }]) => props.selected[type] === weeklyLectures
-  );
   return (
     <Card class="overflow-hidden">
       <CardHeader class="bg-muted space-y-0 relative">
-        <div class={`absolute top-0 left-0 bottom-0 w-1 ${getColor(isAllCourseSelected)} `} />
+        <div class={`absolute top-0 left-0 bottom-0 w-1 ${getColor(props.courseTimeSpan.valid)} `} />
         <CardTitleLink
           href={props.course.detail.url}
           class={cn(
@@ -70,21 +68,25 @@ function TimeSpanCourse(props: { course: Course; selected: Record<LECTURE_TYPE, 
         <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
         <div class="space-y-2">
           <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
-            <For each={ObjectTyped.entries(props.course.metrics).filter(([, value]) => value !== undefined)}>
+            <For each={Object.entries(props.course.metrics)}>
               {([type, { weeks, weeklyLectures }]) => (
                 <>
                   <div class="flex items-center gap-2">
-                    <div class={`w-2 h-2 rounded-full shrink-0 ${getColor(props.selected[type] === weeklyLectures)}`} />
+                    <div
+                      class={`w-2 h-2 rounded-full shrink-0 ${getColor(props.courseTimeSpan.courseData[type as LECTURE_TYPE] === weeklyLectures)}`}
+                    />
                     <Text variant="smallText" class="text-inherit text-sm capitalize">
-                      {t(`scheduler.timeSpan.type.${type}`)}
+                      {t(`scheduler.timeSpan.type.${type as LECTURE_TYPE}`)}
                     </Text>
                   </div>
                   <Text variant="smallText" class="text-inherit text-sm">
                     {t("scheduler.timeSpan.weekly", { hours: weeklyLectures })}
                   </Text>
                   <span class="text-sm font-medium">
-                    <Show when={props.selected[type] !== weeklyLectures}>
-                      {t("scheduler.timeSpan.selected", { selected: props.selected[type] || 0 })}
+                    <Show when={props.courseTimeSpan.courseData[type as LECTURE_TYPE] !== weeklyLectures}>
+                      {t("scheduler.timeSpan.selected", {
+                        selected: props.courseTimeSpan.courseData[type as LECTURE_TYPE] || 0,
+                      })}
                     </Show>
                   </span>
                   <Text variant="smallText" class="text-muted-foreground w-full flex justify-end  text-sm">

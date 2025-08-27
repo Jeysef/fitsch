@@ -14,15 +14,15 @@ import type { StrictOmit } from "ts-essentials";
 import type { Tab } from "~/components/homepage/tab";
 import CustomEventComponent from "~/components/scheduler/event/CustomEvent";
 import ScheduleEventComponent from "~/components/scheduler/event/ScheduleEvent";
-import type { CustomEvent, CustomEventData, DayEvent, EventData, ScheduleEvent } from "~/components/scheduler/event/types";
 import Text from "~/components/typography/text";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
+import type { CustomEvent, DayEvent, Event, ScheduleEvent } from "./types";
 
-export interface EventProps {
-  event: DayEvent;
+export interface EventProps<T extends Event = Event> {
+  dayEvent: DayEvent<T>;
 }
 
 export const EventTitle: VoidComponent<{ title: string }> = (props) => {
@@ -39,8 +39,8 @@ interface EventWrapperProps extends EventProps, StrictOmit<ComponentProps<"div">
   class?: ClassValue;
 }
 export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
-  const [local, rest] = splitProps(props, ["event", "handleCheck", "header", "children"]);
-  const event = local.event.eventData.event;
+  const [local, rest] = splitProps(props, ["dayEvent", "handleCheck", "header", "children"]);
+  const event = local.dayEvent.event;
   const [searchParams] = useSearchParams<Tab>();
 
   const color = createMemo(() => {
@@ -90,24 +90,24 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
     </Card>
   );
 };
-
-export function isCustomEventData(event: EventData): event is CustomEventData {
+export function isCustomDayEvent(event: DayEvent): event is DayEvent<CustomEvent> {
   return isCustomEvent(event.event);
 }
-export function isCustomEvent(event: ScheduleEvent | CustomEvent): event is CustomEvent {
+
+export function isCustomEvent(event: Event): event is CustomEvent {
   return event.type === "CUSTOM";
 }
 
 export default function EventComponent(props: EventProps) {
-  const event = props.event;
+  const event = props.dayEvent;
 
   return (
     <Switch>
-      <Match when={isCustomEventData(event.eventData)}>
-        <CustomEventComponent event={event} />
+      <Match when={isCustomDayEvent(event)}>
+        <CustomEventComponent dayEvent={event as DayEvent<CustomEvent>} />
       </Match>
-      <Match when={!isCustomEventData(event.eventData)}>
-        <ScheduleEventComponent event={event} />
+      <Match when={!isCustomDayEvent(event)}>
+        <ScheduleEventComponent dayEvent={event as DayEvent<ScheduleEvent>} />
       </Match>
     </Switch>
   );

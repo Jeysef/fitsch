@@ -1,9 +1,9 @@
 import { createHash } from "crypto";
 import { cloneDeep, flow, isEqual, isString, union, uniq } from "es-toolkit/compat";
 import type { StrictOmit } from "ts-essentials";
-import type { Time, TimeSpan } from "~/components/scheduler/time";
 import { conjunctableRooms } from "~/config/rooms";
 import { days } from "~/config/scheduler";
+import type { Time, TimeSpan } from "~/lib/time/time";
 import { halfSemesterWeeks } from "~/server/scraper/constants";
 import { lecturesWithoutExam, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";

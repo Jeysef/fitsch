@@ -16,12 +16,12 @@ import {
 import { useI18n } from "~/i18n";
 import { useStore } from "../Scheduler";
 
-export interface CustomEventProps extends EventProps {}
+export interface CustomEventProps extends EventProps<CustomEvent> {}
 
 export default function CustomEventComponent(props: CustomEventProps) {
   const { t } = useI18n();
   const store = useStore();
-  const event = props.event.eventData.event as CustomEvent;
+  const event = props.dayEvent.event;
   const [dropdownMenuOpen, setDropdownMenuOpen] = createSignal(false);
 
   const removeEvent = () => store().removeCustomEvent(event.id);

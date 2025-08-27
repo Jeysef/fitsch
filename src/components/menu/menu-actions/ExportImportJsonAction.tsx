@@ -3,11 +3,11 @@ import { toast } from "solid-sonner";
 import { exportJSON, importJSON } from "~/components/menu/ImportExport";
 import { getFileName } from "~/components/menu/menu-actions/utils";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
-import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { useScheduler } from "~/providers/SchedulerProvider";
+import { parseStoreJson } from "~/store/storeSchema";
 
 function ExportImportJsonAction() {
   const { store, recreateStore, serialize } = useScheduler();
@@ -21,9 +21,9 @@ function ExportImportJsonAction() {
   const loadJSON = () => {
     importJSON({
       onImport: (data) => {
-        startTransition(() => {
+        startTransition(async () => {
           const parsedData = JSON.parse(data, ClassRegistry.reviver);
-          const validatedData = parseStoreJson(parsedData);
+          const validatedData = await parseStoreJson(parsedData);
           if (!validatedData.success) {
             console.error(validatedData.error);
             toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });

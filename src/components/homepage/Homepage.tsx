@@ -1,5 +1,4 @@
 import { useSearchParams } from "@solidjs/router";
-import { ObjectTyped } from "object-typed";
 import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount, startTransition } from "solid-js";
 import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
@@ -68,12 +67,10 @@ export default function Home() {
     setSearchParams({ tab: tabValue }, { replace: true });
   };
 
+  const coursesTimeSpan = createMemo(() => store.coursesTimeSpan);
+
   const areAllCoursesSelected = createMemo(() => {
-    return storeProxy.courses.every((course, idx) => {
-      // Filter out entries where the value is undefined
-      const filteredMetrics = ObjectTyped.entries(course.metrics).filter(([, value]) => value !== undefined);
-      return filteredMetrics.map(([type, { weeklyLectures }]) => storeProxy.selected[idx]?.[type] === weeklyLectures);
-    });
+    return storeProxy.courses.every((course) => coursesTimeSpan()[course.detail.id].valid);
   });
 
   createEffect(() => {
@@ -85,8 +82,8 @@ export default function Home() {
       startTransition(() => {
         batch(() => {
           for (const dayEvent of Object.values(storeProxy.data)) {
-            for (const event of dayEvent.events) {
-              event.eventData.event.collapsed = expand;
+            for (const eventStore of dayEvent.events) {
+              eventStore.event.collapsed = expand;
             }
           }
         });

@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { compact, difference, flatMap, flow, values } from "es-toolkit/compat";
+import { compact, difference, flatMap, flow } from "es-toolkit/compat";
 import TableProperties from "lucide-solid/icons/table-properties";
 import { ObjectTyped } from "object-typed";
 import { usePinch } from "solid-gesture";
@@ -19,23 +19,16 @@ import { isServer } from "solid-js/web";
 import type { StrictExtract } from "ts-essentials";
 import { Button } from "~/components/ui/button";
 import { hoverColors } from "~/config/colors";
+import { LAUNCH_DAY_TIME } from "~/config/scheduler";
+import { Time, TimeSpan } from "~/lib/time/time";
 import { cn } from "~/lib/utils";
-import { DAY } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import type { DayStore } from "~/store/dayStore";
+import type { SchedulerStore } from "~/store/store";
+import { getEventPlacement } from "~/store/utils";
 import { createElementHeightRef } from "../heightMeasurer";
-import { isCustomEventData } from "./event/Event";
-import type { DayEvent, EventData, ScheduleEvent } from "./event/types";
-import { DayEventObject, type DayDataObject, type SchedulerStore } from "./store";
-import { Time, TimeSpan } from "./time";
-
-// Constants
-export const LAUNCH_DAY_TIME = {
-  [DAY.MON]: { start: "11:00", end: "14:30" },
-  [DAY.TUE]: { start: "11:00", end: "14:30" },
-  [DAY.WED]: { start: "11:00", end: "14:30" },
-  [DAY.THU]: { start: "11:00", end: "14:30" },
-  [DAY.FRI]: { start: "11:00", end: "14:00" },
-};
+import { isCustomEvent } from "./event/Event";
+import type { DayEvent, Event, ScheduleEvent } from "./event/types";
 
 // Context
 const SchedulerStoreContext = createContext<Accessor<SchedulerStore>>();
@@ -109,9 +102,9 @@ export function Scheduler(props: FlowProps) {
         "font-size": "var(--scheduler-scale, 100%)",
         "grid-template-columns": isHorizontalLayout()
           ? `max-content 7px repeat(${store().settings.columns.length}, minmax(5.6em, 6rem))`
-          : `max-content repeat(${store().settings.rows.length}, 1fr )`,
+          : `max-content repeat(${Object.keys(store().settings.rows).length}, 1fr )`,
         "grid-template-rows": isHorizontalLayout()
-          ? `auto repeat(${store().settings.rows.length}, auto)`
+          ? `auto repeat(${Object.keys(store().settings.rows).length}, auto)`
           : `auto  7px repeat(${store().settings.columns.length}, calc(5em))`,
       }}
     >
@@ -139,30 +132,28 @@ const createLinkedCss = (eventId: string, linked: LectureMutator.LinkedLectureDa
 
 export function Week(props: FlowProps) {
   const store = useStore();
-  const storeData = createMemo(() => values(store().data || store().getEmptyData()));
+  const storeData = createMemo(() => store().data);
   const createLinkedHighlightClass = (
     property: StrictExtract<keyof ScheduleEvent, "linked" | "strongLinked">,
     color: string
   ) =>
     createMemo(() =>
       flow(
-        (eventData: EventData[]) =>
+        (events: Event[]) =>
           flatMap(
-            eventData,
-            (eventData) =>
-              !isCustomEventData(eventData) &&
+            events,
+            (event) =>
+              !isCustomEvent(event) &&
               createLinkedCss(
-                eventData.event.id,
-                property === "linked"
-                  ? difference(eventData.event.linked, eventData.event.strongLinked)
-                  : eventData.event.strongLinked,
+                event.id,
+                property === "linked" ? difference(event.linked, event.strongLinked) : event.strongLinked,
                 color
               )
           ),
         compact,
         (links) => links.join("\n"),
         css
-      )(storeData().flatMap((e) => e.events.map((event) => event.eventData)))
+      )(storeData().flatMap((e) => e.events.map((event) => event.event)))
     );
 
   // Usage:
@@ -171,7 +162,7 @@ export function Week(props: FlowProps) {
   return (
     <div
       class={cn(
-        "week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] [font-size:inherit]",
+        "week grid grid-cols-subgrid grid-rows-subgrid row-[2/-1] col-[2/-1] [font-size:inherit] divide-y",
         linkedHighlightClass(),
         strongLinkedHighlightClass()
       )}
@@ -181,10 +172,10 @@ export function Week(props: FlowProps) {
   );
 }
 
-export function Days(props: { children: (data: Accessor<DayDataObject>) => JSX.Element }) {
+export function Days(props: { children: (data: Accessor<DayStore>) => JSX.Element }) {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
-  const storeData = createMemo(() => values(store().data || store().getEmptyData()));
+  const storeData = createMemo(() => store().data);
   return (
     <Index each={storeData()}>
       {(data) => (
@@ -207,7 +198,7 @@ export function Days(props: { children: (data: Accessor<DayDataObject>) => JSX.E
   );
 }
 
-export function Events(props: { day: Accessor<DayDataObject>; children: (event: DayEvent) => JSX.Element }) {
+export function Events(props: { day: Accessor<DayStore>; children: (event: DayEvent) => JSX.Element }) {
   const [isHorizontalLayout] = useLayout();
   return (
     <For each={props.day().events}>
@@ -259,19 +250,18 @@ export function LaunchHighlight() {
   const [isHorizontalLayout] = useLayout();
   return ObjectTyped.entries(LAUNCH_DAY_TIME).map(([day, time]) => {
     const timeSpan = new TimeSpan(Time.fromString(time.start), Time.fromString(time.end));
-    const row = store().getDayRow(day);
-    const data = new DayEventObject(store().settings.columns, timeSpan);
+    const row = store().settings.rows[day];
+    if (row === undefined) return;
+    const { colStart, colEnd, paddingStart, paddingEnd } = getEventPlacement(timeSpan, store().settings.columns);
     return (
       <div
         style={{
-          "grid-row": isHorizontalLayout() ? `${row} / span 1` : `${data.colStart + 1} / ${data.colEnd + 2}`,
-          "grid-column": isHorizontalLayout() ? `${data.colStart + 1} / ${data.colEnd + 2}` : `${row} / span 1`,
-          "margin-inline-start": isHorizontalLayout() ? `${data.paddingStart}%` : "unset",
-          "margin-inline-end": isHorizontalLayout() ? `${data.paddingEnd}%` : "unset",
-          "margin-block-start": isHorizontalLayout()
-            ? "unset"
-            : `calc(${data.paddingStart} * var(--element-height, 0) / 100)`,
-          "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${data.paddingEnd} * var(--element-height, 0) / 100)`,
+          "grid-row": isHorizontalLayout() ? `${row} / span 1` : `${colStart + 1} / ${colEnd + 2}`,
+          "grid-column": isHorizontalLayout() ? `${colStart + 1} / ${colEnd + 2}` : `${row} / span 1`,
+          "margin-inline-start": isHorizontalLayout() ? `${paddingStart}%` : "unset",
+          "margin-inline-end": isHorizontalLayout() ? `${paddingEnd}%` : "unset",
+          "margin-block-start": isHorizontalLayout() ? "unset" : `calc(${paddingStart} * var(--element-height, 0) / 100)`,
+          "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${paddingEnd} * var(--element-height, 0) / 100)`,
         }}
         class="bg-fuchsia-300 bg-opacity-10 -z-20"
         ref={createElementHeightRef(isHorizontalLayout)}
@@ -290,7 +280,7 @@ export function ColumnLines() {
         "col-[3/-1]": isHorizontalLayout(),
       })}
     >
-      <For each={isHorizontalLayout() ? store().settings.columns : Array(store().settings.rows.length)}>
+      <For each={isHorizontalLayout() ? store().settings.columns : Array(Object.keys(store().settings.rows).length)}>
         {() => <div class="col-span-1 row-span-full" />}
       </For>
     </div>

@@ -1,11 +1,11 @@
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
-import { without } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import EventSkeleton from "~/components/scheduler/event/EventSkeleton";
 import { useI18n } from "~/i18n";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { cn } from "~/lib/utils";
-import { DAY } from "~/server/scraper/enums";
+import type { SchedulerStore } from "~/store/store";
 import Text from "../typography/text";
 import {
   ColumnLines,
@@ -19,9 +19,243 @@ import {
   TopXAxisHeader,
   Week,
 } from "./Scheduler";
-import type { SchedulerStore } from "./store";
 
-export default function SchedulerComp(props: { store: SchedulerStore }) {
+const mockData = `[
+  {
+    "dayRows": 1,
+    "events": [
+      {
+        "colStart": 2,
+        "colEnd": 3,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "MON",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 8,
+        "colEnd": 9,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "MON",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 10,
+        "colEnd": 11,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "MON",
+          "strongLinked": [],
+          "linked": []
+        }
+      }
+    ],
+    "day": "MON",
+    "dayRow": 1
+  },
+  {
+    "dayRows": 2,
+    "events": [
+      {
+        "colStart": 1,
+        "colEnd": 2,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "LECTURE",
+          "day": "TUE",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 2,
+        "colEnd": 3,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 2,
+        "event": {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 4,
+        "colEnd": 5,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 5,
+        "colEnd": 6,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 2,
+        "event": {
+          "type": "LECTURE",
+          "day": "TUE",
+          "lecturesCount": 13,
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 6,
+        "colEnd": 7,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "TUE",
+          "strongLinked": [],
+          "linked": []
+        }
+      }
+    ],
+    "day": "TUE",
+    "dayRow": 2
+  },
+  {
+    "dayRows": 1,
+    "events": [
+      {
+        "colStart": 2,
+        "colEnd": 3,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "WED",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 4,
+        "colEnd": 5,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "WED",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 7,
+        "colEnd": 8,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "WED",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 9,
+        "colEnd": 10,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "WED",
+          "strongLinked": [],
+          "linked": []
+        }
+      }
+    ],
+    "day": "WED",
+    "dayRow": 3
+  },
+  {
+    "dayRows": 1,
+    "events": [
+      {
+        "colStart": 3,
+        "colEnd": 4,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "THU",
+          "strongLinked": [],
+          "linked": []
+        }
+      }
+    ],
+    "day": "THU",
+    "dayRow": 4
+  },
+  {
+    "dayRows": 1,
+    "events": [
+      {
+        "colStart": 5,
+        "colEnd": 6,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "strongLinked": [],
+          "linked": []
+        }
+      },
+      {
+        "colStart": 7,
+        "colEnd": 8,
+        "paddingStart": 0,
+        "paddingEnd": 8.33,
+        "row": 1,
+        "event": {
+          "type": "EXERCISE",
+          "day": "FRI",
+          "strongLinked": [],
+          "linked": []
+        }
+      }
+    ],
+    "day": "FRI",
+    "dayRow": 5
+  }
+]`;
+
+export default function SchedulerSkeleton(props: { store: SchedulerStore }) {
   const t = useI18n().t;
 
   const [isHorizontalLayout] = makePersisted(createSignal(true), {
@@ -32,7 +266,7 @@ export default function SchedulerComp(props: { store: SchedulerStore }) {
   });
 
   const DayComp = createMemo(() => (
-    <For each={without(ObjectTyped.keys(props.store.settings.rows), "length") as DAY[]}>
+    <For each={ObjectTyped.keys(props.store.settings.rows)}>
       {(day) => <span class="items-center justify-center em:p-2 md:em:p-4 flex">{t(`scheduler.days.${day}`)}</span>}
     </For>
   ));
@@ -81,9 +315,11 @@ export default function SchedulerComp(props: { store: SchedulerStore }) {
     </Show>
   ));
 
+  const data = JSON.parse(mockData, ClassRegistry.reviver);
+
   const storeProxy = new Proxy(props.store, {
     get(store, prop) {
-      if (prop === "data") return mockData;
+      if (prop === "data") return data;
       // Forward all other property access to original store
       // @ts-expect-error prop is a string
       return store[prop];
@@ -113,148 +349,3 @@ export default function SchedulerComp(props: { store: SchedulerStore }) {
     </SchedulerProvider>
   );
 }
-
-const mockData = {
-  MON: {
-    dayRow: 1,
-    dayRows: 1,
-    events: [
-      {
-        row: 1,
-        colStart: 13,
-        colEnd: 15,
-        paddingStart: 0,
-        paddingEnd: 8,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "83",
-          },
-        },
-      },
-      {
-        row: 1,
-        colStart: 3,
-        colEnd: 5,
-        paddingStart: 0,
-        paddingEnd: 4,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "4",
-          },
-        },
-      },
-    ],
-  },
-  TUE: {
-    dayRow: 2,
-    dayRows: 1,
-    events: [
-      {
-        row: 1,
-        colStart: 1,
-        colEnd: 2,
-        paddingStart: 0,
-        paddingEnd: 3,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "47",
-          },
-        },
-      },
-      {
-        row: 1,
-        colStart: 6,
-        colEnd: 7,
-        paddingStart: 0,
-        paddingEnd: 9,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "100",
-          },
-        },
-      },
-    ],
-  },
-  WED: {
-    dayRow: 3,
-    dayRows: 1,
-    events: [
-      {
-        row: 1,
-        colStart: 7,
-        colEnd: 8,
-        paddingStart: 0,
-        paddingEnd: 4,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "31",
-          },
-        },
-      },
-      {
-        row: 1,
-        colStart: 3,
-        colEnd: 5,
-        paddingStart: 0,
-        paddingEnd: 6,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "81",
-          },
-        },
-      },
-    ],
-  },
-  THU: {
-    dayRow: 4,
-    dayRows: 1,
-    events: [
-      {
-        row: 1,
-        colStart: 11,
-        colEnd: 13,
-        paddingStart: 0,
-        paddingEnd: 9,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "92",
-          },
-        },
-      },
-    ],
-  },
-  FRI: {
-    dayRow: 5,
-    dayRows: 1,
-    events: [
-      {
-        row: 1,
-        colStart: 8,
-        colEnd: 10,
-        paddingStart: 0,
-        paddingEnd: 4,
-        eventData: {
-          event: {
-            linked: [],
-            strongLinked: [],
-            id: "23",
-          },
-        },
-      },
-    ],
-  },
-};

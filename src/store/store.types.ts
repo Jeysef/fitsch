@@ -1,37 +1,32 @@
 import type { DayEvent, ScheduleEvent } from "~/components/scheduler/event/types";
-import type { DayDataObject } from "~/components/scheduler/store";
-import type { Time, TimeSpan } from "~/components/scheduler/time";
+import type { Time, TimeSpan } from "~/lib/time/time";
 import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { CourseDetail } from "~/server/scraper/types/types";
+import type { DayStore } from "~/store/dayStore";
 
 export interface DayData {
-  dayRow: number;
+  // dayRow: number;
   /** @default 1 */
   dayRows: number;
   events: DayEvent[];
 }
 
-export type Data = Record<DAY, DayDataObject>;
+/**
+ * Indexed by day
+ */
+export type Data = DayStore[];
 export type CourseData = ScheduleEvent[];
 
-export type IScheduleRow = { [key in DAY]: number } & { length: number };
+export type IScheduleRows = Partial<Record<DAY, number>>;
+
 export interface IScheduleColumn {
   title: string;
   duration: TimeSpan;
 }
-interface IScheduleDimensionsSize {
-  min: string | "auto";
-  max: string | "auto";
-}
-interface IScheduleDimensions {
-  width: IScheduleDimensionsSize | string;
-  height: IScheduleDimensionsSize | string;
-}
 
 export interface ISchedulerSettings {
-  blockDimensions?: Partial<IScheduleDimensions>;
   columns: IScheduleColumn[];
-  rows: IScheduleRow;
+  rows: IScheduleRows;
 }
 export interface ICreateColumns {
   start: Time;
@@ -44,8 +39,13 @@ export interface LectureMetrics {
   weeks: number;
   weeklyLectures: number;
 }
+
+export type CourseMetrics = Partial<Record<LECTURE_TYPE, LectureMetrics>>;
+
 export interface Course {
   detail: CourseDetail;
   data: CourseData;
-  metrics: Record<LECTURE_TYPE, LectureMetrics>;
+  metrics: CourseMetrics;
 }
+
+export type AnyEventType = LECTURE_TYPE | "CUSTOM";

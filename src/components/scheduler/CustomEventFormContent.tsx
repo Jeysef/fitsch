@@ -4,9 +4,7 @@ import type { Setter } from "solid-js";
 import { createRenderEffect, For } from "solid-js";
 import { v4 } from "uuid";
 import type { z } from "zod";
-import { customEventSchema } from "~/components/menu/storeJsonValidator";
 import type { CustomEvent } from "~/components/scheduler/event/types";
-import { Time, TimeSpan } from "~/components/scheduler/time";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
 import { DialogFooter } from "~/components/ui/dialog";
@@ -16,8 +14,10 @@ import { TextField, TextFieldLabel, TextFieldRoot } from "~/components/ui/textfi
 import { customColors } from "~/config/colors";
 import { days, end, start } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
+import { Time, TimeSpan } from "~/lib/time/time";
 import { TwitterPicker } from "~/packages/solid-color/source/components/twitter";
 import { DAY } from "~/server/scraper/enums";
+import { customEventSchema } from "~/store/storeSchema";
 
 interface FormProps {
   setOpen: Setter<boolean>;

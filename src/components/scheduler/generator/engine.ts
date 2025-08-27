@@ -1,8 +1,6 @@
 import { ObjectTyped } from "object-typed";
-import type { Event, ScheduleEventData } from "~/components/scheduler/event/types";
+import type { Event } from "~/components/scheduler/event/types";
 import { isAllowedOverlap } from "~/components/scheduler/generator/utils";
-import { hasOverlap } from "~/components/scheduler/time";
-import type { Course } from "~/components/scheduler/types";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
 
 export class SchedulerEngine {

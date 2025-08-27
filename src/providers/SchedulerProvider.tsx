@@ -3,17 +3,17 @@ import { merge, range, zipObject } from "es-toolkit";
 import { batch, createComputed, createContext, on, useContext, type ParentProps } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
-import { parseStoreJson } from "~/components/menu/storeJsonValidator";
-import { SchedulerStore } from "~/components/scheduler/store";
-import { TimeSpan, type Time } from "~/components/scheduler/time";
-import type { ICreateColumns, IScheduleColumn, IScheduleRow } from "~/components/scheduler/types";
 import { days, end, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
+import { TimeSpan, type Time } from "~/lib/time/time";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
+import { SchedulerStore } from "~/store/store";
+import type { ICreateColumns, IScheduleColumn, IScheduleRows } from "~/store/store.types";
+import { parseStoreJsoUnsafeSync } from "~/store/storeSchema";
 import { makePersistedMutable } from "~/utils/persistedMutable";
 
 // Defines the structure of the store data when it's serialized (plain object without methods)
@@ -58,7 +58,7 @@ export function SchedulerProvider(props: ParentProps) {
   const filter = (event: LectureMutator.MutatedLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
 
   // Define the rows for the scheduler grid, mapping days to row numbers
-  const rows = { ...zipObject(days, range(1, days.length + 1)), length: days.length } as IScheduleRow;
+  const rows = zipObject(days, range(1, days.length + 1)) as IScheduleRows;
 
   // Generate the columns based on configured start/end times and step duration
   const columns = createColumns({
@@ -75,49 +75,41 @@ export function SchedulerProvider(props: ParentProps) {
   const serialize = (store: SchedulerStore) => {
     // Only persist settings, courses, and custom events
     return JSON.stringify({
-      settings: { blockDimensions: store.settings.blockDimensions },
+      settings: store.settings,
       courses: store.courses,
       customEvents: store.customEvents,
     });
   };
 
-  // Deserializes the JSON string from storage back into a store structure.
+  // // Deserializes the JSON string from storage back into a store structure.
   const deserialize = (value: string) => {
     try {
+      if (value === "undefined") return emptyStore;
       // Parse JSON and revive class instances (e.g., TimeSpan) using the ClassRegistry reviver.
       const parsedStore = JSON.parse(value, ClassRegistry.reviver);
       // Validate the structure and types of the parsed data using Zod schema.
-      const validatedStoreResult = parseStoreJson(parsedStore);
+      const validatedStoreResult = parseStoreJsoUnsafeSync(parsedStore);
 
-      if (!validatedStoreResult.success) {
-        // Log validation errors
-        console.log("Error parsing persisted store data:");
-        console.error(validatedStoreResult.error);
-        // Show an error toast to the user after a short delay
-        setTimeout(
-          () =>
-            toast.error(t("schedulerProvider.importFromLocalStorage.error"), {
-              description: t("schedulerProvider.importFromLocalStorage.errorDescription"),
-              // Offer an action to clear the invalid data from local storage
-              action: {
-                label: t("schedulerProvider.importFromLocalStorage.clearLocalStorageAction"),
-                onClick: () => {
-                  // Reset persisted state to the current (likely empty) store
-                  setPersistedShedulerStore(store);
-                },
-              },
-            }),
-          1000
-        );
-        // Return the current store state as a fallback
-        return emptyStore;
-      }
       // Return the successfully validated and revived store data
-      return validatedStoreResult.data as SchedulerStore;
+      return validatedStoreResult as SchedulerStore;
     } catch (error) {
-      // Handle potential JSON parsing errors
-      console.error("Failed to deserialize scheduler store:", error);
-      // Optionally show a toast or return the empty store
+      console.log("Error parsing persisted store data:");
+      console.error(error);
+      setTimeout(
+        () =>
+          toast.error(t("schedulerProvider.importFromLocalStorage.error"), {
+            description: t("schedulerProvider.importFromLocalStorage.errorDescription"),
+            // Offer an action to clear the invalid data from local storage
+            action: {
+              label: t("schedulerProvider.importFromLocalStorage.clearLocalStorageAction"),
+              onClick: () => {
+                // Reset persisted state to the current (likely empty) store
+                setPersistedShedulerStore(emptyStore);
+              },
+            },
+          }),
+        1000
+      );
       return emptyStore;
     }
   };
@@ -162,11 +154,13 @@ export function SchedulerProvider(props: ParentProps) {
         // Revive class instances from the fetched JSON data.
         // Necessary because server actions return plain JSON.
         const revivedData = JSON.parse(JSON.stringify(result), ClassRegistry.reviver) as LectureMutator.Return;
+        console.log("🚀 ~ SchedulerProvider ~ revivedData:", revivedData);
 
         // Update the store with the new course data within a batch to optimize reactivity.
         batch(() => {
           store.newCourses = revivedData;
         });
+        console.log("🚀 ~ SchedulerProvider ~ store.data:", store.data);
       }
     ),
     undefined,

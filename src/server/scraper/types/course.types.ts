@@ -42,7 +42,7 @@ export interface Lecture {
   note: string | null;
 }
 
-type LectureWeeks = (
+export type LectureWeeks = (
   | {
       weeks: number[];
       parity: WEEK_PARITY | null;
@@ -52,5 +52,5 @@ type LectureWeeks = (
       parity: WEEK_PARITY | null;
     }
 ) & {
-  calculated?: boolean;
+  calculated?: boolean | undefined;
 };

@@ -1,14 +1,14 @@
 import Info from "lucide-solid/icons/info";
 import { batch } from "solid-js";
 import { EventTitle, EventWrapper, type EventProps } from "~/components/scheduler/event/Event";
-import type { ScheduleEvent, ScheduleEventData } from "~/components/scheduler/event/types";
 import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { WEEK_PARITY } from "~/server/scraper/enums";
 import { useStore } from "../Scheduler";
+import type { ScheduleEvent } from "./types";
 
-export interface ScheduleEventProps extends EventProps {}
+export interface ScheduleEventProps extends EventProps<ScheduleEvent> {}
 
 function formatWeeks(weeks: string | number[]) {
   if (Array.isArray(weeks)) {
@@ -19,10 +19,9 @@ function formatWeeks(weeks: string | number[]) {
 
 export default function ScheduleEventComponent(props: ScheduleEventProps) {
   const store = useStore();
-  const eventData = props.event.eventData as ScheduleEventData;
-  const event = eventData.event as ScheduleEvent;
+  const event = props.dayEvent.event;
 
-  const strongLinked = event.strongLinked.map((data) => store().getEvent(data));
+  const strongLinked = event.strongLinked.map((data) => store().getLinkedEvent(data, event.courseId));
 
   const handleCheck = (checked?: boolean) => {
     batch(() => {
@@ -49,9 +48,10 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
       }}
       header={
         <>
-          <EventTitle title={eventData.courseDetail.abbreviation} />
+          <EventTitle title={event.title} />
           <EventPopup
-            eventData={eventData}
+            event={event}
+            courseDetail={() => store().getCourse(event.courseId)!.detail}
             onHide={() => {
               event.hidden = event.hidden === undefined ? true : !event.hidden;
             }}

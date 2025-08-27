@@ -1,50 +1,41 @@
-import type { TimeSpan } from "~/components/scheduler/time";
-import type { LectureMetrics } from "~/components/scheduler/types";
+import type { TimeSpan } from "~/lib/time/time";
 import type { DAY } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
-import type { CourseDetail } from "~/server/scraper/types/types";
 
 export interface EventBase {
   id: string;
   day: DAY;
   timeSpan: TimeSpan;
+  title: string;
   info: string;
   /** @default false */
   checked: boolean;
   /** @default false (undefined) */
-  hidden?: boolean;
+  hidden?: boolean | undefined;
   /** @default false (undefined) */
-  collapsed?: boolean;
+  collapsed?: boolean | undefined;
 }
 
 export interface CustomEvent extends EventBase {
-  title: string;
   color: string;
   type: "CUSTOM";
 }
 
 export type Event = CustomEvent | ScheduleEvent;
 
-export interface CustomEventData {
-  event: CustomEvent;
+export interface ScheduleEvent extends EventBase, LectureMutator.MutatedLecture {
+  courseId: string;
 }
 
-export interface ScheduleEvent extends EventBase, LectureMutator.MutatedLecture {}
-
-export interface ScheduleEventData {
-  event: ScheduleEvent;
-  courseDetail: CourseDetail;
-  metrics: LectureMetrics;
-}
-
-export type EventData = ScheduleEventData | CustomEventData;
-
-export interface DayEvent {
-  /** @default 1 */
-  row: number;
+export interface DayEventWORow<T extends Event = Event> {
   colStart: number;
   colEnd: number;
   paddingStart: number;
   paddingEnd: number;
-  eventData: EventData;
+  event: T;
+}
+
+export interface DayEvent<T extends Event = Event> extends DayEventWORow<T> {
+  /** @default 1 */
+  row: number;
 }
