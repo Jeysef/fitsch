@@ -1,6 +1,7 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import AddCustomEventAction from "~/components/menu/menu-actions/AddCustomEventAction";
 import ExportImportJsonAction from "~/components/menu/menu-actions/ExportImportJsonAction";
+import GenerateScheduleAction from "~/components/menu/menu-actions/GenerateScheduleAction";
 import ScheduleScreenshot from "~/components/menu/menu-actions/SaveImageAction";
 import { SectionHeading } from "~/components/menu/MenuCommonComponents";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
@@ -20,7 +21,7 @@ export function Actions() {
         <CollapsibleContent>
           <ScheduleScreenshot />
           <ExportImportJsonAction />
-          {/* <GenerateScheduleAction /> */}
+          <GenerateScheduleAction />
           <AddCustomEventAction />
         </CollapsibleContent>
       </SidebarGroup>

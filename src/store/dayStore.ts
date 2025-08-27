@@ -1,7 +1,7 @@
 import { sortBy } from "es-toolkit";
 import type { DayEvent } from "~/components/scheduler/event/types";
 import type { DayEventStore } from "~/store/dayEventStore";
-import { findAvailableRow } from "~/store/utils";
+import { findAvailableRow, getEventTypePriority } from "~/store/utils";
 
 export class DayStore {
   public dayRows: number;
@@ -27,10 +27,10 @@ export class DayStore {
   }
 
   private getSortedEvents = () => {
-    sortBy(this.events, [(dayEvent) => dayEvent.event.type]);
-    const dayRows = this.assignEventsRows();
+    this.events = sortBy(this.events, [(dayEvent) => getEventTypePriority(dayEvent.event.type)]);
+    const dayRows = this.assignEventsRows().dayRows;
 
-    this.dayRows = dayRows.dayRows;
+    this.dayRows = dayRows;
   };
 
   public addEvent = (event: DayEventStore) => {

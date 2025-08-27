@@ -1,16 +1,14 @@
 import { uniqBy } from "es-toolkit/compat";
-import { ObjectTyped } from "object-typed";
 import { batch, createMemo } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
-import { isCustomEventData } from "~/components/scheduler/event/Event";
-import type { Event, EventData, ScheduleEventData } from "~/components/scheduler/event/types";
+import { isCustomEvent } from "~/components/scheduler/event/Event";
+import type { Event, ScheduleEvent } from "~/components/scheduler/event/types";
+import { SchedulerEngine } from "~/components/scheduler/generator/engine";
 import { getPerturbation, isAllowedOverlap } from "~/components/scheduler/generator/utils";
-import { hasOverlap } from "~/components/scheduler/time";
-import type { Course } from "~/components/scheduler/types";
 import { useI18n } from "~/i18n";
+import { hasOverlap } from "~/lib/time/time";
 import { useScheduler } from "~/providers/SchedulerProvider";
-import type { LECTURE_TYPE } from "~/server/scraper/enums";
 
 // --- Configuration Constants ---
 const RATING_WEIGHTS = {
@@ -26,85 +24,6 @@ const GENERATOR_CONFIG = {
   YIELD_INTERVAL: 100, // Yield to the main thread every N events processed
 } as const;
 
-/**
- * Encapsulates the state and logic for a single schedule generation attempt.
- * This class is temporary and created for each run.
- */
-class SchedulerEngine {
-  public readonly selectedEvents: Map<string, Event>;
-  private readonly completedHours: Record<string, Partial<Record<LECTURE_TYPE, number>>>;
-  private readonly allCourses: readonly Course[];
-
-  constructor(courses: readonly Course[], customEvents: readonly Event[]) {
-    this.allCourses = courses;
-    this.selectedEvents = new Map(customEvents.map((e) => [e.id, e]));
-    this.completedHours = ObjectTyped.fromEntries(courses.map((c) => [c.detail.id, {}]));
-  }
-
-  isEventSelected(eventId: string): boolean {
-    return this.selectedEvents.has(eventId);
-  }
-
-  /**
-   * Checks if a single event can be placed without considering its links.
-   */
-  canPlacePrimaryEvent(eventData: ScheduleEventData): boolean {
-    const { event, courseDetail, metrics } = eventData;
-    const completed = this.completedHours[courseDetail.id][event.type] || 0;
-    if (completed + event.timeSpan.hours > metrics.weeklyLectures) {
-      return false;
-    }
-    return !this.hasDisallowedOverlap(event);
-  }
-
-  /** Adds a validated group of events to the schedule state. */
-  addEventGroup(group: readonly ScheduleEventData[]): void {
-    for (const { event, courseDetail } of group) {
-      this.selectedEvents.set(event.id, event);
-      const currentHours = this.completedHours[courseDetail.id][event.type] || 0;
-      this.completedHours[courseDetail.id][event.type] = currentHours + event.timeSpan.hours;
-    }
-  }
-
-  hasDisallowedOverlap(event: Event): boolean {
-    for (const selected of this.selectedEvents.values()) {
-      if (
-        selected.id !== event.id &&
-        selected.day === event.day &&
-        hasOverlap(selected.timeSpan, event.timeSpan) &&
-        !isAllowedOverlap(event, selected)
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  isComplete(): boolean {
-    return this.allCourses.every((course) => {
-      const courseHours = this.completedHours[course.detail.id];
-      const filteredMetrics = ObjectTyped.entries(course.metrics).filter(([, value]) => value !== undefined);
-      return filteredMetrics.every(([type, metrics]) => {
-        return (courseHours[type] || 0) === metrics.weeklyLectures;
-      });
-    });
-  }
-
-  logMissingHours(): void {
-    console.warn("Could not generate a complete schedule. Missing hours:");
-    for (const course of this.allCourses) {
-      const courseHours = this.completedHours[course.detail.id];
-      for (const [type, metrics] of ObjectTyped.entries(course.metrics)) {
-        const completed = courseHours[type] || 0;
-        const required = metrics.weeklyLectures;
-        if (completed < required) {
-          console.warn(`${course.detail.abbreviation} ${type}: ${completed}/${required}`);
-        }
-      }
-    }
-  }
-}
-
 export function SchedulerGenerator() {
   const { store } = useScheduler();
   const { t } = useI18n();
@@ -115,17 +34,16 @@ export function SchedulerGenerator() {
 
   // --- Reactive Data Preparation (using createMemo for caching) ---
 
-  const filterEvent = (eventData: EventData): eventData is ScheduleEventData =>
-    !isCustomEventData(eventData) && eventData.event.hidden !== true;
+  const filterEvent = (event: Event): event is ScheduleEvent => !isCustomEvent(event) && event.hidden !== true;
 
   const validScheduleEventData = createMemo(() =>
-    Object.values(store.data).flatMap(({ events }) => events.map((dayEvent) => dayEvent.eventData).filter(filterEvent))
+    Object.values(store.data).flatMap(({ events }) => events.map((dayEvent) => dayEvent.event).filter(filterEvent))
   );
 
   const courseTypeCounts = createMemo(() => {
     const counts = new Map<string, number>();
-    for (const eventData of validScheduleEventData()) {
-      const key = `${eventData.courseDetail.id}-${eventData.event.type}`;
+    for (const event of validScheduleEventData()) {
+      const key = `${event.courseId}-${event.type}`;
       counts.set(key, (counts.get(key) || 0) + 1);
     }
     return counts;
@@ -133,7 +51,7 @@ export function SchedulerGenerator() {
 
   const eventOverlapBonuses = createMemo(() => {
     const bonuses = new Map<string, number>();
-    const allEvents = validScheduleEventData().map((d) => d.event);
+    const allEvents = validScheduleEventData();
     for (const eventA of allEvents) {
       let potentialOverlaps = 0;
       for (const eventB of allEvents) {
@@ -156,9 +74,8 @@ export function SchedulerGenerator() {
   const baseEventScores = createMemo(() => {
     const counts = courseTypeCounts();
     const bonuses = eventOverlapBonuses();
-    return validScheduleEventData().map((eventData) => {
-      const { courseDetail, event } = eventData;
-      const typeCount = counts.get(`${courseDetail.id}-${event.type}`) || 1;
+    return validScheduleEventData().map((event) => {
+      const typeCount = counts.get(`${event.courseId}-${event.type}`) || 1;
       const Pr = 1 - 1 / (typeCount + 1);
       const Tr =
         (event.timeSpan.start.hours < RATING_WEIGHTS.IDEAL_START_HOUR
@@ -166,7 +83,7 @@ export function SchedulerGenerator() {
           : event.timeSpan.end.hours - RATING_WEIGHTS.IDEAL_START_HOUR) /
           (24 - RATING_WEIGHTS.IDEAL_START_HOUR) || 0;
       const bonus = bonuses.get(event.id) || 0;
-      return { eventData, baseScore: Pr + Tr + bonus };
+      return { event, baseScore: Pr + Tr + bonus };
     });
   });
 
@@ -179,21 +96,20 @@ export function SchedulerGenerator() {
    * This function does not modify the engine.
    */
   function findViableLinkedGroup(
-    primaryEventData: ScheduleEventData,
+    primaryEvent: ScheduleEvent,
     engine: SchedulerEngine
-  ): { success: boolean; eventsToAdd: ScheduleEventData[] } {
-    const { event } = primaryEventData;
-    const allLinkedIds = uniqBy([...event.strongLinked, ...event.linked], (e) => e.id);
+  ): { success: boolean; eventsToAdd: ScheduleEvent[] } {
+    const allLinkedIds = uniqBy([...primaryEvent.strongLinked, ...primaryEvent.linked], (e) => e.id);
     if (allLinkedIds.length === 0) {
-      return { success: true, eventsToAdd: [primaryEventData] };
+      return { success: true, eventsToAdd: [primaryEvent] };
     }
 
-    const eventsToAdd: ScheduleEventData[] = [primaryEventData];
+    const eventsToAdd: ScheduleEvent[] = [primaryEvent];
     for (const linkedId of allLinkedIds) {
       // Don't re-check the primary event if it's somehow in its own linked list
-      if (linkedId.id === event.id) continue;
+      if (linkedId.id === primaryEvent.id) continue;
 
-      const linkedEventData = store.getEventData(linkedId) as ScheduleEventData | undefined;
+      const linkedEventData = store.getLinkedEvent(linkedId, primaryEvent.courseId);
 
       if (!linkedEventData || !filterEvent(linkedEventData) || !engine.canPlacePrimaryEvent(linkedEventData)) {
         return { success: false, eventsToAdd: [] };
@@ -208,9 +124,9 @@ export function SchedulerGenerator() {
 
     // PERF: Add perturbation and sort. This is much faster than re-calculating all scores.
     const eventsToTry = baseEventScores()
-      .map(({ eventData, baseScore }) => ({
-        eventData,
-        score: baseScore + getPerturbation(eventData.event, attempt),
+      .map(({ event, baseScore }) => ({
+        event,
+        score: baseScore + getPerturbation(event, attempt),
       }))
       .sort((a, b) => a.score - b.score);
 
@@ -219,11 +135,11 @@ export function SchedulerGenerator() {
         await new Promise((resolve) => requestAnimationFrame(resolve));
       }
 
-      const { eventData } = eventsToTry[i];
-      if (engine.isEventSelected(eventData.event.id)) continue; // Skip linked selected events
-      if (!engine.canPlacePrimaryEvent(eventData)) continue;
+      const { event } = eventsToTry[i];
+      if (engine.isEventSelected(event.id)) continue; // Skip linked selected events
+      if (!engine.canPlacePrimaryEvent(event)) continue;
 
-      const linkedGroup = findViableLinkedGroup(eventData, engine);
+      const linkedGroup = findViableLinkedGroup(event, engine);
       if (linkedGroup.success) {
         engine.addEventGroup(linkedGroup.eventsToAdd);
         if (engine.isComplete()) {
@@ -241,8 +157,8 @@ export function SchedulerGenerator() {
   function applyScheduleToStore(selectedEvents: Map<string, Event>) {
     batch(() => {
       for (const dayData of Object.values(store.data)) {
-        for (const e of dayData.events) {
-          e.eventData.event.checked = selectedEvents.has(e.eventData.event.id);
+        for (const dayEvent of dayData.events) {
+          dayEvent.event.checked = selectedEvents.has(dayEvent.event.id);
         }
       }
     });
