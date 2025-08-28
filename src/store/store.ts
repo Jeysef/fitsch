@@ -1,4 +1,5 @@
 import { mapValues, remove } from "es-toolkit";
+import { reconcile } from "solid-js/store";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
@@ -35,7 +36,14 @@ export class SchedulerStore implements StoreJson {
 
   // must be a setter to trigger reactivity
   public set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
-    this.courses = courses.map((course) => createNewCourse(course));
+    this.courses = courses.map((course) => {
+      const existingCourse = this.getCourse(course.detail.id);
+      if (!existingCourse) return createNewCourse(course);
+      if (existingCourse.detail.url !== course.detail.url) {
+        existingCourse.detail = course.detail;
+      }
+      return existingCourse;
+    });
   }
 
   // ---- Custom Events ----
