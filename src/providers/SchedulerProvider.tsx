@@ -1,19 +1,7 @@
-import { trackStore } from "@solid-primitives/deep";
-import { makePersisted } from "@solid-primitives/storage";
 import { useSubmission } from "@solidjs/router";
 import { merge, range, zipObject } from "es-toolkit";
-import {
-  batch,
-  createComputed,
-  createContext,
-  createEffect,
-  createSignal,
-  on,
-  onMount,
-  useContext,
-  type ParentProps,
-} from "solid-js";
-import { createMutable, modifyMutable, reconcile } from "solid-js/store";
+import { batch, createComputed, createContext, on, useContext, type ParentProps } from "solid-js";
+import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { SchedulerStore } from "~/components/scheduler/store";
@@ -26,6 +14,7 @@ import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
+import { makePersistedMutable } from "~/utils/persistedMutable";
 
 // Defines the structure of the store data when it's serialized (plain object without methods)
 export type PlainStore = Pick<SchedulerStore, "courses">;
@@ -121,7 +110,7 @@ export function SchedulerProvider(props: ParentProps) {
           1000
         );
         // Return the current store state as a fallback
-        return store;
+        return emptyStore;
       }
       // Return the successfully validated and revived store data
       return validatedStoreResult.data as SchedulerStore;
@@ -129,33 +118,29 @@ export function SchedulerProvider(props: ParentProps) {
       // Handle potential JSON parsing errors
       console.error("Failed to deserialize scheduler store:", error);
       // Optionally show a toast or return the empty store
-      return store;
+      return emptyStore;
     }
   };
 
+  const revive = (store: SchedulerStore) => {
+    return merge(emptyStore, store);
+  };
+
   // Create the main mutable store instance, initialized with the empty store structure.
-  const store = createMutable(emptyStore);
 
   // Create a persisted signal that automatically saves/loads the store to/from local storage.
-  const [persistedStore, setPersistedShedulerStore] = makePersisted(createSignal(emptyStore), {
+  // const [store, setPersistedShedulerStore] = makePersisted(createMutableAdapter(emptyStore), {
+  const [store, setPersistedShedulerStore] = makePersistedMutable(createMutable(emptyStore), {
     name: "schedulerStore", // Key used in local storage
-    deserialize, // Custom function to handle loading/validation
+    deserialize: (d) => revive(deserialize(d)), // Custom function to handle loading/validation
     serialize, // Custom function to handle saving
+    debounceMs: 500,
   });
 
   // Function to merge plain data (e.g., from local storage) into the existing mutable store.
   // Uses `reconcile` to efficiently update the store while preserving reactivity,
   // and `merge` to combine the plain data with the existing store structure (including methods).
-  const recreateStore = (plainStore: PlainStore) => modifyMutable(store, reconcile(merge(store, plainStore)));
-
-  // On component mount, load the persisted state from local storage and merge it into the store.
-  onMount(() => {
-    const plain = persistedStore();
-    console.log("🚀 ~ SchedulerProvider ~ plain:", plain, "store:", store);
-    console.log("🚀 ~ recreateStore ~ merge(store, plainStore):", merge(store, plain));
-    recreateStore(plain);
-    console.log("🚀 ~ SchedulerProvider ~ full store:", store.data);
-  });
+  const recreateStore = (plainStore: PlainStore) => setPersistedShedulerStore(merge(store, plainStore));
 
   // --- Handle updates when new course data is fetched from the server ---
   const data = useSubmission(getStudyCoursesDetailsAction);
@@ -186,30 +171,6 @@ export function SchedulerProvider(props: ParentProps) {
     ),
     undefined,
     { name: "addCoursesToStore" } // Name for debugging purposes
-  );
-
-  // --- Persist store changes to local storage ---
-  // Create an effect that triggers whenever the store content changes.
-  createEffect(
-    on(
-      // Track deep changes within the mutable store object.
-      () => trackStore(store),
-      // The callback function receives the changed store.
-      (currentStore, _, firstEffect) => {
-        // Skip the very first run on mount, as it's just the initial state.
-        if (firstEffect) return false;
-
-        console.log("Store changed, persisting...", currentStore);
-        // Update the persisted signal, triggering the `serialize` function and saving to local storage.
-        setPersistedShedulerStore(currentStore);
-
-        // Return false to prevent the effect from re-running if only the store reference changed
-        // (though trackStore should usually prevent this).
-        return false;
-      }
-    ),
-    true, // Defer execution until after the render phase
-    { name: "persistStore" } // Name for debugging purposes
   );
 
   // Provide the store and related functions to child components via context.
