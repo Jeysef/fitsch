@@ -1,5 +1,4 @@
 import { mapValues, remove } from "es-toolkit";
-import { reconcile } from "solid-js/store";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
@@ -59,6 +58,7 @@ export class SchedulerStore implements StoreJson {
   }
 
   public get data(): Data {
+    console.log("🚀 ~ SchedulerStore ~ this.dataStore.sort().data:", this.dataStore.sort().data);
     return this.dataStore.sort().data;
   }
 
