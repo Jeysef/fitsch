@@ -9,6 +9,7 @@ import { useIsMobile } from "~/lib/hooks";
 import { usePostHog } from "~/lib/posthog";
 import { cn } from "~/lib/utils";
 import { useScheduler } from "~/providers/SchedulerProvider";
+import { createProjection } from "~/utils/store/projection";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
@@ -18,6 +19,7 @@ import TimeSpan from "./TimeSpan";
 export default function Home() {
   const { t, locale } = useI18n();
   const { store } = useScheduler();
+  const posthog = usePostHog();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
   // const { opened, toggleNavigation } = useMenuOpened();
   const [isAllCollapsed, setIsAllCollapsed] = createSignal(false);
@@ -29,59 +31,27 @@ export default function Home() {
     queueMicrotask(() => setShowSkeleton(false));
   });
 
-  const checkedDataMemo = createMemo(() => store.checkedData);
-  const data = createMemo(() => store.data);
-  const posthog = usePostHog();
-
-  const storeProxy = new Proxy(store, {
-    get(store, prop) {
-      if (prop === "data") return data();
-      // Forward all other property access to original store
-      // @ts-expect-error prop is a string
-      return store[prop];
-    },
-    set(store, prop, value) {
-      // Forward all property sets to original store
-      // @ts-expect-error prop is a string
-      store[prop] = value;
-      return true;
-    },
-  });
-
-  const filteredStore = new Proxy(storeProxy, {
-    get(store, prop) {
-      if (prop === "data") return checkedDataMemo();
-      // Forward all other property access to original store
-      // @ts-expect-error prop is a string
-      return store[prop];
-    },
-    set(store, prop, value) {
-      // Forward all property sets to original store
-      // @ts-expect-error prop is a string
-      store[prop] = value;
-      return true;
-    },
-  });
+  const filteredStore = createProjection(store, (store) => ({
+    data: store.checkedData,
+  }));
 
   const setTab = (tabValue: string) => {
     setSearchParams({ tab: tabValue }, { replace: true });
   };
 
-  const coursesTimeSpan = createMemo(() => store.coursesTimeSpan);
-
   const areAllCoursesSelected = createMemo(() => {
-    return storeProxy.courses.every((course) => coursesTimeSpan()[course.detail.id].valid);
+    return store.courses.every((course) => store.coursesTimeSpan[course.detail.id].valid);
   });
 
   createEffect(() => {
-    if (storeProxy.courses.length && areAllCoursesSelected()) posthog().capture("timespan-all-courses-selected");
+    if (store.courses.length && areAllCoursesSelected()) posthog().capture("timespan-all-courses-selected");
   });
 
   const collapseAll = (expand = false) =>
     setTimeout(() => {
       startTransition(() => {
         batch(() => {
-          for (const dayEvent of Object.values(storeProxy.data)) {
+          for (const dayEvent of Object.values(store.data)) {
             for (const eventStore of dayEvent.events) {
               eventStore.event.collapsed = expand;
             }
@@ -142,17 +112,14 @@ export default function Home() {
       {/* </div> */}
       <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
         <div class="w-auto max-w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2 mx-auto">
-          <Show
-            when={showSkeleton()}
-            fallback={<Scheduler store={tab() === tabs.workSchedule ? storeProxy : filteredStore} />}
-          >
-            <SchedulerSkeleton store={storeProxy} />
+          <Show when={showSkeleton()} fallback={<Scheduler store={tab() === tabs.workSchedule ? store : filteredStore} />}>
+            <SchedulerSkeleton store={store} />
           </Show>
         </div>
       </Show>
       <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
         <Suspense>
-          <TimeSpan store={storeProxy} />
+          <TimeSpan store={store} />
         </Suspense>
       </TabsContent>
     </Tabs>

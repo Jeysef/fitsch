@@ -15,6 +15,7 @@ import { SchedulerStore } from "~/store/store";
 import type { ICreateColumns, IScheduleColumn, IScheduleRows } from "~/store/store.types";
 import { parseStoreJsoUnsafeSync } from "~/store/storeSchema";
 import { makePersistedMutable } from "~/utils/persistedMutable";
+import { makeAutoMemoStore } from "~/utils/store/autoMemo";
 
 // Defines the structure of the store data when it's serialized (plain object without methods)
 export type PlainStore = Pick<SchedulerStore, "courses">;
@@ -169,7 +170,7 @@ export function SchedulerProvider(props: ParentProps) {
   return (
     <SchedulerContext.Provider
       value={{
-        store: store,
+        store: makeAutoMemoStore(store),
         recreateStore,
         serialize,
       }}

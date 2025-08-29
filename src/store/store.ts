@@ -58,7 +58,6 @@ export class SchedulerStore implements StoreJson {
   }
 
   public get data(): Data {
-    console.log("🚀 ~ SchedulerStore ~ this.dataStore.sort().data:", this.dataStore.sort().data);
     return this.dataStore.sort().data;
   }
 
