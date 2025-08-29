@@ -33,6 +33,7 @@ describe("Course parser utils", () => {
       },
     ],
     ["3. 5. 7. 9. 11. 13", { parity: WEEK_PARITY.EVEN, weeks: [3, 5, 7, 9, 11, 13] }],
+    ["výuky", { parity: null, weeks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }],
   ])("parses week", (weeks, expected) => {
     const result = parseWeek(weeks, semesterStart, languageSet);
     expect(result).toEqual(expected);

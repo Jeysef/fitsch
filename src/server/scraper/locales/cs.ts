@@ -34,6 +34,7 @@ export default {
       weeks: {
         [WEEK_PARITY.ODD]: "lichý",
         [WEEK_PARITY.EVEN]: "sudý",
+        ALL: "výuky",
       },
     },
   },

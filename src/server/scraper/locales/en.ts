@@ -35,6 +35,7 @@ export default {
       weeks: {
         [WEEK_PARITY.ODD]: "odd",
         [WEEK_PARITY.EVEN]: "even",
+        ALL: "lectures",
       },
     },
   },

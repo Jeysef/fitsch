@@ -1,5 +1,6 @@
 import { compact } from "es-toolkit";
 import { ObjectTyped } from "object-typed";
+import { semesterWeeks } from "~/server/scraper/constants";
 import { WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { CourseTimeSpan } from "~/server/scraper/types/types";
@@ -9,6 +10,11 @@ export function getWeekParityFromName(week: string, languageSet: LanguageSetDict
   if (week.includes(languageSet.course.detail.weeks.EVEN)) return WEEK_PARITY.EVEN;
   if (week.includes(languageSet.course.detail.weeks.ODD)) return WEEK_PARITY.ODD;
   return null;
+}
+
+export function getWeekFromName(week: string, languageSet: LanguageSetDictionary) {
+  if (week.includes(languageSet.course.detail.weeks.ALL)) return Array.from({ length: semesterWeeks }, (_, i) => i + 1);
+  return week;
 }
 
 export function parseWeek(week: string, semesterStart: Date, languageSet: LanguageSetDictionary) {
@@ -32,7 +38,7 @@ export function parseWeek(week: string, semesterStart: Date, languageSet: Langua
     };
   }
   return {
-    weeks: week,
+    weeks: getWeekFromName(week, languageSet),
     parity: getWeekParityFromName(week, languageSet),
   };
 }
