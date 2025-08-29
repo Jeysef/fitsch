@@ -143,7 +143,6 @@ export function SchedulerProvider(props: ParentProps) {
       () => data.result, // Depend on the result of the server action
       (result) => {
         if (!result) return; // Ignore if no result yet
-        console.log("🚀 ~ SchedulerProvider ~ result:", result);
 
         // Check if the server returned an error
         if (isErrorReturn(result)) {
