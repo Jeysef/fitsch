@@ -17,7 +17,7 @@ import { useI18n } from "~/i18n";
 import { Time, TimeSpan } from "~/lib/time/time";
 import { TwitterPicker } from "~/packages/solid-color/source/components/twitter";
 import { DAY } from "~/server/scraper/enums";
-import { customEventSchema } from "~/store/storeSchema";
+import { customEventSchema } from "~/store/storeSchema-v2";
 
 interface FormProps {
   setOpen: Setter<boolean>;
