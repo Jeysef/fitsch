@@ -245,7 +245,9 @@ const mergeConjunctedLectures = (
  * Finds and merges lectures that occur at the same time and can be "conjuncted" into one.
  * This is a pure implementation of the original's complex, stateful logic.
  */
-const conjunctParallelLectures = (data: LectureMutator.FilteredCourseLecture[]): LectureMutator.ConjunctedLecture[] => {
+export const conjunctParallelLectures = (
+  data: LectureMutator.FilteredCourseLecture[]
+): LectureMutator.ConjunctedLecture[] => {
   const result: LectureMutator.ConjunctedLecture[] = [];
   const consumedIndices = new Set<number>();
 
@@ -270,7 +272,8 @@ const conjunctParallelLectures = (data: LectureMutator.FilteredCourseLecture[]):
       if (isString(tentativeWeeks) || isString(comparedLecture.weeks.weeks)) continue;
 
       const combinedWeeks = union(tentativeWeeks ?? [], comparedLecture.weeks.weeks).sort((a, b) => a - b);
-      if (lecture.groups === "xx" && combinedWeeks.length > lecture.lecturesCount + 1) continue;
+      if (lecture.groups === "xx" && combinedWeeks.length > lecture.lecturesCount + 1 && combinedWeeks.length < 10)
+        continue;
 
       if (
         lecture.lecturesCount <= halfSemesterWeeks &&

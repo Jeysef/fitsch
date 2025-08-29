@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { Time, TimeSpan } from "~/components/scheduler/time";
-import { parseWeek } from "~/server/scraper/utils";
+import { Time, TimeSpan } from "~/lib/time/time";
+import { parseWeek } from "~/server/scraper/parsers/course/utils";
 import { DAY, LECTURE_TYPE } from "../enums";
-import { conjunctLectures, type FilteredCourseLecture } from "../lectureMutator";
+import { conjunctParallelLectures } from "../lectureMutator";
 
 describe("conjunctLectures", () => {
   it("should conjunct lectures with same time and day", () => {
@@ -27,7 +27,7 @@ describe("conjunctLectures", () => {
         calculated: false,
       },
       lecturesCount,
-    } as unknown as FilteredCourseLecture;
+    } as unknown as any;
 
     const lecture2 = {
       id: "test-id-lecture2",
@@ -95,7 +95,7 @@ describe("conjunctLectures", () => {
     for (let i = 0; i < data.length; i++) {
       if (i === data.length - 1) break;
       const nextLectures = data.slice(i + 1);
-      conjunctLectures(data[i], nextLectures, i, data);
+      conjunctParallelLectures(data[i], nextLectures, i, data);
     }
     // let index = 0;
     // let nextLectures = data.slice(index + 1);
@@ -118,6 +118,62 @@ describe("conjunctLectures", () => {
     expect(data[1].weeks.weeks).toEqual([4, 6, 8, 10]);
     // expect(data[0].room).toEqual(["T9:105", "T9:107"]);
   });
+
+  it("should conjunct lectures with same time and day", () => {
+    const lecture1 = {
+      id: "26cdf5114af7e87e6c5a227f28e9658ea97d4dd482fa9a9f9840170704d2478f",
+      day: "TUE",
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 50 })),
+      info: "Grézl",
+      checked: true,
+      title: "IZP",
+      type: "LABORATORY",
+      weeks: {
+        weeks: [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+        parity: null,
+      },
+      room: "N103",
+      lectureGroup: ["1BIA", "1BIB", "2BIA", "2BIB"],
+      groups: "xx",
+      note: null,
+      capacity: "20",
+      lecturesCount: 10,
+      strongLinked: [],
+      linked: [],
+      courseId: "294190",
+    };
+
+    const lecture2 = {
+      id: "26cdf5114af7e87e6c5a227f28e9658ea97d4dd482fa9a9f9840170704d2478f",
+      day: "TUE",
+      timeSpan: new TimeSpan(new Time({ hour: 10, minute: 0 }), new Time({ hour: 11, minute: 50 })),
+      info: "Rozsíval",
+      checked: true,
+      title: "IZP",
+      type: "LABORATORY",
+      weeks: {
+        weeks: [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13],
+        parity: null,
+      },
+      room: "N104",
+      lectureGroup: ["1BIA", "1BIB", "2BIA", "2BIB"],
+      groups: "xx",
+      note: null,
+      capacity: "20",
+      lecturesCount: 10,
+      strongLinked: [],
+      linked: [],
+      courseId: "294190",
+    };
+
+    const data = [lecture1, lecture2];
+    conjunctParallelLectures(data as any);
+    console.log("🚀 ~ data:", data);
+
+    expect(data.length).toBe(1);
+    expect(data[0].room).toEqual(["N103+4"]);
+  });
+
   // it("should conjunct lectures with same time and day", () => {
   //   const lecture1 = createBaseLecture({
   //     id: "lecture1",
