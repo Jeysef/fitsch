@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import { semesterWeeks } from "~/server/scraper/constants";
 import { WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
-import type { CourseTimeSpan } from "~/server/scraper/types/types";
+import type { CourseTimeSpan, LectureWeeks } from "~/server/scraper/types/types";
 import { getParityOfWeeks, getWeekFromSemesterStart } from "~/server/scraper/utils";
 
 export function getWeekParityFromName(week: string, languageSet: LanguageSetDictionary) {
@@ -17,7 +17,7 @@ export function getWeekFromName(week: string, languageSet: LanguageSetDictionary
   return week;
 }
 
-export function parseWeek(week: string, semesterStart: Date, languageSet: LanguageSetDictionary) {
+export function parseWeek(week: string, semesterStart: Date, languageSet: LanguageSetDictionary): LectureWeeks {
   // '1., 2., 3., 4., 5., 6. výuky' => [1, 2, 3, 4, 5, 6]
   if (week.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
     const weekNum = getWeekFromSemesterStart(new Date(week), semesterStart);
