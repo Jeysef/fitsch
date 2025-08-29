@@ -1,4 +1,5 @@
 import { createHash } from "crypto";
+import { compact } from "es-toolkit";
 import { cloneDeep, flow, isEqual, isString, union, uniq } from "es-toolkit/compat";
 import type { StrictOmit } from "ts-essentials";
 import { conjunctableRooms } from "~/config/rooms";
@@ -227,7 +228,7 @@ const mergeConjunctedLectures = (
   return {
     ...mainLecture, // Base properties from main or first lecture
     id: mainLecture.id, // Ensure the ID of the "main" lecture is kept
-    info: uniq(lecturesToMerge.map((lect) => lect.info)).join(", "),
+    info: uniq(compact(lecturesToMerge.map((lect) => lect.info))).join(", "),
     room: conjunctConjunctableRooms(uniq(lecturesToMerge.flatMap((lect) => lect.room))),
     weeks: {
       parity: lecturesToMerge.every((lect) => lect.weeks.parity === mainLecture.weeks.parity)
