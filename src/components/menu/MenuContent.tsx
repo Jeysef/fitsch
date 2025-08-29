@@ -1,5 +1,5 @@
 import { trackStore } from "@solid-primitives/deep";
-import { action, useAction } from "@solidjs/router";
+import { action, useAction, useSubmission } from "@solidjs/router";
 import { flatMap, forEach, mapValues } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
 import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
@@ -88,9 +88,11 @@ function useLoadCourses(
   t: tType,
   store: SchedulerStore
 ) {
+  const coursesSubmission = useSubmission(getStudyCoursesDetailsAction);
   const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {
     if (!data.courseIds.length) {
-      store.clearCourses();
+      store.newCourses = [];
+      coursesSubmission.clear();
       return Promise.resolve();
     }
     const submission = submit(data).then((result) => {
