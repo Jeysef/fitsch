@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "solid-color/*": ["./packages/solid-color/source/*"]
     },
     "exactOptionalPropertyTypes": true
   }
