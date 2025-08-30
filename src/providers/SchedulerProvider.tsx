@@ -1,20 +1,18 @@
 import { useSubmission } from "@solidjs/router";
-import { merge, range, zipObject } from "es-toolkit";
+import { merge } from "es-toolkit";
 import { batch, createComputed, createContext, on, useContext, type ParentProps } from "solid-js";
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
-import { days, end, start, step } from "~/config/scheduler";
-import { LECTURE_TYPE } from "~/enums/enums";
+import { end, rows, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
-import { TimeSpan, type Time } from "~/lib/time/time";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { SchedulerStore } from "~/store/store";
-import type { ICreateColumns, IScheduleColumn, IScheduleRows } from "~/store/store.types";
 import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
 import { parseStoreJsoUnsafeSync } from "~/store/storeSchema";
+import { createColumns, filter, formatTime } from "~/store/utils";
 import { makePersistedMutable } from "~/utils/persistedMutable";
 import { makeAutoMemoStore } from "~/utils/store/autoMemo";
 
@@ -29,38 +27,8 @@ interface SchedulerContextType {
 
 const SchedulerContext = createContext<SchedulerContextType>();
 
-// Helper function to generate the time column headers for the scheduler grid
-export function createColumns(config: ICreateColumns): IScheduleColumn[] {
-  // create columns from start to end with step
-  const columns: IScheduleColumn[] = [];
-  const step = config.step;
-  const end = config.end;
-  let spanStart = config.start;
-  let spanEnd = spanStart.add(step);
-  while (spanEnd.minutes <= end.minutes) {
-    columns.push({
-      title: config.getTimeHeader(spanStart, spanEnd),
-      duration: new TimeSpan(spanStart, spanEnd),
-    });
-    spanStart = spanEnd;
-    spanEnd = spanEnd.add(step);
-  }
-
-  return columns;
-}
-
 export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
-
-  // Formatter for time headers in the scheduler columns (e.g., "08:00–08:50")
-  const formatTime = (start: Time, end: Time) =>
-    `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}–${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
-
-  // Filter function to exclude certain lecture types (e.g., exams, notes) from the main schedule display
-  const filter = (event: LectureMutator.MutatedLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);
-
-  // Define the rows for the scheduler grid, mapping days to row numbers
-  const rows = zipObject(days, range(1, days.length + 1)) as IScheduleRows;
 
   // Generate the columns based on configured start/end times and step duration
   const columns = createColumns({

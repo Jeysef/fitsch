@@ -1,8 +1,9 @@
 import type { Event } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/enums/enums";
-import { hasOverlap, TimeSpan } from "~/lib/time/time";
+import { hasOverlap, TimeSpan, type Time } from "~/lib/time/time";
 import { percentage } from "~/lib/utils";
-import type { AnyEventType, IScheduleColumn } from "~/store/store.types";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import type { AnyEventType, ICreateColumns, IScheduleColumn } from "~/store/store.types";
 
 export function getEventTypePriority(type: AnyEventType): number {
   const priorityMap: Record<AnyEventType, number> = {
@@ -93,3 +94,30 @@ export function getEventPlacement(timeSpan: TimeSpan, columns: IScheduleColumn[]
 
   return { colStart, colEnd, paddingStart, paddingEnd };
 }
+
+// Helper function to generate the time column headers for the scheduler grid
+export function createColumns(config: ICreateColumns): IScheduleColumn[] {
+  // create columns from start to end with step
+  const columns: IScheduleColumn[] = [];
+  const step = config.step;
+  const end = config.end;
+  let spanStart = config.start;
+  let spanEnd = spanStart.add(step);
+  while (spanEnd.minutes <= end.minutes) {
+    columns.push({
+      title: config.getTimeHeader(spanStart, spanEnd),
+      duration: new TimeSpan(spanStart, spanEnd),
+    });
+    spanStart = spanEnd;
+    spanEnd = spanEnd.add(step);
+  }
+
+  return columns;
+}
+
+// Formatter for time headers in the scheduler columns (e.g., "08:00–08:50")
+export const formatTime = (start: Time, end: Time) =>
+  `${start.hour.toString().padStart(2, "0")}:${start.minute.toString().padStart(2, "0")}–${end.hour.toString().padStart(2, "0")}:${end.minute.toString().padStart(2, "0")}`;
+
+// Filter function to exclude certain lecture types (e.g., exams, notes) from the main schedule display
+export const filter = (event: LectureMutator.MutatedLecture) => !(event.note || event.type === LECTURE_TYPE.EXAM);

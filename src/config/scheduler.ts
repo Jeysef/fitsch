@@ -13,3 +13,12 @@ export const LAUNCH_DAY_TIME = {
   [DAY.THU]: { start: "11:00", end: "14:30" },
   [DAY.FRI]: { start: "11:00", end: "14:00" },
 };
+
+// Define the rows for the scheduler grid, mapping days to row numbers
+export const rows = {
+  [DAY.MON]: 1,
+  [DAY.TUE]: 2,
+  [DAY.WED]: 3,
+  [DAY.THU]: 4,
+  [DAY.FRI]: 5,
+};
