@@ -4,12 +4,12 @@ import type { CustomEvent } from "~/components/scheduler/event/types";
 import { days, end, start, step } from "~/config/scheduler";
 import { DAY } from "~/enums/enums";
 import { Time, TimeSpan } from "~/lib/time/time";
-import { createColumns } from "~/providers/SchedulerProvider";
 import { getRandomBoolean, getRandomEnum, getRandomId, getRandomNumber } from "~/server/scraper/tests/utils/common";
 import { getRandomText } from "~/server/scraper/tests/utils/text";
 import { SchedulerStore } from "~/store/store";
 import type { IScheduleRows } from "~/store/store.types";
 import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
+import { createColumns } from "~/store/utils";
 
 // Formatter for time headers in the scheduler columns (e.g., "08:00–08:50")
 const formatTime = (start: Time, end: Time) =>
