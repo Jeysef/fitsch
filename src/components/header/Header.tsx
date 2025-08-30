@@ -5,8 +5,8 @@ import InstallButton from "~/components/ui/InstallButton";
 
 export default function Header() {
   return (
-    <header class="flex sticky top-0 z-50 w-full items-center border-b bg-background">
-      <div class="flex h-[--header-height] w-full items-center gap-2 px-4">
+    <header class="flex h-[--header-height] sticky top-0 z-50 w-full items-center border-b bg-background">
+      <div class="flex h-full w-full items-center gap-2 px-4">
         <svg xmlns="http://www.w3.org/2000/svg" id="icon-logo-fit" viewBox="0 0 196 80" height={40} $ServerOnly>
           <title>VUT FIT Logo</title>
           <rect fill="#fff" width="77" height="100%" /> {/* 80 - 3 */}
