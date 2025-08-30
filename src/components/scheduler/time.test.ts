@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
-import type { ISchedulerTime } from "~/components/scheduler/types";
-import { Time, TimeSpan, hasOverlap, hourDifference } from "./time";
+import { hasOverlap, hourDifference, Time, TimeSpan, type TimeProps } from "~/lib/time/time";
 
 describe("Time", () => {
   test("should correctly create Time instance", () => {
@@ -189,6 +188,6 @@ describe("hourDifference", () => {
   });
 });
 
-function timespanFromPlain(timeSpan: { start: ISchedulerTime; end: ISchedulerTime }) {
+function timespanFromPlain(timeSpan: { start: TimeProps; end: TimeProps }) {
   return new TimeSpan(new Time(timeSpan.start), new Time(timeSpan.end));
 }

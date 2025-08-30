@@ -26,14 +26,14 @@ interface MenuDataContextType {
 }
 
 const MenuLocalDataContext = createContext<MenuDataContextType>();
-const emptyPersistentValue: persistantGroupData = {
+const emptyPersistentValue = {
   year: undefined,
   semester: undefined,
   grade: undefined,
   degree: undefined,
   program: undefined,
   ...mapValues(OBLIGATION, () => undefined),
-};
+} as unknown as persistantGroupData;
 
 const monthCookie = cookieStorage.withOptions({
   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),

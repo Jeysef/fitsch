@@ -31,7 +31,7 @@ export interface OverviewCurrent {
   language: LANGUAGE;
   faculty: FACULTY;
   degree?: DEGREE | undefined;
-  program?: url;
+  program?: url | undefined;
 }
 export interface OverviewPayload {
   year: string;

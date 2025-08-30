@@ -6,8 +6,8 @@ import type { OverviewYear } from "~/server/scraper/types/year.types";
 
 export namespace StudyApiTypes {
   export interface getStudyProgramsConfig {
-    year?: year;
-    degree?: DEGREE;
+    year?: year | undefined;
+    degree?: DEGREE | undefined;
   }
   export interface getStudyProgramsReturn {
     programs: OverviewPrograms;
