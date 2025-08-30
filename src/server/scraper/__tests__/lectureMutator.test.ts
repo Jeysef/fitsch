@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Time, TimeSpan } from "~/lib/time/time";
 import { parseWeek } from "~/server/scraper/parsers/course/utils";
-import { DAY, LECTURE_TYPE } from "../enums";
+import { DAY, LECTURE_TYPE } from "../../../enums/enums";
 import { conjunctParallelLectures } from "../lectureMutator";
 
 describe("conjunctLectures", () => {

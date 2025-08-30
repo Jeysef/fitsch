@@ -1,5 +1,5 @@
+import type { DAY } from "~/enums/enums";
 import type { TimeSpan } from "~/lib/time/time";
-import type { DAY } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 
 export interface EventBase {

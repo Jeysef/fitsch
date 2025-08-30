@@ -4,10 +4,10 @@ import { batch, createComputed, createContext, on, useContext, type ParentProps 
 import { createMutable } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { days, end, start, step } from "~/config/scheduler";
+import { LECTURE_TYPE } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { TimeSpan, type Time } from "~/lib/time/time";
-import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";

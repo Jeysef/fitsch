@@ -3,7 +3,7 @@ import { ObjectTyped } from "object-typed";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import type { OverviewPrograms } from "~/server/scraper/types/overview.types";
 import type { ProgramSpecializationOverview } from "~/server/scraper/types/program.types";
-import { DEGREE } from "../../enums";
+import { DEGREE } from "../../../../enums/enums";
 
 export class ProgramsParser {
   public parse($: CheerioAPI): StudyApiTypes.getStudyProgramsReturn {

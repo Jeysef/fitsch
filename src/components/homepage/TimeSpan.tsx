@@ -4,9 +4,9 @@ import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitleLink } from "~/components/ui/card";
+import type { LECTURE_TYPE } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
-import type { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { Course } from "~/store/store.types";
 import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 

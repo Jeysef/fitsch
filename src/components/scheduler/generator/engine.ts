@@ -1,8 +1,8 @@
 import { ObjectTyped } from "object-typed";
 import type { Event, ScheduleEvent } from "~/components/scheduler/event/types";
 import { isAllowedOverlap } from "~/components/scheduler/generator/utils";
+import type { LECTURE_TYPE } from "~/enums/enums";
 import { hasOverlap } from "~/lib/time/time";
-import type { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { Course, LectureMetrics } from "~/store/store.types";
 
 /**

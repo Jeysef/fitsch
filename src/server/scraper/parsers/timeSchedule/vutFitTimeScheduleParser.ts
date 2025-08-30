@@ -2,7 +2,7 @@ import type { CheerioAPI } from "cheerio";
 import { ObjectTyped } from "object-typed";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { parseAsUtc } from "~/server/scraper/utils";
-import { SEMESTER } from "../../enums";
+import { SEMESTER } from "../../../../enums/enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
 
 export class TimeScheduleParser {

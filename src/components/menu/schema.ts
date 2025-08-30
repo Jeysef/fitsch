@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FACULTY, LANGUAGE } from "~/enums";
-import { DEGREE, OBLIGATION, SEMESTER } from "~/server/scraper/enums";
+import { DEGREE, OBLIGATION, SEMESTER } from "~/enums/enums";
 
 export const menuCurrentSchema = z.object({
   year: z.object({ value: z.string(), label: z.string() }),

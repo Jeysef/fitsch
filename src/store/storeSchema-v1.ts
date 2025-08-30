@@ -1,6 +1,6 @@
 import { z } from "zod";
+import { DAY } from "~/enums/enums";
 import { TimeSpan } from "~/lib/time/time";
-import { DAY } from "~/server/scraper/enums";
 import { courseDetailSchema, courseMetricsSchema, scheduleEventSchema } from "~/store/storeSchema-v2";
 
 const timespanSchema = z.instanceof(TimeSpan);

@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { parseStoreJson } from "~/components/menu/storeJsonValidator";
 import { createColumns, SchedulerStore } from "~/components/scheduler/store";
 import { days, end, start, step } from "~/config/scheduler";
-import { type DAY, LECTURE_TYPE } from "~/server/scraper/enums";
+import { type DAY, LECTURE_TYPE } from "~/enums/enums";
+import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import type { MCourseLecture } from "~/server/scraper/lectureMutator";
 import validSchedule from "./validSchedule.json";
-import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 
 describe("Test schedule parsing", () => {
   it("should parse schedule", () => {

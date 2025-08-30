@@ -10,8 +10,8 @@ import {
   useContext,
 } from "solid-js";
 import type { MenuSchema } from "~/components/menu/schema";
+import { OBLIGATION } from "~/enums/enums";
 import { useI18n } from "~/i18n";
-import { OBLIGATION } from "~/server/scraper/enums";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 
 type persistantGroupData = Partial<MenuSchema>;

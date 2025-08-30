@@ -4,7 +4,7 @@ import { Time, TimeSpan } from "~/lib/time/time";
 import type { CourseDetailParserOptions } from "~/server/scraper/parsers/course/CourseDetailParser.types";
 import { parseCourseTimeSpan, parseWeek } from "~/server/scraper/parsers/course/utils";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
-import { LECTURE_TYPE, type DAY } from "../../enums";
+import { LECTURE_TYPE, type DAY } from "../../../../enums/enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
 import { removeSpaces } from "../../utils";
 

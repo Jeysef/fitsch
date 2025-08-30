@@ -1,7 +1,7 @@
 import type { Event } from "~/components/scheduler/event/types";
+import { LECTURE_TYPE } from "~/enums/enums";
 import { hasOverlap, TimeSpan } from "~/lib/time/time";
 import { percentage } from "~/lib/utils";
-import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { AnyEventType, IScheduleColumn } from "~/store/store.types";
 
 export function getEventTypePriority(type: AnyEventType): number {

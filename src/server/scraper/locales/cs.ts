@@ -1,4 +1,4 @@
-import { DAY, LECTURE_TYPE, WEEK_PARITY } from "~/server/scraper/enums";
+import { DAY, LECTURE_TYPE, WEEK_PARITY } from "~/enums/enums";
 
 export default {
   course: {

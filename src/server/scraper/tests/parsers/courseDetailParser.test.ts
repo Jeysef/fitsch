@@ -2,7 +2,7 @@ import { load } from "cheerio";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
+import { DAY, LECTURE_TYPE } from "~/enums/enums";
 import { CourseDetailParser } from "~/server/scraper/parsers/course/vutFitCourseParser";
 import { getLanguageSet } from "~/server/scraper/tests/mocks/languageSet.mock";
 

@@ -1,5 +1,5 @@
 import type { CustomEvent, Event } from "~/components/scheduler/event/types";
-import type { DAY } from "~/server/scraper/enums";
+import type { DAY } from "~/enums/enums";
 import { DayEventStore } from "~/store/dayEventStore";
 import { DayStore } from "~/store/dayStore";
 import type { SchedulerStore } from "~/store/store";

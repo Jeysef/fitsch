@@ -20,9 +20,9 @@ import {
 } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
+import { OBLIGATION, SEMESTER } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { usePostHog } from "~/lib/posthog";
-import { OBLIGATION, SEMESTER } from "~/server/scraper/enums";
 import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
 import type { ProgramOverviewBase } from "~/server/scraper/types/program.types";

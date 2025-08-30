@@ -13,10 +13,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { TextField, TextFieldLabel, TextFieldRoot } from "~/components/ui/textfield";
 import { customColors } from "~/config/colors";
 import { days, end, start } from "~/config/scheduler";
+import { DAY } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { Time, TimeSpan } from "~/lib/time/time";
 import { TwitterPicker } from "~/packages/solid-color/source";
-import { DAY } from "~/server/scraper/enums";
 import { customEventSchema } from "~/store/storeSchema-v2";
 
 interface FormProps {

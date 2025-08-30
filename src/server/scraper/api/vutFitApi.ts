@@ -2,7 +2,7 @@ import type { LANGUAGE } from "~/enums";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import { defineCachedFunction } from "~/server/utils/cache";
-import { DEGREE } from "../enums";
+import { DEGREE } from "../../../enums/enums";
 import type { HttpFetcher } from "../httpFetcher";
 import type { CourseDetailParser } from "../parsers/course/vutFitCourseParser";
 import type { ProgramCoursesParser } from "../parsers/programCourses/vutFitProgramCoursesParser";

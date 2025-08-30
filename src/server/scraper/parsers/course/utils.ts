@@ -1,7 +1,7 @@
 import { compact } from "es-toolkit";
 import { ObjectTyped } from "object-typed";
+import { WEEK_PARITY } from "~/enums/enums";
 import { semesterWeeks } from "~/server/scraper/constants";
-import { WEEK_PARITY } from "~/server/scraper/enums";
 import type { LanguageSetDictionary } from "~/server/scraper/languageProvider";
 import type { CourseTimeSpan, LectureWeeks } from "~/server/scraper/types/types";
 import { getParityOfWeeks, getWeekFromSemesterStart } from "~/server/scraper/utils";

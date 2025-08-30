@@ -7,7 +7,7 @@ import {
   getWeekFromSemesterStart,
   removeSpaces,
 } from "~/server/scraper/utils";
-import { WEEK_PARITY } from "../enums";
+import { WEEK_PARITY } from "../../../enums/enums";
 
 describe("utils", () => {
   test("should remove spaces", async () => {

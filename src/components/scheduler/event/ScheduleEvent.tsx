@@ -4,7 +4,7 @@ import { EventTitle, EventWrapper, type EventProps } from "~/components/schedule
 import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
-import { WEEK_PARITY } from "~/server/scraper/enums";
+import { WEEK_PARITY } from "~/enums/enums";
 import { useStore } from "../Scheduler";
 import type { ScheduleEvent } from "./types";
 

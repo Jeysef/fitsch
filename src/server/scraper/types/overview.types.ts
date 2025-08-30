@@ -1,5 +1,5 @@
 import type { FACULTY, LANGUAGE } from "~/enums";
-import type { DEGREE, SEMESTER } from "~/server/scraper/enums";
+import type { DEGREE, SEMESTER } from "~/enums/enums";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
 import type { ProgramCourses, ProgramOverview } from "~/server/scraper/types/program.types";
 import type { url } from "~/server/scraper/types/types";

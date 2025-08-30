@@ -4,9 +4,9 @@ import { cloneDeep, flow, isEqual, isString, union, uniq } from "es-toolkit/comp
 import type { StrictOmit } from "ts-essentials";
 import { conjunctableRooms } from "~/config/rooms";
 import { days } from "~/config/scheduler";
+import { lecturesWithoutExam, WEEK_PARITY, type DAY } from "~/enums/enums";
 import type { Time, TimeSpan } from "~/lib/time/time";
 import { halfSemesterWeeks } from "~/server/scraper/constants";
-import { lecturesWithoutExam, WEEK_PARITY, type DAY } from "~/server/scraper/enums";
 import type { StudyApiTypes } from "~/server/scraper/types/api.types";
 import type { CourseDetail, Lecture } from "~/server/scraper/types/course.types";
 import { conjunctConjunctableRooms, getLectureLectures, getWeekFromSemesterStart } from "~/server/scraper/utils";

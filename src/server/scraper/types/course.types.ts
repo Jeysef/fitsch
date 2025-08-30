@@ -1,5 +1,5 @@
+import type { DAY, LECTURE_TYPE, OBLIGATION, WEEK_PARITY } from "~/enums/enums";
 import type { TimeSpan } from "~/lib/time/time";
-import type { DAY, LECTURE_TYPE, OBLIGATION, WEEK_PARITY } from "~/server/scraper/enums";
 import type { url } from "~/server/scraper/types/types";
 
 interface CourseBase {

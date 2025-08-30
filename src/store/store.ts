@@ -1,6 +1,6 @@
 import { mapValues } from "es-toolkit";
 import type { CustomEvent } from "~/components/scheduler/event/types";
-import { LECTURE_TYPE } from "~/server/scraper/enums";
+import { LECTURE_TYPE } from "~/enums/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import { createNewCourse } from "~/store/courseStore";

@@ -1,4 +1,4 @@
-import type { DEGREE, SEMESTER } from "~/server/scraper/enums";
+import type { DEGREE, SEMESTER } from "~/enums/enums";
 import type { Program } from "~/server/scraper/types/program.types";
 import type { SemestersTimeSchedule, SemesterTimeSchedule } from "~/server/scraper/types/timeSchedule.types";
 import type { Course, OverviewPrograms, year } from "~/server/scraper/types/types";

@@ -1,6 +1,6 @@
 import { describe, expect, it, test } from "vitest";
 import { LANGUAGE } from "~/enums";
-import { LECTURE_TYPE, WEEK_PARITY } from "~/server/scraper/enums";
+import { LECTURE_TYPE, WEEK_PARITY } from "~/enums/enums";
 import { parseCourseTimeSpan, parseWeek } from "~/server/scraper/parsers/course/utils";
 import { getLanguageSet } from "~/server/scraper/tests/mocks/languageSet.mock";
 

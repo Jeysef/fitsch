@@ -14,9 +14,9 @@ import { Contributor } from "~/components/ui/contributor";
 import { DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import InstallButton from "~/components/ui/InstallButton";
 import { parityColors, subjectTypeColors } from "~/config/colors";
+import { LECTURE_TYPE } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
-import { LECTURE_TYPE } from "~/server/scraper/enums";
 import QrCode from "./QR-donate.png";
 
 export default function InfoDialogContent() {

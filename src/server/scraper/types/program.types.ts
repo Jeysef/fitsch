@@ -1,4 +1,4 @@
-import type { SEMESTER } from "~/server/scraper/enums";
+import type { SEMESTER } from "~/enums/enums";
 import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeKey } from "~/server/scraper/types/grade.types";
 import type { url } from "~/server/scraper/types/types";

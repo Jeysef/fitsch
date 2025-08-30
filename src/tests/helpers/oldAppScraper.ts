@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import { Time, TimeSpan } from "~/components/scheduler/time";
-import { DAY, LECTURE_TYPE, SEMESTER } from "~/server/scraper/enums";
+import { DAY, LECTURE_TYPE, SEMESTER } from "~/enums/enums";
 
 export interface ScrapedEvent {
   courseId: string;

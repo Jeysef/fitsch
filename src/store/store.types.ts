@@ -1,6 +1,6 @@
 import type { DayEvent, ScheduleEvent } from "~/components/scheduler/event/types";
+import type { DAY, LECTURE_TYPE } from "~/enums/enums";
 import type { Time, TimeSpan } from "~/lib/time/time";
-import type { DAY, LECTURE_TYPE } from "~/server/scraper/enums";
 import type { CourseDetail } from "~/server/scraper/types/types";
 import type { DayStore } from "~/store/dayStore";
 

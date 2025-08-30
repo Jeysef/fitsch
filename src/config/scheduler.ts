@@ -1,5 +1,5 @@
+import { DAY } from "~/enums/enums";
 import { Time } from "~/lib/time/time";
-import { DAY } from "~/server/scraper/enums";
 
 export const start = new Time({ hour: 7, minute: 0 });
 export const step = new Time({ hour: 1, minute: 0 });

@@ -1,5 +1,5 @@
 import colors from "tailwindcss/colors";
-import { LECTURE_TYPE, WEEK_PARITY } from "../server/scraper/enums";
+import { LECTURE_TYPE, WEEK_PARITY } from "../enums/enums";
 
 /**
  * These colors are taken from the official VUT mobile app

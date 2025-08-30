@@ -1,7 +1,7 @@
 import { mergeProps } from "solid-js";
 import type { ScheduleEvent } from "~/components/scheduler/event/types";
+import { LECTURE_TYPE } from "~/enums/enums";
 import { Time } from "~/lib/time/time";
-import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import type { Course, CourseMetrics } from "~/store/store.types";
 

@@ -3,7 +3,7 @@ import type { ProgramCoursesParserOptions } from "~/server/scraper/parsers/progr
 import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeKey } from "~/server/scraper/types/grade.types";
 import type { Program } from "~/server/scraper/types/program.types";
-import { OBLIGATION, SEMESTER } from "../../enums";
+import { OBLIGATION, SEMESTER } from "../../../../enums/enums";
 import type { LanguageSetDictionary } from "../../languageProvider";
 
 export class ProgramCoursesParser {

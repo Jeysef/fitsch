@@ -1,6 +1,6 @@
 import { ObjectTyped } from "object-typed";
 import { FACULTY, LANGUAGE } from "~/enums";
-import { DEGREE, SEMESTER } from "~/server/scraper/enums";
+import { DEGREE, SEMESTER } from "~/enums/enums";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
 import type {
   Overview,

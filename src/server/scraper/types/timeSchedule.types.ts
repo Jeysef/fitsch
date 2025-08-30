@@ -1,4 +1,4 @@
-import type { SEMESTER } from "~/server/scraper/enums";
+import type { SEMESTER } from "~/enums/enums";
 
 export type SemesterTimeSchedule = { start: Date; end: Date };
 

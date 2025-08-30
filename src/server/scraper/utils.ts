@@ -2,7 +2,7 @@ import { conjunctableRooms } from "~/config/rooms";
 import { getWeekNumber } from "~/lib/date";
 import { gradeAll } from "~/server/scraper/constants";
 import type { CourseDetail, Lecture, StudyId } from "~/server/scraper/types/types";
-import { WEEK_PARITY } from "./enums";
+import { WEEK_PARITY } from "../../enums/enums";
 
 /**
  * Removes all whitespace characters from a string.
