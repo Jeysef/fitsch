@@ -75,7 +75,7 @@ export function DegreeSelect() {
 
   return (
     <RadioGroup
-      value={group.controls.degree.value}
+      value={group.controls.degree.value!}
       onChange={group.controls.degree.setValue as (value: string) => void}
       name="degree"
       onBlur={() => group.controls.degree.markTouched(true)}
@@ -136,7 +136,7 @@ export function ProgramSelect() {
       }
     >
       <RadioGroup
-        value={group.controls.program.value}
+        value={group.controls.program.value!}
         onChange={(program) => program && group.controls.program.setValue(program)}
         name="program"
         // onBlur={() => group.controls.program!.markTouched(true)}
@@ -210,7 +210,7 @@ export function GradeSelect() {
 
   return (
     <RadioGroup
-      value={group.controls.grade.value}
+      value={group.controls.grade.value!}
       onChange={group.controls.grade.setValue as (value: string) => void}
       name="yearOfStudy"
       onBlur={() => group.controls.grade.markTouched(true)}
