@@ -57,7 +57,7 @@ describe("TestSchedulerStore", () => {
   });
 
   it("should be able to add custom events and have data", () => {
-    store.addCustomEvent(getRandomEvent());
+    store.addCustomEvent(getRandomEvent({ day: DAY.MON }));
 
     const data = store.data;
     expect(data.length).toBe(5);
