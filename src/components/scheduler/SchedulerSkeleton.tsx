@@ -5,7 +5,6 @@ import EventSkeleton from "~/components/scheduler/event/EventSkeleton";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { cn } from "~/lib/utils";
-import type { SchedulerStore } from "~/store/store";
 import Text from "../typography/text";
 import {
   ColumnLines,
@@ -19,6 +18,7 @@ import {
   TopXAxisHeader,
   Week,
 } from "./Scheduler";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 
 const mockData = `[
   {
@@ -255,7 +255,7 @@ const mockData = `[
   }
 ]`;
 
-export default function SchedulerSkeleton(props: { store: SchedulerStore }) {
+export default function SchedulerSkeleton(props: { store: AdaptedSchedulerStore }) {
   const t = useI18n().t;
 
   const [isHorizontalLayout] = makePersisted(createSignal(true), {

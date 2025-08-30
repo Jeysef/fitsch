@@ -49,10 +49,10 @@ import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/act
 import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/server-fns/getCourses/getStudyCoursesDetails.types";
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
-import type { SchedulerStore } from "~/store/store";
 import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
 import { Settings } from "./MenuSettings";
 import { LoadingState } from "./MenuSkeletons";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 
 type FormGroupValues = { [K in MenuSchemaKey]: MenuSchema[K] };
 type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
@@ -86,7 +86,7 @@ const defaultFormValues = {
 function useLoadCourses(
   submit: (data: GetStudyCoursesDetailsFunctionConfig) => ReturnType<typeof getStudyCoursesDetailsAction>,
   t: tType,
-  store: SchedulerStore
+  store: AdaptedSchedulerStore
 ) {
   const coursesSubmission = useSubmission(getStudyCoursesDetailsAction);
   const loadCourses = (data: GetStudyCoursesDetailsFunctionConfig) => {

@@ -29,8 +29,6 @@ export class SchedulerStore implements StoreJson {
 
   // ---- Courses ----
 
-  public clearCourses = () => (this.newCourses = []);
-
   public getCourse = (courseId: string) => this.courses.find((course) => course.detail.id === courseId);
 
   // must be a setter to trigger reactivity
@@ -46,14 +44,6 @@ export class SchedulerStore implements StoreJson {
   }
 
   // ---- Custom Events ----
-
-  public set addCustomEvent(event: CustomEvent) {
-    this.customEvents.push(event);
-  }
-
-  public set removeCustomEvent(eventId: string) {
-    this.customEvents = this.customEvents.filter((e) => e.id !== eventId);
-  }
 
   // ---- Data ----
 

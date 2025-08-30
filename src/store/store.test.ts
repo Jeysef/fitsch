@@ -9,6 +9,7 @@ import { getRandomBoolean, getRandomEnum, getRandomId, getRandomNumber } from "~
 import { getRandomText } from "~/server/scraper/tests/utils/text";
 import { SchedulerStore } from "~/store/store";
 import type { IScheduleRows } from "~/store/store.types";
+import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
 
 // Formatter for time headers in the scheduler columns (e.g., "08:00–08:50")
 const formatTime = (start: Time, end: Time) =>
@@ -28,10 +29,10 @@ const columns = createColumns({
 });
 
 describe("TestSchedulerStore", () => {
-  let store: SchedulerStore;
+  let store: AdaptedSchedulerStore;
 
   beforeEach(() => {
-    store = new SchedulerStore({ columns, rows });
+    store = adaptSchedulerStore(new SchedulerStore({ columns, rows }));
   });
 
   it("should be created with settings", () => {

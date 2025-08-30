@@ -4,7 +4,6 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import EventComponent from "~/components/scheduler/event/Event";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
-import type { SchedulerStore } from "~/store/store";
 import Text from "../typography/text";
 import {
   ColumnLines,
@@ -18,8 +17,9 @@ import {
   TopXAxisHeader,
   Week,
 } from "./Scheduler";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 
-export default function SchedulerComp(props: { store: SchedulerStore }) {
+export default function SchedulerComp(props: { store: AdaptedSchedulerStore }) {
   const t = useI18n().t;
 
   const [isHorizontalLayout, setIsHorizontalLayout] = makePersisted(createSignal(true), {

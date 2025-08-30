@@ -7,11 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitleLink } from "~
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
 import type { LECTURE_TYPE } from "~/server/scraper/enums";
-import type { SchedulerStore } from "~/store/store";
 import type { Course } from "~/store/store.types";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 
 export interface TimeSpanProps {
-  store: SchedulerStore;
+  store: AdaptedSchedulerStore;
 }
 
 export default function TimeSpan(props: TimeSpanProps) {

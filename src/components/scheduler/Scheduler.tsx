@@ -24,14 +24,14 @@ import { Time, TimeSpan } from "~/lib/time/time";
 import { cn } from "~/lib/utils";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import type { DayStore } from "~/store/dayStore";
-import type { SchedulerStore } from "~/store/store";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 import { getEventPlacement } from "~/store/utils";
 import { createElementHeightRef } from "../heightMeasurer";
 import { isCustomEvent } from "./event/Event";
 import type { DayEvent, Event, ScheduleEvent } from "./event/types";
 
 // Context
-const SchedulerStoreContext = createContext<Accessor<SchedulerStore>>();
+const SchedulerStoreContext = createContext<Accessor<AdaptedSchedulerStore>>();
 const LayoutContext = createContext<Signal<boolean>>();
 
 export function useStore() {
@@ -52,7 +52,7 @@ export function useLayout() {
 
 export const [scheduleRef, setScheduleRef] = createSignal<HTMLDivElement | null>(null);
 
-export function SchedulerProvider(props: { store: SchedulerStore; layout: Signal<boolean> } & FlowProps) {
+export function SchedulerProvider(props: { store: AdaptedSchedulerStore; layout: Signal<boolean> } & FlowProps) {
   const [isHorizontalLayout, setIsHorizontalLayout] = props.layout;
   return (
     <SchedulerStoreContext.Provider value={() => props.store}>

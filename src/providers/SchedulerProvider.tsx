@@ -13,6 +13,7 @@ import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/act
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { SchedulerStore } from "~/store/store";
 import type { ICreateColumns, IScheduleColumn, IScheduleRows } from "~/store/store.types";
+import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
 import { parseStoreJsoUnsafeSync } from "~/store/storeSchema";
 import { makePersistedMutable } from "~/utils/persistedMutable";
 import { makeAutoMemoStore } from "~/utils/store/autoMemo";
@@ -21,7 +22,7 @@ import { makeAutoMemoStore } from "~/utils/store/autoMemo";
 export type PlainStore = Pick<SchedulerStore, "courses">;
 
 interface SchedulerContextType {
-  store: SchedulerStore;
+  store: AdaptedSchedulerStore;
   recreateStore: (plainStore: PlainStore) => void;
   serialize: (store: SchedulerStore) => string;
 }
@@ -169,7 +170,7 @@ export function SchedulerProvider(props: ParentProps) {
   return (
     <SchedulerContext.Provider
       value={{
-        store: makeAutoMemoStore(store),
+        store: adaptSchedulerStore(makeAutoMemoStore(store)),
         recreateStore,
         serialize,
       }}
