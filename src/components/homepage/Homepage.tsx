@@ -1,5 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount, startTransition } from "solid-js";
+import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import Scheduler from "~/components/scheduler";
 import SchedulerSkeleton from "~/components/scheduler/SchedulerSkeleton";
@@ -21,11 +21,9 @@ export default function Home() {
   const { store } = useScheduler();
   const posthog = usePostHog();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
-  // const { opened, toggleNavigation } = useMenuOpened();
   const [isAllCollapsed, setIsAllCollapsed] = createSignal(false);
   const [showSkeleton, setShowSkeleton] = createSignal(true);
 
-  // Hide skeleton after localStorage loads (simulate with onMount and a microtask)
   onMount(() => {
     // Wait for next tick to allow localStorage hydration
     queueMicrotask(() => setShowSkeleton(false));
@@ -34,10 +32,6 @@ export default function Home() {
   const filteredStore = createProjection(store, (store) => ({
     data: store.checkedData,
   }));
-
-  const setTab = (tabValue: string) => {
-    setSearchParams({ tab: tabValue }, { replace: true });
-  };
 
   const areAllCoursesSelected = createMemo(() => {
     return store.courses.every((course) => store.coursesTimeSpan[course.detail.id].valid);
@@ -48,25 +42,20 @@ export default function Home() {
   });
 
   const collapseAll = (expand = false) =>
-    setTimeout(() => {
-      startTransition(() => {
-        batch(() => {
-          for (const dayEvent of Object.values(store.data)) {
-            for (const eventStore of dayEvent.events) {
-              eventStore.event.collapsed = expand;
-            }
-          }
-        });
-      });
-    }, 20);
+    batch(() => {
+      for (const dayEvent of Object.values(store.data)) {
+        for (const eventStore of dayEvent.events) {
+          eventStore.event.collapsed = expand;
+        }
+      }
+    });
 
   const tab = createMemo(() => searchParams.tab ?? tabs.workSchedule);
-
+  const setTab = (tabValue: string) => setSearchParams({ tab: tabValue }, { replace: true });
   const isMobile = useIsMobile();
 
   return (
     <Tabs value={tab()} onChange={setTab} class="contents">
-      {/* <div class="flex items-center justify-between w-full h-14 bg-background sticky top-0 z-10 px-4"> */}
       <div class="flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between">
         <div class="flex h-16 shrink-0 items-center gap-2 -ml-1">
           <SidebarTrigger />
@@ -106,13 +95,13 @@ export default function Home() {
               .join(" ")}
           </Button>
         </div>
-        {/* <div /> */}
       </div>
-      {/* <div /> */}
-      {/* </div> */}
       <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
         <div class="w-auto max-w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2 mx-auto">
-          <Show when={showSkeleton()} fallback={<Scheduler store={tab() === tabs.workSchedule ? store : filteredStore} />}>
+          <Show
+            when={showSkeleton()}
+            fallback={<Scheduler store={tab() === tabs.resultSchedule ? filteredStore : store} />}
+          >
             <SchedulerSkeleton store={store} />
           </Show>
         </div>
