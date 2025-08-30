@@ -9,7 +9,7 @@ import { useScheduler } from "~/providers/SchedulerProvider";
 function AddCustomEventAction() {
   const { t } = useI18n();
   const { store } = useScheduler();
-  const handleAddEvent = (event: CustomEvent) => store.addCustomEvent(event);
+  const handleAddEvent = (event: CustomEvent) => (store.addCustomEvent = event);
   return (
     <ItemText as="div">
       <EventForm

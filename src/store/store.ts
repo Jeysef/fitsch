@@ -1,4 +1,4 @@
-import { mapValues, remove } from "es-toolkit";
+import { mapValues } from "es-toolkit";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/server/scraper/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
@@ -47,13 +47,18 @@ export class SchedulerStore implements StoreJson {
 
   // ---- Custom Events ----
 
-  public addCustomEvent = (event: CustomEvent) => this.customEvents.push(event);
+  public set addCustomEvent(event: CustomEvent) {
+    this.customEvents.push(event);
+  }
 
-  public removeCustomEvent = (eventId: string) => remove(this.customEvents, (e) => e.id === eventId);
+  public set removeCustomEvent(eventId: string) {
+    this.customEvents = this.customEvents.filter((e) => e.id !== eventId);
+  }
 
   // ---- Data ----
 
   private get dataStore(): DataStore {
+    console.log("🚀 ~ SchedulerStore ~ dataStore:");
     return new DataStore(this).withCustomEvents(this.customEvents).fromCourses(this.courses);
   }
 

@@ -6,7 +6,7 @@ import type { z } from "zod";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { useI18n } from "~/i18n";
-import type { customEventSchema } from "~/store/storeSchema";
+import type { customEventSchema } from "~/store/storeSchema-v2";
 import Loader from "../ui/loader";
 
 const Form = lazy(() => import("./CustomEventFormContent"));
