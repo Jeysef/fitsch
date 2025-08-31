@@ -48,7 +48,6 @@ export class SchedulerStore implements StoreJson {
   // ---- Data ----
 
   private get dataStore(): DataStore {
-    console.log("🚀 ~ SchedulerStore ~ dataStore:");
     return new DataStore(this).withCustomEvents(this.customEvents).fromCourses(this.courses);
   }
 
