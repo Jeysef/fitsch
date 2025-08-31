@@ -248,26 +248,38 @@ export function Corner() {
 export function LaunchHighlight() {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
-  return ObjectTyped.entries(LAUNCH_DAY_TIME).map(([day, time]) => {
-    const timeSpan = new TimeSpan(Time.fromString(time.start), Time.fromString(time.end));
-    const row = store().settings.rows[day];
-    if (row === undefined) return;
-    const { colStart, colEnd, paddingStart, paddingEnd } = getEventPlacement(timeSpan, store().settings.columns);
-    return (
-      <div
-        style={{
-          "grid-row": isHorizontalLayout() ? `${row} / span 1` : `${colStart + 1} / ${colEnd + 2}`,
-          "grid-column": isHorizontalLayout() ? `${colStart + 1} / ${colEnd + 2}` : `${row} / span 1`,
-          "margin-inline-start": isHorizontalLayout() ? `${paddingStart}%` : "unset",
-          "margin-inline-end": isHorizontalLayout() ? `${paddingEnd}%` : "unset",
-          "margin-block-start": isHorizontalLayout() ? "unset" : `calc(${paddingStart} * var(--element-height, 0) / 100)`,
-          "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${paddingEnd} * var(--element-height, 0) / 100)`,
-        }}
-        class="bg-fuchsia-300 bg-opacity-10 -z-20"
-        ref={createElementHeightRef(isHorizontalLayout)}
-      />
-    );
-  });
+  const InnerComponent = () =>
+    ObjectTyped.entries(LAUNCH_DAY_TIME).map(([day, time]) => {
+      const timeSpan = new TimeSpan(Time.fromString(time.start), Time.fromString(time.end));
+      const row = store().settings.rows[day];
+      if (row === undefined) return;
+      const { colStart, colEnd, paddingStart, paddingEnd } = getEventPlacement(timeSpan, store().settings.columns);
+      return (
+        <div
+          style={{
+            "grid-row": isHorizontalLayout() ? `${row} / span 1` : `${colStart + 1} / ${colEnd + 2}`,
+            "grid-column": isHorizontalLayout() ? `${colStart + 1} / ${colEnd + 2}` : `${row} / span 1`,
+            "margin-inline-start": isHorizontalLayout() ? `${paddingStart}%` : "unset",
+            "margin-inline-end": isHorizontalLayout() ? `${paddingEnd}%` : "unset",
+            "margin-block-start": isHorizontalLayout() ? "unset" : `calc(${paddingStart} * var(--element-height, 0) / 100)`,
+            "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${paddingEnd} * var(--element-height, 0) / 100)`,
+          }}
+          class="bg-fuchsia-300 bg-opacity-10 -z-20"
+          ref={createElementHeightRef(isHorizontalLayout)}
+        />
+      );
+    });
+
+  return (
+    <div
+      class={cn("grid grid-cols-subgrid grid-rows-subgrid select-none -z-30", {
+        "row-[2/-1] col-start-1 -col-end-1": !isHorizontalLayout(),
+        "col-[2/-1] row-start-1 -row-end-1": isHorizontalLayout(),
+      })}
+    >
+      <InnerComponent />
+    </div>
+  );
 }
 
 export function ColumnLines() {

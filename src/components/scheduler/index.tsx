@@ -4,12 +4,14 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import EventComponent from "~/components/scheduler/event/Event";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
+import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 import Text from "../typography/text";
 import {
   ColumnLines,
   Corner,
   Days,
   Events,
+  LaunchHighlight,
   LeftYAxisHeader,
   Scheduler,
   SchedulerGrid,
@@ -17,7 +19,6 @@ import {
   TopXAxisHeader,
   Week,
 } from "./Scheduler";
-import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 
 export default function SchedulerComp(props: { store: AdaptedSchedulerStore }) {
   const t = useI18n().t;
@@ -87,6 +88,7 @@ export default function SchedulerComp(props: { store: AdaptedSchedulerStore }) {
             <Corner />
             <AxisComponents />
             <Week>
+              <LaunchHighlight />
               <Days>{(day) => <Events day={day}>{(event) => <EventComponent dayEvent={event} />}</Events>}</Days>
             </Week>
             <ColumnLines />
