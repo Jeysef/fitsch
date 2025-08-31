@@ -152,19 +152,20 @@ const addLectureIds = (lectures: Lecture[], courseDetail: CourseDetail): Lecture
  */
 const filterValidLectures = (data: LectureMutator.LectureWithId[]) => {
   const isValid = (lecture: LectureMutator.LectureWithId) =>
-    lecturesWithoutExam.includes(lecture.type) && !lecture.note && days.includes(lecture.day) && lecture.lecturesCount;
+    lecturesWithoutExam.includes(lecture.type) &&
+    !(lecture.note && lecture.capacity === "0") &&
+    days.includes(lecture.day) &&
+    lecture.lecturesCount;
 
   // The type assertion is complex but necessary to narrow down the types after filtering.
   return data.filter(isValid) as {
     [K in keyof LectureMutator.LectureWithId]: K extends "type"
       ? (typeof lecturesWithoutExam)[number]
-      : K extends "note"
-        ? null
-        : K extends "day"
-          ? DAY
-          : K extends "lecturesCount"
-            ? number
-            : LectureMutator.LectureWithId[K];
+      : K extends "day"
+        ? DAY
+        : K extends "lecturesCount"
+          ? number
+          : LectureMutator.LectureWithId[K];
   }[];
 };
 

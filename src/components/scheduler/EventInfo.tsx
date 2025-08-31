@@ -14,6 +14,7 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { useI18n } from "~/i18n";
+import { cn } from "~/lib/utils";
 import type { CourseDetail } from "~/server/scraper/types/types";
 
 interface EventPopupProps {
@@ -36,7 +37,16 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
 
   return (
     <Popover flip placement="left-start" onOpenChange={onChangeOpen}>
-      <PopoverTrigger on:dblclick={(e) => e.stopPropagation()}>{props.children}</PopoverTrigger>
+      <PopoverTrigger
+        on:dblclick={(e) => e.stopPropagation()}
+        class={cn(
+          "relative",
+          note &&
+            "after:absolute after:-top-1 after:-right-1 after:w-2 after:h-2 after:rounded-full after:bg-red-500 after:self-start"
+        )}
+      >
+        {props.children}
+      </PopoverTrigger>
       <PopoverContent class="w-80">
         <Show when={courseDetail()}>
           {/* Header */}
@@ -131,7 +141,7 @@ const EventPopup: ParentComponent<EventPopupProps> = (props) => {
                 <div class="flex-1">
                   <p class="text-sm font-medium">{t("course.detail.popover.info")}</p>
                   {info && <p class="text-sm text-muted-foreground">{info}</p>}
-                  {note && <p class="text-sm text-muted-foreground italic">{note}</p>}
+                  {note && <p class="text-sm text-destructive italic">{note}</p>}
                 </div>
               </div>
             </Show>

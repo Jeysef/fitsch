@@ -43,7 +43,7 @@ export const scheduleEventSchema = eventBaseSchema.extend({
   room: z.string(),
   lectureGroup: z.array(z.string()),
   groups: z.string(),
-  note: z.null(),
+  note: z.null().or(z.string()),
   capacity: z.string(),
   lecturesCount: z.number(),
   strongLinked: z.array(linkedLectureDataSchema),
