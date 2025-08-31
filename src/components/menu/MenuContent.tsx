@@ -355,7 +355,7 @@ function Content({
 
   const clearCoursesDeps = () => ({
     year: group.controls.year.value,
-    degree: group.controls.degree.value,
+    // degree: group.controls.degree.value,
   });
   createRenderEffect(
     on(clearCoursesDeps, (_, __, firstEffect) => {
