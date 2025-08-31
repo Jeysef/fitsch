@@ -1,16 +1,16 @@
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
 import {
   type Accessor,
-  createComputed,
   createContext,
   createMemo,
   createSignal,
+  onMount,
   type ParentProps,
   type Setter,
-  untrack,
   useContext,
 } from "solid-js";
-import { menuSchema, type MenuSchema } from "~/components/menu/schema";
+import { toast } from "solid-sonner";
+import { type MenuSchema } from "~/components/menu/schema";
 import type { MenuSelected } from "~/components/menu/types";
 import { isObligationData } from "~/components/menu/utils";
 import { useI18n } from "~/i18n";
@@ -47,51 +47,25 @@ export function MenuLocalDataProvider(props: ParentProps) {
     { name: "groupData", storage: monthCookie }
   );
 
-  const isCreatedFromOldSymbol = Symbol("isCreatedFromOld");
-
-  const deserialize = (data: string): MenuSelected => {
-    console.log("🚀 ~ deserialize ~ data:", data);
-    let parsedData: unknown;
-    try {
-      parsedData = JSON.parse(data);
-      console.log(
-        "🚀 ~ deserialize ~ menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected:",
-        menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected
-      );
-      return menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected;
-    } catch {
-      if (!parsedData) return {};
-      if (isObligationData(parsedData)) {
-        const degree = persistentGroupData()?.degree;
-        const program = persistentGroupData()?.program;
-        const grade = persistentGroupData()?.grade;
-        const newData = {
-          [isCreatedFromOldSymbol]: true,
-          [degree!]: {
-            [program!]: {
-              [grade!]: parsedData,
-            },
-          },
-        } as MenuSelected;
-        console.log("🚀 ~ deserialize ~ newData:", newData);
-        return newData;
-      }
-      return {};
-    }
-  };
-
   const [submittedData, setSubmittedData] = makePersisted(createSignal<MenuSelected>(), {
-    name: "submittedCourses",
+    name: "submittedData",
     storage: monthCookie,
-    deserialize,
   });
 
-  const createImmediateOnce = (fn: Accessor<unknown>) => createComputed(() => untrack(fn));
+  const [submittedCourses, setSubmittedCourses] = makePersisted(createSignal<MenuSelected>(), {
+    name: "submittedCourses",
+    storage: monthCookie,
+  });
 
-  createImmediateOnce(() => {
-    // @ts-expect-error symbol is not typed
-    if (submittedData()?.[isCreatedFromOldSymbol]) {
-      setSubmittedData(submittedData());
+  onMount(() => {
+    if (isObligationData(submittedCourses())) {
+      setTimeout(() => {
+        toast.info(
+          "To improve the menu, we've updated its data structure. As a one-time result, your previously selected courses have been cleared. The good news is that you can now see hidden course selections across different degrees and programs.",
+          { duration: 10000 }
+        );
+        setSubmittedCourses(undefined);
+      }, 100);
     }
   });
 

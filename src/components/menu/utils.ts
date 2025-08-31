@@ -154,15 +154,20 @@ export function isObligationData(data: unknown): data is Record<OBLIGATION, stri
     }
   }
 
-  // Check if all values are arrays of strings
+  let hasAtLeastOneValue = false;
+
+  // Check if all values are arrays of strings and if any array has values
   for (const key in data) {
     if (Object.prototype.hasOwnProperty.call(data, key)) {
       const value = (data as Record<string, unknown>)[key];
       if (!Array.isArray(value) || !value.every((item) => typeof item === "string")) {
         return false;
       }
+      if (value.length > 0) {
+        hasAtLeastOneValue = true;
+      }
     }
   }
 
-  return true;
+  return hasAtLeastOneValue;
 }
