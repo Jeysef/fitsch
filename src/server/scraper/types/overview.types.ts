@@ -1,8 +1,7 @@
 import type { FACULTY, LANGUAGE } from "~/enums";
 import type { DEGREE, SEMESTER } from "~/enums/enums";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
-import type { ProgramCourses, ProgramOverview } from "~/server/scraper/types/program.types";
-import type { url } from "~/server/scraper/types/types";
+import type { ProgramCourses, ProgramOverview, ProgramUrl } from "~/server/scraper/types/program.types";
 import type { OverviewYear } from "~/server/scraper/types/year.types";
 
 export type OverviewPrograms = Record<DEGREE, ProgramOverview[]>;
@@ -31,12 +30,12 @@ export interface OverviewCurrent {
   language: LANGUAGE;
   faculty: FACULTY;
   degree?: DEGREE | undefined;
-  program?: url | undefined;
+  program?: ProgramUrl | undefined;
 }
 export interface OverviewPayload {
   year: string;
   language: LANGUAGE;
   faculty: FACULTY;
   degree?: DEGREE | undefined;
-  program?: url | undefined;
+  program?: ProgramUrl | undefined;
 }

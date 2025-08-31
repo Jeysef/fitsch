@@ -3,10 +3,12 @@ import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeKey } from "~/server/scraper/types/grade.types";
 import type { url } from "~/server/scraper/types/types";
 
+export type ProgramUrl = url;
+
 export interface ProgramOverviewBase {
   name: string;
   abbreviation: string;
-  url: url; // @unique
+  url: ProgramUrl; // @unique
 }
 export interface ProgramOverview extends ProgramOverviewBase {
   isEnglish: boolean;

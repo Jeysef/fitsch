@@ -2,10 +2,12 @@ import type { DAY, LECTURE_TYPE, OBLIGATION, WEEK_PARITY } from "~/enums/enums";
 import type { TimeSpan } from "~/lib/time/time";
 import type { url } from "~/server/scraper/types/types";
 
+export type CourseUrl = url;
+
 interface CourseBase {
   name: string;
   abbreviation: string;
-  url: url;
+  url: CourseUrl;
   id: string;
 }
 
