@@ -5,13 +5,17 @@ import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
 import { Checkbox, CheckboxControl } from "~/components/ui/checkbox";
 import { WEEK_PARITY } from "~/enums/enums";
+import { useI18n } from "~/i18n";
+import { semesterWeeks } from "~/server/scraper/constants";
 import { useStore } from "../Scheduler";
 import type { ScheduleEvent } from "./types";
 
 export interface ScheduleEventProps extends EventProps<ScheduleEvent> {}
 
 function formatWeeks(weeks: string | number[]) {
+  const t = useI18n().t;
   if (Array.isArray(weeks)) {
+    if (weeks.length === semesterWeeks - 1) return t("event.weekly");
     return weeks.join(". ");
   }
   return weeks;

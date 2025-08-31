@@ -33,6 +33,9 @@ export default {
       },
     },
   },
+  event: {
+    weekly: "Weekly",
+  },
   menu: {
     year: {
       title: "Year",

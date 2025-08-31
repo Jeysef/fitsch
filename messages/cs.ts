@@ -32,6 +32,9 @@ export default {
       },
     },
   },
+  event: {
+    weekly: "Týdně",
+  },
   menu: {
     year: {
       title: "Rok",
