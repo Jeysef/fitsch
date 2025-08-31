@@ -1,4 +1,5 @@
 import { Tooltip } from "@kobalte/core/tooltip";
+import { flatMap } from "es-toolkit/compat";
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import Link from "lucide-solid/icons/link";
 import { For, Show, Suspense, createMemo, type JSXElement } from "solid-js";
@@ -179,9 +180,8 @@ export function GradeSelect() {
     const SelectedHiddenCourses = ({ grade }: { grade: GradeOverview }) => {
       const count = createMemo(() => {
         const courses = ddata.courses?.[grade.key][group.controls.semester.value] as CourseOverview[];
-        const selected = courses?.filter((course) =>
-          group.controls[OBLIGATION.COMPULSORY].value.includes(course.id)
-        ).length;
+        const allSelectedCoursesforGrade = flatMap(OBLIGATION, (obligation) => group.controls[obligation].value);
+        const selected = courses?.filter((course) => allSelectedCoursesforGrade.includes(course.id)).length;
 
         return selected || null;
       });
@@ -247,9 +247,8 @@ export function SemesterSelect() {
       if (!allCourses) return null;
       return ddata.grades.reduce((acc, grade) => {
         const courses = allCourses[grade.key][semester];
-        const selected = courses?.filter((course) =>
-          group.controls[OBLIGATION.COMPULSORY].value.includes(course.id)
-        ).length;
+        const allSelectedCoursesforGrade = flatMap(OBLIGATION, (obligation) => group.controls[obligation].value);
+        const selected = courses?.filter((course) => allSelectedCoursesforGrade.includes(course.id)).length;
         return acc + selected;
       }, 0);
     });
