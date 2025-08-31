@@ -1,39 +1,41 @@
 import { cookieStorage, makePersisted } from "@solid-primitives/storage";
-import { mapValues } from "es-toolkit/compat";
 import {
   type Accessor,
+  createComputed,
   createContext,
   createMemo,
   createSignal,
   type ParentProps,
   type Setter,
+  untrack,
   useContext,
 } from "solid-js";
-import type { MenuSchema } from "~/components/menu/schema";
-import { OBLIGATION } from "~/enums/enums";
+import { menuSchema, type MenuSchema } from "~/components/menu/schema";
+import type { MenuSelected } from "~/components/menu/types";
+import { isObligationData } from "~/components/menu/utils";
 import { useI18n } from "~/i18n";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 
 type persistantGroupData = Partial<MenuSchema>;
-type SubmittedCourses = Record<OBLIGATION, string[]>;
+type SubmittedData = MenuSchema["selected"] | undefined;
 
 interface MenuDataContextType {
   persistentGroupData: Accessor<persistantGroupData>;
   setPersistentGroupData: Setter<persistantGroupData>;
-  submittedCourses: Accessor<SubmittedCourses>;
-  setSubmittedCourses: Setter<SubmittedCourses>;
+  submittedData: Accessor<SubmittedData>;
+  setSubmittedData: Setter<SubmittedData>;
   initialConfigSignal: Accessor<DataProviderTypes.getStudyOverviewConfig>;
 }
 
 const MenuLocalDataContext = createContext<MenuDataContextType>();
-const emptyPersistentValue = {
+const emptyPersistentValue: persistantGroupData = {
   year: undefined,
   semester: undefined,
   grade: undefined,
   degree: undefined,
   program: undefined,
-  ...mapValues(OBLIGATION, () => undefined),
-} as unknown as persistantGroupData;
+  selected: undefined,
+};
 
 const monthCookie = cookieStorage.withOptions({
   expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
@@ -44,10 +46,54 @@ export function MenuLocalDataProvider(props: ParentProps) {
     createSignal<persistantGroupData>(emptyPersistentValue),
     { name: "groupData", storage: monthCookie }
   );
-  const [submittedCourses, setSubmittedCourses] = makePersisted(
-    createSignal<SubmittedCourses>(mapValues(OBLIGATION, () => [])),
-    { name: "submittedCourses", storage: monthCookie }
-  );
+
+  const isCreatedFromOldSymbol = Symbol("isCreatedFromOld");
+
+  const deserialize = (data: string): MenuSelected => {
+    console.log("🚀 ~ deserialize ~ data:", data);
+    let parsedData: unknown;
+    try {
+      parsedData = JSON.parse(data);
+      console.log(
+        "🚀 ~ deserialize ~ menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected:",
+        menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected
+      );
+      return menuSchema.pick({ selected: true }).parse({ selected: parsedData }).selected;
+    } catch {
+      if (!parsedData) return {};
+      if (isObligationData(parsedData)) {
+        const degree = persistentGroupData()?.degree;
+        const program = persistentGroupData()?.program;
+        const grade = persistentGroupData()?.grade;
+        const newData = {
+          [isCreatedFromOldSymbol]: true,
+          [degree!]: {
+            [program!]: {
+              [grade!]: parsedData,
+            },
+          },
+        } as MenuSelected;
+        console.log("🚀 ~ deserialize ~ newData:", newData);
+        return newData;
+      }
+      return {};
+    }
+  };
+
+  const [submittedData, setSubmittedData] = makePersisted(createSignal<MenuSelected>(), {
+    name: "submittedCourses",
+    storage: monthCookie,
+    deserialize,
+  });
+
+  const createImmediateOnce = (fn: Accessor<unknown>) => createComputed(() => untrack(fn));
+
+  createImmediateOnce(() => {
+    // @ts-expect-error symbol is not typed
+    if (submittedData()?.[isCreatedFromOldSymbol]) {
+      setSubmittedData(submittedData());
+    }
+  });
 
   const locale = useI18n().locale;
 
@@ -65,8 +111,8 @@ export function MenuLocalDataProvider(props: ParentProps) {
   const value: MenuDataContextType = {
     persistentGroupData,
     setPersistentGroupData,
-    submittedCourses,
-    setSubmittedCourses,
+    submittedData,
+    setSubmittedData,
     initialConfigSignal,
   };
 

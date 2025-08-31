@@ -1,12 +1,15 @@
 import { Tooltip } from "@kobalte/core/tooltip";
-import { flatMap } from "es-toolkit/compat";
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import Link from "lucide-solid/icons/link";
-import { For, Show, Suspense, createMemo, type JSXElement } from "solid-js";
-import type { StrictExtract } from "ts-essentials";
+import { For, Show, Suspense, batch, createMemo, type JSXElement } from "solid-js";
 import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
-import type { MenuSchemaKey } from "~/components/menu/schema";
+import {
+  getCurrentSelectedCourseId,
+  getCurrentSelectedCourseIds,
+  getSelectedCourseIds,
+  handleCourseSelection,
+} from "~/components/menu/utils";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
@@ -21,12 +24,12 @@ import {
 } from "~/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
-import { OBLIGATION, SEMESTER } from "~/enums/enums";
+import { OBLIGATION, SEMESTER, type DEGREE } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { usePostHog } from "~/lib/posthog";
 import type { CourseOverview } from "~/server/scraper/types/course.types";
 import type { GradeOverview } from "~/server/scraper/types/grade.types";
-import type { ProgramOverviewBase } from "~/server/scraper/types/program.types";
+import type { ProgramOverviewBase, ProgramUrl } from "~/server/scraper/types/program.types";
 import type { OverviewYear } from "~/server/scraper/types/year.types";
 import { asMerge } from "~/utils/asMerge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -74,6 +77,20 @@ export function DegreeSelect() {
   const data = getData();
   const { t } = useI18n();
 
+  const SelectedHiddenDegrees = ({ degree }: { degree: DEGREE }) => {
+    const count = createMemo(() => {
+      const allCurrentSelectedCoursesforGrade = getSelectedCourseIds(group, { degree }).length;
+
+      return allCurrentSelectedCoursesforGrade || null;
+    });
+
+    return (
+      <Show when={group.controls.degree.value !== degree && count()} keyed>
+        {SelectedCountIndicator}
+      </Show>
+    );
+  };
+
   return (
     <RadioGroup
       value={group.controls.degree.value!}
@@ -93,6 +110,7 @@ export function DegreeSelect() {
             <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
               {t(`menu.degree.data.${degree}`)}
             </RadioGroupItemLabel>
+            <SelectedHiddenDegrees degree={degree} />
           </RadioGroupItem>
         )}
       </For>
@@ -104,6 +122,23 @@ export function ProgramSelect() {
   const group = getGroup();
   const data = getData();
   const { t } = useI18n();
+
+  const SelectedHiddenPrograms = ({ program }: { program: ProgramUrl }) => {
+    const count = createMemo(() => {
+      const allCurrentSelectedCoursesforGrade = getSelectedCourseIds(group, {
+        degree: group.controls.degree.value,
+        program,
+      }).length;
+
+      return allCurrentSelectedCoursesforGrade || null;
+    });
+
+    return (
+      <Show when={group.controls.program.value !== program && count()} keyed>
+        {SelectedCountIndicator}
+      </Show>
+    );
+  };
 
   const ProgramRadioLabel = (props: { program: ProgramOverviewBase }) => {
     const program = props.program;
@@ -127,6 +162,7 @@ export function ProgramSelect() {
       <RadioGroupItemInput />
       <RadioGroupItemControl class="cursor-pointer" />
       <ProgramRadioLabel program={program} />
+      <SelectedHiddenPrograms program={program.url} />
     </RadioGroupItem>
   );
 
@@ -179,11 +215,9 @@ export function GradeSelect() {
 
     const SelectedHiddenCourses = ({ grade }: { grade: GradeOverview }) => {
       const count = createMemo(() => {
-        const courses = ddata.courses?.[grade.key][group.controls.semester.value] as CourseOverview[];
-        const allSelectedCoursesforGrade = flatMap(OBLIGATION, (obligation) => group.controls[obligation].value);
-        const selected = courses?.filter((course) => allSelectedCoursesforGrade.includes(course.id)).length;
+        const allCurrentSelectedCoursesforGrade = getCurrentSelectedCourseIds(group, { grade: grade.key }).length;
 
-        return selected || null;
+        return allCurrentSelectedCoursesforGrade || null;
       });
 
       return (
@@ -236,30 +270,6 @@ export function SemesterSelect() {
 
   const semesetrs = () => data()?.data.semesters ?? Object.values(SEMESTER);
 
-  const SelectedHiddenCourses = ({ semester }: { semester: SEMESTER }) => {
-    const ddata = data()?.data;
-    if (!ddata || !ddata.grades || !ddata.courses) {
-      return null;
-    }
-    const count = createMemo(() => {
-      if (!ddata.grades) return null;
-      const allCourses = ddata.courses;
-      if (!allCourses) return null;
-      return ddata.grades.reduce((acc, grade) => {
-        const courses = allCourses[grade.key][semester];
-        const allSelectedCoursesforGrade = flatMap(OBLIGATION, (obligation) => group.controls[obligation].value);
-        const selected = courses?.filter((course) => allSelectedCoursesforGrade.includes(course.id)).length;
-        return acc + selected;
-      }, 0);
-    });
-
-    return (
-      <Show when={group.controls.semester.value !== semester && count()} keyed>
-        {SelectedCountIndicator}
-      </Show>
-    );
-  };
-
   return (
     <RadioGroup
       value={group.controls.semester.value}
@@ -280,7 +290,6 @@ export function SemesterSelect() {
               <RadioGroupItemLabel as={asMerge([ItemText, RadioGroupItemLabel])}>
                 {t(`menu.semester.data.${semester}`)}
               </RadioGroupItemLabel>
-              <SelectedHiddenCourses semester={semester} />
             </RadioGroupItem>
           );
         }}
@@ -296,10 +305,9 @@ export function CoursesSelect() {
 
   const Fallback = () => <ItemText>{group.controls.grade.value ? "no courses to show" : "select grade to show"}</ItemText>;
 
-  const handleChange = (checked: boolean, type: StrictExtract<MenuSchemaKey, OBLIGATION>, courseId: string) => {
-    group.controls[type].setValue(
-      checked ? [...group.controls[type].value, courseId] : group.controls[type].value.filter((id) => id !== courseId)
-    );
+  const handleChange = (checked: boolean, type: OBLIGATION, courseId: string) => {
+    console.log("🚀 ~ handleChange:", checked, type, courseId);
+    handleCourseSelection(group, type, courseId, checked);
   };
 
   const CourseCheckboxLabel = (props: { course: CourseOverview }) => {
@@ -363,7 +371,7 @@ export function CoursesSelect() {
                     <Checkbox
                       class="flex items-center"
                       value={course.id}
-                      checked={group.controls[props.obligation].value.includes(course.id)}
+                      checked={getCurrentSelectedCourseId(group, props.obligation, course.id)}
                       onChange={(checked) => handleChange(checked, props.obligation, course.id)}
                     >
                       <CheckboxControl />
@@ -380,14 +388,19 @@ export function CoursesSelect() {
   };
 
   const CheckAll = (obligation: OBLIGATION) => {
+    const handleChange = (checked: boolean, couses: CourseOverview[]) => {
+      batch(() => {
+        for (const course of couses) {
+          handleCourseSelection(group, obligation, course.id, checked);
+        }
+      });
+    };
     return (courses: CourseOverview[]) => (
       <Checkbox
         class="flex items-center cursor-pointer"
         value={`all-${obligation}`}
-        checked={courses.every((course) => group.controls[obligation].value.includes(course.id))}
-        onChange={(checked) =>
-          checked ? group.controls[obligation].setValue(courses.map((e) => e.id)) : group.controls[obligation].setValue([])
-        }
+        checked={courses.every((course) => getCurrentSelectedCourseId(group, obligation, course.id))}
+        onChange={(checked) => handleChange(checked, courses)}
       >
         <CheckboxControl />
         <CheckboxLabel

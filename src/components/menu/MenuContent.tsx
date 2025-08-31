@@ -1,8 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { action, useAction, useSubmission } from "@solidjs/router";
-import { flatMap, forEach, mapValues } from "es-toolkit/compat";
 import { ObjectTyped } from "object-typed";
-import { type IFormControl, type IFormGroup, type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
+import { type ValidatorFn, createFormControl, createFormGroup } from "solid-forms";
 import {
   type Accessor,
   ErrorBoundary,
@@ -38,9 +37,11 @@ import {
 } from "~/components/menu/MenuComponents";
 import ErrorFallback from "~/components/menu/MenuErrorFallback";
 import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
-import { type MenuSchema, type MenuSchemaKey, menuSchema } from "~/components/menu/schema";
+import { type MenuSchemaKey, menuSchema } from "~/components/menu/schema";
+import type { FormGroup, FormGroupControls, FormGroupValues } from "~/components/menu/types";
+import { getAllSelectedCourseIds } from "~/components/menu/utils";
 import { Button } from "~/components/ui/button";
-import { DEGREE, OBLIGATION, SEMESTER } from "~/enums/enums";
+import { DEGREE, SEMESTER } from "~/enums/enums";
 import { type tType, useI18n } from "~/i18n";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
@@ -53,10 +54,6 @@ import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
 import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
 import { Settings } from "./MenuSettings";
 import { LoadingState } from "./MenuSkeletons";
-
-type FormGroupValues = { [K in MenuSchemaKey]: MenuSchema[K] };
-type FormGroupControls = { [K in keyof FormGroupValues]: IFormControl<FormGroupValues[K]> };
-type FormGroup = IFormGroup<FormGroupControls, FormGroupValues>;
 
 // ----- Context and Cookie Setup -----
 const GroupContext = createContext<FormGroup>();
@@ -78,9 +75,6 @@ const defaultFormValues = {
   semester: SEMESTER.WINTER,
   degree: DEGREE.BACHELOR,
   grade: undefined,
-  [OBLIGATION.COMPULSORY]: [],
-  [OBLIGATION.COMPULSORY_ELECTIVE]: [],
-  [OBLIGATION.ELECTIVE]: [],
 };
 
 function useLoadCourses(
@@ -193,7 +187,7 @@ function Content({
 }: {
   resource: InitializedResourceReturn<DataProviderTypes.getStudyOverviewReturn, DataProviderTypes.getStudyOverviewConfig>;
 }) {
-  const { persistentGroupData, setPersistentGroupData, setSubmittedCourses, submittedCourses } = useLocalMenuData();
+  const { persistentGroupData, setPersistentGroupData, setSubmittedData, submittedData } = useLocalMenuData();
   const { store } = useScheduler();
   const data = resource[0];
   const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
@@ -219,13 +213,12 @@ function Content({
 
   const getDataToSubmit = (makeStale = false): GetStudyCoursesDetailsFunctionConfig => {
     const controls = group.controls;
-    const selectedCourseIds = flatMap(OBLIGATION, (type) => controls[type].value);
 
     // Split selected courses into stale and new arrays in one pass
     const staleCourseIds: string[] = [];
     const newCourseIds: string[] = [];
 
-    for (const id of selectedCourseIds) {
+    for (const id of getAllSelectedCourseIds(group)) {
       if (makeStale && store.courses.some((c) => c.detail.id === id)) {
         staleCourseIds.push(id);
       } else {
@@ -278,8 +271,6 @@ function Content({
     return returnType.error ? { error: returnType.error } : null;
   };
 
-  const submittedObligation = mapValues(submittedCourses(), (courses) => courses.length > 0 && courses);
-
   const values: FormGroupValues = {
     year: data().current.year,
     degree: data().current.degree,
@@ -288,7 +279,7 @@ function Content({
     program: data().current.program ?? persistentGroupData()?.program,
     grade: persistentGroupData()?.grade ?? defaultFormValues.grade,
     semester: persistentGroupData()?.semester ?? defaultFormValues.semester,
-    ...mapValues(OBLIGATION, (type) => submittedObligation[type] || defaultFormValues[type]),
+    selected: submittedData(),
   };
 
   const formGroupControls = ObjectTyped.fromEntries(
@@ -355,14 +346,14 @@ function Content({
 
   const clearCoursesDeps = () => ({
     year: group.controls.year.value,
-    // degree: group.controls.degree.value,
+    semester: group.controls.semester.value,
   });
   createRenderEffect(
     on(clearCoursesDeps, (_, __, firstEffect) => {
       if (isServer) return true;
       if (firstEffect) return false;
       batch(() => {
-        forEach(OBLIGATION, (type) => group.controls[type].setValue([]));
+        group.controls.selected.setValue(undefined);
       });
       return false;
     }),
@@ -407,7 +398,7 @@ function Content({
     group.markSubmitted(true);
     const dataToSubmit = getDataToSubmit();
     loadCourses(dataToSubmit)?.then(() => {
-      setSubmittedCourses(mapValues(OBLIGATION, (type) => group.controls[type].value));
+      setSubmittedData(group.controls.selected.value);
     });
   }, "menu-submit-action");
 

@@ -13,9 +13,13 @@ export const menuCurrentSchema = z.object({
 export const menuAdditionalSchema = z.object({
   semester: z.enum(SEMESTER),
   grade: z.string().optional(),
-  [OBLIGATION.COMPULSORY]: z.array(z.string()),
-  [OBLIGATION.COMPULSORY_ELECTIVE]: z.array(z.string()),
-  [OBLIGATION.ELECTIVE]: z.array(z.string()),
+  // PartiapartialRecord<DEGREE, Record<Program, Record<GradeKey, Record<OBLIGATION, string[]>>>>
+  selected: z
+    .partialRecord(
+      z.enum(DEGREE),
+      z.partialRecord(z.string(), z.partialRecord(z.string(), z.partialRecord(z.enum(OBLIGATION), z.array(z.string()))))
+    )
+    .optional(),
 });
 
 export const menuSchema = menuCurrentSchema.extend(menuAdditionalSchema.shape);
