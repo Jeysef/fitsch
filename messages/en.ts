@@ -186,8 +186,9 @@ export default {
         description: [
           "Click on the checkbox to add the item to the master schedule.",
           "In the 'Scopes' tab, there is a check to check off all lectures and labs by course scope. It may not always work reliably!",
-          "Rozvrh je automaticky ukládán do prohlížeče.",
-          "V menu jsou tlačítka „Otevřít JSON“ a „Uložit JSON“, pomocí kterých si můžete rozvrh uložit a potom ho někomu poslat, přenést na jiné zařízení atd. Rozvrh v každém případě zůstává uložen v prohlížeči. Navíc lze rozvrh vyexportovat jako fotka.",
+          "The schedule is automatically saved in your browser.",
+          "The menu contains the 'Open JSON' and 'Save JSON' buttons, which you can use to save your schedule and then send it to someone else, transfer it to another device, etc. In any case, the schedule remains saved in your browser. In addition, the schedule can be exported as a photo.",
+          "Generator adjustment: to prevent lessons from being selected, you can hide them. To prevent lessons from being selected at a certain time, add your own event.",
         ],
       },
       liabilityWarning: {

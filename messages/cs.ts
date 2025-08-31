@@ -190,6 +190,7 @@ export default {
           "V kartě „Rozsahy“ je kontrola vyklikání všech přednášek a cvičení dle rozsahů předmětu. Nemusí to vždy fungovat spolehlivě!",
           "Rozvrh je automaticky ukládán do prohlížeče.",
           "V menu jsou tlačítka „Otevřít JSON“ a „Uložit JSON“, pomocí kterých si můžete rozvrh uložit a potom ho někomu poslat, přenést na jiné zařízení atd. Rozvrh v každém případě zůstává uložen v prohlížeči. Navíc lze rozvrh vyexportovat jako fotka.",
+          "Úprava generátoru: pro zamezení vybrání lekce se dá lekce skrýt. Pro zamezení vybrání lekcí v určitém čase přidejte vlastní událost.",
         ],
       },
       liabilityWarning: {
