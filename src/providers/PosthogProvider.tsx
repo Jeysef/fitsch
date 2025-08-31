@@ -1,5 +1,3 @@
-"use client";
-
 import posthog from "posthog-js";
 import type { FlowProps } from "solid-js";
 import { isServer } from "solid-js/web";
