@@ -81,6 +81,9 @@ export default function InfoDialogContent() {
             )}
           </For>
         </div>
+        <Text variant="smallText" class="inline mt-4">
+          {t("info.appInfo.colors.lunchHighlight")}
+        </Text>
         <Heading variant="h4" class="mt-8">
           {t("info.appInfo.weekParity.title")}
         </Heading>

@@ -177,6 +177,7 @@ export default {
       colors: {
         title: "Barevná konvence",
         description: "Podle mobilní aplikace.",
+        lunchHighlight: "růžové podbarvení značí čas oběda",
       },
       weekParity: {
         title: "Parita týdne",

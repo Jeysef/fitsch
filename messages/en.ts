@@ -175,6 +175,7 @@ export default {
       colors: {
         title: "Color convention",
         description: "According to the mobile app.",
+        lunchHighlight: "The pink backlighting indicates lunchtime.",
       },
       weekParity: {
         title: "WeekParity",
