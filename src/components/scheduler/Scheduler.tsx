@@ -15,7 +15,6 @@ import {
   type JSX,
   type Signal,
 } from "solid-js";
-import { isServer } from "solid-js/web";
 import type { StrictExtract } from "ts-essentials";
 import { Button } from "~/components/ui/button";
 import { hoverColors } from "~/config/colors";
@@ -64,7 +63,7 @@ export function SchedulerProvider(props: { store: AdaptedSchedulerStore; layout:
 export function Scheduler(props: FlowProps) {
   const store = useStore();
   const [isHorizontalLayout] = useLayout();
-  const [scale, setScale] = createSignal(isServer ? 100 : window.innerWidth < 720 ? 50 : 100);
+  const [scale, setScale] = createSignal(100);
   const [touchAction, setTouchAction] = createSignal("pan-x pan-y");
 
   const bind = usePinch(
@@ -232,7 +231,12 @@ export function Corner() {
   const [isHorizontalLayout, setIsHorizontalLayout] = useLayout();
   return (
     <div class="row-span-1 col-span-1 left-0  sticky top-0 z-30 bg-background font-mono flex justify-center items-center border-r border-b">
-      <Button onClick={() => setIsHorizontalLayout((p) => !p)} variant="ghost" class="h-full w-full p-1 rounded-none">
+      <Button
+        onClick={() => setIsHorizontalLayout((p) => !p)}
+        variant="ghost"
+        class="h-full w-full p-1 rounded-none"
+        title="Toggle layout"
+      >
         <TableProperties
           class={cn("transition-transform ease-linear em:w-5 md:em:w-7 aspect-square", {
             "rotate-180": isHorizontalLayout(),
