@@ -1,7 +1,7 @@
 import { trackStore } from "@solid-primitives/deep";
 import { makePersisted, type PersistenceOptions } from "@solid-primitives/storage";
 import { debounce } from "es-toolkit";
-import { batch, createComputed, on } from "solid-js";
+import { createComputed, on } from "solid-js";
 import { modifyMutable, reconcile, type createStore, type Store } from "solid-js/store";
 
 type StoreReturn<T extends object = {}> = ReturnType<typeof createStore<T>>;
@@ -9,11 +9,8 @@ type MakePersistedReturn<T extends object = {}> = ReturnType<typeof makePersiste
 
 export function createMutableAdapter<T extends object = {}>(store: Store<T>): StoreReturn<T> {
   const setStore = (...args: any[]): void => {
-    batch(() =>
-      args.length === 1
-        ? modifyMutable(store, reconcile(args[0]))
-        : console.warn("setStore called with multiple arguments, ignoring extra arguments.")
-    );
+    if (args.length === 1) return modifyMutable(store, reconcile(args[0], args[1]));
+    console.warn("setStore called with multiple arguments, ignoring extra arguments.");
   };
 
   return [store, setStore];

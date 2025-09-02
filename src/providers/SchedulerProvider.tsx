@@ -1,7 +1,7 @@
 import { useSubmission } from "@solidjs/router";
 import { merge } from "es-toolkit";
 import { batch, createComputed, createContext, on, useContext, type ParentProps } from "solid-js";
-import { createMutable } from "solid-js/store";
+import { createMutable, modifyMutable, produce } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { end, rows, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
@@ -17,11 +17,11 @@ import { makePersistedMutable } from "~/utils/persistedMutable";
 import { makeAutoMemoStore } from "~/utils/store/autoMemo";
 
 // Defines the structure of the store data when it's serialized (plain object without methods)
-export type PlainStore = Pick<SchedulerStore, "courses">;
+export type PlainStore = Pick<SchedulerStore, "courses" | "customEvents">;
 
 interface SchedulerContextType {
   store: AdaptedSchedulerStore;
-  recreateStore: (plainStore: PlainStore) => void;
+  recreateStore: (plainStore: Partial<PlainStore>) => void;
   serialize: (store: SchedulerStore) => string;
 }
 
@@ -61,7 +61,7 @@ export function SchedulerProvider(props: ParentProps) {
       const validatedStoreResult = parseStoreJsoUnsafeSync(parsedStore);
 
       // Return the successfully validated and revived store data
-      return validatedStoreResult as SchedulerStore;
+      return validatedStoreResult as PlainStore;
     } catch (error) {
       console.log("Error parsing persisted store data:");
       console.error(error);
@@ -84,7 +84,7 @@ export function SchedulerProvider(props: ParentProps) {
     }
   };
 
-  const revive = (store: SchedulerStore) => {
+  const revive = (store: PlainStore): SchedulerStore => {
     return merge(emptyStore, store);
   };
 
@@ -99,10 +99,14 @@ export function SchedulerProvider(props: ParentProps) {
     debounceMs: 500,
   });
 
-  // Function to merge plain data (e.g., from local storage) into the existing mutable store.
-  // Uses `reconcile` to efficiently update the store while preserving reactivity,
-  // and `merge` to combine the plain data with the existing store structure (including methods).
-  const recreateStore = (plainStore: PlainStore) => setPersistedShedulerStore(merge(store, plainStore));
+  const recreateStore = (plainStore: Partial<PlainStore>) =>
+    modifyMutable(
+      store,
+      produce((s) => {
+        s.customEvents = plainStore.customEvents ?? [];
+        s.courses = plainStore.courses ?? [];
+      })
+    );
 
   // --- Handle updates when new course data is fetched from the server ---
   const data = useSubmission(getStudyCoursesDetailsAction);
