@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { end, rows, start, step } from "~/config/scheduler";
 import { SchedulerStore } from "~/store/store";
-import { parseStoreJsonSync } from "~/store/storeSchema";
+import { parseStoreJson } from "~/store/storeSchema";
 import { createColumns, filter, formatTime } from "~/store/utils";
 
 describe("Test schedule parsing", () => {
   // it("should parse schedule", () => {
   //   const stringifiedData = JSON.stringify(validSchedule);
   //   const parsedData = JSON.parse(stringifiedData, ClassRegistry.reviver);
-  //   const schedule = parseStoreJsonSync(parsedData);
+  //   const schedule = parseStoreJson(parsedData);
   //   console.log("err", schedule.error);
   //   expect(schedule.error).toBeUndefined();
   //   expect(schedule.success).toBe(true);
@@ -27,9 +27,9 @@ describe("Test schedule parsing", () => {
       },
       filter
     );
-    const schedule = parseStoreJsonSync(store);
-    expect(schedule.error).toBeUndefined();
+    const schedule = parseStoreJson(store);
+    expect(schedule.issues).toBeUndefined();
     expect(schedule.success).toBe(true);
-    expect(schedule.data).toBeDefined();
+    expect(schedule.output).toBeDefined();
   });
 });

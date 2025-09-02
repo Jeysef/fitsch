@@ -3,12 +3,12 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import type { Setter } from "solid-js";
 import { createRenderEffect, For } from "solid-js";
 import { v4 } from "uuid";
-import type { z } from "zod";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import Text from "~/components/typography/text";
 import { Button } from "~/components/ui/button";
 import { DialogFooter } from "~/components/ui/dialog";
 // import { DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import * as v from "valibot";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { TextField, TextFieldLabel, TextFieldRoot } from "~/components/ui/textfield";
 import { customColors } from "~/config/colors";
@@ -17,7 +17,7 @@ import { DAY } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { Time, TimeSpan } from "~/lib/time/time";
 import { TwitterPicker } from "~/packages/solid-color/source";
-import { customEventSchema } from "~/store/storeSchema-v2";
+import { customEventSchema, type CustomEventSchema } from "~/store/storeSchema-v2";
 
 interface FormProps {
   setOpen: Setter<boolean>;
@@ -146,16 +146,16 @@ export default function Form(props: FormProps) {
       id: id,
       checked: checked,
       type: type,
-    } as z.infer<typeof customEventSchema>;
+    } as CustomEventSchema;
 
-    const result = customEventSchema.safeParse(value);
+    const result = v.safeParse(customEventSchema, value);
     if (!result.success) {
-      console.error(result.error);
+      console.error(result.issues);
       return;
     }
 
     setOpen(false);
-    props.onSubmit(result.data);
+    props.onSubmit(result.output);
   };
 
   return (

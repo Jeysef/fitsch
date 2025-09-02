@@ -1,107 +1,102 @@
-import { z } from "zod";
+import * as v from "valibot";
 import { DAY, LECTURE_TYPE, WEEK_PARITY } from "~/enums/enums";
 import { TimeSpan } from "~/lib/time/time";
 
-const timespanSchema = z.instanceof(TimeSpan);
+const timespanSchema = v.instance(TimeSpan);
 
-const linkedLectureDataSchema = z.object({
-  id: z.string(),
-  day: z.enum(DAY),
+const linkedLectureDataSchema = v.object({
+  id: v.string(),
+  day: v.enum(DAY),
 });
 
-const eventBaseSchema = z.object({
-  id: z.string(),
-  day: z.enum(DAY),
+const eventBaseSchema = v.object({
+  id: v.string(),
+  day: v.enum(DAY),
   timeSpan: timespanSchema,
-  info: z.string(),
-  checked: z.boolean(),
-  hidden: z.boolean().optional(),
-  title: z.string(),
+  info: v.string(),
+  checked: v.boolean(),
+  hidden: v.optional(v.boolean()),
+  title: v.string(),
 });
 
-// --- Custom Events Schema ---
-
-export const customEventSchema = eventBaseSchema.extend({
-  color: z.string(),
-  type: z.literal("CUSTOM"),
+export const customEventSchema = v.object({
+  ...eventBaseSchema.entries,
+  color: v.string(),
+  type: v.literal("CUSTOM"),
 });
 
-export const customEventsSchema = z.array(customEventSchema).optional();
+export type CustomEventSchema = v.InferOutput<typeof customEventSchema>;
 
-// --- Schedule Event Schema (for lectures within courses) ---
+export const customEventsSchema = v.optional(v.array(customEventSchema));
 
-// This schema is complex and not fully redefined in the new store's types,
-// so we reuse the robust definition from the old schema.
-export const scheduleEventSchema = eventBaseSchema.extend({
-  type: z.enum(LECTURE_TYPE),
-  weeks: z
-    .object({
-      weeks: z.string().or(z.array(z.number())),
-      parity: z.enum(WEEK_PARITY).nullable(),
-    })
-    .and(z.object({ calculated: z.boolean().optional() })),
-  room: z.string(),
-  lectureGroup: z.array(z.string()),
-  groups: z.string(),
-  note: z.null().or(z.string()),
-  capacity: z.string(),
-  lecturesCount: z.number(),
-  strongLinked: z.array(linkedLectureDataSchema),
-  linked: z.array(linkedLectureDataSchema),
-  courseId: z.string(),
+export const scheduleEventSchema = v.object({
+  ...eventBaseSchema.entries,
+  type: v.enum(LECTURE_TYPE),
+  weeks: v.intersect([
+    v.object({
+      weeks: v.union([v.string(), v.array(v.number())]),
+      parity: v.nullable(v.enum(WEEK_PARITY)),
+    }),
+    v.object({
+      calculated: v.optional(v.boolean()),
+    }),
+  ]),
+  room: v.string(),
+  lectureGroup: v.array(v.string()),
+  groups: v.string(),
+  note: v.union([v.null_(), v.string()]),
+  capacity: v.string(),
+  lecturesCount: v.number(),
+  strongLinked: v.array(linkedLectureDataSchema),
+  linked: v.array(linkedLectureDataSchema),
+  courseId: v.string(),
 });
 
-// --- Settings Schema (based on ISchedulerSettings) ---
-
-const scheduleColumnSchema = z.object({
-  title: z.string(),
+const scheduleColumnSchema = v.object({
+  title: v.string(),
   duration: timespanSchema,
 });
 
-const scheduleRowsSchema = z.partialRecord(z.enum(DAY), z.number());
+const scheduleRowsSchema = v.record(v.enum(DAY), v.optional(v.number()));
 
-export const settingsSchema = z.object({
-  columns: z.array(scheduleColumnSchema),
+export const settingsSchema = v.object({
+  columns: v.array(scheduleColumnSchema),
   rows: scheduleRowsSchema,
 });
 
-const courseTimeSpan = z.partialRecord(z.enum(LECTURE_TYPE), z.number());
+const courseTimeSpan = v.record(v.enum(LECTURE_TYPE), v.optional(v.number()));
 
-// --- Course Schema (based on Course type) ---
-
-export const courseDetailSchema = z.object({
-  abbreviation: z.string(),
-  name: z.string(),
-  url: z.url(),
-  id: z.string(),
-  // These were part of the old detail schema and are useful for display purposes.
-  // They are derived in the new store but useful to have in the serialized state.
+export const courseDetailSchema = v.object({
+  abbreviation: v.string(),
+  name: v.string(),
+  url: v.pipe(v.string(), v.url()),
+  id: v.string(),
   timeSpan: courseTimeSpan,
-  timeSpanText: z.array(z.string()),
+  timeSpanText: v.array(v.string()),
 });
 
-export const courseMetricsSchema = z.partialRecord(
-  z.enum(LECTURE_TYPE),
-  z.object({ weeks: z.number(), weeklyLectures: z.number() })
+export const courseMetricsSchema = v.record(
+  v.enum(LECTURE_TYPE),
+  v.optional(
+    v.object({
+      weeks: v.number(),
+      weeklyLectures: v.number(),
+    })
+  )
 );
 
-const courseSchema = z.object({
+const courseSchema = v.object({
   detail: courseDetailSchema,
-  data: z.array(scheduleEventSchema),
+  data: v.array(scheduleEventSchema),
   metrics: courseMetricsSchema,
 });
 
-const coursesSchema = z.array(courseSchema);
+const coursesSchema = v.array(courseSchema);
 
-// --- Top-Level Store Schema ---
-
-// This schema represents the serializable state of the new SchedulerStore
-export const storeSchema = z.object({
-  settings: settingsSchema.optional(),
+export const storeSchema = v.object({
+  settings: v.optional(settingsSchema),
   courses: coursesSchema,
   customEvents: customEventsSchema,
 });
 
-// --- Exports and Parser ---
-
-export type StoreJson = z.infer<typeof storeSchema>;
+export type StoreJson = v.InferOutput<typeof storeSchema>;

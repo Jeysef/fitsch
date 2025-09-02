@@ -65,11 +65,11 @@
     "type-fest": "^4.41.0",
     "unstorage": "^1.16.0",
     "uuid": "^11.1.0",
+    "valibot": "^1.1.0",
     "vinxi": "^0.5.7",
     "vite": "^6.3.5",
     "vite-plugin-solid": "^2.11.7",
-    "vitest": "^3.2.4",
-    "zod": "^4.1.5"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18"

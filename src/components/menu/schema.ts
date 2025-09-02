@@ -1,28 +1,35 @@
-import { z } from "zod";
+import * as v from "valibot";
 import { FACULTY, LANGUAGE } from "~/enums";
 import { DEGREE, OBLIGATION, SEMESTER } from "~/enums/enums";
 
-export const menuCurrentSchema = z.object({
-  year: z.object({ value: z.string(), label: z.string() }),
-  language: z.enum(LANGUAGE),
-  faculty: z.enum(FACULTY),
-  degree: z.enum(DEGREE).optional(),
-  program: z.string().optional(),
+export const menuCurrentSchema = v.object({
+  year: v.object({ value: v.string(), label: v.string() }),
+  language: v.enum(LANGUAGE),
+  faculty: v.enum(FACULTY),
+  degree: v.optional(v.enum(DEGREE)),
+  program: v.optional(v.string()),
 });
 
-export const menuAdditionalSchema = z.object({
-  semester: z.enum(SEMESTER),
-  grade: z.string().optional(),
-  // PartiapartialRecord<DEGREE, Record<Program, Record<GradeKey, Record<OBLIGATION, string[]>>>>
-  selected: z
-    .partialRecord(
-      z.enum(DEGREE),
-      z.partialRecord(z.string(), z.partialRecord(z.string(), z.partialRecord(z.enum(OBLIGATION), z.array(z.string()))))
+export const menuAdditionalSchema = v.object({
+  semester: v.enum(SEMESTER),
+  grade: v.optional(v.string()),
+  selected: v.optional(
+    v.record(
+      v.enum(DEGREE),
+      v.optional(
+        v.record(
+          v.string(),
+          v.optional(v.record(v.string(), v.optional(v.record(v.enum(OBLIGATION), v.optional(v.array(v.string()))))))
+        )
+      )
     )
-    .optional(),
+  ),
 });
 
-export const menuSchema = menuCurrentSchema.extend(menuAdditionalSchema.shape);
+export const menuSchema = v.object({
+  ...menuCurrentSchema.entries,
+  ...menuAdditionalSchema.entries,
+});
 
-export type MenuSchema = z.infer<typeof menuSchema>;
+export type MenuSchema = v.InferOutput<typeof menuSchema>;
 export type MenuSchemaKey = keyof MenuSchema;

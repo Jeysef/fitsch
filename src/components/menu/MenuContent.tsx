@@ -25,6 +25,7 @@ import {
 } from "solid-js";
 import { isServer } from "solid-js/web";
 import { toast } from "solid-sonner";
+import * as v from "valibot";
 import { Actions } from "~/components/menu/MenuActions";
 import {
   CoursesSelect,
@@ -267,8 +268,8 @@ function Content({
     name: K,
     value: FormGroupValues[K]
   ) => ReturnType<ValidatorFn<FormGroupValues[K]>> = (name, value) => {
-    const returnType = menuSchema.pick({ [name]: true } as { [K in MenuSchemaKey]: true }).safeParse({ [name]: value });
-    return returnType.error ? { error: returnType.error } : null;
+    const returnType = v.safeParse(menuSchema.entries[name], value);
+    return !returnType.success ? { error: returnType.issues } : null;
   };
 
   const values: FormGroupValues = {

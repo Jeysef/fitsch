@@ -1,4 +1,3 @@
-import { startTransition } from "solid-js";
 import { toast } from "solid-sonner";
 import { exportJSON, importJSON } from "~/components/menu/ImportExport";
 import { getFileName } from "~/components/menu/menu-actions/utils";
@@ -21,16 +20,14 @@ function ExportImportJsonAction() {
   const loadJSON = () => {
     importJSON({
       onImport: (data) => {
-        startTransition(async () => {
-          const parsedData = JSON.parse(data, ClassRegistry.reviver);
-          const validatedData = await parseStoreJson(parsedData);
-          if (!validatedData.success) {
-            console.error(validatedData.error);
-            toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });
-            return;
-          }
-          recreateStore(validatedData.data);
-        });
+        const parsedData = JSON.parse(data, ClassRegistry.reviver);
+        const validatedData = parseStoreJson(parsedData);
+        if (!validatedData.success) {
+          console.error(validatedData.issues);
+          toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });
+          return;
+        }
+        recreateStore(validatedData.output);
       },
       onError: () => {
         toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });

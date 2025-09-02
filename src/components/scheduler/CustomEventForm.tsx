@@ -2,16 +2,12 @@ import type { OverrideProps, PolymorphicProps } from "@kobalte/core";
 import type { DialogTriggerProps } from "@kobalte/core/dialog";
 import type { ValidComponent } from "solid-js";
 import { createSignal, lazy, splitProps, Suspense } from "solid-js";
-import type { z } from "zod";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import { useI18n } from "~/i18n";
-import type { customEventSchema } from "~/store/storeSchema-v2";
 import Loader from "../ui/loader";
 
 const Form = lazy(() => import("./CustomEventFormContent"));
-
-export type EventFormData = z.infer<typeof customEventSchema>;
 
 interface EventFormProps {
   defaultValue?: CustomEvent;
