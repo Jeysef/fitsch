@@ -3,7 +3,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   vite: {
-    plugins: [visualizer({ open: true, gzipSize: true, template: "sunburst" })],
+    plugins: [visualizer({ open: true, gzipSize: true })],
   },
   server: {
     compatibilityDate: "2025-08-20",
