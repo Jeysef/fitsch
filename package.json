@@ -47,6 +47,7 @@
     "es-toolkit": "^1.39.10",
     "eslint-config-prettier": "^10.1.8",
     "html-to-image": "^1.11.13",
+    "isbot": "^5.1.30",
     "jsdom": "^26.1.0",
     "lucide-solid": "^0.503.0",
     "object-typed": "^1.0.0",
