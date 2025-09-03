@@ -1,14 +1,12 @@
 import { makeTimer } from "@solid-primitives/timer";
 import { children, createSignal, lazy, onMount, Show, Suspense, type FlowProps } from "solid-js";
-import { isServer } from "solid-js/web";
+import { isDev, isServer } from "solid-js/web";
 
 const LazyClientProvider = lazy(() => import("~/components/PostHogClientProvider"));
 
 export function PostHogProvider(props: FlowProps) {
   const resolved = children(() => props.children);
-  if (isServer) {
-    return resolved();
-  }
+  if (isServer || isDev) return resolved();
 
   const [shouldLoad, setShouldLoad] = createSignal(false);
 
