@@ -67,7 +67,7 @@ const ScheduleScreenshot = () => {
         {t("menu.actions.saveImage.title")}
       </Button>
       <Tooltip placement="right" flip="top" gutter={12} open={tooltipOpen()} hideWhenDetached>
-        <TooltipTrigger type="button" on:click={handleTooltip} name="save-screenshot-tooltip">
+        <TooltipTrigger type="button" on:click={handleTooltip} name="save-screenshot-tooltip" title="Button info">
           <CircleAlert class="w-4 h-4 text-amber-400" />
         </TooltipTrigger>
         <TooltipContent>{t("menu.actions.saveImage.info")}</TooltipContent>

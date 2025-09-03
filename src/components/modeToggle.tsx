@@ -12,7 +12,14 @@ const ModeToggle: ParentComponent = (props) => {
   const [local, rest] = splitProps(props, ["children"]);
   return (
     <DropdownMenu placement="bottom-end">
-      <DropdownMenuTrigger as={Button} variant="ghost" size="icon" name="toggle-color-mode" {...rest}>
+      <DropdownMenuTrigger
+        as={Button}
+        variant="ghost"
+        size="icon"
+        name="toggle-color-mode"
+        {...rest}
+        title="Toggle color mode"
+      >
         <SunMedium class="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
         <Moon class="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         {local.children}
