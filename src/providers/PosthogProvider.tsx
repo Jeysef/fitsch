@@ -10,7 +10,7 @@ export function PostHogProvider(props: FlowProps) {
 
   const [shouldLoad, setShouldLoad] = createSignal(false);
 
-  onMount(() => makeTimer(() => setShouldLoad(true), 500, setTimeout));
+  onMount(() => makeTimer(() => setShouldLoad(true), 2000, setTimeout));
 
   return (
     <Show when={shouldLoad()} fallback={resolved()}>
