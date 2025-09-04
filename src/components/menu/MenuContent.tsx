@@ -52,7 +52,7 @@ import type { GetStudyCoursesDetailsFunctionConfig } from "~/server/server-fns/g
 import { getStudyOverviewResource } from "~/server/server-fns/getOverview/resource";
 import { type FunctionReturn, type FunctionReturnError, isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import type { AdaptedSchedulerStore } from "~/store/storeAdapter";
-import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu } from "../ui/sidebar";
+import { SidebarContent, SidebarFooter, SidebarGroup, SidebarMenu, SidebarMenuItem } from "../ui/sidebar";
 import { Settings } from "./MenuSettings";
 import { LoadingState } from "./MenuSkeletons";
 
@@ -410,17 +410,29 @@ function Content({
           <SidebarGroup>
             <SidebarMenu>
               <DataContext.Provider value={cData}>
-                <YearSelect />
+                <SidebarMenuItem>
+                  <YearSelect />
+                </SidebarMenuItem>
                 {/* semester up top coz it dosn't change much */}
-                <SemesterSelect />
-                <DegreeSelect />
-                <ProgramSelect />
+                <SidebarMenuItem>
+                  <SemesterSelect />
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <DegreeSelect />
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <ProgramSelect />
+                </SidebarMenuItem>
               </DataContext.Provider>
               <DataContext.Provider value={data as Accessor<DataProviderTypes.getStudyOverviewReturn | undefined>}>
-                <GradeSelect />
-                <Suspense>
-                  <CoursesSelect />
-                </Suspense>
+                <SidebarMenuItem>
+                  <GradeSelect />
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <Suspense>
+                    <CoursesSelect />
+                  </Suspense>
+                </SidebarMenuItem>
               </DataContext.Provider>
             </SidebarMenu>
           </SidebarGroup>
