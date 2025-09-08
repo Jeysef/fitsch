@@ -1,6 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
+import { VALIDITY, getAfterValidityColor } from "~/components/homepage/utils";
 import Scheduler from "~/components/scheduler";
 import SchedulerSkeleton from "~/components/scheduler/SchedulerSkeleton";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -33,12 +34,19 @@ export default function Home() {
     data: store.checkedData,
   }));
 
-  const areAllCoursesSelected = createMemo(() => {
-    return store.courses.every((course) => store.coursesTimeSpan[course.detail.id].valid);
+  const allCoursesValidity = createMemo((): VALIDITY => {
+    // if all courses are valid, return VALID
+    // if any courses are invalid, return INVALID
+    // if all are partial or there is at least one partial between valid return PARTIAL
+    return store.courses.every((course) => store.coursesTimeSpan[course.detail.id].validity === VALIDITY.VALID)
+      ? VALIDITY.VALID
+      : store.courses.some((course) => store.coursesTimeSpan[course.detail.id].validity === VALIDITY.INVALID)
+        ? VALIDITY.INVALID
+        : VALIDITY.PARTIAL;
   });
 
   createEffect(() => {
-    if (store.courses.length && areAllCoursesSelected()) posthog().capture("timespan-all-courses-selected");
+    if (store.courses.length && allCoursesValidity() === VALIDITY.VALID) posthog().capture("timespan-all-courses-selected");
   });
 
   const collapseAll = (expand = false) =>
@@ -73,9 +81,7 @@ export default function Home() {
                   "w-auto whitespace-break-spaces",
                   value === tabs.timeSpan &&
                     !isServer &&
-                    (areAllCoursesSelected()
-                      ? "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-green-500 after:self-start"
-                      : "after:ml-2 after:w-2 after:h-2 after:rounded-full after:bg-red-500 after:self-start")
+                    `after:absolute after:right-0 after: top-0 after:size-2 after:rounded-full after:self-start ${getAfterValidityColor(allCoursesValidity())}`
                 )}
                 value={value}
               >

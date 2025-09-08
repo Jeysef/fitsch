@@ -1,5 +1,6 @@
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import { createMemo, For, Index, Show } from "solid-js";
+import { getValidityColor, VALIDITY } from "~/components/homepage/utils";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
@@ -36,15 +37,14 @@ export default function TimeSpan(props: TimeSpanProps) {
 
 function TimeSpanCourse(props: {
   course: Course;
-  courseTimeSpan: { valid: boolean; courseData: Record<LECTURE_TYPE, number> };
+  courseTimeSpan: { validity: VALIDITY; courseData: Record<LECTURE_TYPE, number> };
 }) {
   const { t } = useI18n();
 
-  const getColor = (valid: boolean) => (valid ? "bg-green-500" : "bg-red-500");
   return (
     <Card class="overflow-hidden">
       <CardHeader class="bg-muted space-y-0 relative">
-        <div class={`absolute top-0 left-0 bottom-0 w-1 ${getColor(props.courseTimeSpan.valid)} `} />
+        <div class={`absolute top-0 left-0 bottom-0 w-1 ${getValidityColor(props.courseTimeSpan.validity)} `} />
         <CardTitleLink
           href={props.course.detail.url}
           class={cn(
@@ -65,38 +65,47 @@ function TimeSpanCourse(props: {
         </For>
       </CardHeader>
       <CardContent class="pt-4">
-        <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
-        <div class="space-y-2">
-          <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
-            <For each={Object.entries(props.course.metrics)}>
-              {([type, { weeks, weeklyLectures }]) => (
-                <>
-                  <div class="flex items-center gap-2">
-                    <div
-                      class={`w-2 h-2 rounded-full shrink-0 ${getColor(props.courseTimeSpan.courseData[type as LECTURE_TYPE] === weeklyLectures)}`}
-                    />
-                    <Text variant="smallText" class="text-inherit text-sm capitalize">
-                      {t(`scheduler.timeSpan.type.${type as LECTURE_TYPE}`)}
+        <Show
+          when={Object.keys(props.course.metrics).length}
+          fallback={
+            <Text variant="smallText" class="text-muted-foreground">
+              {t("scheduler.timeSpan.emptyCourse")}
+            </Text>
+          }
+        >
+          <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
+          <div class="space-y-2">
+            <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
+              <For each={Object.entries(props.course.metrics)}>
+                {([type, { weeks, weeklyLectures }]) => (
+                  <>
+                    <div class="flex items-center gap-2">
+                      <div
+                        class={`w-2 h-2 rounded-full shrink-0 ${getValidityColor(props.courseTimeSpan.courseData[type as LECTURE_TYPE] === weeklyLectures)}`}
+                      />
+                      <Text variant="smallText" class="text-inherit text-sm capitalize">
+                        {t(`scheduler.timeSpan.type.${type as LECTURE_TYPE}`)}
+                      </Text>
+                    </div>
+                    <Text variant="smallText" class="text-inherit text-sm">
+                      {t("scheduler.timeSpan.weekly", { hours: weeklyLectures })}
                     </Text>
-                  </div>
-                  <Text variant="smallText" class="text-inherit text-sm">
-                    {t("scheduler.timeSpan.weekly", { hours: weeklyLectures })}
-                  </Text>
-                  <span class="text-sm font-medium">
-                    <Show when={props.courseTimeSpan.courseData[type as LECTURE_TYPE] !== weeklyLectures}>
-                      {t("scheduler.timeSpan.selected", {
-                        selected: props.courseTimeSpan.courseData[type as LECTURE_TYPE] || 0,
-                      })}
-                    </Show>
-                  </span>
-                  <Text variant="smallText" class="text-muted-foreground w-full flex justify-end  text-sm">
-                    {t("scheduler.timeSpan.weeks", { weeks })}
-                  </Text>
-                </>
-              )}
-            </For>
+                    <span class="text-sm font-medium">
+                      <Show when={props.courseTimeSpan.courseData[type as LECTURE_TYPE] !== weeklyLectures}>
+                        {t("scheduler.timeSpan.selected", {
+                          selected: props.courseTimeSpan.courseData[type as LECTURE_TYPE] || 0,
+                        })}
+                      </Show>
+                    </span>
+                    <Text variant="smallText" class="text-muted-foreground w-full flex justify-end  text-sm">
+                      {t("scheduler.timeSpan.weeks", { weeks })}
+                    </Text>
+                  </>
+                )}
+              </For>
+            </div>
           </div>
-        </div>
+        </Show>
       </CardContent>
     </Card>
   );

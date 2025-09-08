@@ -1,8 +1,9 @@
-import { mapValues } from "es-toolkit";
+import type { VALIDITY } from "~/components/homepage/utils";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/enums/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
+import { CoursesTimespan } from "~/store/coursesTimespan";
 import { createNewCourse } from "~/store/courseStore";
 import { DataStore } from "~/store/dataStore";
 import type { Course, Data, ISchedulerSettings } from "~/store/store.types";
@@ -60,27 +61,9 @@ export class SchedulerStore implements StoreJson {
   }
 
   // previousely called selected
-  public get coursesTimeSpan(): Record<string, { valid: boolean; courseData: Record<LECTURE_TYPE, number> }> {
-    return Object.fromEntries(this.courses.map((course) => [course.detail.id, this.getCourseTimeSpan(course)]));
+  public get coursesTimeSpan(): Record<string, { validity: VALIDITY; courseData: Record<LECTURE_TYPE, number> }> {
+    return new CoursesTimespan(this.courses).getCoursesTimeSpan();
   }
-
-  // ---- Virtual Course ----
-  private getCourseTimeSpan = (course: Course) => {
-    const courseData = course.data.reduce(
-      (acc, event) => {
-        if (event.checked) {
-          acc[event.type] = (acc[event.type] || 0) + event.timeSpan.hours;
-        }
-        return acc;
-      },
-      mapValues(LECTURE_TYPE, () => 0)
-    );
-
-    const valid = Object.entries(course.metrics).every(
-      ([type, { weeklyLectures }]) => courseData[type as LECTURE_TYPE] === weeklyLectures
-    );
-    return { valid, courseData };
-  };
 
   // ---- Events ----
   public getLinkedEvent = (linkedData: LectureMutator.LinkedLectureData, courseId: string) => {

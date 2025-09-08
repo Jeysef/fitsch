@@ -143,6 +143,7 @@ export default {
     timeSpan: {
       empty: "Není zvolen žádný předmět",
       hoursAWeek: "Počet hodin lekce týdně:",
+      emptyCourse: "Tento kurz ještě nezveřejnil žádné lekce",
       type: {
         [LECTURE_TYPE.LECTURE]: "přednášky",
         [LECTURE_TYPE.LABORATORY]: "laboratoře",

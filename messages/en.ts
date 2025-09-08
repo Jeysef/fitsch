@@ -145,6 +145,7 @@ export default {
     timeSpan: {
       empty: "No course selected",
       hoursAWeek: "Number of lecture hours per week:",
+      emptyCourse: "This course has not yet announced any lectures",
       type: {
         [LECTURE_TYPE.LECTURE]: "lecture",
         [LECTURE_TYPE.LABORATORY]: "laboratory",
