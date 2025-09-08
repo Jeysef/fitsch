@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import { tabs, type Tab } from "./tab";
-import TimeSpan from "./TimeSpan";
+import TimeSpan, { TimeSpanSkeleton } from "./TimeSpan";
 
 export default function Home() {
   const { t, locale } = useI18n();
@@ -113,9 +113,9 @@ export default function Home() {
         </div>
       </Show>
       <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
-        <Suspense>
-          <TimeSpan store={store} />
-        </Suspense>
+        <Show when={showSkeleton()} fallback={<TimeSpan store={store} />}>
+          <TimeSpanSkeleton store={store} />
+        </Show>
       </TabsContent>
     </Tabs>
   );

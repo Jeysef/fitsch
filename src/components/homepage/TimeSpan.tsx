@@ -5,6 +5,7 @@ import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
 import { buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitleLink } from "~/components/ui/card";
+import Loader from "~/components/ui/loader";
 import type { LECTURE_TYPE } from "~/enums/enums";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
@@ -108,5 +109,17 @@ function TimeSpanCourse(props: {
         </Show>
       </CardContent>
     </Card>
+  );
+}
+
+export function TimeSpanSkeleton(_props: TimeSpanProps) {
+  useI18n();
+  return (
+    <div
+      class="overflow-x-auto w-full px-4 grid grid-cols-[repeat(auto-fit,minmax(20rem,56rem))] gap-y-4 gap-x-8"
+      style={{ "justify-content": "safe center" }}
+    >
+      <Loader />
+    </div>
   );
 }
