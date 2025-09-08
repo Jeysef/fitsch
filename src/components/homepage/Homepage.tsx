@@ -1,7 +1,6 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, Show, batch, createEffect, createMemo, createSignal, onMount } from "solid-js";
-import { isServer } from "solid-js/web";
-import { VALIDITY, getAfterValidityColor } from "~/components/homepage/utils";
+import { batch, createEffect, createMemo, createSignal, For, onMount, Show } from "solid-js";
+import { getAfterValidityColor, VALIDITY } from "~/components/homepage/utils";
 import Scheduler from "~/components/scheduler";
 import SchedulerSkeleton from "~/components/scheduler/SchedulerSkeleton";
 import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -79,9 +78,11 @@ export default function Home() {
               <TabsTrigger
                 class={cn(
                   "w-auto whitespace-break-spaces",
-                  value === tabs.timeSpan &&
-                    !isServer &&
-                    `after:absolute after:right-0 after: top-0 after:size-2 after:rounded-full after:self-start ${getAfterValidityColor(allCoursesValidity())}`
+                  {
+                    "after:absolute after:right-0 after: top-0 after:size-2 after:rounded-full after:self-start":
+                      value === tabs.timeSpan && !showSkeleton(),
+                  },
+                  { [getAfterValidityColor(allCoursesValidity())]: value === tabs.timeSpan && !showSkeleton() }
                 )}
                 value={value}
               >
