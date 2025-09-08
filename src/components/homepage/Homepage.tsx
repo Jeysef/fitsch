@@ -1,5 +1,5 @@
 import { useSearchParams } from "@solidjs/router";
-import { For, Show, Suspense, batch, createEffect, createMemo, createSignal, onMount } from "solid-js";
+import { For, Show, batch, createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import { VALIDITY, getAfterValidityColor } from "~/components/homepage/utils";
 import Scheduler from "~/components/scheduler";
