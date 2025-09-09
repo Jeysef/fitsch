@@ -4,7 +4,7 @@ import { LECTURE_TYPE } from "~/enums/enums";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import { CoursesTimespan } from "~/store/coursesTimespan";
-import { createNewCourse } from "~/store/courseStore";
+import { createNewCourse, reconcileCourses } from "~/store/courseStore";
 import { DataStore } from "~/store/dataStore";
 import type { Course, Data, ISchedulerSettings } from "~/store/store.types";
 import type { StoreJson } from "~/store/storeSchema";
@@ -36,11 +36,7 @@ export class SchedulerStore implements StoreJson {
   public set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
     this.courses = courses.map((course) => {
       const existingCourse = this.getCourse(course.detail.id);
-      if (!existingCourse) return createNewCourse(course);
-      if (existingCourse.detail.url !== course.detail.url) {
-        existingCourse.detail = course.detail;
-      }
-      return existingCourse;
+      return existingCourse ? reconcileCourses(existingCourse, course) : createNewCourse(course);
     });
   }
 
