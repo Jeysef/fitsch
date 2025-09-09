@@ -1,33 +1,42 @@
+import { batch } from "solid-js";
 import { toast } from "solid-sonner";
 import { exportJSON, importJSON } from "~/components/menu/ImportExport";
+import { parseImportJsonSchema } from "~/components/menu/menu-actions/schema";
 import { getFileName } from "~/components/menu/menu-actions/utils";
 import { ItemText } from "~/components/menu/MenuCommonComponents";
+import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
 import { useScheduler } from "~/providers/SchedulerProvider";
-import { parseStoreJson } from "~/store/storeSchema";
 
 function ExportImportJsonAction() {
   const { store, recreateStore, serialize } = useScheduler();
+  const { submittedData, setSubmittedData } = useLocalMenuData();
   const { t, locale } = useI18n();
 
   const saveJSON = () => {
     const filename = getFileName({ locale, store });
-    exportJSON({ obj: store, filename, serializer: serialize });
+    const data = { store, submittedData: submittedData() };
+    const serializer = ({ submittedData, store }: typeof data) =>
+      JSON.stringify({ submittedData, store: JSON.parse(serialize(store)) }, null, 2);
+    exportJSON({ obj: data, filename, serializer });
   };
 
   const loadJSON = () => {
     importJSON({
       onImport: (data) => {
         const parsedData = JSON.parse(data, ClassRegistry.reviver);
-        const validatedData = parseStoreJson(parsedData);
+        const validatedData = parseImportJsonSchema(parsedData);
         if (!validatedData.success) {
           console.error(validatedData.issues);
           toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });
           return;
         }
-        recreateStore(validatedData.output);
+        batch(() => {
+          recreateStore(validatedData.output.store);
+          setSubmittedData(validatedData.output.submittedData);
+        });
       },
       onError: () => {
         toast.error(t("menu.actions.importJson.error"), { description: t("menu.actions.importJson.errorDescription") });

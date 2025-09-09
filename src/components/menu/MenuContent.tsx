@@ -317,6 +317,18 @@ function Content({
     true
   );
 
+  // update on external changes to submittedData (import json)
+  createComputed(
+    on(submittedData, (submittedData, _, firstEffect) => {
+      if (firstEffect) return false;
+      if (isServer) return true;
+      console.log("running");
+      group.controls.selected.setValue(submittedData);
+      return false;
+    }),
+    true
+  );
+
   // // TODO: find something better
   createEffect(
     on(

@@ -3,7 +3,7 @@ import { storeSchema as storeSchemaV1 } from "~/store/storeSchema-v1";
 import { StoreJson as StoreJsonV2, storeSchema as storeSchemaV2 } from "~/store/storeSchema-v2";
 
 // const mergedStoreSchema = storeSchemaV2.or(storeSchemaV1);
-const mergedStoreSchema = v.union([storeSchemaV2, storeSchemaV1]);
+export const mergedStoreSchema = v.union([storeSchemaV2, storeSchemaV1]);
 
 export type StoreJson = StoreJsonV2;
 /**

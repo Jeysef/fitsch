@@ -10,20 +10,22 @@ export const menuCurrentSchema = v.object({
   program: v.optional(v.string()),
 });
 
+export const menuPersistedData = v.optional(
+  v.record(
+    v.enum(DEGREE),
+    v.optional(
+      v.record(
+        v.string(),
+        v.optional(v.record(v.string(), v.optional(v.record(v.enum(OBLIGATION), v.optional(v.array(v.string()))))))
+      )
+    )
+  )
+);
+
 export const menuAdditionalSchema = v.object({
   semester: v.enum(SEMESTER),
   grade: v.optional(v.string()),
-  selected: v.optional(
-    v.record(
-      v.enum(DEGREE),
-      v.optional(
-        v.record(
-          v.string(),
-          v.optional(v.record(v.string(), v.optional(v.record(v.enum(OBLIGATION), v.optional(v.array(v.string()))))))
-        )
-      )
-    )
-  ),
+  selected: menuPersistedData,
 });
 
 export const menuSchema = v.object({
