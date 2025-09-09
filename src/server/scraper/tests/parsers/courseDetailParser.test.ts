@@ -32,7 +32,7 @@ describe("CourseDetailParser", () => {
     expect(result.detail.timeSpan.LECTURE).toBe(39);
     expect(result.detail.timeSpan.SEMINAR).toBe(6);
     expect(result.detail.timeSpan.LABORATORY).toBe(12);
-    expect(result.detail.timeSpan.EXERCISE).toBe(0);
+    expect(result.detail.timeSpan.EXERCISE).not.toBeDefined();
     expect(result.detail.timeSpan.EXAM).not.toBeDefined();
 
     // first row: background color -> LECTURE, has note
