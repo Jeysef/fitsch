@@ -73,7 +73,7 @@ export default {
       new: "Load",
       clean: "Clean",
       update: "Update",
-      announcement: "Update regularly, selected courses will remain the same if they haven't been removed.",
+      announcement: "Update regularly. Selected courses will remain the same if they haven't been removed.",
     },
     toast: {
       languageChanged: {

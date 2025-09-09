@@ -72,7 +72,7 @@ export default {
       new: "Načíst",
       clean: "Vyčistit",
       update: "Aktualizovat",
-      announcement: "Pravidelně aktualizujte, vybrané lekce zůstanou, pokud se nezrušily.",
+      announcement: "Pravidelně aktualizujte. Vybrané lekce zůstanou, pokud se nezrušily.",
     },
     toast: {
       languageChanged: {
