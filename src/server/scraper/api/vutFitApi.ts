@@ -10,7 +10,7 @@ import type { ProgramsParser } from "../parsers/programs/vutFitProgramsParser";
 import type { TimeScheduleParser } from "../parsers/timeSchedule/vutFitTimeScheduleParser";
 import type { IStudyApi } from "./interface";
 
-const cacheMaxAge = 60 * 60 * 24 * 30;
+const cacheMaxAge = 60 * 10; // in seconds, 10 minutes
 
 export class VutFitApi implements IStudyApi {
   private readonly baseUrl = "https://www.fit.vut.cz/study/";
