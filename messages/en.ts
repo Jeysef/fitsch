@@ -69,7 +69,12 @@ export default {
       [OBLIGATION.ELECTIVE]: "Elective",
       all: "All",
     },
-    load: "Load",
+    load: {
+      new: "Load",
+      clean: "Clean",
+      update: "Update",
+      announcement: "Update regularly, selected courses will remain the same if they haven't been removed.",
+    },
     toast: {
       languageChanged: {
         loading: "Loading data in new language",

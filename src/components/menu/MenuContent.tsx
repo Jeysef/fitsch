@@ -44,6 +44,7 @@ import { getAllSelectedCourseIds } from "~/components/menu/utils";
 import { Button } from "~/components/ui/button";
 import { DEGREE, SEMESTER } from "~/enums/enums";
 import { type tType, useI18n } from "~/i18n";
+import { cloneDeepJSON } from "~/lib/toolkit";
 import { useScheduler } from "~/providers/SchedulerProvider";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import type { Overview } from "~/server/scraper/types/overview.types";
@@ -254,7 +255,7 @@ function Content({
         success: t("menu.toast.languageChanged.success"),
         error: t("menu.toast.languageChanged.error"),
         description: t("menu.toast.languageChanged.description", { language: t(`language.${language}`) }),
-        action: { label: t("menu.load"), onClick: onRegenerate },
+        action: { label: t("menu.load.update"), onClick: onRegenerate },
         id: toastId,
         duration: 5000,
       });
@@ -272,7 +273,7 @@ function Content({
     return !returnType.success ? { error: returnType.issues } : null;
   };
 
-  const values: FormGroupValues = {
+  const values = cloneDeepJSON({
     year: data().current.year,
     degree: data().current.degree,
     language: data().current.language,
@@ -281,7 +282,7 @@ function Content({
     grade: persistentGroupData()?.grade ?? defaultFormValues.grade,
     semester: persistentGroupData()?.semester ?? defaultFormValues.semester,
     selected: submittedData(),
-  };
+  }) as FormGroupValues;
 
   const formGroupControls = ObjectTyped.fromEntries(
     ObjectTyped.entries(values).map(
@@ -322,7 +323,6 @@ function Content({
     on(submittedData, (submittedData, _, firstEffect) => {
       if (firstEffect) return false;
       if (isServer) return true;
-      console.log("running");
       group.controls.selected.setValue(submittedData);
       return false;
     }),
@@ -411,7 +411,7 @@ function Content({
     group.markSubmitted(true);
     const dataToSubmit = getDataToSubmit();
     loadCourses(dataToSubmit)?.then(() => {
-      setSubmittedData(group.controls.selected.value);
+      setSubmittedData(cloneDeepJSON(group.controls.selected.value));
     });
   }, "menu-submit-action");
 

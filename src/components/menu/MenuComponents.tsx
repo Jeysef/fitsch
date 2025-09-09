@@ -1,14 +1,18 @@
 import { Tooltip } from "@kobalte/core/tooltip";
+import { flattenObject } from "es-toolkit";
+import { isEmpty } from "es-toolkit/compat";
 import ChevronRight from "lucide-solid/icons/chevron-right";
 import Link from "lucide-solid/icons/link";
 import { For, Show, Suspense, batch, createMemo, type JSXElement } from "solid-js";
 import { ItemText, SectionHeading, SubSectionHeading } from "~/components/menu/MenuCommonComponents";
 import { getData, getGroup } from "~/components/menu/MenuContent";
+import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
 import {
   getCurrentSelectedCourseId,
   getCurrentSelectedCourseIds,
   getSelectedCourseIds,
   handleCourseSelection,
+  isSelectedEqual,
 } from "~/components/menu/utils";
 import { typographyVariants } from "~/components/typography";
 import Text from "~/components/typography/text";
@@ -427,16 +431,43 @@ export function CoursesSelect() {
 
 export function SubmitButton() {
   const posthog = usePostHog();
-  const { t } = useI18n();
+  const group = getGroup();
+  const { submittedData } = useLocalMenuData();
+  const t = useI18n().t;
 
   const onClick = () => {
     posthog().capture("menu-submit_clicked", {
       button_name: "Get Started",
     });
   };
+
+  const menuLoadState = createMemo(() => getMenuLoadState(group.controls.selected.value, submittedData()));
   return (
-    <Button class="w-full" type="submit" onClick={onClick}>
-      {t("menu.load")}
-    </Button>
+    <>
+      <Button class="w-full" type="submit" onClick={onClick}>
+        {t(menuLoadState())}
+      </Button>
+      <Text variant={"smallText"} class="text-xs text-muted-foreground text-center">
+        {t("menu.load.announcement")}
+      </Text>
+    </>
   );
 }
+
+enum MENU_LOAD_STATE {
+  NEW = "menu.load.new",
+  CLEAN = "menu.load.clean",
+  UPDATE = "menu.load.update",
+}
+
+const getMenuLoadState = (current: {} | undefined, submitted: {} | undefined) => {
+  // if group.selected is empty, we're in the clean state
+  if (current === undefined || isEmpty(flattenObject(current))) {
+    return MENU_LOAD_STATE.CLEAN;
+  }
+  // if group.selected is same as submittedData, we're in the update state
+  if (isSelectedEqual(current, submitted)) {
+    return MENU_LOAD_STATE.UPDATE;
+  }
+  return MENU_LOAD_STATE.NEW;
+};

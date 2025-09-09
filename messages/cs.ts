@@ -68,7 +68,12 @@ export default {
       [OBLIGATION.ELECTIVE]: "Volitelné",
       all: "Všechny",
     },
-    load: "Načíst",
+    load: {
+      new: "Načíst",
+      clean: "Vyčistit",
+      update: "Aktualizovat",
+      announcement: "Pravidelně aktualizujte, vybrané lekce zůstanou, pokud se nezrušily.",
+    },
     toast: {
       languageChanged: {
         loading: "Načítám data v novém jazyce",

@@ -1,5 +1,5 @@
 import { flattenObject } from "es-toolkit";
-import { flatMap } from "es-toolkit/compat";
+import { flatMap, isEqual } from "es-toolkit/compat";
 import { produce, unwrap } from "solid-js/store";
 import type { MenuSchema } from "~/components/menu/schema";
 import type { FormGroup, MenuSelected } from "~/components/menu/types";
@@ -171,3 +171,21 @@ export function isObligationData(data: unknown): data is Record<OBLIGATION, stri
 
   return hasAtLeastOneValue;
 }
+
+const sortObject = (obj: Record<string, unknown>) => {
+  const sortedKeys = Object.keys(obj).sort();
+  const sortedObj: Record<string, unknown> = {};
+  for (const key of sortedKeys) {
+    sortedObj[key] = obj[key];
+  }
+  return sortedObj;
+};
+
+export const isSelectedEqual = (selected: any, current: any): boolean => {
+  const flattenedSelected = flattenObject(selected);
+  const flattenedCurrent = flattenObject(current);
+  if (Object.keys(flattenedSelected).length !== Object.keys(flattenedCurrent).length) {
+    return false;
+  }
+  return isEqual(sortObject(flattenedSelected), sortObject(flattenedCurrent));
+};
