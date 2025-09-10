@@ -58,12 +58,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
     <Card
       data-id={event.id}
       style={{ "background-color": color().bg, border: `2px solid ${color().border}` }}
-      on:dblclick={() => {
-        if (!(typeof window !== "undefined" && "ontouchstart" in window)) local.handleCheck();
-      }}
-      on:click={() => {
-        if (typeof window !== "undefined" && "ontouchstart" in window) local.handleCheck();
-      }}
+      on:dblclick={() => local.handleCheck()}
       {...rest}
       class={cn(
         "event", // needed for linked outline
