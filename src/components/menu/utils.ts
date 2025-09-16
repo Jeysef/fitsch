@@ -181,7 +181,8 @@ const sortObject = (obj: Record<string, unknown>) => {
   return sortedObj;
 };
 
-export const isSelectedEqual = (selected: any, current: any): boolean => {
+export const isSelectedEqual = (selected: unknown, current: unknown): boolean => {
+  if (!selected || !current) return false;
   const flattenedSelected = flattenObject(selected);
   const flattenedCurrent = flattenObject(current);
   if (Object.keys(flattenedSelected).length !== Object.keys(flattenedCurrent).length) {
