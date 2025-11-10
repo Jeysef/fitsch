@@ -2,7 +2,7 @@ import { Show } from "solid-js";
 import { Button, type ButtonProps } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { cn } from "~/lib/utils";
-import { useInstallation } from "~/providers/InstallationProvider";
+import { useInstallation } from "~/providers/instalation/instalation-hooks";
 
 export default function InstallButton(props: ButtonProps) {
   const { canInstall, install } = useInstallation();

@@ -8,7 +8,7 @@ import { useI18n } from "~/i18n";
 import { useIsMobile } from "~/lib/hooks";
 import { usePostHog } from "~/lib/posthog";
 import { cn } from "~/lib/utils";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 import { createProjection } from "~/utils/store/projection";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -18,7 +18,7 @@ import TimeSpan, { TimeSpanSkeleton } from "./TimeSpan";
 
 export default function Home() {
   const { t, locale } = useI18n();
-  const { store } = useScheduler();
+  const { store } = useSchedule();
   const posthog = usePostHog();
   const [searchParams, setSearchParams] = useSearchParams<Tab>();
   const [isAllCollapsed, setIsAllCollapsed] = createSignal(false);

@@ -1,6 +1,6 @@
 import { createEffect } from "solid-js";
 import Scheduler from "~/components/scheduler/index";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 
 // export default function () {
 //   const formatTime = (start: Time, end: Time) =>
@@ -23,7 +23,7 @@ import { useScheduler } from "~/providers/SchedulerProvider";
 // }
 
 export default function () {
-  const { store } = useScheduler();
+  const { store } = useSchedule();
 
   createEffect(() => {
     console.log("🚀 ~ test ~ store courses changed:", store.courses);

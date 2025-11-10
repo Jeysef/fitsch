@@ -4,11 +4,11 @@ import EventForm from "~/components/scheduler/CustomEventForm";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { buttonVariants } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 
 function AddCustomEventAction() {
   const { t } = useI18n();
-  const { store } = useScheduler();
+  const { store } = useSchedule();
   const handleAddEvent = (event: CustomEvent) => store.addCustomEvent(event);
   return (
     <ItemText as="div">

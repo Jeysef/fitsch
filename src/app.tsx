@@ -9,9 +9,9 @@ import { Suspense } from "solid-js";
 import Layout from "~/components/layout";
 import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
-import { InstallationProvider } from "~/providers/InstallationProvider";
+import { InstallationProvider } from "~/providers/instalation/InstallationProvider";
 import { PostHogProvider } from "~/providers/PosthogProvider";
-import { SchedulerProvider } from "~/providers/SchedulerProvider";
+import { SchedulerProvider } from "~/providers/schedule/ScheduleProvider";
 import "./app.css";
 
 export default function App() {

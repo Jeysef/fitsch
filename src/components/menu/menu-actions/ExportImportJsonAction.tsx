@@ -8,10 +8,10 @@ import { useLocalMenuData } from "~/components/menu/MenuLocalDataProvider";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 
 function ExportImportJsonAction() {
-  const { store, recreateStore, serialize } = useScheduler();
+  const { store, recreateStore, serialize } = useSchedule();
   const { submittedData, setSubmittedData } = useLocalMenuData();
   const { t, locale } = useI18n();
 

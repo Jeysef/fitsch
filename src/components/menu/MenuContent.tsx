@@ -45,7 +45,7 @@ import { Button } from "~/components/ui/button";
 import { DEGREE, SEMESTER } from "~/enums/enums";
 import { type tType, useI18n } from "~/i18n";
 import { cloneDeepJSON } from "~/lib/toolkit";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import type { Overview } from "~/server/scraper/types/overview.types";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
@@ -190,7 +190,7 @@ function Content({
   resource: InitializedResourceReturn<DataProviderTypes.getStudyOverviewReturn, DataProviderTypes.getStudyOverviewConfig>;
 }) {
   const { persistentGroupData, setPersistentGroupData, setSubmittedData, submittedData } = useLocalMenuData();
-  const { store } = useScheduler();
+  const { store } = useSchedule();
   const data = resource[0];
   const cData = createMemo(() => (data.state === "refreshing" ? data.latest : data())) as Accessor<
     DataProviderTypes.getStudyOverviewReturn | undefined

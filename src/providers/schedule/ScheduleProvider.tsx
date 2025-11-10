@@ -1,31 +1,22 @@
 import { useSubmission } from "@solidjs/router";
 import { merge } from "es-toolkit";
-import { batch, createComputed, createContext, on, useContext, type ParentProps } from "solid-js";
+import { batch, createComputed, on, type ParentProps } from "solid-js";
 import { createMutable, modifyMutable, produce } from "solid-js/store";
 import { toast } from "solid-sonner";
 import { end, rows, start, step } from "~/config/scheduler";
 import { useI18n } from "~/i18n";
 import { ClassRegistry } from "~/lib/classRegistry/classRegistry";
+import { ScheduleContext } from "~/providers/schedule/schedule-context";
+import type { PlainStore } from "~/providers/schedule/schedule-types";
 import type { LectureMutator } from "~/server/scraper/lectureMutator";
 import { getStudyCoursesDetailsAction } from "~/server/server-fns/getCourses/actions";
 import { isErrorReturn } from "~/server/server-fns/utils/errorHandeler";
 import { SchedulerStore } from "~/store/store";
-import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
+import { adaptSchedulerStore } from "~/store/storeAdapter";
 import { parseStoreJsoUnsafeSync } from "~/store/storeSchema";
 import { createColumns, filter, formatTime } from "~/store/utils";
 import { makePersistedMutable } from "~/utils/persistedMutable";
 import { makeAutoMemoStore } from "~/utils/store/autoMemo";
-
-// Defines the structure of the store data when it's serialized (plain object without methods)
-export type PlainStore = Pick<SchedulerStore, "courses" | "customEvents">;
-
-interface SchedulerContextType {
-  store: AdaptedSchedulerStore;
-  recreateStore: (plainStore: Partial<PlainStore>) => void;
-  serialize: (store: SchedulerStore) => string;
-}
-
-const SchedulerContext = createContext<SchedulerContextType>();
 
 export function SchedulerProvider(props: ParentProps) {
   const { t } = useI18n();
@@ -140,7 +131,7 @@ export function SchedulerProvider(props: ParentProps) {
 
   // Provide the store and related functions to child components via context.
   return (
-    <SchedulerContext.Provider
+    <ScheduleContext.Provider
       value={{
         store: adaptSchedulerStore(makeAutoMemoStore(store)),
         recreateStore,
@@ -148,13 +139,6 @@ export function SchedulerProvider(props: ParentProps) {
       }}
     >
       {props.children}
-    </SchedulerContext.Provider>
+    </ScheduleContext.Provider>
   );
-}
-
-// Custom hook to easily access the Scheduler context.
-export function useScheduler() {
-  const context = useContext(SchedulerContext);
-  if (!context) throw new Error("useScheduler must be used within an SchedulerProvider");
-  return context;
 }

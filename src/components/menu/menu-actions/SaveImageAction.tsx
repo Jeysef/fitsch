@@ -1,5 +1,6 @@
 import { createTimer } from "@solid-primitives/timer";
 import { useSearchParams } from "@solidjs/router";
+import download from "downloadjs";
 import { toPng } from "html-to-image";
 import CircleAlert from "lucide-solid/icons/circle-alert";
 import { batch, createSignal } from "solid-js";
@@ -9,12 +10,11 @@ import { scheduleRef } from "~/components/scheduler/Scheduler";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useI18n } from "~/i18n";
-import { useScheduler } from "~/providers/SchedulerProvider";
-import download from "downloadjs";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 
 const ScheduleScreenshot = () => {
   const { locale, t } = useI18n();
-  const { store } = useScheduler();
+  const { store } = useSchedule();
   const [isLoading, setLoading] = createSignal(false);
   const [searchParams] = useSearchParams();
 

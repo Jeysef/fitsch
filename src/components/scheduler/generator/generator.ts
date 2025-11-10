@@ -8,7 +8,7 @@ import { SchedulerEngine } from "~/components/scheduler/generator/engine";
 import { getPerturbation, isAllowedOverlap } from "~/components/scheduler/generator/utils";
 import { useI18n } from "~/i18n";
 import { hasOverlap } from "~/lib/time/time";
-import { useScheduler } from "~/providers/SchedulerProvider";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
 
 // --- Configuration Constants ---
 const RATING_WEIGHTS = {
@@ -25,7 +25,7 @@ const GENERATOR_CONFIG = {
 } as const;
 
 export function SchedulerGenerator() {
-  const { store } = useScheduler();
+  const { store } = useSchedule();
   const { t } = useI18n();
   const currentPosition = createMutable({
     attempt: -1,
