@@ -17,3 +17,5 @@ export const Toaster = (props: Parameters<typeof Sonner>[0]) => {
     />
   );
 };
+
+export default Toaster;

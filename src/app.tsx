@@ -5,14 +5,16 @@ import { MultiProvider } from "@solid-primitives/context";
 import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
+import { lazy, Suspense } from "solid-js";
 import Layout from "~/components/layout";
-import { Toaster } from "~/components/ui/sonner";
+// import { Toaster } from "~/components/ui/sonner";
 import { I18nProvider } from "~/i18n";
 import { InstallationProvider } from "~/providers/instalation/InstallationProvider";
 import { PostHogProvider } from "~/providers/PosthogProvider";
 import { SchedulerProvider } from "~/providers/schedule/ScheduleProvider";
 import "./app.css";
+
+const Toaster = lazy(() => import("./components/ui/sonner"));
 
 export default function App() {
   const providers = [
@@ -35,7 +37,10 @@ export default function App() {
               </Layout>
             </MultiProvider>
           </Suspense>
-          <Toaster />
+          <Suspense>
+            {/* I am not sure wheter suspense is needed */}
+            <Toaster />
+          </Suspense>
         </>
       )}
     >
