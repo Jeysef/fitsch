@@ -1,0 +1,19 @@
+diff --git a/dist/config/dev-server.js b/dist/config/dev-server.js
+index ab966eadf274b4fac10beaf9bdd983da2ebe93f6..4ee117c064b1979b2de87eae629c1932fc6be659 100644
+--- a/dist/config/dev-server.js
++++ b/dist/config/dev-server.js
+@@ -1,4 +1,5 @@
+ import { NodeRequest, sendNodeResponse } from "srvx/node";
++import { pathToFileURL } from "url";
+ import { isRunnableDevEnvironment, } from "vite";
+ import { VITE_ENVIRONMENTS } from "./constants.js";
+ export function devServer() {
+@@ -10,7 +11,7 @@ export function devServer() {
+                     server.middlewares.use(async (req, res) => {
+                         res.setHeader("content-encoding", "identity");
+                         const webReq = new NodeRequest({ req, res });
+-                        const def = await import(process.cwd() + "/dist/server/entry-server.js");
++                        const def = await import(pathToFileURL(process.cwd() + "/dist/server/entry-server.js").href);
+                         sendNodeResponse(res, await def.default.fetch(webReq));
+                     });
+                 };

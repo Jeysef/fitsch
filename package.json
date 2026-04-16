@@ -96,7 +96,8 @@
   "pnpm": {
     "patchedDependencies": {
       "solid-gesture": "patches/solid-gesture.patch",
-      "solid-forms": "patches/solid-forms.patch"
+      "solid-forms": "patches/solid-forms.patch",
+      "@solidjs/start": "patches/@solidjs__start.patch"
     },
     "onlyBuiltDependencies": [
       "@biomejs/biome",
