@@ -1,7 +1,7 @@
 import type { NitroApp } from "nitropack/types";
+import { createStorage } from "unstorage";
 import fsLiteDriver from "unstorage/drivers/fs-lite";
 import netlifyBlobsDriver from "unstorage/drivers/netlify-blobs";
-import { createStorage } from "vinxi/storage";
 
 export default function CachePlugin(nitroApp: NitroApp) {
   globalThis.cachePlugin = {

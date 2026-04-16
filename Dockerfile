@@ -9,7 +9,7 @@ RUN pnpm install
 # Copy remaining source code
 COPY . .
 # Build the app (adjust the build script if different)
-RUN pnpm run build
+RUN CI=true pnpm run build
 # Rename the entire .vinxi folder so that .output/server exists
 RUN mv .vinxi .output
 
@@ -19,7 +19,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
-RUN pnpm install --prod
+RUN pnpm install --prod --ignore-scripts
 # Copy the build output from the builder stage
 COPY --from=builder /app/.output ./.output
 # Expose the port (adjust if needed)

@@ -1,6 +1,6 @@
+import type { Storage, StorageValue } from "unstorage";
+import { createStorage, prefixStorage } from "unstorage";
 import nullDriver from "unstorage/drivers/null";
-import type { Storage, StorageValue } from "vinxi/storage";
-import { createStorage, prefixStorage } from "vinxi/storage";
 
 export function useStorage<T extends StorageValue = StorageValue>(base = ""): Storage<T> {
   if (!globalThis.cachePlugin) {

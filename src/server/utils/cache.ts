@@ -1,7 +1,7 @@
+import { HTTPEventSymbol, isEvent } from "@solidjs/start/http";
 import type { CacheEntry, CacheOptions, NitroAsyncContext } from "nitropack/types";
 import { hash } from "ohash";
-import { isEvent } from "vinxi/server";
-import type { TransactionOptions } from "vinxi/storage";
+import type { TransactionOptions } from "unstorage";
 import { useStorage } from "./storage";
 
 type H3Event = NitroAsyncContext["event"];
@@ -140,12 +140,18 @@ export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
     }
     const key = await (opts.getKey || getKey)(...args);
     const shouldInvalidateCache = await opts.shouldInvalidateCache?.(...args);
-    const entry = await get(
-      key,
-      () => fn(...args),
-      shouldInvalidateCache,
-      args[0] && isEvent(args[0]) ? args[0] : undefined
-    );
+
+    // Safely unwrap the SolidStart event wrapper to get the raw H3Event
+    let eventArg: H3Event | undefined = undefined;
+    const firstArg = args[0];
+
+    if (firstArg && isEvent(firstArg)) {
+      // If the event is wrapped in the HTTPEventSymbol, extract it. Otherwise, use it directly.
+      eventArg = (HTTPEventSymbol in firstArg ? firstArg[HTTPEventSymbol] : firstArg) as unknown as H3Event;
+    }
+
+    const entry = await get(key, () => fn(...args), shouldInvalidateCache, eventArg);
+
     let value = entry.value;
     if (opts.transform) {
       value = (await opts.transform(entry, ...args)) || value;
