@@ -1,8 +1,9 @@
 import { solidStart } from "@solidjs/start/config";
 import { nitroV2Plugin } from "@solidjs/vite-plugin-nitro-2";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
       solidStart(),
@@ -14,6 +15,7 @@ export default defineConfig(() => {
             proxy: "https://eu.i.posthog.com/**",
           },
         },
+        preset: env.NITRO_PRESET,
       }),
     ],
   };
