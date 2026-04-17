@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index 9d826501613e46861a5eea23510484cf0decec72..04802f21045ce34627018b04febe081002fde262 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -97,7 +97,7 @@ export function nitroV2Plugin(nitroConfig) {
+                 };
+             }
+         },
+-        nitroConfig?.preset === "netlify" && {
++        (nitroConfig?.preset === "netlify" || nitroConfig?.preset === "netlify-edge") && {
+             name: "solid-start-nitro-netlify-fix",
+             enforce: "post",
+             config() {
