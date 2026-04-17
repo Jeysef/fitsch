@@ -23,7 +23,7 @@ export async function fromURL(url: string | URL, options: Options = {}, retries 
     headers: {
       "User-Agent": "Mozilla/5.0 (compatible; Cheerio)",
       Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      ...(requestOptions?.headers || {}),
+      ...requestOptions?.headers,
     },
     ...requestOptions,
   };

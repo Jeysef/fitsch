@@ -63,8 +63,7 @@ const variantElementMap: Record<NonNullable<VariantPropType["variant"]>, string>
 };
 
 export interface TypographyProps<T extends ValidComponent = "p">
-  extends JSX.HTMLAttributes<HTMLElement>,
-    TypographyVariantsType {
+  extends JSX.HTMLAttributes<HTMLElement>, TypographyVariantsType {
   as?: T;
   em?: boolean;
 }
