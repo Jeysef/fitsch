@@ -8,15 +8,18 @@ export default defineConfig(({ mode }) => {
     plugins: [
       solidStart(),
       nitroV2Plugin({
-        plugins: ["./src/plugins/cache.ts"],
         compatibilityDate: "2026-04-16",
-        routeRules: {
-          "/api/insights/**": {
-            proxy: "https://eu.i.posthog.com/**",
-          },
-        },
         preset: env.NITRO_PRESET,
       }),
     ],
+    server: {
+      proxy: {
+        "/api/insights": {
+          target: "https://eu.i.posthog.com",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/insights/, ""),
+        },
+      },
+    },
   };
 });

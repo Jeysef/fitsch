@@ -1,170 +1,42 @@
-import { HTTPEventSymbol, isEvent } from "@solidjs/start/http";
-import type { CacheEntry, CacheOptions, NitroAsyncContext } from "nitropack/types";
+import { defineCachedFunction as _defineCachedFunction, setStorage, type CachedFunction, type CacheOptions } from "ocache";
 import { hash } from "ohash";
-import type { TransactionOptions } from "unstorage";
+import type { StorageValue } from "unstorage";
 import { useStorage } from "./storage";
 
-type H3Event = NitroAsyncContext["event"];
-
-function defaultCacheOptions() {
-  return {
-    name: "_",
-    base: "/cache",
-    swr: true,
-    maxAge: 1,
-  } as const;
+interface CapturedErrorContext {
+  tags?: string[];
 }
+const captureError = (error: unknown, errorCtx: CapturedErrorContext) => {
+  console.error("[Captured Error]", error, "Context:", errorCtx);
+};
 
-type ResolvedCacheEntry<T> = CacheEntry<T> & { value: T };
-
+let _storageReady = false;
+function ensureStorage() {
+  if (_storageReady) {
+    return;
+  }
+  _storageReady = true;
+  const storage = useStorage();
+  setStorage({
+    get: <T = unknown>(key: string) => storage.getItem<T>(key),
+    set: <T = unknown>(key: string, value: T, opts?: { ttl?: number }) =>
+      storage.setItem(key, value as StorageValue, opts?.ttl ? { ttl: opts.ttl } : undefined),
+  });
+}
+function defaultOnError(error: unknown) {
+  console.error("[cache]", error);
+  captureError(error as Error, { tags: ["cache"] });
+}
 export function defineCachedFunction<T, ArgsT extends unknown[] = any[]>(
   fn: (...args: ArgsT) => T | Promise<T>,
-  opts: CacheOptions<T, ArgsT> = {}
-): (...args: ArgsT) => Promise<T> {
-  opts = { ...defaultCacheOptions(), ...opts };
-
-  const pending: { [key: string]: Promise<T> } = {};
-
-  // Normalize cache params
-  const group = opts.group || "nitro/functions";
-  const name = opts.name || fn.name || "_";
-  const integrity = opts.integrity || hash([fn, opts]);
-  const validate = opts.validate || ((entry) => entry.value !== undefined);
-
-  async function get(
-    key: string,
-    resolver: () => T | Promise<T>,
-    shouldInvalidateCache?: boolean,
-    event?: H3Event
-  ): Promise<ResolvedCacheEntry<T>> {
-    // Use extension for key to avoid conflicting with parent namespace (foo/bar and foo/bar/baz)
-    const cacheKey = [opts.base, group, name, key + ".json"].filter(Boolean).join(":").replace(/:\/$/, ":index");
-
-    let entry: CacheEntry<T> =
-      ((await useStorage()
-        .getItem(cacheKey)
-        .catch((error) => {
-          console.error(`[nitro] [cache] Cache read error.`, error);
-          globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
-        })) as unknown) || {};
-
-    // https://github.com/nitrojs/nitro/issues/2160
-    if (typeof entry !== "object") {
-      entry = {};
-      const error = new Error("Malformed data read from cache.");
-      console.error("[nitro] [cache]", error);
-      globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
-    }
-
-    const ttl = (opts.maxAge ?? 0) * 1000;
-    if (ttl) {
-      entry.expires = Date.now() + ttl;
-    }
-
-    const expired =
-      shouldInvalidateCache ||
-      entry.integrity !== integrity ||
-      (ttl && Date.now() - (entry.mtime || 0) > ttl) ||
-      validate(entry) === false;
-
-    const _resolve = async () => {
-      const isPending = pending[key];
-      if (!isPending) {
-        if (entry.value !== undefined && (opts.staleMaxAge || 0) >= 0 && opts.swr === false) {
-          // Remove cached entry to prevent using expired cache on concurrent requests
-          entry.value = undefined;
-          entry.integrity = undefined;
-          entry.mtime = undefined;
-          entry.expires = undefined;
-        }
-        pending[key] = Promise.resolve(resolver());
-      }
-
-      try {
-        entry.value = await pending[key];
-      } catch (error) {
-        // Make sure entries that reject get removed.
-        if (!isPending) {
-          delete pending[key];
-        }
-        // Re-throw error to make sure the caller knows the task failed.
-        throw error;
-      }
-
-      if (!isPending) {
-        // Update mtime, integrity + validate and set the value in cache only the first time the request is made.
-        entry.mtime = Date.now();
-        entry.integrity = integrity;
-        delete pending[key];
-        if (validate(entry) !== false) {
-          let setOpts: TransactionOptions | undefined;
-          if (opts.maxAge && !opts.swr /* TODO: respect staleMaxAge */) {
-            setOpts = { ttl: opts.maxAge };
-          }
-          const promise = useStorage()
-            .setItem(cacheKey, entry, setOpts)
-            .catch((error) => {
-              console.error(`[nitro] [cache] Cache write error.`, error);
-              globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
-            });
-          if (event?.waitUntil) {
-            event.waitUntil(promise);
-          }
-        }
-      }
-    };
-
-    const _resolvePromise = expired ? _resolve() : Promise.resolve();
-
-    if (entry.value === undefined) {
-      await _resolvePromise;
-    } else if (expired && event && event.waitUntil) {
-      event.waitUntil(_resolvePromise);
-    }
-
-    if (opts.swr && validate(entry) !== false) {
-      _resolvePromise.catch((error) => {
-        console.error(`[nitro] [cache] SWR handler error.`, error);
-        globalThis.cachePlugin.captureError(error, { event, tags: ["cache"] });
-      });
-      return entry as ResolvedCacheEntry<T>;
-    }
-
-    return _resolvePromise.then(() => entry) as Promise<ResolvedCacheEntry<T>>;
-  }
-
-  return async (...args) => {
-    const shouldBypassCache = await opts.shouldBypassCache?.(...args);
-    if (shouldBypassCache) {
-      return fn(...args);
-    }
-    const key = await (opts.getKey || getKey)(...args);
-    const shouldInvalidateCache = await opts.shouldInvalidateCache?.(...args);
-
-    // Safely unwrap the SolidStart event wrapper to get the raw H3Event
-    let eventArg: H3Event | undefined = undefined;
-    const firstArg = args[0];
-
-    if (firstArg && isEvent(firstArg)) {
-      // If the event is wrapped in the HTTPEventSymbol, extract it. Otherwise, use it directly.
-      eventArg = (HTTPEventSymbol in firstArg ? firstArg[HTTPEventSymbol] : firstArg) as unknown as H3Event;
-    }
-
-    const entry = await get(key, () => fn(...args), shouldInvalidateCache, eventArg);
-
-    let value = entry.value;
-    if (opts.transform) {
-      value = (await opts.transform(entry, ...args)) || value;
-    }
-    return value;
-  };
-}
-
-export function cachedFunction<T, ArgsT extends unknown[] = any[]>(
-  fn: (...args: ArgsT) => T | Promise<T>,
-  opts: CacheOptions<T> = {}
-): (...args: ArgsT) => Promise<T | undefined> {
-  return defineCachedFunction(fn, opts);
+  opts?: CacheOptions<T, ArgsT>
+): CachedFunction<T, ArgsT> {
+  ensureStorage();
+  return _defineCachedFunction(fn, {
+    group: "nitro/functions",
+    onError: defaultOnError,
+    ...opts,
+  });
 }
 
 export function getKey(...args: unknown[]) {
