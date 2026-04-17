@@ -3,5 +3,6 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-  "*": ["oxlint --fix", "oxfmt"],
+  "*.{js,jsx,ts,tsx}": ["oxlint --fix", "oxfmt"],
+  "*.{json,md}": ["oxfmt"],
 };
