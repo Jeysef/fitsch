@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 124,
+  "trailingComma": "es5",
+  "endOfLine": "crlf",
+  "sortPackageJson": false,
+  "ignorePatterns": ["src/paraglide/", "src/lang/core.tsx", "src/packages/", "pnpm-lock.yaml", "\"**/*.cjs\","]
+}
