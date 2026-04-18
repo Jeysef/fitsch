@@ -56,7 +56,7 @@ function TimeSpanCourse(props: {
         >
           {props.course.detail.abbreviation} <ChevronRight size={20} />
         </CardTitleLink>
-        <CardDescription class="text-accent-foreground !mt-0 !mb-4">{props.course.detail.name}</CardDescription>
+        <CardDescription class="text-accent-foreground mt-0! mb-4!">{props.course.detail.name}</CardDescription>
         <For each={props.course.detail.timeSpanText}>
           {(hours) => (
             <Text variant="smallText" class="text-sm text-muted-foreground">
@@ -76,7 +76,7 @@ function TimeSpanCourse(props: {
         >
           <h3 class="text-sm tracking-wider mb-3">{t("scheduler.timeSpan.hoursAWeek")}</h3>
           <div class="space-y-2">
-            <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 items-center justify-start overflow-auto">
+            <div class="grid grid-cols-[repeat(3,minmax(min-content,auto))_1fr] gap-x-4 items-center justify-start overflow-auto">
               <For each={Object.entries(props.course.metrics)}>
                 {([type, { weeks, weeklyLectures }]) => (
                   <>
@@ -131,7 +131,7 @@ function TimeSpanCourseSkeleton() {
         <div class="flex items-center gap-2">
           <Skeleton class="h-6 w-28" />
         </div>
-        <Skeleton class="h-4 w-40 !mt-2 !mb-4" />
+        <Skeleton class="h-4 w-40 mt-2! mb-4!" />
         <div class="space-y-1">
           <Skeleton class="h-3 w-44" />
           <Skeleton class="h-3 w-32" />
@@ -140,7 +140,7 @@ function TimeSpanCourseSkeleton() {
       <CardContent class="pt-4">
         <Skeleton class="h-4 w-40 mb-3" />
         <div class="space-y-2">
-          <div class="grid grid-cols-[repeat(3,_minmax(min-content,_auto)),1fr] gap-x-4 gap-y-1 items-center justify-start overflow-auto">
+          <div class="grid grid-cols-[repeat(3,minmax(min-content,auto))_1fr] gap-x-4 gap-y-1 items-center justify-start overflow-auto">
             <For each={[0, 1]}>
               {() => (
                 <>

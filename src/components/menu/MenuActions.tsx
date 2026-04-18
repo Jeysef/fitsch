@@ -16,7 +16,7 @@ export function Actions() {
       <SidebarGroup>
         <CollapsibleTrigger class="flex w-full overflow-hidden items-center">
           <SectionHeading>{t("menu.actions.title")}</SectionHeading>
-          <ChevronRight class="ml-auto transition-transform group-data-[expanded]/collapsible:rotate-90" />
+          <ChevronRight class="ml-auto transition-transform group-data-expanded/collapsible:rotate-90" />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <ScheduleScreenshot />

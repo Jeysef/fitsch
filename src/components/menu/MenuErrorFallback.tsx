@@ -99,7 +99,7 @@ const ErrorFallback: Component<ErrorBoundaryFallbackProps> = (props) => {
             when={!loading()}
             fallback={
               <Loader
-                class={cn("w-full", "before:content-[var(--tryAgainContent)] before:opacity-0 before:invisible before:h-0")}
+                class={cn("w-full", "before:content-(--tryAgainContent) before:opacity-0 before:invisible before:h-0")}
                 style={{ "--tryAgainContent": `"${t("error.tryAgain")}"` }}
               />
             }

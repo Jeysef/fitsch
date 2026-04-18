@@ -19,7 +19,7 @@ export default function NotFound() {
       </p>
       <a
         href="/"
-        class="inline-block px-6 py-3 bg-sky-600 text-white rounded-lg shadow hover:bg-sky-700 transition-colors font-medium"
+        class="inline-block px-6 py-3 bg-sky-600 text-white rounded-lg shadow-sm hover:bg-sky-700 transition-colors font-medium"
       >
         Go to Homepage
       </a>

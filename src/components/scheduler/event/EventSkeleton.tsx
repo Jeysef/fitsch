@@ -19,7 +19,7 @@ export default function EventSkeleton() {
         "flex flex-col h-full hover:shadow-md transition-shadow overflow-auto",
         // "text-colored-event-foreground",
         // "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
-        "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline"
+        "hover:outline-2 hover:outline-offset-2 hover:outline-strongLinked hover:outline-solid"
         // if hidden, make the event more transparent
       )}
     >

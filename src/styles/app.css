@@ -1,0 +1,255 @@
+/* @import '@fontsource/courier-prime' layer(base);
+@import '@fontsource/geist-sans' layer(base); */
+
+@import 'tailwindcss';
+
+@import "tw-animate-css";
+
+@custom-variant em (&);
+@custom-variant dark (&:is([data-kb-theme="dark"] *));
+
+@theme {
+  --font-sans:
+    Geist Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono:
+    Courier Prime, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  --text-xxs: 0.625rem;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-linked: #94a3b8;
+  --color-strongLinked: #f97316;
+  --color-link: hsl(var(--link));
+  --color-parityEven: #ef4444;
+  --color-parityOdd: #3b82f6;
+  --color-colored-event-foreground: hsl(var(--colored-event-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-collapsible-down: collapsible-down 0.2s ease-out;
+  --animate-collapsible-up: collapsible-up 0.2s ease-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+  --animate-progress-indeterminate: 1s ease 0s infinite normal none running progress-indeterminate;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--kb-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--kb-accordion-content-height); }
+    to { height: 0; }
+  }
+  @keyframes collapsible-down {
+    from { height: 0; }
+    to { height: var(--kb-collapsible-content-height); }
+  }
+  @keyframes collapsible-up {
+    from { height: var(--kb-collapsible-content-height); }
+    to { height: 0; }
+  }
+  @keyframes caret-blink {
+    0%, 70%, 100% { opacity: 1; }
+    20%, 50% { opacity: 0; }
+  }
+  @keyframes progress-indeterminate {
+    from { translate: -90%; }
+    to { translate: 100%; }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility gradient {
+  mask-image: linear-gradient(
+    to right,
+    hsla(0, 0%, 0%, 0) 0%,
+    hsla(0, 0%, 0%, 0.013) 4.05%,
+    hsla(0, 0%, 0%, 0.049) 7.75%,
+    hsla(0, 0%, 0%, 0.104) 11.25%,
+    hsla(0, 0%, 0%, 0.175) 14.5%,
+    hsla(0, 0%, 0%, 0.259) 17.65%,
+    hsla(0, 0%, 0%, 0.352) 20.6%,
+    hsla(0, 0%, 0%, 0.45) 23.55%,
+    hsla(0, 0%, 0%, 0.55) 26.45%,
+    hsla(0, 0%, 0%, 0.648) 29.4%,
+    hsla(0, 0%, 0%, 0.741) 32.35%,
+    hsla(0, 0%, 0%, 0.825) 35.5%,
+    hsla(0, 0%, 0%, 0.896) 38.75%,
+    hsla(0, 0%, 0%, 0.951) 42.25%,
+    hsla(0, 0%, 0%, 0.987) 45.95%,
+    hsl(0, 0%, 0%) 50%,
+    hsla(0, 0%, 0%, 0.987) 54.05%,
+    hsla(0, 0%, 0%, 0.951) 57.75%,
+    hsla(0, 0%, 0%, 0.896) 61.25%,
+    hsla(0, 0%, 0%, 0.825) 64.5%,
+    hsla(0, 0%, 0%, 0.741) 67.65%,
+    hsla(0, 0%, 0%, 0.648) 70.6%,
+    hsla(0, 0%, 0%, 0.55) 73.55%,
+    hsla(0, 0%, 0%, 0.45) 76.45%,
+    hsla(0, 0%, 0%, 0.352) 79.4%,
+    hsla(0, 0%, 0%, 0.259) 82.35%,
+    hsla(0, 0%, 0%, 0.175) 85.5%,
+    hsla(0, 0%, 0%, 0.104) 88.75%,
+    hsla(0, 0%, 0%, 0.049) 92.25%,
+    hsla(0, 0%, 0%, 0.013) 95.95%,
+    hsla(0, 0%, 0%, 0) 100%
+  );
+}
+
+@utility text-link-external {
+  @apply text-link! hover:saturate-150 hover:cursor-pointer visited:text-indigo-600;
+}
+
+@layer base {
+  :root,
+  .light {
+    --background: from theme("colors.white") h s l;
+    --foreground: from theme("colors.black") h s l;
+
+    --card: from theme("colors.white") h s l;
+    --card-foreground: from theme("colors.zinc.950") h s l;
+
+    --popover: from theme("colors.white") h s l;
+    --popover-foreground: from theme("colors.zinc.950") h s l;
+
+    --primary: from theme("colors.zinc.800") h s l;
+    --primary-foreground: from theme("colors.zinc.50") h s l;
+
+    --secondary: from theme("colors.zinc.100") h s l;
+    --secondary-foreground: from theme("colors.zinc.800") h s l;
+
+    --muted: from theme("colors.zinc.100") h s l;
+    --muted-foreground: from theme("colors.zinc.600") h s l;
+
+    --accent: from theme("colors.zinc.100") h s l;
+    --accent-foreground: from theme("colors.zinc.800") h s l;
+
+    --destructive: from theme("colors.red.500") h s l;
+    --destructive-foreground: from theme("colors.zinc.50") h s l;
+
+    --border: from theme("colors.zinc.200") h s l;
+    --input: from theme("colors.zinc.200") h s l;
+    --ring: from theme("colors.zinc.950") h s l;
+
+    --colored-event-foreground: from theme("colors.black") h s l;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --link: 210 100% 40%;
+
+    --radius: 0.5rem;
+
+    touch-action: pan-x pan-y;
+    height: 100%;
+    a[target="_blank"][rel~="noopener"][rel~="noreferrer"] {
+      /* @apply text-blue-600 hover:text-blue-800 visited:text-indigo-600; */
+      @apply text-link-external;
+    }
+  }
+
+  /* dark mnode only for elements not containing .light class */
+  [data-kb-theme="dark"] {
+    --background: from theme("colors.zinc.900") h s l;
+    --foreground: from theme("colors.zinc.50") h s l;
+
+    --card: from theme("colors.zinc.900") h s l;
+    --card-foreground: from theme("colors.zinc.50") h s l;
+
+    --popover: from theme("colors.zinc.950") h s l;
+    --popover-foreground: from theme("colors.zinc.50") h s l;
+
+    --primary: from theme("colors.zinc.50") h s l;
+    --primary-foreground: from theme("colors.zinc.900") h s l;
+
+    --secondary: from theme("colors.zinc.800") h s l;
+    --secondary-foreground: from theme("colors.zinc.50") h s l;
+
+    --muted: from theme("colors.zinc.800") h s l;
+    --muted-foreground: from theme("colors.zinc.400") h s l;
+
+    --accent: from theme("colors.zinc.800") h s l;
+    --accent-foreground: from theme("colors.zinc.50") h s l;
+
+    --destructive: from theme("colors.red.900") h s l;
+    --destructive-foreground: from theme("colors.zinc.50") h s l;
+
+    --border: from theme("colors.zinc.800") h s l;
+    --input: from theme("colors.zinc.800") h s l;
+    --ring: from theme("colors.zinc.300") h s l;
+
+    --colored-event-foreground: from theme("colors.black") h s l;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

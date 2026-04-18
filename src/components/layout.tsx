@@ -5,7 +5,7 @@ import { SidebarInset, SidebarProvider } from "./ui/sidebar";
 
 export default function Layout(props: FlowProps) {
   return (
-    <div class="[--header-height:calc(theme(spacing.14))]">
+    <div class="[--header-height:calc(--spacing(14))]">
       <SidebarProvider class="flex flex-col" defaultOpen>
         <Header />
         <div class="flex flex-1">

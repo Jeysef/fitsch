@@ -297,7 +297,7 @@ export default function Form(props: FormProps) {
         <Button type="button" variant="outline" onClick={() => setOpen(false)}>
           {t("menu.actions.addCustomEvent.form.cancel")}
         </Button>
-        <Button type="submit" class="flex-auto flex-shrink-0" onClick={onCancel}>
+        <Button type="submit" class="flex-auto shrink-0" onClick={onCancel}>
           {props.isEdit ? t("menu.actions.addCustomEvent.form.edit") : t("menu.actions.addCustomEvent.form.submit")}
         </Button>
       </DialogFooter>

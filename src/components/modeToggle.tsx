@@ -24,7 +24,7 @@ const ModeToggle: ParentComponent = (props) => {
         <Moon class="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         {local.children}
       </DropdownMenuTrigger>
-      <DropdownMenuContent class="min-w-[8rem]">
+      <DropdownMenuContent class="min-w-32">
         <DropdownMenuItem onSelect={() => setColorMode("light")}>
           <SunMedium />
           <span>Light</span>

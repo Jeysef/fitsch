@@ -47,8 +47,8 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
       handleCheck={handleCheck}
       {...props}
       class={{
-        "!border-parityEven !border-dashed": isEven,
-        "!border-parityOdd !border-dashed": isOdd,
+        "!border-parityEven border-dashed!": isEven,
+        "!border-parityOdd border-dashed!": isOdd,
       }}
       header={
         <>

@@ -4,7 +4,7 @@ import { Sidebar, SidebarHeader, SidebarTrigger } from "../ui/sidebar";
 
 export default function Menu() {
   return (
-    <Sidebar class="top-[--header-height] !h-[calc(100svh-var(--header-height))]">
+    <Sidebar class="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
       <SidebarHeader class="block md:hidden">
         <div class="flex items-center justify-between w-full">
           <div class="flex items-center gap-2">

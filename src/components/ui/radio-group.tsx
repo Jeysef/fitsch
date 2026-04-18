@@ -26,12 +26,12 @@ export const RadioGroupItemControl = <T extends ValidComponent = "div">(
   return (
     <RadioGroupPrimitive.ItemControl
       class={cn(
-        "flex aspect-square h-4 w-4 items-center justify-center rounded-full border border-primary text-primary shadow transition-shadow focus:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-foreground",
+        "flex aspect-square h-4 w-4 items-center justify-center rounded-full border border-primary text-primary shadow-sm transition-shadow focus:outline-hidden focus-visible:ring-[1.5px] focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-checked:bg-foreground",
         local.class
       )}
       {...rest}
     >
-      <RadioGroupPrimitive.ItemIndicator class="h-2 w-2 rounded-full data-[checked]:bg-background" />
+      <RadioGroupPrimitive.ItemIndicator class="h-2 w-2 rounded-full data-checked:bg-background" />
     </RadioGroupPrimitive.ItemControl>
   );
 };

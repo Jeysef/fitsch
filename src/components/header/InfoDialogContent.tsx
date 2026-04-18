@@ -159,7 +159,7 @@ export default function InfoDialogContent() {
   };
 
   return (
-    <DialogContent class="max-w-screen-lg">
+    <DialogContent class="max-w-(--breakpoint-lg)">
       <DialogHeader class="relative space-y-0">
         <DialogTitle class={typographyVariants({ variant: "h2" })}>{t("info.heading")}</DialogTitle>
         <InstallButton class="absolute top-0 right-10 hidden md:block lg:hidden" />

@@ -240,7 +240,7 @@ export function Corner() {
         <TableProperties
           class={cn("transition-transform ease-linear em:w-5 md:em:w-7 aspect-square", {
             "rotate-180": isHorizontalLayout(),
-            "rotate-[270deg]": !isHorizontalLayout(),
+            "rotate-270": !isHorizontalLayout(),
           })}
         />
       </Button>
@@ -268,7 +268,7 @@ export function LaunchHighlight() {
             "margin-block-start": isHorizontalLayout() ? "unset" : `calc(${paddingStart} * var(--element-height, 0) / 100)`,
             "margin-block-end": isHorizontalLayout() ? "unset" : `calc(${paddingEnd} * var(--element-height, 0) / 100)`,
           }}
-          class="bg-fuchsia-300 bg-opacity-10 -z-20"
+          class="bg-fuchsia-300/10 -z-20"
           ref={createElementHeightRef(isHorizontalLayout)}
         />
       );

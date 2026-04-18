@@ -66,11 +66,11 @@ export default function Home() {
       <div class="flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between">
         <div class="flex h-16 shrink-0 items-center gap-2 -ml-1">
           <SidebarTrigger />
-          <Separator orientation="vertical" class="mr-2 !h-4" />
+          <Separator orientation="vertical" class="mr-2 h-4!" />
         </div>
         <TabsList
           class={cn(
-            "h-14 max-w-full w-auto bg-background flex-shrink overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center"
+            "h-14 max-w-full w-auto bg-background shrink overflow-auto z-0 transition-[margin,max-width] justify-between px-4 items-center"
           )}
         >
           <For each={Object.values(tabs)}>
@@ -94,7 +94,7 @@ export default function Home() {
           {/* data-lang for rerendering */}
         </TabsList>
         <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", { "*:hidden": tab() === tabs.timeSpan })}>
-          <Separator orientation="vertical" class="mr-2 !h-4" />
+          <Separator orientation="vertical" class="mr-2 h-4!" />
           <Button variant="outline" on:click={() => collapseAll(setIsAllCollapsed((p) => !p))} class="h-8">
             {(isAllCollapsed() ? t("scheduler.tabActions.expandAll") : t("scheduler.tabActions.collapseAll"))
               .split(" ")
@@ -104,7 +104,7 @@ export default function Home() {
         </div>
       </div>
       <Show when={tab() === tabs.workSchedule || tab() === tabs.resultSchedule}>
-        <div class="w-auto max-w-full h-full !mt-0 overflow-auto border-t-4 border-t-background p-2 mx-auto">
+        <div class="w-auto max-w-full h-full mt-0! overflow-auto border-t-4 border-t-background p-2 mx-auto">
           <Show
             when={showSkeleton()}
             fallback={<Scheduler store={tab() === tabs.resultSchedule ? filteredStore : store} />}
@@ -113,7 +113,7 @@ export default function Home() {
           </Show>
         </div>
       </Show>
-      <TabsContent value={tabs.timeSpan} class="w-full h-full !mt-0 overflow-auto border-t-4 border-t-background pb-4">
+      <TabsContent value={tabs.timeSpan} class="w-full h-full mt-0! overflow-auto border-t-4 border-t-background pb-4">
         <Show when={showSkeleton()} fallback={<TimeSpan store={store} />}>
           <TimeSpanSkeleton store={store} />
         </Show>

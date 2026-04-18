@@ -51,7 +51,7 @@ export const TabsContent = <T extends ValidComponent = "div">(props: Polymorphic
   return (
     <TabsPrimitive.Content
       class={cn(
-        "transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[orientation=horizontal]:mt-2 data-[orientation=vertical]:ml-2",
+        "transition-shadow duration-200 focus-visible:outline-hidden focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[orientation=horizontal]:mt-2 data-[orientation=vertical]:ml-2",
         local.class
       )}
       {...rest}
@@ -69,7 +69,7 @@ export const TabsTrigger = <T extends ValidComponent = "button">(props: Polymorp
   return (
     <TabsPrimitive.Trigger
       class={cn(
-        "peer relative z-10 inline-flex h-7 w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium outline-none transition-[color] disabled:pointer-events-none disabled:opacity-50 data-[selected]:text-foreground",
+        "peer relative z-10 inline-flex h-7 w-full items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium outline-hidden transition-[color] disabled:pointer-events-none disabled:opacity-50 data-selected:text-foreground",
         local.class
       )}
       {...rest}
@@ -77,13 +77,13 @@ export const TabsTrigger = <T extends ValidComponent = "button">(props: Polymorp
   );
 };
 
-const tabsIndicatorVariants = cva("absolute transition-all duration-200 outline-none", {
+const tabsIndicatorVariants = cva("absolute transition-all duration-200 outline-hidden", {
   variants: {
     variant: {
       block:
-        "data-[orientation=horizontal]:bottom-1 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:right-1 data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[calc(100%-0.5rem)] data-[orientation=vertical]:w-[calc(100%-0.5rem)] bg-background shadow rounded-md peer-focus-visible:ring-[1.5px] peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-focus-visible:outline-none",
+        "data-[orientation=horizontal]:bottom-1 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:right-1 data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[calc(100%-0.5rem)] data-[orientation=vertical]:w-[calc(100%-0.5rem)] bg-background shadow-sm rounded-md peer-focus-visible:ring-[1.5px] peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background peer-focus-visible:outline-hidden",
       underline:
-        "data-[orientation=horizontal]:bottom-0 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:-right-[1px] data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[2px] data-[orientation=vertical]:w-[2px] bg-primary",
+        "data-[orientation=horizontal]:bottom-0 data-[orientation=horizontal]:left-0 data-[orientation=vertical]:-right-px data-[orientation=vertical]:top-0 data-[orientation=horizontal]:h-[2px] data-[orientation=vertical]:w-[2px] bg-primary",
     },
   },
   defaultVariants: {

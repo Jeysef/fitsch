@@ -280,7 +280,7 @@ export default function SchedulerSkeleton(props: { store: AdaptedSchedulerStore 
             em
             class={cn(
               "[text-align-last:right] em:p-1 font-mono",
-              "em:text-sm font-medium leading-none !mt-0",
+              "em:text-sm font-medium leading-none mt-0!",
               "md:em:text-base md:font-normal font-mono",
               ""
             )}

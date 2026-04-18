@@ -21,7 +21,7 @@ export const Progress = <T extends ValidComponent = "div">(props: PolymorphicPro
     <ProgressPrimitive class={cn("flex w-full flex-col gap-2", local.class)} {...rest}>
       {local.children}
       <ProgressPrimitive.Track class="h-2 overflow-hidden rounded-full bg-primary/20">
-        <ProgressPrimitive.Fill class="h-full w-[--kb-progress-fill-width] bg-primary transition-all duration-500 ease-linear data-[progress=complete]:bg-primary data-[indeterminate]:animate-progress-indeterminate" />
+        <ProgressPrimitive.Fill class="h-full w-(--kb-progress-fill-width) bg-primary transition-all duration-500 ease-linear data-[progress=complete]:bg-primary data-indeterminate:animate-progress-indeterminate" />
       </ProgressPrimitive.Track>
     </ProgressPrimitive>
   );

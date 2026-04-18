@@ -65,16 +65,16 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         "flex flex-col h-full hover:shadow-md transition-shadow overflow-auto",
         // "text-colored-event-foreground",
         // "event relative w-full h-full min-h-min rounded flex flex-col items-center em:p-2 em:pt-1 *:text-center overflow-hidden",
-        "outline-2 outline-offset-2 hover:outline-strongLinked hover:outline",
+        "hover:outline-2 hover:outline-offset-2 hover:outline-strongLinked hover:outline-solid",
         // if hidden, make the event more transparent
         event.hidden && "opacity-50 h-auto",
         rest.class
       )}
     >
-      <Collapsible open={!(event.collapsed || event.hidden)} class="group data-[expanded]:visible flex flex-col h-full">
+      <Collapsible open={!(event.collapsed || event.hidden)} class="group data-expanded:visible flex flex-col h-full">
         <CardHeader class="flex-row w-full p-3 relative space-y-0">
           {event.checked && searchParams.tab !== "resultSchedule" && (
-            <div class={"absolute top-0 left-0 bottom-0 w-1 bg-green-500  group-data-[expanded]:hidden"} />
+            <div class={"absolute top-0 left-0 bottom-0 w-1 bg-green-500  group-data-expanded:hidden"} />
           )}
           {local.header}
         </CardHeader>

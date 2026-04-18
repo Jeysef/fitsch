@@ -3,7 +3,7 @@
   "tailwind": {
     "config": "tailwind.config.cjs",
     "css": {
-      "path": "src/app.css",
+      "path": "src/styles/app.css",
       "variable": true
     },
     "color": "zinc",

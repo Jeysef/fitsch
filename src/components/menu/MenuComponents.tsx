@@ -208,7 +208,7 @@ export function GradeSelect() {
   const { t } = useI18n();
 
   const Fallback = () => (
-    <Text class={typographyVariants({ class: "!mt-0 text-sm ml-2" })}>{t("menu.grade.selectToShow")}</Text>
+    <Text class={typographyVariants({ class: "mt-0! text-sm ml-2" })}>{t("menu.grade.selectToShow")}</Text>
   );
 
   const RenderContent = () => {
@@ -351,7 +351,7 @@ export function CoursesSelect() {
     const Subsection = () => (
       <CollapsibleTrigger class="flex pl-2" as={SubSectionHeading}>
         {t(`menu.courses.${props.obligation}`)}
-        <ChevronRight class="ml-auto transition-transform group-data-[expanded]/collapsible:rotate-90" />
+        <ChevronRight class="ml-auto transition-transform group-data-expanded/collapsible:rotate-90" />
       </CollapsibleTrigger>
     );
 
