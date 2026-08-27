@@ -18,10 +18,10 @@ import Text from "~/components/typography/text";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
+import { hasOverlap } from "~/lib/time/time";
 import { cn } from "~/lib/utils";
 import type { CustomEvent, DayEvent, Event, ScheduleEvent } from "./types";
 import { useSchedule } from "~/providers/schedule/schedule-hooks";
-import { VALIDITY } from "~/components/homepage/utils";
 
 export interface EventProps<T extends Event = Event> {
   dayEvent: DayEvent<T>;
@@ -46,7 +46,17 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
   const [searchParams] = useSearchParams<Tab>();
   const { store } = useSchedule();
 
-  const canGrayOut = () => event.type !== "CUSTOM" && store.coursesTimeSpan[event.courseId].validity === VALIDITY.VALID;
+  const isConflictingWithChecked = () =>
+    event.type !== "CUSTOM" &&
+    store.data.some((day) =>
+      day.events.some(
+        (dayEvent) =>
+          dayEvent.event.day === event.day &&
+          dayEvent.event.type !== "CUSTOM" &&
+          dayEvent.event.checked &&
+          hasOverlap(dayEvent.event.timeSpan, event.timeSpan)
+      )
+    );
 
   const color = createMemo(() => {
     if (event.type === "CUSTOM") {
@@ -76,7 +86,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         "transition-[opacity,filter] duration-300 ease-in-out",
         {
           "opacity-50 grayscale-60 bg-[repeating-linear-gradient(45deg,transparent,transparent_6px,rgba(128,128,128,0.15)_6px,rgba(128,128,128,0.15)_12px)]":
-            event.checked === false && event.grayedOut && canGrayOut(),
+            event.checked === false && event.grayedOut && isConflictingWithChecked(),
         },
         rest.class
       )}

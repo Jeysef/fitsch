@@ -45,10 +45,6 @@ export default function Home() {
         : VALIDITY.PARTIAL;
   });
 
-  const isSomeCourseValid = createMemo(() =>
-    store.courses.some((course) => store.coursesTimeSpan[course.detail.id].validity === VALIDITY.VALID)
-  );
-
   createEffect(() => {
     if (store.courses.length && allCoursesValidity() === VALIDITY.VALID) posthog().capture("timespan-all-courses-selected");
   });
@@ -66,7 +62,6 @@ export default function Home() {
     batch(() => {
       for (const dayEvent of Object.values(store.data)) {
         for (const eventStore of dayEvent.events) {
-          if (eventStore.event.type === "CUSTOM") continue;
           eventStore.event.grayedOut = isGrayoutAllowed();
         }
       }
@@ -109,25 +104,27 @@ export default function Home() {
           <TabsIndicator variant="underline" data-lang={locale()} />
           {/* data-lang for rerendering */}
         </TabsList>
-        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", { "*:hidden!": tab() === tabs.timeSpan })}>
-          <Separator orientation="vertical" class="mr-2 h-4!" />
+        <div
+          class={cn(
+            "flex-col justify-center text-xs sm:text-base sm:flex-row flex h-16 shrink-0 items-center gap-2 -mr-1",
+            { "*:hidden!": tab() === tabs.timeSpan }
+          )}
+        >
+          <Separator orientation="vertical" class="mr-2 h-4! hidden md:block" />
           <Button
             variant="outline"
             on:click={() => {
               setIsGrayoutAllowed((p) => !p);
               toggleGrayedOut();
             }}
-            class={cn(
-              "h-8 hidden md:flex whitespace-nowrap overflow-hidden transition-[max-width,padding,border-width] duration-300 ease-in-out max-w-xs",
-              { "max-w-0 px-0 border-0": !isSomeCourseValid() }
-            )}
+            class="h-6 sm:h-8"
           >
             {(isGrayoutAllowed() ? t("scheduler.tabActions.unfocus") : t("scheduler.tabActions.focus"))
               .split(" ")
               .slice(0, 2 - Number(isMobile()))
               .join(" ")}
           </Button>
-          <Button variant="outline" on:click={() => collapseAll(setIsAllCollapsed((p) => !p))} class="h-8">
+          <Button variant="outline" on:click={() => collapseAll(setIsAllCollapsed((p) => !p))} class="h-6 sm:h-8">
             {(isAllCollapsed() ? t("scheduler.tabActions.expandAll") : t("scheduler.tabActions.collapseAll"))
               .split(" ")
               .slice(0, 2 - Number(isMobile()))

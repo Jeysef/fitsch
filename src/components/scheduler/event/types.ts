@@ -14,9 +14,7 @@ export interface EventBase {
   hidden?: boolean | undefined;
   /** @default false (undefined) */
   collapsed?: boolean | undefined;
-  /** grayed out for course events are validly selected
-  @default true
-  */
+  /** @default false (undefined) */
   grayedOut?: boolean | undefined;
 }
 
