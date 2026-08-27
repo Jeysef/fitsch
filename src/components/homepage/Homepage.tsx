@@ -66,6 +66,7 @@ export default function Home() {
     batch(() => {
       for (const dayEvent of Object.values(store.data)) {
         for (const eventStore of dayEvent.events) {
+          if (eventStore.event.type === "CUSTOM") continue;
           eventStore.event.grayedOut = isGrayoutAllowed();
         }
       }
