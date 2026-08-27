@@ -146,6 +146,8 @@ export default {
     tabActions: {
       collapseAll: "Collapse all",
       expandAll: "Expand all",
+      focus: "Dim unselected",
+      unfocus: "Highlight all",
     },
     timeSpan: {
       empty: "No course selected",

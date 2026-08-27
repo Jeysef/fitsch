@@ -91,6 +91,7 @@ const getRandomEvent = (e: Partial<CustomEvent> = {}): CustomEvent => {
     checked: e.checked ?? getRandomBoolean(),
     hidden: e.hidden ?? getRandomBoolean(),
     collapsed: e.collapsed ?? getRandomBoolean(),
+    grayedOut: e.grayedOut ?? getRandomBoolean(),
     color: e.color ?? color,
     type: e.type ?? type,
   };

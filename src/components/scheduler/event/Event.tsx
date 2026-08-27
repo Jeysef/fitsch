@@ -20,6 +20,8 @@ import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
 import { cn } from "~/lib/utils";
 import type { CustomEvent, DayEvent, Event, ScheduleEvent } from "./types";
+import { useSchedule } from "~/providers/schedule/schedule-hooks";
+import { VALIDITY } from "~/components/homepage/utils";
 
 export interface EventProps<T extends Event = Event> {
   dayEvent: DayEvent<T>;
@@ -42,6 +44,9 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
   const [local, rest] = splitProps(props, ["dayEvent", "handleCheck", "header", "children"]);
   const event = local.dayEvent.event;
   const [searchParams] = useSearchParams<Tab>();
+  const { store } = useSchedule();
+
+  const canGrayOut = () => event.type !== "CUSTOM" && store.coursesTimeSpan[event.courseId].validity === VALIDITY.VALID;
 
   const color = createMemo(() => {
     if (event.type === "CUSTOM") {
@@ -68,6 +73,11 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         "hover:outline-2 hover:outline-offset-2 hover:outline-strongLinked hover:outline-solid",
         // if hidden, make the event more transparent
         event.hidden && "opacity-50 h-auto",
+        "transition-[opacity,filter] duration-300 ease-in-out",
+        {
+          "opacity-50 grayscale-60 bg-[repeating-linear-gradient(45deg,transparent,transparent_6px,rgba(128,128,128,0.15)_6px,rgba(128,128,128,0.15)_12px)]":
+            event.checked === false && event.grayedOut && canGrayOut(),
+        },
         rest.class
       )}
     >

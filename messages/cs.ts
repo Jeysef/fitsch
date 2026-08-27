@@ -144,6 +144,8 @@ export default {
     tabActions: {
       collapseAll: "Sbalit vše",
       expandAll: "Rozbalit vše",
+      focus: "ztlumit nevybrané",
+      unfocus: "zvýraznit vše",
     },
     timeSpan: {
       empty: "Není zvolen žádný předmět",

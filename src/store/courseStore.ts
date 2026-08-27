@@ -74,6 +74,7 @@ export function reconcileCourses(course: Course, courseData: LectureMutator.Muta
       checked: existingLecture?.checked ?? false,
       hidden: existingLecture?.hidden ?? undefined,
       collapsed: existingLecture?.collapsed ?? undefined,
+      grayedOut: existingLecture?.grayedOut ?? undefined,
     };
     return mergeProps(lecture, additionalData) satisfies ScheduleEvent;
   });
