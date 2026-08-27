@@ -108,7 +108,7 @@ export default function Home() {
           <TabsIndicator variant="underline" data-lang={locale()} />
           {/* data-lang for rerendering */}
         </TabsList>
-        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", { "*:hidden": tab() === tabs.timeSpan })}>
+        <div class={cn("flex h-16 shrink-0 items-center gap-2 -mr-1", { "*:hidden!": tab() === tabs.timeSpan })}>
           <Separator orientation="vertical" class="mr-2 h-4!" />
           <Button
             variant="outline"
