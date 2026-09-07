@@ -1,3 +1,4 @@
+import { untrack } from "solid-js";
 import type { VALIDITY } from "~/components/homepage/utils";
 import type { CustomEvent } from "~/components/scheduler/event/types";
 import { LECTURE_TYPE } from "~/enums/enums";
@@ -30,14 +31,22 @@ export class SchedulerStore implements StoreJson {
 
   // ---- Courses ----
 
-  public getCourse = (courseId: string) => this.courses.find((course) => course.detail.id === courseId);
+  // NOTE: lookups have to be prototype methods, not class field arrow functions.
+  // A class field binds `this` to the raw instance, which escapes the reactive store proxy
+  // and therefore returns unwrapped (non-reactive) objects.
+  public getCourse(courseId: string) {
+    return this.courses.find((course) => course.detail.id === courseId);
+  }
 
   // must be a setter to trigger reactivity
   public set newCourses(courses: DataProviderTypes.getStudyCoursesDetailsReturn) {
-    this.courses = courses.map((course) => {
-      const existingCourse = this.getCourse(course.detail.id);
-      return existingCourse ? reconcileCourses(existingCourse, course) : createNewCourse(course);
-    });
+    // reconcile against the current state without subscribing to it
+    this.courses = untrack(() =>
+      courses.map((course) => {
+        const existingCourse = this.getCourse(course.detail.id);
+        return existingCourse ? reconcileCourses(existingCourse, course) : createNewCourse(course);
+      })
+    );
   }
 
   // ---- Custom Events ----
@@ -62,11 +71,12 @@ export class SchedulerStore implements StoreJson {
   }
 
   // ---- Events ----
-  public getLinkedEvent = (linkedData: LectureMutator.LinkedLectureData, courseId: string) => {
+  // prototype method on purpose, see `getCourse`
+  public getLinkedEvent(linkedData: LectureMutator.LinkedLectureData, courseId: string) {
     const course = this.courses.find((course) => course.detail.id === courseId);
     if (!course) return undefined;
     return course.data.find((event) => event.id === linkedData.id);
-  };
+  }
 }
 
 /**

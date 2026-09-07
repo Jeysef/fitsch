@@ -1,15 +1,21 @@
 import { range, zipObject } from "es-toolkit";
+import { createComputed, createRoot } from "solid-js";
+import { createMutable } from "solid-js/store";
 import { beforeEach, describe, expect, it } from "vitest";
-import type { CustomEvent } from "~/components/scheduler/event/types";
+import type { CustomEvent, ScheduleEvent } from "~/components/scheduler/event/types";
 import { days, end, start, step } from "~/config/scheduler";
-import { DAY } from "~/enums/enums";
+import { DAY, LECTURE_TYPE } from "~/enums/enums";
 import { Time, TimeSpan } from "~/lib/time/time";
+import type { CourseDetail } from "~/server/scraper/types/course.types";
+import type { LectureMutator } from "~/server/scraper/lectureMutator";
+import type { DataProviderTypes } from "~/server/scraper/types/data.types";
 import { getRandomBoolean, getRandomEnum, getRandomId, getRandomNumber } from "~/server/scraper/tests/utils/common";
 import { getRandomText } from "~/server/scraper/tests/utils/text";
 import { SchedulerStore } from "~/store/store";
 import type { IScheduleRows } from "~/store/store.types";
 import { adaptSchedulerStore, type AdaptedSchedulerStore } from "~/store/storeAdapter";
 import { createColumns } from "~/store/utils";
+import { makeAutoMemoStore } from "~/utils/store/autoMemo";
 
 // Formatter for time headers in the scheduler columns (e.g., "08:00–08:50")
 const formatTime = (start: Time, end: Time) =>
@@ -67,6 +73,81 @@ describe("TestSchedulerStore", () => {
   it("should be able to sort data", () => {
     store.addCustomEvent(getRandomEvent({ day: DAY.MON }));
     store.addCustomEvent(getRandomEvent({ day: DAY.MON }));
+  });
+});
+
+describe("linked events", () => {
+  const monId = "mon-id";
+  const wedId = "wed-id";
+
+  const lecture = (over: Partial<LectureMutator.MutatedLecture>): LectureMutator.MutatedLecture =>
+    ({
+      id: "id",
+      day: DAY.MON,
+      type: LECTURE_TYPE.LECTURE,
+      timeSpan: new TimeSpan(new Time({ hour: 8, minute: 0 }), new Time({ hour: 9, minute: 0 })),
+      capacity: "100",
+      groups: "1",
+      lectureGroup: ["01"],
+      note: "",
+      room: ["A01"],
+      weeks: { parity: null, weeks: range(1, 15) },
+      strongLinked: [],
+      linked: [],
+      ...over,
+    }) as LectureMutator.MutatedLecture;
+
+  const mutatedCourse = (): LectureMutator.MutatedCourse => ({
+    detail: { id: "EZP", abbreviation: "EZP" } as CourseDetail,
+    data: [
+      lecture({ id: monId, day: DAY.MON, strongLinked: [{ id: wedId, day: DAY.WED }] }),
+      lecture({ id: wedId, day: DAY.WED, strongLinked: [{ id: monId, day: DAY.MON }] }),
+    ],
+  });
+
+  const getEvents = (store: AdaptedSchedulerStore) =>
+    store.data.flatMap((day) => day.events.map((e) => e.event)) as ScheduleEvent[];
+
+  /**
+   * Lookups have to return objects of the reactive store, otherwise mutating a linked event
+   * doesn't notify subscribers and its checkbox never updates in the UI.
+   */
+  it("should return linked events of the reactive store", () => {
+    createRoot((dispose) => {
+      const store = adaptSchedulerStore(makeAutoMemoStore(createMutable(new SchedulerStore({ columns, rows }))));
+      store.newCourses = [mutatedCourse()] as unknown as DataProviderTypes.getStudyCoursesDetailsReturn;
+
+      const events = getEvents(store);
+      const mon = events.find((e) => e.id === monId)!;
+      const wed = events.find((e) => e.id === wedId)!;
+
+      expect(store.getLinkedEvent({ id: wedId, day: DAY.WED }, mon.courseId)).toBe(wed);
+
+      let trackedWedChecked = 0;
+      createComputed(() => {
+        void wed.checked;
+        trackedWedChecked++;
+      });
+
+      mon.checked = true;
+      store.getLinkedEvent({ id: wedId, day: DAY.WED }, mon.courseId)!.checked = true;
+
+      expect(wed.checked).toBe(true);
+      expect(trackedWedChecked).toBe(2);
+
+      dispose();
+    });
+  });
+
+  it("should keep linked events resolvable after courses are reconciled", () => {
+    const store = adaptSchedulerStore(makeAutoMemoStore(createMutable(new SchedulerStore({ columns, rows }))));
+    store.newCourses = [mutatedCourse()] as unknown as DataProviderTypes.getStudyCoursesDetailsReturn;
+
+    const wedBefore = getEvents(store).find((e) => e.id === wedId)!;
+    store.newCourses = [mutatedCourse()] as unknown as DataProviderTypes.getStudyCoursesDetailsReturn;
+
+    expect(store.getLinkedEvent({ id: wedId, day: DAY.WED }, "EZP")).toBe(getEvents(store).find((e) => e.id === wedId));
+    expect(store.getLinkedEvent({ id: wedId, day: DAY.WED }, "EZP")).not.toBe(wedBefore);
   });
 });
 

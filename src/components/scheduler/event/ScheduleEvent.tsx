@@ -1,5 +1,5 @@
 import Info from "lucide-solid/icons/info";
-import { batch } from "solid-js";
+import { batch, createMemo, untrack } from "solid-js";
 import { EventTitle, EventWrapper, type EventProps } from "~/components/scheduler/event/Event";
 import EventPopup from "~/components/scheduler/EventInfo";
 import Text from "~/components/typography/text";
@@ -25,16 +25,18 @@ export default function ScheduleEventComponent(props: ScheduleEventProps) {
   const store = useStore();
   const event = props.dayEvent.event;
 
-  const strongLinked = event.strongLinked.map((data) => store().getLinkedEvent(data, event.courseId));
+  const strongLinked = createMemo(() =>
+    event.strongLinked
+      .map((data) => store().getLinkedEvent(data, event.courseId))
+      .filter((linkedEvent): linkedEvent is NonNullable<typeof linkedEvent> => !!linkedEvent)
+  );
 
   const handleCheck = (checked?: boolean) => {
+    const toBeChecked = checked ?? !event.checked;
     batch(() => {
-      const toBeChecked = checked ?? !event.checked;
       event.checked = toBeChecked;
-      for (const linkedEvent of strongLinked) {
-        if (linkedEvent) {
-          linkedEvent.checked = toBeChecked;
-        }
+      for (const linkedEvent of untrack(strongLinked)) {
+        linkedEvent.checked = toBeChecked;
       }
     });
   };
