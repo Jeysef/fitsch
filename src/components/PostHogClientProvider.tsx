@@ -10,7 +10,10 @@ export function PostHogClientProvider(props: FlowProps) {
   onMount(() => {
     if (!posthog.__loaded) {
       posthog.init(env.VITE_PUBLIC_POSTHOG_KEY, {
-        api_host: "/api/insights", // proxy
+        api_host: env.VITE_PUBLIC_POSTHOG_HOST,
+        // the deployed host is a subdomain of a public suffix (e.g. *.netlify.app),
+        // so writing the cookie for the parent domain is rejected by browsers
+        cross_subdomain_cookie: false,
         defaults: "2025-05-24",
         person_profiles: "always",
       });
