@@ -1,0 +1,10 @@
+patchedDependencies:
+  '@solidjs/start': patches/@solidjs__start.patch
+  '@solidjs/vite-plugin-nitro-2': patches/@solidjs__vite-plugin-nitro-2.patch
+  solid-forms: patches/solid-forms.patch
+  solid-gesture: patches/solid-gesture.patch
+
+allowBuilds:
+  '@parcel/watcher': true
+  core-js: false
+  esbuild: true

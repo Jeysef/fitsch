@@ -3,7 +3,7 @@ FROM node:23-alpine AS builder
 WORKDIR /app
 # Install dependencies
 RUN corepack enable && corepack prepare pnpm@latest --activate
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY patches ./patches
 RUN pnpm install
 # Copy remaining source code
@@ -17,7 +17,7 @@ RUN mv .vinxi .output
 FROM node:23-alpine AS runner
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY patches ./patches
 RUN pnpm install --prod --ignore-scripts
 # Copy the build output from the builder stage
