@@ -66,7 +66,13 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         border: event.color,
       } as const;
     }
-    return subjectTypeColors[event.type];
+
+    const isChecked = local.dayEvent.event.checked;
+    const typeColor = subjectTypeColors[event.type];
+    return {
+      bg: isChecked ? typeColor.checkedBg : typeColor.bg,
+      border: typeColor.border,
+    };
   });
 
   return (
