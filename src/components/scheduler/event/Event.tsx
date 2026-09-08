@@ -18,6 +18,7 @@ import Text from "~/components/typography/text";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Collapsible, CollapsibleContent } from "~/components/ui/collapsible";
 import { subjectTypeColors } from "~/config/colors";
+import { tabs } from "~/components/homepage/tab";
 import { hasOverlap } from "~/lib/time/time";
 import { cn } from "~/lib/utils";
 import type { CustomEvent, DayEvent, Event, ScheduleEvent } from "./types";
@@ -66,8 +67,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         border: event.color,
       } as const;
     }
-
-    const isChecked = local.dayEvent.event.checked;
+    const isChecked = searchParams.tab === tabs.workSchedule && local.dayEvent.event.checked;
     const typeColor = subjectTypeColors[event.type];
     return {
       bg: isChecked ? typeColor.checkedBg : typeColor.bg,
