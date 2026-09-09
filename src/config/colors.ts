@@ -13,11 +13,11 @@ import { LECTURE_TYPE, WEEK_PARITY } from "../enums/enums";
 // };
 
 export const subjectTypeColors = {
-  [LECTURE_TYPE.LECTURE]: { bg: colors.green[100], checkedBg: colors.green[300], border: colors.green[300] },
-  [LECTURE_TYPE.EXERCISE]: { bg: colors.yellow[100], checkedBg: colors.yellow[300], border: colors.yellow[300] },
-  [LECTURE_TYPE.SEMINAR]: { bg: colors.blue[100], checkedBg: colors.blue[300], border: colors.blue[300] },
-  [LECTURE_TYPE.LABORATORY]: { bg: colors.amber[100], checkedBg: colors.amber[300], border: colors.amber[300] },
-  [LECTURE_TYPE.EXAM]: { bg: colors.red[100], checkedBg: colors.red[300], border: colors.red[300] },
+  [LECTURE_TYPE.LECTURE]: { bg: colors.green[100], highlightColor: colors.green[300] },
+  [LECTURE_TYPE.EXERCISE]: { bg: colors.yellow[100], highlightColor: colors.yellow[300] },
+  [LECTURE_TYPE.SEMINAR]: { bg: colors.blue[100], highlightColor: colors.blue[300] },
+  [LECTURE_TYPE.LABORATORY]: { bg: colors.amber[100], highlightColor: colors.amber[300] },
+  [LECTURE_TYPE.EXAM]: { bg: colors.red[100], highlightColor: colors.red[300] },
 } as const;
 
 export const hoverColors = {
