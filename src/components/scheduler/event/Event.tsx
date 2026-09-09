@@ -67,7 +67,7 @@ export const EventWrapper: FlowComponent<EventWrapperProps> = (props) => {
         border: event.color,
       } as const;
     }
-    const isChecked = searchParams.tab === tabs.workSchedule && local.dayEvent.event.checked;
+    const isChecked = searchParams.tab !== tabs.resultSchedule && local.dayEvent.event.checked;
     const typeColor = subjectTypeColors[event.type];
     return {
       bg: isChecked ? typeColor.highlightColor : typeColor.bg,
